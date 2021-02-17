@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20210217115804_DotNetUpgrade_Blank")]
+    partial class DotNetUpgrade_Blank
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,6 +39,10 @@ namespace ntbs_service.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("CaseManagerUsername")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
                     b.Property<string>("ClosingUserId")
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
@@ -50,11 +56,20 @@ namespace ntbs_service.Migrations
                     b.Property<int?>("NotificationId")
                         .HasColumnType("int");
 
+                    b.Property<string>("TbServiceCode")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
+
                     b.HasKey("AlertId");
 
-                    b.HasIndex("AlertStatus", "AlertType");
+                    b.HasIndex("CaseManagerUsername");
+
+                    b.HasIndex("TbServiceCode");
 
                     b.HasIndex("NotificationId", "AlertType");
+
+                    b.HasIndex("AlertStatus", "AlertType", "TbServiceCode");
 
                     b.ToTable("Alert");
 
@@ -24000,17 +24015,9 @@ namespace ntbs_service.Migrations
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
 
-                    b.Property<string>("CaseManagerUsername")
-                        .HasColumnName("CaseManagerUsername")
-                        .HasMaxLength(64);
-
                     b.Property<string>("OtherReasonDescription")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("TbServiceCode")
-                        .HasColumnName("TbServiceCode")
-                        .HasMaxLength(16);
 
                     b.Property<string>("TransferReason")
                         .IsRequired()
@@ -24020,10 +24027,6 @@ namespace ntbs_service.Migrations
                     b.Property<string>("TransferRequestNote")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
-
-                    b.HasIndex("CaseManagerUsername");
-
-                    b.HasIndex("TbServiceCode");
 
                     b.HasDiscriminator().HasValue("TransferRequest");
                 });
@@ -24056,9 +24059,25 @@ namespace ntbs_service.Migrations
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.Alert", b =>
                 {
+                    b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
+                        .WithMany()
+                        .HasForeignKey("CaseManagerUsername");
+
                     b.HasOne("ntbs_service.Models.Entities.Notification", "Notification")
                         .WithMany("Alerts")
                         .HasForeignKey("NotificationId");
+
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")
+                        .WithMany()
+                        .HasForeignKey("TbServiceCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CaseManager");
+
+                    b.Navigation("Notification");
+
+                    b.Navigation("TbService");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.CaseManagerTbService", b =>
@@ -25212,17 +25231,6 @@ namespace ntbs_service.Migrations
             modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.TBService", b =>
                 {
                     b.Navigation("CaseManagerTbServices");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.TransferAlert", b =>
-                {
-                    b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
-                        .WithMany()
-                        .HasForeignKey("CaseManagerUsername");
-
-                    b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")
-                        .WithMany()
-                        .HasForeignKey("TbServiceCode");
                 });
 #pragma warning restore 612, 618
         }

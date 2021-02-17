@@ -162,7 +162,7 @@ namespace ntbs_service.DataAccess
 
             modelBuilder.Entity<TBService>(entity =>
             {
-                entity.Property(e => e.Code).HasMaxLength(16);
+                entity.Property(e => e.Code).HasMaxLength(16).ValueGeneratedOnAdd();
                 entity.HasKey(e => e.Code);
                 entity.Property(e => e.Name).HasMaxLength(200);
                 /*
@@ -204,6 +204,8 @@ namespace ntbs_service.DataAccess
             {
                 entity.HasKey(e => e.Code);
 
+                entity.Property(e => e.Code).ValueGeneratedOnAdd();
+
                 entity.ToTable(nameof(LocalAuthority), ReferenceDataSchemaName);
 
                 entity.HasData(GetLocalAuthoritiesList());
@@ -215,11 +217,15 @@ namespace ntbs_service.DataAccess
 
                 entity.HasOne(e => e.LocalAuthority)
                     .WithOne(x => x.LocalAuthorityToPHEC)
-                    .HasForeignKey<LocalAuthorityToPHEC>(la => la.LocalAuthorityCode);
+                    .HasForeignKey<LocalAuthorityToPHEC>(la => la.LocalAuthorityCode)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
 
                 entity.HasOne(e => e.PHEC)
                     .WithOne()
-                    .HasForeignKey<LocalAuthorityToPHEC>(la => la.PHECCode);
+                    .HasForeignKey<LocalAuthorityToPHEC>(la => la.PHECCode)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
 
                 entity.ToTable(nameof(LocalAuthorityToPHEC), ReferenceDataSchemaName);
 
@@ -558,11 +564,15 @@ namespace ntbs_service.DataAccess
 
                 entity.HasOne(e => e.CaseManager)
                     .WithMany(caseManager => caseManager.CaseManagerTbServices)
-                    .HasForeignKey(e => e.CaseManagerUsername);
+                    .HasForeignKey(e => e.CaseManagerUsername)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
 
                 entity.HasOne(e => e.TbService)
                     .WithMany(tbService => tbService.CaseManagerTbServices)
-                    .HasForeignKey(e => e.TbServiceCode);
+                    .HasForeignKey(e => e.TbServiceCode)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
             });
 
             modelBuilder.Entity<ManualTestType>(entity =>
@@ -590,11 +600,15 @@ namespace ntbs_service.DataAccess
 
                 entity.HasOne(e => e.ManualTestType)
                     .WithMany(manualTestType => manualTestType.ManualTestTypeSampleTypes)
-                    .HasForeignKey(e => e.ManualTestTypeId);
+                    .HasForeignKey(e => e.ManualTestTypeId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
 
                 entity.HasOne(e => e.SampleType)
                     .WithMany(sampleType => sampleType.ManualTestTypeSampleTypes)
-                    .HasForeignKey(e => e.SampleTypeId);
+                    .HasForeignKey(e => e.SampleTypeId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
 
                 entity.ToTable(nameof(ManualTestTypeSampleType), ReferenceDataSchemaName);
 
@@ -615,14 +629,19 @@ namespace ntbs_service.DataAccess
 
                 entity.HasOne(e => e.ManualTestType)
                     .WithMany()
-                    .HasForeignKey(e => e.ManualTestTypeId);
+                    .HasForeignKey(e => e.ManualTestTypeId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
 
                 entity.HasOne(e => e.SampleType)
                     .WithMany()
                     .HasForeignKey(e => e.SampleTypeId);
+                
                 entity.HasOne<TestData>()
                     .WithMany(e => e.ManualTestResults)
-                    .HasForeignKey(e => e.NotificationId);
+                    .HasForeignKey(e => e.NotificationId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
             });
 
             modelBuilder.Entity<MBovisDetails>(entity =>
@@ -642,7 +661,9 @@ namespace ntbs_service.DataAccess
                 entity.ToTable("MBovisExposureToKnownCase");
                 entity.HasOne<MBovisDetails>()
                     .WithMany(e => e.MBovisExposureToKnownCases)
-                    .HasForeignKey(e => e.NotificationId);
+                    .HasForeignKey(e => e.NotificationId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);;
             });
 
             modelBuilder.Entity<MBovisUnpasteurisedMilkConsumption>(entity =>
@@ -657,7 +678,9 @@ namespace ntbs_service.DataAccess
                 entity.ToTable("MBovisUnpasteurisedMilkConsumption");
                 entity.HasOne<MBovisDetails>()
                     .WithMany(e => e.MBovisUnpasteurisedMilkConsumptions)
-                    .HasForeignKey(e => e.NotificationId);
+                    .HasForeignKey(e => e.NotificationId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
             });
             
             modelBuilder.Entity<MBovisOccupationExposure>(entity =>
@@ -668,7 +691,9 @@ namespace ntbs_service.DataAccess
                 entity.ToTable("MBovisOccupationExposures");
                 entity.HasOne<MBovisDetails>()
                     .WithMany(e => e.MBovisOccupationExposures)
-                    .HasForeignKey(e => e.NotificationId);
+                    .HasForeignKey(e => e.NotificationId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
             });
 
             modelBuilder.Entity<MBovisAnimalExposure>(entity =>
@@ -684,7 +709,9 @@ namespace ntbs_service.DataAccess
                 entity.ToTable("MBovisAnimalExposure");
                 entity.HasOne<MBovisDetails>()
                     .WithMany(e => e.MBovisAnimalExposures)
-                    .HasForeignKey(e => e.NotificationId);
+                    .HasForeignKey(e => e.NotificationId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
             });
 
             modelBuilder.Entity<Alert>(entity =>
