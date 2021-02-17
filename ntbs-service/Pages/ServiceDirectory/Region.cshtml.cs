@@ -20,7 +20,7 @@ namespace ntbs_service.Pages.ServiceDirectory
         {
             _referenceDataRepository = referenceDataRepository;
         }
-        
+
         [BindProperty(SupportsGet = true)]
         public string PhecCode { get; set; }
 
@@ -29,23 +29,23 @@ namespace ntbs_service.Pages.ServiceDirectory
 
         public async Task<IActionResult> OnGetAsync()
         {
-            TbServicesWithCaseManagers = 
+            TbServicesWithCaseManagers =
                 (await _referenceDataRepository.GetTbServicesWithCaseManagersFromPhecCodeAsync(PhecCode))
                 .ToDictionary(
-                    service => service, 
+                    service => service,
                     service => service.CaseManagerTbServices
                         .Select(c => c.CaseManager)
-                        .OrderBy(c => c.FamilyName)
+                        .OrderBy(c => c.DisplayName)
                         .ToList()
                     );
 
             Phec = await _referenceDataRepository.GetPhecByCode(PhecCode);
-            
+
             PrepareBreadcrumbs();
-            
+
             return Page();
         }
-        
+
         private void PrepareBreadcrumbs()
         {
             var breadcrumbs = new List<Breadcrumb>
