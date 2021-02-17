@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@sentry/webpack-plugin": "1.11.1",
-    "@types/node": "13.11.1",
+    "@types/node": "14.14.28",
     "@types/webpack-env": "1.15.2",
     "@types/webpack": "^4.41.26",
     "aspnet-webpack": "3.0.0",
