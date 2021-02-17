@@ -36,7 +36,7 @@ We are following the [NHS Digital Service Manual](https://beta.nhs.uk/service-ma
 
 ### Dev-mode secrets
 
-Use [dotnet secrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-2.2&tabs=windowsgit) 
+Use [dotnet secrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-2.2&tabs=windowsgit)
 for configuring environment variables that should be kept secret (and therefore not checked into the repo) or specific to your machine:
 `dotnet user-secrets set "<envVariable>" "<value>"`
 
@@ -66,15 +66,7 @@ Secrets are project specific so run these commands in the root of a project.
 We are using the [xunit](https://xunit.net/) framework for testing.
 To run unit/integration tests, cd into the ntbs-service-unit-tests/ntbs-integration-tests project and run `dotnet test`.
 
-Before first running ui tests locally (the below steps are powershell specific, trivial changes are required for bash):
-
- - Make sure you have a local install of java (doesn't have to be jdk) 
- - cd into the ntbs-ui-tests directory 
- - run `npm ci` to get the   selenium-standalone dependency 
- - run   `.\node_modules\.bin\selenium-standalone install` to install  selenium-standalone - Flip slashes for bash
-
-To run ui tests, run the script `.\test.ps1` - If you don't have bash configured to be able to run powershell, `./test.sh` is a good alternative.
-To see the browser window when running them change the setting in Hooks\TestSettings.cs
+See [ntbs-ui-tests/README.md](../ntbs-ui-tests/README.md) for information on the UI tests.
 
 ### Accessing app logs whilst under integration tests
 The integration tests by default don't collect logs from the system under test (ie the whole app).
@@ -87,7 +79,7 @@ You can also make the tests log to a file by un-commenting the appropriate lines
 To minimize friction in development and deployments, the app uses Entity Framework migrations.
 The simplest way to make a schema change is to make the appropriate changes in the model (e.g. [Notification](Models/Entities/Notification.cs) and the [database context](DataAccess/NtbsContext.cs) and run
 `dotnet ef migrations add <NameOfMigration>`
-This will create a migration file, that can be edited further to match needs. It will be run at application startup, 
+This will create a migration file, that can be edited further to match needs. It will be run at application startup,
 or can be evoked by hand using
 `dotnet ef database update`
 
@@ -126,7 +118,7 @@ For `test` and `uat` environments, pick the docker image <TAG> of the build from
 For `live` environment, the process is the same once
 [you've connected to Openshift successfully](https://airelogic-nis.atlassian.net/wiki/spaces/R2/pages/163446793/Deployments+on+PHE+infrastructure)
 
-Note - when using two kubectl pods 
+Note - when using two kubectl pods
 [these commands](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-context-and-configuration)
 will help to keep track of the kubectl contexts
 
@@ -151,16 +143,16 @@ To switch on set the AzureADOptions.Enabled app setting to "true".
 NTBS will require an Azure AD Application to be configured for Azure AD Auth.
 The configuration of the Azure AD Application should be as follows:
 
-Environment Name: 
+Environment Name:
 This will be used in the name of the application and the application id uri.
 For non-prod environments it should be used so dev,int,test etc.
 Live it should be left out.
 
-- Name: 
-  - NTBS Login ([Environment Name]) 
+- Name:
+  - NTBS Login ([Environment Name])
   - e.g. Environment Name = Dev/Int/Test if Live then leave blank.
-- Application ID Uri: 
-  - https://[domain.com]/ntbs-[environmentname] 
+- Application ID Uri:
+  - https://[domain.com]/ntbs-[environmentname]
   - e.g. https://aptemus.com/ntbs-int or https://phe.gov.uk/ntbs (for live)
 
 Authentication:
@@ -178,7 +170,7 @@ Token Configuration
 - Tokens, ID and Access Token choose to use the Group Id, Emit Group as Role Claims
 
 Api Permissions
-- Microsoft Graph 
+- Microsoft Graph
 - Application permission - Group.Read.All and User.Read.All and GroupMember.Read.All (Enable Admin consent)
 - Delegate permission - profile and User.Read
 
@@ -198,6 +190,6 @@ The Azure AD Application requires the following permissions:
 - dashboard - UI access to env health, logs, etc : `az aks browse --resource-group PHE-NTBS --name ntbs-envs`
 - adding kubernetes secrets: `kubectl create secret generic <secret> --from-literal=<key>=<value>`
 - purging registry - every once in a while the images registry [should be purged](../scripts/purge-images.ps1) so it
- doesn't grow too big. It runs with `--dry-run` by default, 
+ doesn't grow too big. It runs with `--dry-run` by default,
  make sure to remove the flag once you're happy nothing relevant will be deleted.
 - SSL certificates - see [dedicated readme](./deployments/README.md)
