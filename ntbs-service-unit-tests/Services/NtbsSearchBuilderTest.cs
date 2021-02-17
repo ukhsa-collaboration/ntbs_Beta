@@ -19,7 +19,7 @@ namespace ntbs_service_unit_tests.Services
         public NtbsSearchBuilderTest()
         {
             ContextOptions = new DbContextOptionsBuilder<NtbsContext>()
-                .UseInMemoryDatabase(nameof(DataQualityRepositoryTests))
+                .UseInMemoryDatabase(nameof(NtbsSearchBuilderTest))
                 .Options;
         }
 
