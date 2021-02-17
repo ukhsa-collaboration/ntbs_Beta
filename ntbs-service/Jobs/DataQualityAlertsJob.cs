@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -115,19 +115,18 @@ namespace ntbs_service.Jobs
             await CreateTreatmentOutcome12MonthAlertsInBulkAsync();
             await CreateTreatmentOutcome24MonthAlertsInBulkAsync();
             await CreateTreatmentOutcome36MonthAlertsInBulkAsync();
-            
-            // NTBS-2107 - temporarily disable duplicate checking for performance reasons
-            //var possibleDuplicateNotificationIds =
-            //    await _dataQualityRepository.GetNotificationIdsEligibleForDqPotentialDuplicateAlertsAsync();
-            //foreach (var notification in possibleDuplicateNotificationIds)
-            //{
-            //    var alert = new DataQualityPotentialDuplicateAlert
-            //    {
-            //        NotificationId = notification.NotificationId, 
-            //        DuplicateId = notification.DuplicateId
-            //    };
-            //    await _alertService.AddUniquePotentialDuplicateAlertAsync(alert);
-            //}
+
+            var possibleDuplicateNotificationIds =
+                await _dataQualityRepository.GetNotificationIdsEligibleForDqPotentialDuplicateAlertsAsync();
+            foreach (var notification in possibleDuplicateNotificationIds)
+            {
+                var alert = new DataQualityPotentialDuplicateAlert
+                {
+                    NotificationId = notification.NotificationId,
+                    DuplicateId = notification.DuplicateId
+                };
+                await _alertService.AddUniquePotentialDuplicateAlertAsync(alert);
+            }
 
             Log.Information($"Finished data quality alerts job");
         }
