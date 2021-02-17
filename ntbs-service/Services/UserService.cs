@@ -79,7 +79,7 @@ namespace ntbs_service.Services
         
         public async Task<User> GetUser(ClaimsPrincipal user)
         {
-           return await _userRepository.GetUserByUsername(user.FindFirstValue(ClaimTypes.Upn));
+           return await _userRepository.GetUserByUsername(user.Username());
         }
 
         public UserType GetUserType(ClaimsPrincipal user)

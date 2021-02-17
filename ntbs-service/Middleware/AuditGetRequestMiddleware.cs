@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
@@ -39,7 +40,7 @@ namespace ntbs_service.Middleware
 
                 if (shouldAudit && int.TryParse(pathArray[notificationIndex + 1], out var id))
                 {
-                    var userName = context.User.FindFirstValue(ClaimTypes.Upn);
+                    var userName = context.User.Username();
                     // Fallback if user doesn't have an email associated with them - as is the case with our test users
                     if (string.IsNullOrEmpty(userName))
                     {

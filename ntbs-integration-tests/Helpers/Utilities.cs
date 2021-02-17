@@ -109,6 +109,7 @@ namespace ntbs_integration_tests.Helpers
         public const string UNPERMITTED_POSTCODE = "NW51TL";
         public const string CASEMANAGER_ABINGDON_EMAIL = "pheNtbs_nhsUser2@ntbs.phe.com";
         public const string CASEMANAGER_ABINGDON_EMAIL2 = "pheNtbs_nhsUser3@ntbs.phe.com";
+        public const string NATIONAL_TEAM_USER_EMAIL = "user@national-team.com";
 
         public static void SeedDatabase(NtbsContext context)
         {
@@ -200,6 +201,15 @@ namespace ntbs_integration_tests.Helpers
                     AdGroups = "Global.NIS.NTBS.NTS",
                     IsActive = true,
                     IsCaseManager = true
+                },
+                new User
+                {
+                    Username = NATIONAL_TEAM_USER_EMAIL,
+                    GivenName = "National",
+                    FamilyName = "User",
+                    AdGroups = "Global.NIS.NTBS.Admin",
+                    IsActive = true,
+                    IsCaseManager = false
                 }
             };
         }

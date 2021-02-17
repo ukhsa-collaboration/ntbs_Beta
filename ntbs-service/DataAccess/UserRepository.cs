@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -65,13 +66,13 @@ namespace ntbs_service.DataAccess
         /// </summary>
         public async Task UpdateUserContactDetails(User user)
         {
-            _context.Attach(user);
-            _context.Entry(user).Property(x => x.JobTitle).IsModified = true;
-            _context.Entry(user).Property(x => x.PhoneNumberPrimary).IsModified = true;
-            _context.Entry(user).Property(x => x.PhoneNumberSecondary).IsModified = true;
-            _context.Entry(user).Property(x => x.EmailPrimary).IsModified = true;
-            _context.Entry(user).Property(x => x.EmailSecondary).IsModified = true;
-            _context.Entry(user).Property(x => x.Notes).IsModified = true;
+            var existingUser = await _context.User.SingleAsync(u => u.Username == user.Username);
+            existingUser.JobTitle = user.JobTitle;
+            existingUser.PhoneNumberPrimary = user.PhoneNumberPrimary;
+            existingUser.PhoneNumberSecondary = user.PhoneNumberSecondary;
+            existingUser.EmailPrimary = user.EmailPrimary;
+            existingUser.EmailSecondary = user.EmailSecondary;
+            existingUser.Notes = user.Notes;
             await _context.SaveChangesAsync();
         }
 

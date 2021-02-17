@@ -1,7 +1,8 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Pages.Notifications;
@@ -53,7 +54,7 @@ namespace ntbs_service.Pages.Alerts
         {
             TransferRejectedAlert = 
                 await _alertRepository.GetOpenAlertByNotificationId<TransferRejectedAlert>(NotificationId);
-            await _alertService.DismissAlertAsync(TransferRejectedAlert.AlertId, User.FindFirstValue(ClaimTypes.Upn));
+            await _alertService.DismissAlertAsync(TransferRejectedAlert.AlertId, User.Username());
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
     }

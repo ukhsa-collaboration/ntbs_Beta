@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Alerts
@@ -30,7 +31,7 @@ namespace ntbs_service.Pages.Alerts
             
             if(await authorizationService.IsUserAuthorizedToManageAlert(User, alertToDismiss))
             {
-                await alertService.DismissAlertAsync(AlertId, User.FindFirstValue(ClaimTypes.Upn));
+                await alertService.DismissAlertAsync(AlertId, User.Username());
             }
 
             if (Request.Query["page"] == "Overview")

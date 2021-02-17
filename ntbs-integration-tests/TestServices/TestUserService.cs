@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -180,6 +181,13 @@ namespace ntbs_integration_tests.TestServices
     
     public class NationalTeamUser : IUserService
     {
+        private readonly IUserRepository _userRepository;
+
+        public NationalTeamUser(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
+
         public Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
         {
             return Task.FromResult(new UserPermissionsFilter {Type = UserType.NationalTeam});
@@ -210,9 +218,9 @@ namespace ntbs_integration_tests.TestServices
             return Task.CompletedTask;
         }
 
-        public Task<User> GetUser(ClaimsPrincipal user)
+        public async Task<User> GetUser(ClaimsPrincipal user)
         {
-            return Task.FromResult(new User());
+            return await _userRepository.GetUserByUsername(Utilities.NATIONAL_TEAM_USER_EMAIL);
         }
 
         public Task<string> GetUserDisplayName(ClaimsPrincipal user)

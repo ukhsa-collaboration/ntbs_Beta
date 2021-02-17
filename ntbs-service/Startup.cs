@@ -29,6 +29,7 @@ using Microsoft.IdentityModel.Logging;
 using ntbs_service.Authentication;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
+using ntbs_service.Helpers;
 using ntbs_service.Jobs;
 using ntbs_service.Middleware;
 using ntbs_service.Models;
@@ -276,7 +277,7 @@ namespace ntbs_service
 
                     options.Events.OnSecurityTokenValidated += async context =>
                     {
-                        var username = context.Principal.FindFirstValue(ClaimTypes.Upn);
+                        var username = context.Principal.Username();
                         if (username != null)
                         {
                             var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
@@ -315,7 +316,7 @@ namespace ntbs_service
                     options.Events = new OpenIdConnectEvents();
                     options.Events.OnTokenValidated += async context => 
                     {
-                        var username = context.Principal.FindFirstValue(ClaimTypes.Upn);
+                        var username = context.Principal.Username();
                         if (username == null) {
                             username = context.Principal.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name");
                         }

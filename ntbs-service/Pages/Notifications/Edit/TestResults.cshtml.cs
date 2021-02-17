@@ -78,7 +78,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public async Task<IActionResult> OnPostUnmatch(string labReferenceNumber)
         {
-            var userName = User.FindFirstValue(ClaimTypes.Upn);
+            var userName = User.Username();
             await _specimenService.UnmatchSpecimenAsync(NotificationId, labReferenceNumber, userName);
             return RedirectToPage("/Notifications/Edit/TestResults", new { NotificationId });
         }

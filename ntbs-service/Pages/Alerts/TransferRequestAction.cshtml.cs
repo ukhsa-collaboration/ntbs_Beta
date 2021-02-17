@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
@@ -150,12 +151,12 @@ namespace ntbs_service.Pages.Alerts
             await Service.UpdateHospitalDetailsAsync(Notification, Notification.HospitalDetails);
             await _treatmentEventRepository.AddAsync(transferOutEvent);
             await _treatmentEventRepository.AddAsync(transferInEvent);
-            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Upn));
+            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.Username());
         }
 
         public async Task RejectTransferAndDismissAlertAsync()
         {
-            var user = await _referenceDataRepository.GetUserByUsernameAsync(User.FindFirstValue(ClaimTypes.Upn));
+            var user = await _referenceDataRepository.GetUserByUsernameAsync(User.Username());
             var transferRejectedAlert = new TransferRejectedAlert
             {
                 CaseManagerUsername = Notification.HospitalDetails.CaseManagerUsername,
@@ -170,10 +171,10 @@ namespace ntbs_service.Pages.Alerts
                 await _alertRepository.GetOpenAlertByNotificationId<TransferRejectedAlert>(NotificationId);
             if (pendingTransferRejectedAlert != null)
             {
-                await _alertService.DismissAlertAsync(pendingTransferRejectedAlert.AlertId, User.FindFirstValue(ClaimTypes.Upn));
+                await _alertService.DismissAlertAsync(pendingTransferRejectedAlert.AlertId, User.Username());
             }
             await _alertService.AddUniqueOpenAlertAsync(transferRejectedAlert);
-            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Upn));
+            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.Username());
         }
     }
 }
