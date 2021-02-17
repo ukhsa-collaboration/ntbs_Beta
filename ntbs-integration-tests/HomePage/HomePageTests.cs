@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_integration_tests.TestServices;
 using ntbs_service;
@@ -16,8 +16,8 @@ namespace ntbs_integration_tests.HomePage
         [Fact]
         public async Task DismissAlert_CorrectlyDismissesAlertAndReturnsHomePage()
         {
-            using (var client = Factory.WithUser<NhsUserForAbingdonAndPermitted>()
-                .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE)
+            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+                .WithNotificationAndTbServiceConnected(Utilities.NOTIFIED_ID, Utilities.PERMITTED_SERVICE_CODE)
                 .CreateClientWithoutRedirects())
             {
                 
@@ -51,7 +51,7 @@ namespace ntbs_integration_tests.HomePage
         [Fact]
         public async Task ShowingHomepageKpis_WhenUserIsNhsUser()
         {
-            using (var client = Factory.WithUser<NhsUserForAbingdonAndPermitted>()
+            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
                                         .CreateClientWithoutRedirects())
             {
                 // Arrange
@@ -66,7 +66,7 @@ namespace ntbs_integration_tests.HomePage
         [Fact]
         public async Task ShowingHomepageKpis_WhenUserIsPheUser()
         {
-            using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
+            using (var client = Factory.WithUserAuth(TestUser.PheUserWithPermittedPhecCode)
                                         .CreateClientWithoutRedirects())
             {
                 // Arrange

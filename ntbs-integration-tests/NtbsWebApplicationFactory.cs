@@ -1,12 +1,10 @@
-﻿using System;
-using EFAuditer;
+﻿using EFAuditer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_integration_tests.Helpers;
-using ntbs_integration_tests.TestServices;
 using ntbs_service.DataAccess;
 using ntbs_service.Services;
 using Serilog;

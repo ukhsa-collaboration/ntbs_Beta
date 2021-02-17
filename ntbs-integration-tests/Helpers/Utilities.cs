@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ntbs_integration_tests.LabResultsPage;
 using ntbs_integration_tests.NotificationPages;
 using ntbs_integration_tests.TransferPage;
@@ -109,7 +110,6 @@ namespace ntbs_integration_tests.Helpers
         public const string UNPERMITTED_POSTCODE = "NW51TL";
         public const string CASEMANAGER_ABINGDON_EMAIL = "pheNtbs_nhsUser2@ntbs.phe.com";
         public const string CASEMANAGER_ABINGDON_EMAIL2 = "pheNtbs_nhsUser3@ntbs.phe.com";
-        public const string NATIONAL_TEAM_USER_EMAIL = "user@national-team.com";
 
         public static void SeedDatabase(NtbsContext context)
         {
@@ -176,59 +176,24 @@ namespace ntbs_integration_tests.Helpers
 
         private static IEnumerable<User> GetCaseManagers()
         {
-            return new List<User>
+            return TestUser.GetAll().Select(user => new User
             {
-                new User
-                {
-                    Username = CASEMANAGER_ABINGDON_EMAIL,
-                    DisplayName = "TestCase TestManager",
-                    AdGroups = "Global.NIS.NTBS.Service_Abingdon",
-                    IsActive = true,
-                    IsCaseManager = true
-                },
-                new User
-                {
-                    Username = CASEMANAGER_ABINGDON_EMAIL2,
-                    DisplayName = "TestCase2 TestManager",
-                    AdGroups = "Global.NIS.NTBS.Service_Abingdon",
-                    IsActive = true,
-                    IsCaseManager = true
-                },
-                new User
-                {
-                    Username = "Developer@ntbs.phe.com",
-                    DisplayName = "BaseTestCase BaseTestManager",
-                    AdGroups = "Global.NIS.NTBS.NTS",
-                    IsActive = true,
-                    IsCaseManager = true
-                },
-                new User
-                {
-                    Username = NATIONAL_TEAM_USER_EMAIL,
-                    GivenName = "National",
-                    FamilyName = "User",
-                    AdGroups = "Global.NIS.NTBS.Admin",
-                    IsActive = true,
-                    IsCaseManager = false
-                }
-            };
+                Username = user.Username,
+                DisplayName = user.DisplayName,
+                AdGroups = string.Join(',', user.AdGroups),
+                IsActive = true,
+                IsCaseManager = true
+            });
         }
 
         private static IEnumerable<CaseManagerTbService> GetCaseManagerTbServicesJoinEntries()
         {
-            return new List<CaseManagerTbService>
-            {
+            return TestUser.GetAll().SelectMany(user => user.TbServiceCodes.Select(serviceCode =>
                 new CaseManagerTbService
                 {
-                    TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
-                    CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL
-                },
-                new CaseManagerTbService
-                {
-                    TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
-                    CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL2
-                }
-            };
+                    TbServiceCode = serviceCode,
+                    CaseManagerUsername = user.Username
+                }));
         }
 
         private static IEnumerable<Notification> GetSeedingNotifications()

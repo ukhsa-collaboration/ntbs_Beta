@@ -52,7 +52,7 @@ namespace ntbs_integration_tests.LabResultsPage
         [Fact]
         public async Task NhsUser_CanViewSpecimensAccordingToPermissions()
         {
-            using (var client = Factory.WithUser<NhsUserForAbingdonAndPermitted>()
+            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
                 .CreateClientWithoutRedirects())
             {
                 // Arrange
@@ -92,7 +92,7 @@ namespace ntbs_integration_tests.LabResultsPage
         [Fact]
         public async Task NhsUser_ShowsNoSpecimensIfNoPermissionForTbServices()
         {
-            using (var client = Factory.WithUser<NhsUserWithNoTbServices>()
+            using (var client = Factory.WithUserAuth(TestUser.NhsUserWithNoTbServices)
                 .CreateClientWithoutRedirects())
             {
                 //Act
@@ -110,7 +110,7 @@ namespace ntbs_integration_tests.LabResultsPage
         [Fact]
         public async Task PheUser_CanViewSpecimensAccordingToPermissions()
         {
-            using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
+            using (var client = Factory.WithUserAuth(TestUser.PheUserWithPermittedPhecCode)
                 .CreateClientWithoutRedirects())
             {
                 // Arrange
@@ -150,7 +150,7 @@ namespace ntbs_integration_tests.LabResultsPage
         [Fact]
         public async Task NationalTeam_CanViewSpecimensAccordingToPermissions()
         {
-            using (var client = Factory.WithUser<NationalTeamUser>()
+            using (var client = Factory.WithUserAuth(TestUser.NationalTeamUser)
                 .CreateClientWithoutRedirects())
             {
                 // Arrange
@@ -185,7 +185,7 @@ namespace ntbs_integration_tests.LabResultsPage
         [MemberData(nameof(TbServiceCandidateMatchNotificationIds))]
         public async Task NationalTeam_CanMatchSpecimenFromCandidatePotentialMatch(int candidateMatchNotificationId)
         {
-            using (var client = Factory.WithUser<NationalTeamUser>()
+            using (var client = Factory.WithUserAuth(TestUser.NationalTeamUser)
                 .CreateClientWithoutRedirects())
             {
                 // Arrange
@@ -218,7 +218,7 @@ namespace ntbs_integration_tests.LabResultsPage
         [Fact]
         public async Task NationalTeam_CanMatchSpecimenForManualNotificationId()
         {
-            using (var client = Factory.WithUser<NationalTeamUser>()
+            using (var client = Factory.WithUserAuth(TestUser.NationalTeamUser)
                 .CreateClientWithoutRedirects())
             {
                 // Arrange
@@ -255,7 +255,7 @@ namespace ntbs_integration_tests.LabResultsPage
         [Fact]
         public async Task NationalTeam_CanNotManuallyMatchToNonExistentNotificationId_ValidationError()
         {
-            using (var client = Factory.WithUser<NationalTeamUser>()
+            using (var client = Factory.WithUserAuth(TestUser.NationalTeamUser)
                 .CreateClientWithoutRedirects())
             {
                 // Arrange
