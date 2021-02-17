@@ -24,6 +24,12 @@ namespace ntbs_service.Models.Validations
                 return new ValidationResult(string.Format(ValidationMessages.NhsNumberLength, validationContext.DisplayName));
             }
             
+            var monodigitNumbers = new List<string> {"0000000000", "1111111111", "9999999999"};
+            if (monodigitNumbers.Contains(nhsNumber))
+            {
+                return new ValidationResult(string.Format(ValidationMessages.InvalidNhsNumber, validationContext.DisplayName));
+            }
+            
             var firstDigit = nhsNumber.Substring(0, 1);
             // Scotland uses different validation and has NHS numbers starting with 0, 1 and 2. 9 is a generally used test digit for NHS numbers.
             var  scottishAndTestDigits = new List<string> {"0", "1", "2", "9"};

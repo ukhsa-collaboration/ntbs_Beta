@@ -33,6 +33,23 @@ namespace ntbs_service_unit_tests.Models
             Assert.True(IsValid);
         }
 
+        public static IEnumerable<object[]> MonodigitNhsNumbers()
+        {
+            return new List<string>()
+                {
+                    "0000000000",
+                    "1111111111",
+                    "9999999999"
+                }
+                .Select(number => new object[] { number });
+        }
+
+        [Theory, MemberData(nameof(MonodigitNhsNumbers))]
+        public void CheckNhsNumberValidationAttributeReturnsInvalid_ForMonodigitNumbers(string nhsNumber) {
+            var IsValid = ValidateNhsNumber(nhsNumber);
+            Assert.False(IsValid);
+        }
+
         public static IEnumerable<object[]> ScottishNhsNumbers()
         {
             return new List<string>()
