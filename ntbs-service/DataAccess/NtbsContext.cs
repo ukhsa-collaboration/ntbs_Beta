@@ -194,6 +194,7 @@ namespace ntbs_service.DataAccess
             modelBuilder.Entity<PHEC>(entity =>
             {
                 entity.HasKey(e => e.Code);
+                entity.Property(e => e.Code).ValueGeneratedOnAdd();
 
                 entity.ToTable(nameof(PHEC), ReferenceDataSchemaName);
 
@@ -235,6 +236,7 @@ namespace ntbs_service.DataAccess
             modelBuilder.Entity<PostcodeLookup>(entity =>
             {
                 entity.HasKey(e => e.Postcode);
+                entity.Property(e => e.Postcode).ValueGeneratedOnAdd();
                 entity.HasOne(e => e.LocalAuthority)
                     .WithMany(c => c.PostcodeLookups)
                     .HasForeignKey(ns => ns.LocalAuthorityCode);
@@ -541,7 +543,7 @@ namespace ntbs_service.DataAccess
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.Username).HasMaxLength(64);
+                entity.Property(e => e.Username).HasMaxLength(64).ValueGeneratedOnAdd();
                 entity.Property(e => e.FamilyName).HasMaxLength(64);
                 entity.Property(e => e.GivenName).HasMaxLength(64);
                 entity.Property(e => e.DisplayName).HasMaxLength(256);

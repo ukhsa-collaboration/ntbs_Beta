@@ -555,6 +555,7 @@ namespace ntbs_service.Migrations
             modelBuilder.Entity("ntbs_service.Models.Entities.User", b =>
                 {
                     b.Property<string>("Username")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
@@ -15816,6 +15817,7 @@ namespace ntbs_service.Migrations
             modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.PHEC", b =>
                 {
                     b.Property<string>("Code")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -15909,6 +15911,7 @@ namespace ntbs_service.Migrations
             modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.PostcodeLookup", b =>
                 {
                     b.Property<string>("Postcode")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 

@@ -10,7 +10,7 @@ using ntbs_service.DataAccess;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    [Migration("20210217115804_DotNetUpgrade_Blank")]
+    [Migration("20210217120522_DotNetUpgrade_Blank")]
     partial class DotNetUpgrade_Blank
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -570,6 +570,7 @@ namespace ntbs_service.Migrations
             modelBuilder.Entity("ntbs_service.Models.Entities.User", b =>
                 {
                     b.Property<string>("Username")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
@@ -15831,6 +15832,7 @@ namespace ntbs_service.Migrations
             modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.PHEC", b =>
                 {
                     b.Property<string>("Code")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -15924,6 +15926,7 @@ namespace ntbs_service.Migrations
             modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.PostcodeLookup", b =>
                 {
                     b.Property<string>("Postcode")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
