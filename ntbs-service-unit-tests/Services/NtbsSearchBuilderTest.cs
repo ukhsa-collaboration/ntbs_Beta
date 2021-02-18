@@ -116,7 +116,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var result = ((INtbsSearchBuilder)builder.FilterByFamilyName("merry")).GetResult().ToList();
 
-            Assert.Equal(2, result.Count());
+            Assert.Equal(2, result.Count);
             Assert.Equal("Merry", result.FirstOrDefault().PatientDetails.FamilyName);
         }
 
@@ -125,7 +125,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var result = ((INtbsSearchBuilder)builder.FilterByFamilyName("ry")).GetResult().ToList();
 
-            Assert.Equal(2, result.Count());
+            Assert.Equal(2, result.Count);
             Assert.Equal("Merry", result.FirstOrDefault().PatientDetails.FamilyName);
         }
 
@@ -134,7 +134,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var result = ((INtbsSearchBuilder)builder.FilterByFamilyName("merr")).GetResult().ToList();
 
-            Assert.Equal(2, result.Count());
+            Assert.Equal(2, result.Count);
             Assert.Equal("Merry", result.FirstOrDefault().PatientDetails.FamilyName);
         }
 
@@ -143,7 +143,16 @@ namespace ntbs_service_unit_tests.Services
         {
             var result = ((INtbsSearchBuilder)builder.FilterByFamilyName("err")).GetResult().ToList();
 
-            Assert.Equal(2, result.Count());
+            Assert.Equal(2, result.Count);
+            Assert.Equal("Merry", result.FirstOrDefault().PatientDetails.FamilyName);
+        }
+
+        [Fact]
+        public void SearchByFamilyName_WhitespacePrefixAndSuffix()
+        {
+            var result = ((INtbsSearchBuilder)builder.FilterByFamilyName("   Merry  ")).GetResult().ToList();
+
+            Assert.Equal(2, result.Count);
             Assert.Equal("Merry", result.FirstOrDefault().PatientDetails.FamilyName);
         }
 
@@ -186,6 +195,15 @@ namespace ntbs_service_unit_tests.Services
         public void SearchByGivenName_WildcardedPrefixAndSuffix()
         {
             var result = ((INtbsSearchBuilder)builder.FilterByGivenName("roun")).GetResult().ToList();
+
+            Assert.Single(result);
+            Assert.Equal("Goround", result.FirstOrDefault().PatientDetails.GivenName);
+        }
+
+        [Fact]
+        public void SearchByGivenName_WhitespacePrefixAndSuffix()
+        {
+            var result = ((INtbsSearchBuilder)builder.FilterByGivenName("  Goround   ")).GetResult().ToList();
 
             Assert.Single(result);
             Assert.Equal("Goround", result.FirstOrDefault().PatientDetails.GivenName);

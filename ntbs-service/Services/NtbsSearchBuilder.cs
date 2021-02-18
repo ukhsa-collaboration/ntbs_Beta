@@ -39,7 +39,7 @@ namespace ntbs_service.Services
         {
             if (!string.IsNullOrEmpty(familyName))
             {
-                notificationIQ = notificationIQ.Where(s => EF.Functions.Like(s.PatientDetails.FamilyName, $"%{familyName}%"));
+                notificationIQ = notificationIQ.Where(s => EF.Functions.Like(s.PatientDetails.FamilyName, $"%{familyName.Trim()}%"));
             }
             return this;
         }
@@ -48,7 +48,7 @@ namespace ntbs_service.Services
         {
             if (!string.IsNullOrEmpty(givenName))
             {
-                notificationIQ = notificationIQ.Where(s => EF.Functions.Like(s.PatientDetails.GivenName, $"%{givenName}%"));
+                notificationIQ = notificationIQ.Where(s => EF.Functions.Like(s.PatientDetails.GivenName, $"%{givenName.Trim()}%"));
             }
             return this;
         }
