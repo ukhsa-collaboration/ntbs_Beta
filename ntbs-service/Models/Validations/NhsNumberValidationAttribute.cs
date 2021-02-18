@@ -27,7 +27,7 @@ namespace ntbs_service.Models.Validations
             var monodigitNumbers = new List<string> {"0000000000", "1111111111", "9999999999"};
             if (monodigitNumbers.Contains(nhsNumber))
             {
-                return new ValidationResult(string.Format(ValidationMessages.InvalidNhsNumber, validationContext.DisplayName));
+                return new ValidationResult(string.Format(ValidationMessages.NhsNumberMonodigit, validationContext.DisplayName));
             }
             
             var firstDigit = nhsNumber.Substring(0, 1);
