@@ -1,6 +1,5 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: { 'main': './wwwroot/source/app.ts'},
@@ -10,14 +9,6 @@ module.exports = {
     filename: 'bundle.js'
   },
   plugins: [
-    new CopyPlugin({
-      patterns: [
-        // Copy the GOV.UK assets (fonts and crests mainly) to public path /assets/
-        // These are referenced by the GOV.UK SCSS and publishing these assets is a
-        // requirement for using this style sheet.
-        { from: 'node_modules/govuk-frontend/govuk/assets/', to: 'assets/' },
-      ],
-    }),
     new MiniCssExtractPlugin({
       filename:'[name].css',
       chunkFilename: '[id].css',
