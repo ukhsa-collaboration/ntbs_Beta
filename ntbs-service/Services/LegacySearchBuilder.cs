@@ -45,7 +45,7 @@ namespace ntbs_service.Services
             if (!string.IsNullOrEmpty(familyName))
             {
                 AppendCondition("dmg.FamilyName LIKE @familyName");
-                var wildcardedFamilyName = '%' + familyName + '%';
+                var wildcardedFamilyName = '%' + familyName.Trim() + '%';
                 parameters.familyName = wildcardedFamilyName;
             }
             return this;
@@ -56,7 +56,7 @@ namespace ntbs_service.Services
             if (!string.IsNullOrEmpty(givenName))
             {
                 AppendCondition("dmg.GivenName LIKE @givenName");
-                var wildcardedGivenName = '%' + givenName + '%';
+                var wildcardedGivenName = '%' + givenName.Trim() + '%';
                 parameters.givenName = wildcardedGivenName;
             }
             return this;
