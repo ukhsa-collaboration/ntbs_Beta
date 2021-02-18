@@ -1,5 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: { 'main': './wwwroot/source/app.ts'},
@@ -9,6 +10,14 @@ module.exports = {
     filename: 'bundle.js'
   },
   plugins: [
+    new CopyPlugin({
+      patterns: [
+        // Copy the GOV.UK assets (fonts and crests mainly) to public path /assets/
+        // These are referenced by the GOV.UK SCSS and publishing these assets is a
+        // requirement for using this style sheet.
+        { from: 'node_modules/govuk-frontend/govuk/assets/', to: 'assets/' },
+      ],
+    }),
     new MiniCssExtractPlugin({
       filename:'[name].css',
       chunkFilename: '[id].css',
@@ -41,18 +50,21 @@ module.exports = {
         test: /\.(sc|c)ss$/,
         use: [
           {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              hmr: process.env.NODE_ENV === 'development',
-            },
+            loader: MiniCssExtractPlugin.loader
           },
           "css-loader",
           "sass-loader"
         ]
       },
-      { 
-          test: /\.(png|woff|woff2|eot|ttf|svg)$/, 
-          loader: 'url-loader?limit=100000' 
+      {
+        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+        use: {
+            loader: 'url-loader',
+            options: {
+              limit: 10_000, // bytes
+              publicPath: './'
+            }
+        }
       }
     ]
   },
