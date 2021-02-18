@@ -141,14 +141,16 @@ namespace ntbs_service.DataMigration
                     .Where(sc => sc.OldNotificationId == id)
                     .Select(AsSocialContextAddress)
                     .ToList();
-                var notificationTransferEvents = transferEvents
-                    .Where(sc => sc.OldNotificationId == id)
-                    .Select(sc => AsTransferEvent(sc).Result)
-                    .ToList();
-                var notificationOutcomeEvents = outcomeEvents
-                    .Where(sc => sc.OldNotificationId == id)
-                    .Select(sc => AsOutcomeEvent(sc).Result)
-                    .ToList();
+                var notificationTransferEvents = new List<TreatmentEvent>();
+                foreach (var transfer in transferEvents.Where(sc => sc.OldNotificationId == id))
+                {
+                    notificationTransferEvents.Add(await AsTransferEvent(transfer));
+                }
+                var notificationOutcomeEvents = new List<TreatmentEvent>();
+                foreach (var transfer in outcomeEvents.Where(sc => sc.OldNotificationId == id))
+                {
+                    notificationOutcomeEvents.Add(await AsOutcomeEvent(transfer));
+                }
                 var notificationMBovisAnimalExposures = mbovisAnimalExposures
                     .Where(sc => sc.OldNotificationId == id)
                     .Select(AsMBovisAnimalExposure)
