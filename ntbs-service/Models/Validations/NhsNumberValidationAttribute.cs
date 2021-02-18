@@ -21,13 +21,13 @@ namespace ntbs_service.Models.Validations
             }
             else if (nhsNumber.Length != 10)
             {
-                return new ValidationResult(string.Format(ValidationMessages.NhsNumberLength, validationContext.DisplayName));
+                return new ValidationResult(ValidationMessages.NhsNumberLength);
             }
             
             var monodigitNumbers = new List<string> {"0000000000", "1111111111", "9999999999"};
             if (monodigitNumbers.Contains(nhsNumber))
             {
-                return new ValidationResult(string.Format(ValidationMessages.NhsNumberMonodigit, validationContext.DisplayName));
+                return new ValidationResult(ValidationMessages.NhsNumberMonodigit);
             }
             
             var firstDigit = nhsNumber.Substring(0, 1);
@@ -40,7 +40,7 @@ namespace ntbs_service.Models.Validations
 
             if(!ValidateNhsNumber(nhsNumber))
             {
-                return new ValidationResult(string.Format(ValidationMessages.InvalidNhsNumber, validationContext.DisplayName));
+                return new ValidationResult(ValidationMessages.InvalidNhsNumber);
             }
 
             return null;

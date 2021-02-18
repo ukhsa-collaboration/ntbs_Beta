@@ -42,10 +42,10 @@
         #endregion
 
         #region Patient Details
-        public const string NhsNumberLength = "{0} needs to be 10 digits long";
-        public const string InvalidNhsNumber = "This {0} is not valid. Confirm you have entered it correctly";
+        public const string NhsNumberLength = "NHS number needs to be 10 digits long";
+        public const string InvalidNhsNumber = "This NHS number is not valid. Confirm you have entered it correctly";
         // We think users trying to enter a monodigit nhs number are doing so because they do not know the nhs number.
-        public const string NhsNumberMonodigit = "This {0} is not valid. If you do not know the NHS number please select \"Not Known\"";
+        public const string NhsNumberMonodigit = "This NHS number is not valid. If you do not know the NHS number please select \"Not Known\"";
         public const string FieldRequired = "{0} is a mandatory field";
         public const string PostcodeNotFound = "{0} is not found";
         #endregion
