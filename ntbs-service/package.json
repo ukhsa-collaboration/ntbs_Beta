@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@babel/core": "7.12.16",
-    "@babel/preset-env": "7.12.16",
+    "@babel/preset-env": "7.12.17",
     "@sentry/browser": "6.1.0",
     "@sentry/integrations": "6.1.0",
     "accessible-autocomplete": "2.0.3",
