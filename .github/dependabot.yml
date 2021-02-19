@@ -3,61 +3,8 @@ updates:
 - package-ecosystem: nuget
   directory: "/"
   schedule:
-    interval: daily
+    interval: monthly
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: EFCore.BulkExtensions
-    versions:
-    - ">= 3.a"
-    - "< 4"
-  - dependency-name: Microsoft.AspNetCore.DataProtection.EntityFrameworkCore
-    versions:
-    - ">= 3.a"
-    - "< 4"
-  - dependency-name: Microsoft.AspNetCore.Mvc.Testing
-    versions:
-    - ">= 3.a"
-    - "< 4"
-  - dependency-name: Microsoft.Data.Sqlite
-    versions:
-    - "> 3.1.1"
-    - "< 4"
-  - dependency-name: Microsoft.EntityFrameworkCore
-    versions:
-    - ">= 3.a"
-    - "< 4"
-  - dependency-name: Microsoft.EntityFrameworkCore.Design
-    versions:
-    - ">= 3.a"
-    - "< 4"
-  - dependency-name: Microsoft.EntityFrameworkCore.InMemory
-    versions:
-    - ">= 3.a"
-    - "< 4"
-  - dependency-name: Microsoft.EntityFrameworkCore.Proxies
-    versions:
-    - ">= 3.a"
-    - "< 4"
-  - dependency-name: Microsoft.EntityFrameworkCore.Sqlite
-    versions:
-    - ">= 3.a"
-    - "< 4"
-  - dependency-name: Microsoft.EntityFrameworkCore.SqlServer
-    versions:
-    - ">= 3.a"
-    - "< 4"
-  - dependency-name: Microsoft.EntityFrameworkCore.Tools
-    versions:
-    - ">= 3.a"
-    - "< 4"
-  - dependency-name: Microsoft.Extensions.Configuration.Json
-    versions:
-    - ">= 3.a"
-    - "< 4"
-  - dependency-name: Microsoft.VisualStudio.Web.CodeGeneration.Design
-    versions:
-    - ">= 3.a"
-    - "< 4"
 - package-ecosystem: npm
   directory: "/ntbs-service"
   schedule:
