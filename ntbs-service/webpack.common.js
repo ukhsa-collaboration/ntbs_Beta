@@ -41,21 +41,18 @@ module.exports = {
         test: /\.(sc|c)ss$/,
         use: [
           {
-            loader: MiniCssExtractPlugin.loader
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: process.env.NODE_ENV === 'development',
+            },
           },
           "css-loader",
           "sass-loader"
         ]
       },
-      {
-        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-        use: {
-            loader: 'url-loader',
-            options: {
-              limit: 10_000, // bytes
-              publicPath: './'
-            }
-        }
+      { 
+          test: /\.(png|woff|woff2|eot|ttf|svg)$/, 
+          loader: 'url-loader?limit=100000' 
       }
     ]
   },

@@ -19,15 +19,12 @@ In this directory, run:
 
 - `git submodule update --init --recursive` to recursively initialise and update submodules, if this was not done as part of the cloning process
 - `dotnet restore` and `npm install` to pull in dependencies
-- `npm run build` to compile frontend assets through webpack
 - `dotnet run` to launch the webserver locally
-- `dotnet watch run` to launch the webserver locally with hot-reloading of non-webpack-managed changes enabled
+- `dotnet watch run` to launch the webserver locally with hot-reloading enabled
 
 Make sure to get the dev secrets from Azure (see [dev mode secrets](#dev-mode-secrets)) to connect to Azure dbs.
 
-Hot module reloading was supported until the .NET 5 upgrade (NTBS-2074, #1022) but was removed as part of NTBS-1768.
-This was because in .NET 5 `UseWebpackDevMiddleware` was removed, see [here](https://github.com/dotnet/AspNetCore/issues/12890)
-for a discussion of this change.
+The frontend assets are compiled through Webpack, with hot-reload enabled automatically in development mode.
 
 ### Debugging
 
