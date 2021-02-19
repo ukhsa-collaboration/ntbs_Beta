@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,8 +57,8 @@ namespace ntbs_service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // This was helpful for identifying issues with ADFS login - but shouldn't be on usually
-            // IdentityModelEventSource.ShowPII = true;
+            // This was helpful for identifying issues with ADFS login - but shouldn't be on usually 
+            // IdentityModelEventSource.ShowPII = true; 
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.All;
@@ -108,7 +109,7 @@ namespace ntbs_service
 
             Log.Information($"Basic Auth Enabled: {basicAuthEnabled}");
             Log.Information($"Azure Ad Auth Enabled: {azureAdAuthEnabled}");
-
+            
             var baseUserGroupRole = adfsConfig["BaseUserGroup"];
 
 
@@ -120,8 +121,8 @@ namespace ntbs_service
             }
             else
                 UseAdfsAuthentication(services, adfsConfig);
-
-
+                
+            
 
             services.AddMvc(options =>
                 {
@@ -152,7 +153,7 @@ namespace ntbs_service
             services.AddDbContext<NtbsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ntbsContext"))
             );
-
+            
             services.AddSingleton<NtbsContextDesignTimeFactory>();
 
             var auditDbConnectionString = Configuration.GetConnectionString("auditContext");
@@ -160,7 +161,7 @@ namespace ntbs_service
             services.AddDbContext<AuditDatabaseContext>(options =>
                 options.UseSqlServer(auditDbConnectionString)
             );
-
+            
             // Add a DbContext for Data Protection key storage
             services.AddDbContext<KeysContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("keysContext")));
@@ -285,7 +286,7 @@ namespace ntbs_service
                     };
                 })
                 .AddCookie(options => { options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null; });
-
+                
 
             if (setupDummyAuth)
             {
@@ -311,9 +312,9 @@ namespace ntbs_service
                     options.CallbackPath =  azureAdConfig["CallbackPath"];
                     options.CorrelationCookie.SameSite = SameSiteMode.None;
                     options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
-
+                    
                     options.Events = new OpenIdConnectEvents();
-                    options.Events.OnTokenValidated += async context =>
+                    options.Events.OnTokenValidated += async context => 
                     {
                         var username = context.Principal.Username();
                         if (username == null) {
@@ -395,7 +396,7 @@ namespace ntbs_service
                                             context.UserName,
                                             context.Options.ClaimsIssuer),
                                         new Claim(ClaimTypes.Role, adfsOptions.BaseUserGroup, ClaimValueTypes.String),
-
+                                        
                                         new Claim(ClaimTypes.Role, groupAdmin, ClaimValueTypes.String),
                                         new Claim(ClaimTypes.Role, groupDev, ClaimValueTypes.String)
                                     };
@@ -439,11 +440,11 @@ namespace ntbs_service
             {
                 services.AddScoped<IAdImportService, AzureAdImportService>();
             }
-            else
+            else 
             {
                 services.AddScoped<IAdImportService, AdImportService>();
             }
-
+            
         }
 
         private void AddClusterService(IServiceCollection services)
@@ -514,12 +515,16 @@ namespace ntbs_service
             {
                 app.UseForwardedHeaders();
                 app.UseDeveloperExceptionPage();
+                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                {
+                    HotModuleReplacement = true, ConfigFile = "webpack.dev.js"
+                });
                 // We only need to turn this on in development, as in production this
                 // This behaviour is by default provided by the nginx ingress
                 // (see https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#server-side-https-enforcement-through-redirect)
                 // (also see  HSTS setting below)
                 app.UseHttpsRedirection();
-
+                
             }
             else
             {
@@ -546,9 +551,9 @@ namespace ntbs_service
                     // 400s get thrown e.g. on antiforgery token validation failures. In those cases we don't have
                     // an exception logged in Sentry, so we want to log at Warning level to make sure we are able to
                     // identify and cure false positives.
-                    // Otherwise setting to Information to prevent duplicated exceptions in sentry.
+                    // Otherwise setting to Information to prevent duplicated exceptions in sentry. 
                     options.GetLevel = (context, _, __) => context.Response.StatusCode == StatusCodes.Status400BadRequest
-                        ? LogEventLevel.Warning
+                        ? LogEventLevel.Warning 
                         : LogEventLevel.Information;
                 });
             }
@@ -556,12 +561,12 @@ namespace ntbs_service
             app.UseAuthentication();
             app.UseCookiePolicy();
             app.UseSession();
-
+            
             if (!Env.IsEnvironment("CI"))
             {
                 app.UseMiddleware<ActivityDetectionMiddleware>();
             }
-
+            
             if (Configuration.GetValue<bool>(Constants.AuditEnabledConfigValue))
             {
                 app.UseMiddleware<AuditGetRequestMiddleWare>();

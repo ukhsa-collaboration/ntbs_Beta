@@ -1,11 +1,10 @@
-﻿@use "../../node_modules/govuk-frontend/govuk/all.scss" with (
-    $govuk-assets-path: "../../node_modules/govuk-frontend/govuk/assets/"
-);
-
-@import "./reset.scss";
+﻿@import "./reset.scss";
+// Need to override fontHandler to prevent 404s when looking for the GDS specific fonts
+@import "./fonts/govukFontHandler.scss";
 // We're importing the raw scss instaed of a packaged css bundle since we're using some of the dynamic elements ourselves (colour variables, functions etc)
 @import "../../node_modules/nhsuk-frontend/packages/nhsuk.scss";
 // Govuk css - needed for things like conditionally revealed radios sections
+@import "../../node_modules/govuk-frontend/govuk/all.scss";
 @import "../../node_modules/vue-accessible-modal/dist/index.css";
 @import "./checkboxes.scss";
 @import "./buttons.scss";
@@ -46,15 +45,15 @@ a.navbar-brand {
     size: 330mm 427mm;
     margin: 10mm;
   }
-
+  
   .no-print {
     display: none;
   }
-
+  
   .main-wrapper {
     width: 1100px;
   }
-
+  
   .nhsuk-grid-row:not(.allow-page-break) {
     page-break-inside: avoid;
   }
@@ -219,7 +218,7 @@ body {
 .nhsuk-table-responsive {
     margin-top: 18px;
     margin-bottom: 40px;
-
+    
     @media (min-width: 40.0625em) {
         margin-top: 18px;
         margin-bottom: 40px;
@@ -250,19 +249,19 @@ body {
   margin-bottom: 12px;
 }
 
-/* Overrides the coming soon a tag so that link is not displayed. */
+/* Overrides the coming soon a tag so that link is not displayed. */ 
 @media print {
   a:after {
       content: none;
-  }
-
+  } 
+  
   /* If link should be displayed use display-link to explicitly declare behaviour. */
   a.display-link:after {
     color: #212b32;
     content: " (Link: " attr(href) ")";
     /* [1] */
     font-size: 14pt;
-    /* [2] */
+    /* [2] */ 
   }
 }
 
