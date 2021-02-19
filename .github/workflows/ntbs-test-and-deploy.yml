@@ -3,6 +3,7 @@ name: test and publish to int
 on:
   push:
     branches: [ master ]
+  workflow_dispatch: 
 
 jobs:
   test-and-publish-job:
@@ -49,6 +50,7 @@ jobs:
 
       # Deploy to int
       - name: Save kubeconfig
+        if: github.ref == 'refs/heads/master'
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         run: echo "$KUBE_CONFIG" > $GITHUB_WORKSPACE/.kubeconfig
