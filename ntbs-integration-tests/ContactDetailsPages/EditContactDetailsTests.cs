@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_integration_tests.TestServices;
@@ -20,15 +21,18 @@ namespace ntbs_integration_tests.ContactDetailsPages
         [Fact]
         public async Task EditDetails_ValidFields_Success()
         {
-            using (var client = Factory.WithUser<NationalTeamUser>().CreateClientWithoutRedirects())
+            var user = TestUser.NationalTeamUser;
+            using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
             {
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(UserAuthentication.SchemeName);
                 // Arrange
                 var initialPage = await client.GetAsync(PageRoute);
                 var initialDocument = await GetDocumentAsync(initialPage);
 
                 var formData = new Dictionary<string, string>
                 {
-                    ["ContactDetails.Username"] = Utilities.NATIONAL_TEAM_USER_EMAIL,
+                    ["ContactDetails.Username"] = user.Username,
                     ["ContactDetails.JobTitle"] = "Teacher",
                     ["ContactDetails.PhoneNumberPrimary"] = "0888192311",
                     ["ContactDetails.PhoneNumberSecondary"] = "0123871623",
@@ -48,7 +52,8 @@ namespace ntbs_integration_tests.ContactDetailsPages
         [Fact]
         public async Task EditDetails_InvalidFields_DisplayErrors()
         {
-            using (var client = Factory.WithUser<NationalTeamUser>().CreateClientWithoutRedirects())
+            var user = TestUser.NationalTeamUser;
+            using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
             {
                 // Arrange
                 var initialPage = await client.GetAsync(PageRoute);
@@ -56,7 +61,7 @@ namespace ntbs_integration_tests.ContactDetailsPages
 
                 var formData = new Dictionary<string, string>
                 {
-                    ["ContactDetails.Username"] = Utilities.NATIONAL_TEAM_USER_EMAIL,
+                    ["ContactDetails.Username"] = user.Username,
                     ["ContactDetails.JobTitle"] = "¬Teacher",
                     ["ContactDetails.PhoneNumberPrimary"] = "¬0888192311",
                     ["ContactDetails.PhoneNumberSecondary"] = "¬0123871623",
@@ -90,7 +95,8 @@ namespace ntbs_integration_tests.ContactDetailsPages
         [Fact]
         public async Task EditDetails_EditingOtherUser_IsForbidden()
         {
-            using (var client = Factory.WithUser<NationalTeamUser>().CreateClientWithoutRedirects())
+            var user = TestUser.NationalTeamUser;
+            using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
             {
                 // Arrange
                 var initialPage = await client.GetAsync(PageRoute);

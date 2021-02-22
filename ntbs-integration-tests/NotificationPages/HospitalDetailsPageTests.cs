@@ -346,8 +346,8 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var result = await response.Content.ReadAsStringAsync();
             var filteredLists = JsonConvert.DeserializeObject<FilteredHospitalDetailsPageSelectLists>(result);
-            Assert.Equal(Utilities.CASEMANAGER_ABINGDON_EMAIL, filteredLists.CaseManagers.First().Value);
-            Assert.Equal(Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID, filteredLists.Hospitals.First().Value.ToUpperInvariant());
+            Assert.Contains(Utilities.CASEMANAGER_ABINGDON_EMAIL, filteredLists.CaseManagers.Select(x => x.Value));
+            Assert.Contains(Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID, filteredLists.Hospitals.Select(x => x.Value.ToUpperInvariant()));
         }
         
         [Fact]

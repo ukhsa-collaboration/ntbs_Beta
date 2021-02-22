@@ -8,6 +8,8 @@ using ntbs_service.Properties;
 
 namespace ntbs_service.Authentication
 {
+    // This class is used to artificially authenticate requests when running tests.
+    // Tech debt: we should move this out of production code.
     public class DummyAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         public static readonly string Name = "DummyAuth";
