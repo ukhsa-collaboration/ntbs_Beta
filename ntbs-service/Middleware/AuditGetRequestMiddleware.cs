@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -29,13 +30,16 @@ namespace ntbs_service.Middleware
             var request = context.Request;
             var response = context.Response;
 
-            if (response.StatusCode == StatusCodes.Status200OK && request.Method == "GET" && request.Path.Value.Contains("Notifications"))
+            var pathArray = request.Path.Value.ToLower().Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+            if (response.StatusCode == StatusCodes.Status200OK
+                && request.Method == "GET"
+                && pathArray.Contains("notifications"))
             {
                 // We only want to audit reads of pages, i.e. where paths are of form Notifications/{id} or /Notifications/{id}/Edit/{modelName}
                 // We also make get requests for validation etc (which have longer paths), so ensure we ignore these here
-                var pathArray = request.Path.Value.Split('/');
                 var maxIndex = pathArray.Length - 1;
-                var notificationIndex = Array.IndexOf(pathArray, "Notifications");
+                var notificationIndex = Array.IndexOf(pathArray, "notifications");
                 var shouldAudit = (maxIndex > notificationIndex && maxIndex <= notificationIndex + 3);
 
                 if (shouldAudit && int.TryParse(pathArray[notificationIndex + 1], out var id))

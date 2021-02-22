@@ -15,7 +15,7 @@ namespace ntbs_service.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (!context.Request.Path.Value.Contains("Heartbeat"))
+            if (!context.Request.Path.Value.ToLower().Contains("heartbeat"))
             {
                 SessionStateHelper.UpdateSessionActivity(context.Session);
             }
