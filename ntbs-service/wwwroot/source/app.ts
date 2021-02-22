@@ -95,11 +95,6 @@ new Vue({
     el: "#app",
 });
 
-if (config.env === "development") {
-    // Enables ASP hot reload
-    console.log("RUNNING IN DEVELOPMENT MODE - Accepting hot reload");
-    module.hot.accept();
-}
 cssVars();
 govUkJsInitAll();
 
