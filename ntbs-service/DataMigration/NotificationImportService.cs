@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,7 +6,9 @@ using Hangfire.Server;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration.Exceptions;
 using ntbs_service.Jobs;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 using Sentry;
 using Serilog;
@@ -40,6 +42,7 @@ namespace ntbs_service.DataMigration
         private readonly IMigrationRepository _migrationRepository;
         private readonly IMigratedNotificationsMarker _migratedNotificationsMarker;
         private readonly ISpecimenService _specimenService;
+        private readonly INotificationClusterService _notificationClusterService;
         private readonly IImportValidator _importValidator;
 
         public NotificationImportService(INotificationMapper notificationMapper,
@@ -50,7 +53,8 @@ namespace ntbs_service.DataMigration
                              IMigrationRepository migrationRepository,
                              IMigratedNotificationsMarker migratedNotificationsMarker,
                              ISpecimenService specimenService,
-                             IImportValidator importValidator)
+                             IImportValidator importValidator,
+                             INotificationClusterService notificationClusterService)
         {
             sentryHub.ConfigureScope(s =>
             {
@@ -65,6 +69,7 @@ namespace ntbs_service.DataMigration
             _migratedNotificationsMarker = migratedNotificationsMarker;
             _specimenService = specimenService;
             _importValidator = importValidator;
+            _notificationClusterService = notificationClusterService;
         }
 
         public async Task<IList<ImportResult>> ImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate)
@@ -181,6 +186,7 @@ namespace ntbs_service.DataMigration
                 await _migratedNotificationsMarker.MarkNotificationsAsImportedAsync(savedNotifications);
                 importResult.NtbsIds = savedNotifications.ToDictionary(x => x.LegacyId, x => x.NotificationId);
                 await ImportReferenceLabResultsAsync(context, requestId, savedNotifications, importResult);
+                await UpdateClusterInformation(context, requestId, savedNotifications);
 
                 var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));
                 _logger.LogSuccess(context, requestId, $"Imported notifications have following Ids: {newIdsString}");
@@ -245,6 +251,40 @@ namespace ntbs_service.DataMigration
                 }
             }
             return legacyIdsToImport;
+        }
+
+        private async Task UpdateClusterInformation(
+            PerformContext context,
+            string requestId,
+            List<Notification> savedNotifications)
+        {
+            foreach (var notification in savedNotifications)
+            {
+                var ntbsNotificationId = notification.NotificationId;
+                if (!string.IsNullOrWhiteSpace(notification.ETSID)
+                    && int.TryParse(notification.ETSID, out var etsNotificationId))
+                {
+                    var clusterData = await _notificationClusterService.GetNotificationClusterValue(etsNotificationId);
+                    await UpdateClusterInformation(context, requestId, notification, clusterData);
+                    await _notificationClusterService.SetNotificationClusterValue(etsNotificationId, ntbsNotificationId);
+                }
+            }
+        }
+
+        private async Task UpdateClusterInformation(
+            PerformContext context,
+            string requestId,
+            Notification notification,
+            NotificationClusterValue clusterData)
+        {
+            if (clusterData != null)
+            {
+                notification.ClusterId = clusterData.ClusterId;
+                await _notificationRepository.SaveChangesAsync(
+                    NotificationAuditType.SystemEdited,
+                    AuditService.AuditUserSystem);
+                _logger.LogSuccess(context, requestId, $"Imported notification with ID {notification.NotificationId} into cluster with ID {clusterData.ClusterId}");
+            }
         }
     }
 }

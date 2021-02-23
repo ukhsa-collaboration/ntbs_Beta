@@ -10,6 +10,8 @@ namespace ntbs_service.Services
     public interface INotificationClusterService
     {
         Task<IEnumerable<NotificationClusterValue>> GetNotificationClusterValues();
+        Task<NotificationClusterValue> GetNotificationClusterValue(int etsNotificationId);
+        Task SetNotificationClusterValue(int etsNotificationId, int ntbsNotificationId);
     }
     
     public class NotificationClusterService : INotificationClusterService
@@ -33,6 +35,33 @@ namespace ntbs_service.Services
             {
                 connection.Open();
                 return await connection.QueryAsync<NotificationClusterValue>(query);
+            }
+        }
+
+        public async Task<NotificationClusterValue> GetNotificationClusterValue(int etsNotificationId)
+        {
+            var query = $@"
+                SELECT
+                    [{nameof(NotificationClusterValue.NotificationId)}]
+                    ,[{nameof(NotificationClusterValue.ClusterId)}]
+                FROM [dbo].[NotificationClusterMatch]
+                WHERE [{nameof(NotificationClusterValue.NotificationId)}] = @etsNotificationId";
+
+            using (var connection = new SqlConnection(_reportingDbConnectionString))
+            {
+                connection.Open();
+                return await connection.QuerySingleOrDefaultAsync<NotificationClusterValue>(query, new { etsNotificationId });
+            }
+        }
+
+        public async Task SetNotificationClusterValue(int etsNotificationId, int ntbsNotificationId)
+        {
+            using (var connection = new SqlConnection(_reportingDbConnectionString))
+            {
+                connection.Open();
+                await connection.ExecuteAsync(
+                    @"EXEC [dbo].[uspUpdateNotificationClusterMatchWithNtbsId] @etsNotificationId, @ntbsNotificationId;",
+                    new { etsNotificationId, ntbsNotificationId });
             }
         }
     }
