@@ -35,7 +35,7 @@
                     TB Service
                 </span>
                 <div>
-                    @Model.TransferAlert.TbServiceName
+                    @Model.TransferAlert.TbService?.Name
                 </div>
             </nhs-grid-column>
 
@@ -44,7 +44,7 @@
                     Case manager
                 </span>
                 <div>
-                    @Model.TransferAlert.CaseManagerFullName
+                    @Model.TransferAlert.CaseManager.DisplayName
                 </div>
             </nhs-grid-column>
         </nhs-grid-row>

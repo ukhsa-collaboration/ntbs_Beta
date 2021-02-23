@@ -3,6 +3,7 @@ using ntbs_service.Models.Validations;
 using System.ComponentModel.DataAnnotations;
 using EFAuditer;
 using ntbs_service.Helpers;
+using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.Models.Entities.Alerts
 
@@ -37,5 +38,11 @@ namespace ntbs_service.Models.Entities.Alerts
 
         public string RootEntityType => RootEntities.Notification;
         public string RootId => NotificationId.ToString();
+        [Display(Name = "TB Service")]
+        public string TbServiceCode { get; set; }
+        public virtual TBService TbService { get; set; }
+        [Display(Name = "Case Manager")]
+        public string CaseManagerUsername { get; set; }
+        public virtual User CaseManager { get; set; }
     }
 }

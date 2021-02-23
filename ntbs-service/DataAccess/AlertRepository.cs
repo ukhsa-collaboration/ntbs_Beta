@@ -16,8 +16,7 @@ namespace ntbs_service.DataAccess
 
         Task<DataQualityPotentialDuplicateAlert> GetDuplicateAlertByNotificationIdAndDuplicateId(int notificationId,
             int duplicateId);
-        Task<IList<Alert>> GetOpenAlertsForNotificationAsync(int notificationId);
-        Task<IList<Alert>> GetOpenAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
+        IQueryable<Alert> GetOpenAlertsForNotificationIQueryable(int notificationId);
         Task<IList<UnmatchedLabResultAlert>> GetAllOpenUnmatchedLabResultAlertsAsync();
         Task<DataQualityDraftAlert> GetOpenDraftAlertForNotificationAsync(int notificationId);
         Task AddAlertAsync(Alert alert);
@@ -26,6 +25,7 @@ namespace ntbs_service.DataAccess
         Task CloseAlertRangeAsync(IEnumerable<Alert> alerts);
         Task CloseUnmatchedLabResultAlertsForSpecimenIdAsync(string specimenId);
         Task SaveAlertChangesAsync(NotificationAuditType auditType = NotificationAuditType.Edited);
+        IQueryable<Alert> GetBaseOpenAlertIQueryable();
     }
 
     public class AlertRepository : IAlertRepository
@@ -68,15 +68,6 @@ namespace ntbs_service.DataAccess
                          && m.DuplicateId == duplicateId);
         }
 
-        public async Task<IList<Alert>> GetOpenAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices)
-        {
-            return await GetBaseOpenAlertIQueryable()
-                .Where(a => tbServices.Contains(a.TbServiceCode))
-                .Where(a => a.NotificationId == null || a.Notification.NotificationStatus != NotificationStatus.Draft || a.AlertType == AlertType.DataQualityDraft)
-                .OrderByDescending(a => a.CreationDate)
-                .ToListAsync();
-        }
-
         public async Task<IList<UnmatchedLabResultAlert>> GetAllOpenUnmatchedLabResultAlertsAsync()
         {
             return await GetBaseOpenAlertIQueryable()
@@ -93,20 +84,16 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync();
         }
         
-        public async Task<IList<Alert>> GetOpenAlertsForNotificationAsync(int notificationId)
+        public IQueryable<Alert> GetOpenAlertsForNotificationIQueryable(int notificationId)
         {
-            return await GetBaseOpenAlertIQueryable()
-                .Where(a => a.NotificationId == notificationId)
-                .ToListAsync();
+            return GetBaseOpenAlertIQueryable()
+                .Where(a => a.NotificationId == notificationId);
         }
 
-        private IQueryable<Alert> GetBaseOpenAlertIQueryable()
+        public IQueryable<Alert> GetBaseOpenAlertIQueryable()
         {
             return _context.Alert
-                .Where(n => n.AlertStatus != AlertStatus.Closed)
-                .Include(n => n.TbService)
-                    .ThenInclude(s => s.PHEC)
-                .Include(n => n.CaseManager);
+                .Where(n => n.AlertStatus != AlertStatus.Closed);
         }
 
         public async Task AddAlertAsync(Alert alert)

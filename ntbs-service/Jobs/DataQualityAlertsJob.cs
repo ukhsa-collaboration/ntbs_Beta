@@ -87,11 +87,6 @@ namespace ntbs_service.Jobs
                         T alert = (T)Activator.CreateInstance(typeof(T));
                         alert.NotificationId = n.NotificationId;
                         alert.CreationDate = now;
-                        alert.TbServiceCode = n.HospitalDetails?.TBServiceCode;
-                        if (alert.AlertType != AlertType.TransferRequest)
-                        {
-                            alert.CaseManagerUsername = n.HospitalDetails?.CaseManagerUsername;
-                        }
 
                         return (Alert) alert;
                     })
