@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
 
 namespace ntbs_service.Services
 {
-    public class MockNotificationClusterService : INotificationClusterService
+    public class MockNotificationClusterRepository : INotificationClusterRepository
     {
         private readonly List<NotificationClusterValue> _notificationClusterValues;
 
-        public MockNotificationClusterService(List<NotificationClusterValue> notificationClusterValues)
+        public MockNotificationClusterRepository(List<NotificationClusterValue> notificationClusterValues)
         {
             _notificationClusterValues = notificationClusterValues;
         }

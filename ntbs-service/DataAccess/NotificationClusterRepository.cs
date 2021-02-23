@@ -5,20 +5,20 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using ntbs_service.Models;
 
-namespace ntbs_service.Services
+namespace ntbs_service.DataAccess
 {
-    public interface INotificationClusterService
+    public interface INotificationClusterRepository
     {
         Task<IEnumerable<NotificationClusterValue>> GetNotificationClusterValues();
         Task<NotificationClusterValue> GetNotificationClusterValue(int etsNotificationId);
         Task SetNotificationClusterValue(int etsNotificationId, int ntbsNotificationId);
     }
     
-    public class NotificationClusterService : INotificationClusterService
+    public class NotificationClusterRepository : INotificationClusterRepository
     {
         private readonly string _reportingDbConnectionString;
 
-        public NotificationClusterService(IConfiguration configuration)
+        public NotificationClusterRepository(IConfiguration configuration)
         {
             _reportingDbConnectionString = configuration.GetConnectionString(Constants.DbConnectionStringReporting);
         }

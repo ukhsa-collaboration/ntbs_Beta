@@ -454,12 +454,12 @@ namespace ntbs_service
                 var notificationClusterValues = new List<NotificationClusterValue>();
                 clusterMatchingConfig.Bind("MockedNotificationClusterValues", notificationClusterValues);
 
-                services.AddScoped<INotificationClusterService>(sp =>
-                    new MockNotificationClusterService(notificationClusterValues));
+                services.AddScoped<INotificationClusterRepository>(sp =>
+                    new MockNotificationClusterRepository(notificationClusterValues));
             }
             else
             {
-                services.AddScoped<INotificationClusterService, NotificationClusterService>();
+                services.AddScoped<INotificationClusterRepository, NotificationClusterRepository>();
             }
         }
 
