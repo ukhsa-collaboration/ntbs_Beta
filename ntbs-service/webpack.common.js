@@ -28,10 +28,7 @@ module.exports = {
               options: {
                   presets: [
                       [
-                      "@babel/preset-env",
-                      {
-                          "targets": {"ie": 11}
-                      }
+                          "@babel/preset-env"
                       ]
                   ]
               }

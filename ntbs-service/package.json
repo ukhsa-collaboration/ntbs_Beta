@@ -8,6 +8,10 @@
     "build": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js"
   },
+  "browserslist": [
+    "defaults",
+    "IE 11"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
