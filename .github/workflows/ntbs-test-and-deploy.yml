@@ -2,7 +2,7 @@ name: test and publish to int
 
 on:
   push:
-    branches: [ master ]
+    branches: [ NTBS-2074 ]
 
 jobs:
   test-and-publish-job:
@@ -16,23 +16,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: true
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 2.2
-      
-      # Run all the tests
-      - name: Run unit tests
-        working-directory: ntbs-service-unit-tests
-        run: dotnet test
-      - name: Run unit tests (EF auditer)
-        working-directory: EFAuditer-tests
-        run: dotnet test
-      - name: Run integration tests
-        if: "!contains(github.event.head_commit.message, 'skip int tests')"
-        working-directory: ntbs-integration-tests
-        run: dotnet test
-      # TODO run ui tests
 
       # Build and release
       
@@ -46,46 +29,3 @@ jobs:
           # auth token based on https://sentry.io/settings/phe-ntbs/developer-settings/jenkins-build-40d229/
           build_extra_args: ${{ format('--build-arg RELEASE={0} --build-arg SENTRY_AUTH_TOKEN={1}', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_AUTH_TOKEN) }}
           image_tag: ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
-
-      # Deploy to int
-      - name: Save kubeconfig
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-        run: echo "$KUBE_CONFIG" > $GITHUB_WORKSPACE/.kubeconfig
-      - name: Deploy to int
-        uses: stefanprodan/kube-tools@v1
-        env:
-          KUBECONFIG: ${{ github.workspace }}/.kubeconfig
-        with:
-          kubectl: 1.18.2
-          command: |
-            chmod +x ./scripts/release.sh
-            ./scripts/release.sh int ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
-
-      # Notify slack
-      - name: The job has succeeded
-        if: ${{ success() }}
-        uses: rtCamp/action-slack-notify@v2.1.0
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_CHANNEL: '#dev-ci'
-          SLACK_USERNAME: github actions
-          SLACK_COLOR: '#23b828' #green
-          SLACK_MESSAGE: New deployment on int ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
-          SLACK_TITLE: ':green_heart: :computer: Build succeeded'
-          SLACK_ICON_EMOJI: ':octopus:'
-          SLACK_FOOTER: ''
-      
-      - name: The job has failed
-        if: ${{ failure() }}
-        uses: rtCamp/action-slack-notify@v2.1.0
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_CHANNEL: '#dev-ci'
-          SLACK_USERNAME: github actions
-          SLACK_COLOR: '#d12121' #red
-          SLACK_MESSAGE: '@here Build failed'
-          SLACK_TITLE: ':red_circle: :computer: Build failed'
-          SLACK_ICON_EMOJI: ':octopus:'
-          SLACK_FOOTER: ''
-      
