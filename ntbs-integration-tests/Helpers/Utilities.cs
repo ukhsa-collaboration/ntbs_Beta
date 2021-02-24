@@ -309,7 +309,6 @@ namespace ntbs_integration_tests.Helpers
                 {
                     AlertId = ALERT_ID,
                     AlertStatus = AlertStatus.Open,
-                    TbServiceCode = PERMITTED_SERVICE_CODE,
                     CreationDate = DateTime.Now,
                     NotificationId = NOTIFIED_ID,
                     AlertType = AlertType.Test
@@ -354,7 +353,6 @@ namespace ntbs_integration_tests.Helpers
                     AlertType = AlertType.TransferRejected,
                     AlertId = TRANSFER_REJECTED_ID,
                     NotificationId = NOTIFIED_ID,
-                    TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                     AlertStatus = AlertStatus.Open
                 }
             };

@@ -44,7 +44,7 @@
                             @Html.DisplayNameFor(model => model.Alerts[0].AlertType)
                         </nhs-table-item>
                         <nhs-table-item>
-                            @Html.DisplayNameFor(model => model.Alerts[0].Notification.HospitalDetails.CaseManager.DisplayName)
+                            @Html.DisplayNameFor(model => model.Alerts[0].Notification.HospitalDetails.CaseManager)
                             <br />
                             @Html.DisplayNameFor(model => model.Alerts[0].Notification.HospitalDetails.TBServiceName)
                         </nhs-table-item>
@@ -76,12 +76,12 @@
                                     @Html.DisplayFor(_ => item.Action)
                                 </nhs-table-item>
                                 <nhs-table-item>
-                                    @if (!string.IsNullOrWhiteSpace(item.Notification.HospitalDetails.CaseManager.DisplayName))
+                                    @if (!string.IsNullOrWhiteSpace(item.Notification?.HospitalDetails?.CaseManager?.DisplayName))
                                     {
                                         @item.Notification.HospitalDetails.CaseManager.DisplayName
                                         <br />
                                     }
-                                    @item.Notification.HospitalDetails.TBServiceName
+                                    @item.Notification?.HospitalDetails?.TBServiceName
                                 </nhs-table-item>
                                 <nhs-table-item>
                                     @if (!item.NotDismissable)

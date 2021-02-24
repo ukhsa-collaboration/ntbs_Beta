@@ -103,8 +103,6 @@ namespace ntbs_service_unit_tests.Services
             Assert.Equal(AlertStatus.Open, alert.AlertStatus);
             Assert.Equal(1, alert.NotificationId);
             Assert.Equal("1", alert.SpecimenId);
-            Assert.Equal("testUsername@email.com", alert.CaseManagerUsername);
-            Assert.Equal("AB0000001", alert.TbServiceCode);
         }
     }
 }
