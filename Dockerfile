@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /app
 
 # restore audit lib (in a separate layer to speed up the build)
@@ -44,7 +44,7 @@ ARG RELEASE
 RUN npm run build:prod
 
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
 
 RUN apt-get update \
     && apt-get install -y krb5-user \
