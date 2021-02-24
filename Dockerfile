@@ -58,7 +58,7 @@ EXPOSE 8080
 ENV ASPNETCORE_URLS=http://*:8080
 
 WORKDIR /app
-COPY --from=build /app/ntbs-service/out ./
+COPY --from=build /app/out ./
 COPY --from=build-frontend /app/wwwroot/dist ./wwwroot/dist/
 
 ARG RELEASE
