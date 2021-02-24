@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
@@ -147,7 +148,7 @@ namespace ntbs_service.Services
 
         public async Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId, ClaimsPrincipal user)
         {
-            var alerts = _alertRepository.GetOpenAlertsForNotificationIQueryable(notificationId);
+            var alerts = await _alertRepository.GetOpenAlertsForNotificationAsync(notificationId);
             var filteredAlerts = await _authorizationService.FilterAlertsForUserAsync(user, alerts);
 
             return filteredAlerts;

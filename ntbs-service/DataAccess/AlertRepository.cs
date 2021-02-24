@@ -16,7 +16,7 @@ namespace ntbs_service.DataAccess
 
         Task<DataQualityPotentialDuplicateAlert> GetDuplicateAlertByNotificationIdAndDuplicateId(int notificationId,
             int duplicateId);
-        IQueryable<Alert> GetOpenAlertsForNotificationIQueryable(int notificationId);
+        Task<IList<Alert>> GetOpenAlertsForNotificationAsync(int notificationId);
         Task<IList<UnmatchedLabResultAlert>> GetAllOpenUnmatchedLabResultAlertsAsync();
         Task<DataQualityDraftAlert> GetOpenDraftAlertForNotificationAsync(int notificationId);
         Task AddAlertAsync(Alert alert);
@@ -84,10 +84,11 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync();
         }
         
-        public IQueryable<Alert> GetOpenAlertsForNotificationIQueryable(int notificationId)
+        public async Task<IList<Alert>> GetOpenAlertsForNotificationAsync(int notificationId)
         {
-            return GetBaseOpenAlertIQueryable()
-                .Where(a => a.NotificationId == notificationId);
+            return await GetBaseOpenAlertIQueryable()
+                .Where(a => a.NotificationId == notificationId)
+                .ToListAsync();
         }
 
         public IQueryable<Alert> GetBaseOpenAlertIQueryable()
