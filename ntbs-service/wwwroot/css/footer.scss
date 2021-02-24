@@ -3,6 +3,8 @@
 .footer {
     width: 100%;
     position: absolute;
+    overflow: auto;
+    max-height: 150px;
     bottom: 0;
     padding: 10px;
     background: $lighter-grey;
