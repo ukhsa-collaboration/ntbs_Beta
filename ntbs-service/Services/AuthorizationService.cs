@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
-using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -30,7 +28,7 @@ namespace ntbs_service.Services
     {
         private readonly IUserService _userService;
         private UserPermissionsFilter _userPermissionsFilter;
-        private INotificationRepository _notificationRepository;
+        private readonly INotificationRepository _notificationRepository;
 
         public AuthorizationService(IUserService userService, INotificationRepository notificationRepository)
         {
@@ -41,10 +39,7 @@ namespace ntbs_service.Services
         public async Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert)
         {
             var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code).ToList();
-            var notificationIdsInUsersServices = _notificationRepository.GetBaseNotificationsIQueryable()
-                .Where(n => userTbServiceCodes.Contains(n.HospitalDetails.TBServiceCode))
-                .Select(n => n.NotificationId);
-            return AlertIsForNotificationInOrTransferToGivenServices(alert, userTbServiceCodes, notificationIdsInUsersServices);
+            return AlertIsForNotificationInOrTransferToGivenServices(alert, userTbServiceCodes);
         }
 
         public async Task SetFullAccessOnNotificationBannersAsync(
@@ -194,10 +189,7 @@ namespace ntbs_service.Services
         {
             var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code).ToList();
             var userType = _userService.GetUserType(user);
-            var notificationIdsInUsersServices = _notificationRepository.GetBaseNotificationsIQueryable()
-                .Where(n => userTbServiceCodes.Contains(n.HospitalDetails.TBServiceCode))
-                .Select(n => n.NotificationId);
-            alerts = alerts.Where(a => AlertIsForNotificationInOrTransferToGivenServices(a, userTbServiceCodes, notificationIdsInUsersServices)).ToList();
+            alerts = alerts.Where(a => AlertIsForNotificationInOrTransferToGivenServices(a, userTbServiceCodes)).ToList();
             if (userType == UserType.PheUser)
             {
                 alerts = alerts.Where(a => a.AlertType != AlertType.TransferRequest && 
@@ -211,8 +203,11 @@ namespace ntbs_service.Services
             return await _userService.GetUserPermissionsFilterAsync(user);
         }
 
-        private bool AlertIsForNotificationInOrTransferToGivenServices(Alert alert, ICollection<string> givenTbServiceCodes, IQueryable<int> notificationIdsInServices)
+        private bool AlertIsForNotificationInOrTransferToGivenServices(Alert alert, ICollection<string> givenTbServiceCodes)
         {
+            var notificationIdsInServices = _notificationRepository.GetBaseNotificationsIQueryable()
+                .Where(n => givenTbServiceCodes.Contains(n.HospitalDetails.TBServiceCode))
+                .Select(n => n.NotificationId);
             return (alert.NotificationId != null &&
                     alert.AlertType != AlertType.TransferRequest &&
                     notificationIdsInServices.Contains((int)alert.NotificationId)) ||
