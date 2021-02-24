@@ -56,6 +56,23 @@ spec:
                 key: connectionString
           - name: AdfsOptions__Wtrealm
             value: "https://ntbs-uat.61b431d7ea3041e89733.uksouth.aksapp.io/"
+          - name: AzureAdOptions__ClientId
+            valueFrom:
+              secretKeyRef:
+                name: uat-azuread-options
+                key: clientId
+          - name: AzureAdOptions__ClientSecret
+            valueFrom:
+              secretKeyRef:
+                name: uat-azuread-options
+                key: clientSecret
+          - name: AzureAdOptions__Authority
+            valueFrom:
+              secretKeyRef:
+                name: uat-azuread-options
+                key: authority
+          - name: AzureAdOptions__Enabled
+            value: "true"
           - name: LdapSettings__Password
             valueFrom:
               secretKeyRef:
