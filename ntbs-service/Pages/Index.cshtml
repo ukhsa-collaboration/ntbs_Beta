@@ -44,8 +44,13 @@
                             @Html.DisplayNameFor(model => model.Alerts[0].AlertType)
                         </nhs-table-item>
                         <nhs-table-item>
+<<<<<<< HEAD
                             @Html.DisplayNameFor(model => model.Alerts[0].Notification.HospitalDetails.CaseManager)
                             <br />
+=======
+                            @Html.DisplayNameFor(model => model.Alerts[0].Notification.HospitalDetails.CaseManagerName)
+                            <br/>
+>>>>>>> c500ac29... NTBS-2111: Fix when transfer requests should be shown
                             @Html.DisplayNameFor(model => model.Alerts[0].Notification.HospitalDetails.TBServiceName)
                         </nhs-table-item>
                         <nhs-table-item>
@@ -76,9 +81,9 @@
                                     @Html.DisplayFor(_ => item.Action)
                                 </nhs-table-item>
                                 <nhs-table-item>
-                                    @if (!string.IsNullOrWhiteSpace(item.Notification?.HospitalDetails?.CaseManager?.DisplayName))
+                                    @if (!string.IsNullOrWhiteSpace(item.Notification?.HospitalDetails?.CaseManagerName))
                                     {
-                                        @item.Notification.HospitalDetails.CaseManager.DisplayName
+                                        @item.Notification.HospitalDetails.CaseManagerName
                                         <br />
                                     }
                                     @item.Notification?.HospitalDetails?.TBServiceName

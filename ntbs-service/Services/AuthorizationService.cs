@@ -213,7 +213,8 @@ namespace ntbs_service.Services
 
         private bool AlertIsForNotificationInOrTransferToGivenServices(Alert alert, ICollection<string> givenTbServiceCodes, IList<int> notificationIdsInServices)
         {
-            return (alert.NotificationId != null && 
+            return (alert.NotificationId != null &&
+                    alert.AlertType != AlertType.TransferRequest &&
                     notificationIdsInServices.Contains((int)alert.NotificationId)) ||
                    (alert.AlertType == AlertType.TransferRequest &&
                     givenTbServiceCodes.Contains((alert as TransferAlert)?.TbServiceCode));
