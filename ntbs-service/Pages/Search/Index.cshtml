@@ -10,18 +10,18 @@
 <form-leave-checker></form-leave-checker>
 
 <nhs-width-container container-width="Standard">
-    <h1 class="search-header"> Search </h1>
     <div class="search-page">
         <form method="get" autocomplete="off">
             @{
                 var searchParametersError = !Model.ValidationService.IsValid("SearchParameters");
                 var searchParametersGroupState = searchParametersError ? Error : Standard;
             }
-            <nhs-form-group nhs-form-group-type=@searchParametersGroupState>
-                <nhs-fieldset aria-describedby="one-parameter-required-error">
-                    <span nhs-span-type="ErrorMessage" id="one-parameter-required-error"
-                        asp-validation-for="SearchParameters" has-error="@searchParametersError"></span>
-                    <br />
+            <nhs-fieldset aria-describedby="one-parameter-required-error">
+                <nhs-fieldset-legend nhs-legend-size="XLarge" is-page-heading="true"> Search </nhs-fieldset-legend>
+
+                <nhs-form-group nhs-form-group-type="@searchParametersGroupState" classes="nhsuk-u-margin-bottom-4">
+                    <span nhs-span-type="ErrorMessage" id="one-parameter-required-error" classes="nhsuk-u-margin-bottom-4"
+                            asp-validation-for="SearchParameters" has-error="@searchParametersError"></span>
 
                     @{
                         var idFilterError = !Model.ValidationService.IsValid("SearchParameters.IdFilter");
@@ -60,34 +60,41 @@
                         }
                         <nhs-form-group nhs-form-group-type=@dobGroupState classes="nhs-form-group--search-date">
                             <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error" classes="search-error"
-                                asp-validation-for="SearchParameters.PartialDob" has-error="@dobError"></span>
-                            <label nhs-label-type="Standard" classes="search-label--standard" for="dob"> Date of birth </label>
-                            <nhs-date-input id="dob" classes="date-input--search">
-                                <nhs-date-input-item>
-                                    <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
-                                        <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Day" classes="search-date-input-label">Day</label>
-                                        <input nhs-input-type="Date" fixed-width="Two" ref="dayInput"
-                                                is-error-input=@dobError asp-for="SearchParameters.PartialDob.Day" />
-                                    </nhs-form-group>
-                                </nhs-date-input-item>
-                                <nhs-date-input-item>
-                                    <nhs-form-group nhs-form-group-type="Standard"  classes="search-date-input">
-                                        <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Month" classes="search-date-input-label">Month</label>
-                                        <input nhs-input-type="Date" fixed-width="Two" ref="monthInput"
-                                                is-error-input=@dobError asp-for="SearchParameters.PartialDob.Month" />
-                                    </nhs-form-group>
-                                </nhs-date-input-item>
-                                <nhs-date-input-item>
-                                    <nhs-form-group nhs-form-group-type="Standard"  classes="search-date-input">
-                                        <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Year" classes="search-date-input-label">Year</label>
-                                        <input nhs-input-type="Date" fixed-width="Four" ref="yearInput"
-                                                is-error-input=@dobError asp-for="SearchParameters.PartialDob.Year" />
-                                    </nhs-form-group>
-                                </nhs-date-input-item>
-                            </nhs-date-input>
-                            <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint" classes="search-hint">
-                                Dates can be partial
-                            </nhs-hint>
+                                  asp-validation-for="SearchParameters.PartialDob" has-error="@dobError"></span>
+                            <nhs-fieldset classes="nhs-form-group--search-date">
+                                <nhs-fieldset-legend nhs-legend-size="Standard" classes="search-legend--standard">
+                                    <span class="nhsuk-label search-label--standard">
+                                        Date of birth
+                                    </span>
+                                </nhs-fieldset-legend>
+
+                                <nhs-date-input id="dob" classes="date-input--search">
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
+                                            <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Day" classes="search-date-input-label">Day</label>
+                                            <input nhs-input-type="Date" fixed-width="Two" ref="dayInput"
+                                                    is-error-input=@dobError asp-for="SearchParameters.PartialDob.Day" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard"  classes="search-date-input">
+                                            <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Month" classes="search-date-input-label">Month</label>
+                                            <input nhs-input-type="Date" fixed-width="Two" ref="monthInput"
+                                                    is-error-input=@dobError asp-for="SearchParameters.PartialDob.Month" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard"  classes="search-date-input">
+                                            <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Year" classes="search-date-input-label">Year</label>
+                                            <input nhs-input-type="Date" fixed-width="Four" ref="yearInput"
+                                                    is-error-input=@dobError asp-for="SearchParameters.PartialDob.Year" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                </nhs-date-input>
+                                <nhs-hint nhs-hint-type="Standard" id="partial-dob-dates-allowed-hint" classes="search-hint">
+                                    Dates can be partial
+                                </nhs-hint>
+                        </nhs-fieldset>
                         </nhs-form-group>
                     </date-input>
 
@@ -106,10 +113,9 @@
                             Enter at least two characters
                         </nhs-hint>
                     </nhs-form-group>
-                </nhs-fieldset>
-            </nhs-form-group>
-            <nhs-details display-text="Advanced options" nhs-details-type="Standard">
-                <div>
+                </nhs-form-group>
+
+                <nhs-details display-text="Advanced options" nhs-details-type="Standard">
                     <date-input inline-template>
                         @{
                             var notificationDateError = !Model.ValidationService.IsValid("SearchParameters.PartialNotificationDate");
@@ -117,8 +123,13 @@
                         }
                         <nhs-form-group nhs-form-group-type=@notificationDateGroupState classes="nhs-form-group--search-date">
                             <span ref="errorField" nhs-span-type="ErrorMessage" id="notification-date-error" classes="search-error"
-                                asp-validation-for="SearchParameters.PartialNotificationDate" has-error="@notificationDateError"></span>
-                                <label nhs-label-type="Standard" classes="search-label--long" for="notification-date"> Notification Date </label>
+                                  asp-validation-for="SearchParameters.PartialNotificationDate" has-error="@notificationDateError"></span>
+                            <nhs-fieldset classes="nhs-form-group--search-date">
+                                <nhs-fieldset-legend nhs-legend-size="Standard" classes="search-legend--long">
+                                    <span class="nhsuk-label search-label--long">
+                                        Notification Date
+                                    </span>
+                                </nhs-fieldset-legend>
                                 <nhs-date-input id="notification-date" classes="date-input--search">
                                     <nhs-date-input-item>
                                         <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
@@ -142,9 +153,10 @@
                                         </nhs-form-group>
                                     </nhs-date-input-item>
                                 </nhs-date-input>
-                            <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint" classes="search-hint">
+                            <nhs-hint nhs-hint-type="Standard" id="partial-notification-dates-allowed-hint" classes="search-hint">
                                 Dates can be partial
                             </nhs-hint>
+                            </nhs-fieldset>
                         </nhs-form-group>
                     </date-input>
 
@@ -157,15 +169,20 @@
                             asp-validation-for="SearchParameters.GivenName" has-error="@givenNameError"></span>
                         <label nhs-label-type="Standard" classes="search-label--long" asp-for="SearchParameters.GivenName"> Given Name</label>
                         <input is-error-input=@givenNameError nhs-input-type="Standard"
-                                asp-for="SearchParameters.GivenName" classes="nhsuk-input--width-10 search-input" 
+                                asp-for="SearchParameters.GivenName" classes="nhsuk-input--width-10 search-input"
                                 aria-describedby="two-character-given-name-hint" />
                         <nhs-hint nhs-hint-type="Standard" id="two-character-given-name-hint" classes="search-hint">
                             Enter at least two characters
                         </nhs-hint>
                     </nhs-form-group>
 
-                    <div class="search-sex-radios">
-                        <label nhs-label-type="Standard" classes="search-label--long" for="sex-radios"> Sex </label>
+                    <nhs-fieldset classes="search-sex-radios">
+                        <nhs-fieldset-legend nhs-legend-size="Standard" classes="search-legend--long">
+                            <span class="nhsuk-label search-label--long">
+                                Sex
+                            </span>
+                        </nhs-fieldset-legend>
+
                         <nhs-radios nhs-radios-type="Standard" classes="search-sex-radios" id="sex-radios">
                             @foreach (var sex in Model.Sexes)
                             {
@@ -186,7 +203,7 @@
                                 <label nhs-label-type="Radios" asp-for="SearchParameters.SexId" for="sexId-Any">Any</label>
                             </nhs-radios-item>
                         </nhs-radios>
-                    </div>
+                    </nhs-fieldset>
 
                     <div class="nhs-form-group--search">
                         <label nhs-label-type="Standard" classes="search-label--long" asp-for="SearchParameters.TBServiceCode"> TB service </label>
@@ -203,8 +220,8 @@
                             <option value="" selected>Select country</option>
                         </select>
                     </div>
-                </div>
-            </nhs-details>
+                </nhs-details>
+            </nhs-fieldset>
 
             <div class="submit-search-button-container">
                 <button nhs-button-type="Standard" type="submit" value="Search" classes="ntbsuk-button--primary submit-search-button" id="search-button" formaction="#search-results-section">
@@ -230,10 +247,10 @@
                 </a>
             </div>
             <p> To filter results, add more search terms and search again. </p>
-            <p> 
-                Search results are ordered with the records you can edit above those you cannot. 
+            <p>
+                Search results are ordered with the records you can edit above those you cannot.
                 <br/>
-                Draft notifications are displayed before submitted records. 
+                Draft notifications are displayed before submitted records.
             </p>
             <div class="create-notification-button-container">
                 <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button create-notification-button--right ntbsuk-button--primary" id="create-button">

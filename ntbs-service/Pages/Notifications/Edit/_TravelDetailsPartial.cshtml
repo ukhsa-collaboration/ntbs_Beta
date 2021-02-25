@@ -15,7 +15,7 @@
             </nhs-fieldset-legend>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios" v-on:focusout="validate">
                 <div class="nhsuk-radios__item">
-                    <input asp-for="TravelDetails.HasTravel" nhs-input-type="Radios" type="radio" value="@Status.Yes" 
+                    <input asp-for="TravelDetails.HasTravel" nhs-input-type="Radios" type="radio" value="@Status.Yes"
                            id="travelDetails-hasTravelYes" ref="hasDataYes" data-aria-controls="conditional-has-travel" />
                     <label for="travelDetails-hasTravelYes" nhs-label-type="Radios">
                         @Status.Yes
@@ -54,6 +54,9 @@
                                   id="travel-country1Id-error" ref="country1IdErrorRef" has-error="@hasCountry1IdError"></span>
                             <div ref="country1Id" aria-describedby="travel-country1Id-error">
                                 <autocomplete-select placeholder="@selectDropdownPlaceholder" inline-template>
+                                    <label asp-for="TravelDetails.Country1Id" nhs-label-type="Standard">
+                                        Most recent country travelled to
+                                    </label>
                                     <select asp-for="TravelDetails.Country1Id" asp-items="Model.HighTbIncidenceCountries" ref="selectElement">
                                         <option value=""></option>
                                     </select>
@@ -150,7 +153,7 @@
                         @Status.No
                     </label>
                 </div>
-                
+
                 <div class="nhsuk-radios__item">
                     <input asp-for="TravelDetails.HasTravel" nhs-input-type="Radios" type="radio" value="@Status.Unknown"
                             id="travelDetails-hasTravelUnknown" ref="hasDataUnknown" />

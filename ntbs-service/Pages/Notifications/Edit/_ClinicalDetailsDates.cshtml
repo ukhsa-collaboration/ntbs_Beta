@@ -146,7 +146,7 @@
                                     @healthcareSetting.GetDisplayName()
                                 </label>
                             </div>
-                        } 
+                        }
                         else
                         {
                             <div class="nhsuk-radios__item">
@@ -169,7 +169,7 @@
                                         </label>
                                         <input ref="inputField" v-on:blur="validate" is-error-input=@hasHealthcareDescriptionError nhs-input-type="Standard"
                                                fixed-width="Ten" asp-for="ClinicalDetails.HealthcareDescription" type="text">
-                                    </nhs-form-group>                   
+                                    </nhs-form-group>
                                 </validate-input>
                             </div>
                         }
@@ -419,34 +419,34 @@
                 </div>
             </nhs-fieldset>
         </nhs-form-group>
-    
-        <h2>@Html.DisplayNameFor(m => m.Notification.ClinicalDetails.IsPostMortem)</h2>
-            <nhs-fieldset>
-                <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
-                    <div class="nhsuk-radios__item">
-                        <input asp-for="ClinicalDetails.IsPostMortem" id="postmortem-yes" class="nhsuk-radios__input" type="radio" value="true" data-aria-controls="conditional-postmortem-conditional">
-                        <label class="nhsuk-label nhsuk-radios__label" for="postmortem-yes">
-                            Yes
-                        </label>
-                    </div>
-                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-postmortem-conditional">
-                        <label class="nhsuk-label" for="postmortem-save-button"> Please record the death outcome on the treatment events page </label>
-                        <button
-                            nhs-button-type="Standard"
-                            classes="ntbsuk-button--primary"
-                            name="SaveAndRouteToTreatmentEvents"
-                            value="SaveAndRouteToTreatmentEvents"
-                            id="postmortem-save-button">
-                            Save and go to treatment events
-                        </button>
-                    </div>
-                    <div class="nhsuk-radios__item">
-                        <input asp-for="ClinicalDetails.IsPostMortem" id="postmortem-no" class="nhsuk-radios__input" type="radio" value="false">
-                        <label class="nhsuk-label nhsuk-radios__label" for="postmortem-no">
-                            No
-                        </label>
-                    </div>
-                </div>
-            </nhs-fieldset>
+
+    <nhs-fieldset>
+        <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(m => m.ClinicalDetails.IsPostMortem)</nhs-fieldset-legend>
+        <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+            <div class="nhsuk-radios__item">
+                <input asp-for="ClinicalDetails.IsPostMortem" id="postmortem-yes" class="nhsuk-radios__input" type="radio" value="true" data-aria-controls="conditional-postmortem-conditional">
+                <label class="nhsuk-label nhsuk-radios__label" for="postmortem-yes">
+                    Yes
+                </label>
+            </div>
+            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-postmortem-conditional">
+                <p class="nhsuk-label"> Please record the death outcome on the treatment events page </p>
+                <button
+                    nhs-button-type="Standard"
+                    classes="ntbsuk-button--primary"
+                    name="SaveAndRouteToTreatmentEvents"
+                    value="SaveAndRouteToTreatmentEvents"
+                    id="postmortem-save-button">
+                    Save and go to treatment events
+                </button>
+            </div>
+            <div class="nhsuk-radios__item">
+                <input asp-for="ClinicalDetails.IsPostMortem" id="postmortem-no" class="nhsuk-radios__input" type="radio" value="false">
+                <label class="nhsuk-label nhsuk-radios__label" for="postmortem-no">
+                    No
+                </label>
+            </div>
+        </div>
+    </nhs-fieldset>
     </div>
 </date-comparison>

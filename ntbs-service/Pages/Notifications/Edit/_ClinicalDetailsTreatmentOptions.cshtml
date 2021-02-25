@@ -15,7 +15,7 @@
             <nhs-fieldset-legend nhs-legend-size="Standard">DOT offered?</nhs-fieldset-legend>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
-                    <input asp-for="ClinicalDetails.IsDotOffered" id="dot-offered-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" 
+                    <input asp-for="ClinicalDetails.IsDotOffered" id="dot-offered-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes"
                         data-aria-controls="conditional-dot-offered-conditional">
                     <label class="nhsuk-label nhsuk-radios__label" for="dot-offered-yes">
                         @(Status.Yes)
@@ -31,7 +31,7 @@
                                     <nhs-radios-item>
                                         <input nhs-input-type="Radios" asp-for="ClinicalDetails.DotStatus" id="dot-status-@status" type="radio" value="@status" />
                                         <label nhs-label-type="Radios" for="dot-status-@status">@status.GetDisplayName()</label>
-                                    </nhs-radios-item> 
+                                    </nhs-radios-item>
                                 }
                             </nhs-radios>
                         </nhs-fieldset>
@@ -108,19 +108,19 @@
     <nhs-form-group nhs-form-group-type="@mdrGroupState" id="ClinicalDetails-IsMDRTreatment">
         <nhs-fieldset aria-describedby="regimen-error">
             <nhs-fieldset-legend nhs-legend-size="Standard">Planned treatment regimen</nhs-fieldset-legend>
-            <span ref="errorField" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsMDRTreatment"	
+            <span ref="errorField" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsMDRTreatment"
                                                                   has-error="@hasMdrError" id="regimen-error"></span>
-            
+
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
-                    <input nhs-input-type="Radios" asp-for="ClinicalDetails.TreatmentRegimen" id="regimen-standardTherapy" class="nhsuk-radios__input" type="radio" 
+                    <input nhs-input-type="Radios" asp-for="ClinicalDetails.TreatmentRegimen" id="regimen-standardTherapy" class="nhsuk-radios__input" type="radio"
                         value="@TreatmentRegimen.StandardTherapy">
                     <label class="nhsuk-label nhsuk-radios__label" for="regimen-standardTherapy">Standard Therapy</label>
                 </div>
-            
-                    
+
+
                 <div class="nhsuk-radios__item">
-                    <input nhs-input-type="Radios" asp-for="ClinicalDetails.TreatmentRegimen" id="regimen-mdr" class="nhsuk-radios__input" type="radio" 
+                    <input nhs-input-type="Radios" asp-for="ClinicalDetails.TreatmentRegimen" id="regimen-mdr" class="nhsuk-radios__input" type="radio"
                         value="@TreatmentRegimen.MdrTreatment" data-aria-controls="conditional-mdr-conditional">
                     <label class="nhsuk-label nhsuk-radios__label" for="regimen-mdr">RR/MDR/XDR treatment</label>
                 </div>
@@ -163,23 +163,23 @@
                         </nhs-form-group>
                     </validate-date>
                 </div>
-                
+
                 <div class="nhsuk-radios__item">
-                    <input asp-for="ClinicalDetails.TreatmentRegimen" id="regimen-other" class="nhsuk-radios__input" type="radio" value="@TreatmentRegimen.Other" 
+                    <input asp-for="ClinicalDetails.TreatmentRegimen" id="regimen-other" class="nhsuk-radios__input" type="radio" value="@TreatmentRegimen.Other"
                         data-aria-controls="conditional-regimen-other-conditional">
                     <label class="nhsuk-label nhsuk-radios__label" for="regimen-other">
                         Other
                     </label>
                 </div>
-                 
-                
+
+
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-regimen-other-conditional">
                     <validate-input model="ClinicalDetails" property="TreatmentRegimenOtherDescription" inline-template>
                         @{
                             var hasTreatmentRegimenOtherDescriptionError = !Model.IsValid("ClinicalDetails.TreatmentRegimenOtherDescription");
                             var TreatmentRegimenOtherDescriptionGroupState = hasTreatmentRegimenOtherDescriptionError ? Error : Standard;
                         }
-                        <nhs-form-group nhs-form-group-type=@TreatmentRegimenOtherDescriptionGroupState aria-describedby="relationship-description-error">
+                        <nhs-form-group nhs-form-group-type=@TreatmentRegimenOtherDescriptionGroupState aria-describedby="other-regimen-text-error">
                             <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasTreatmentRegimenOtherDescriptionError"
                                 asp-validation-for="ClinicalDetails.TreatmentRegimenOtherDescription" id="other-regimen-text-error">
                             </span>
