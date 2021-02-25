@@ -205,10 +205,11 @@ namespace ntbs_service
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
             services.AddScoped<INotificationCloningService, NotificationCloningService>();
             services.AddScoped<ICaseManagerSearchService, CaseManagerSearchService>();
+            services.AddScoped<IClusterImportService, ClusterImportService>();
 
             AddAuditService(services, auditDbConnectionString);
             AddReferenceLabResultServices(services);
-            AddClusterService(services);
+            AddNotificationClusterRepository(services);
             AddReportingServices(services);
             AddMicrosoftGraphServices(services);
             AddAdImportService(services);
@@ -446,7 +447,7 @@ namespace ntbs_service
 
         }
 
-        private void AddClusterService(IServiceCollection services)
+        private void AddNotificationClusterRepository(IServiceCollection services)
         {
             var clusterMatchingConfig = Configuration.GetSection(Constants.ClusterMatchingConfig);
             if (clusterMatchingConfig.GetValue<bool>(Constants.ClusterMatchingConfigMockOut))
