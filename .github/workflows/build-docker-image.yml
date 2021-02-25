@@ -1,0 +1,33 @@
+name: Build docker image
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-publish-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set build number
+        id: ntbs_build_step
+        run: echo '::set-output name=NTBS_BUILD::${{ format('build-{0}-{1}', github.run_number, github.sha) }}'
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 2.2
+
+      # Build and release
+      - name: Build and publish new release
+        uses: whoan/docker-build-with-cache-action@v5
+        with:
+          image_name: ntbs-service
+          registry: ntbscontainerregistry.azurecr.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          # auth token based on https://sentry.io/settings/phe-ntbs/developer-settings/jenkins-build-40d229/
+          build_extra_args: ${{ format('--build-arg RELEASE={0} --build-arg SENTRY_AUTH_TOKEN={1}', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_AUTH_TOKEN) }}
+          image_tag: ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
