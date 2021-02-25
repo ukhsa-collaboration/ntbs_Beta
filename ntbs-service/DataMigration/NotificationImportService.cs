@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,6 +41,7 @@ namespace ntbs_service.DataMigration
         private readonly IMigratedNotificationsMarker _migratedNotificationsMarker;
         private readonly ISpecimenService _specimenService;
         private readonly IImportValidator _importValidator;
+        private readonly IClusterImportService _clusterImportService;
 
         public NotificationImportService(INotificationMapper notificationMapper,
                              INotificationRepository notificationRepository,
@@ -50,7 +51,8 @@ namespace ntbs_service.DataMigration
                              IMigrationRepository migrationRepository,
                              IMigratedNotificationsMarker migratedNotificationsMarker,
                              ISpecimenService specimenService,
-                             IImportValidator importValidator)
+                             IImportValidator importValidator,
+                             IClusterImportService clusterImportService)
         {
             sentryHub.ConfigureScope(s =>
             {
@@ -65,6 +67,7 @@ namespace ntbs_service.DataMigration
             _migratedNotificationsMarker = migratedNotificationsMarker;
             _specimenService = specimenService;
             _importValidator = importValidator;
+            _clusterImportService = clusterImportService;
         }
 
         public async Task<IList<ImportResult>> ImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate)
@@ -181,6 +184,7 @@ namespace ntbs_service.DataMigration
                 await _migratedNotificationsMarker.MarkNotificationsAsImportedAsync(savedNotifications);
                 importResult.NtbsIds = savedNotifications.ToDictionary(x => x.LegacyId, x => x.NotificationId);
                 await ImportReferenceLabResultsAsync(context, requestId, savedNotifications, importResult);
+                await _clusterImportService.UpdateClusterInformation(savedNotifications);
 
                 var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));
                 _logger.LogSuccess(context, requestId, $"Imported notifications have following Ids: {newIdsString}");
