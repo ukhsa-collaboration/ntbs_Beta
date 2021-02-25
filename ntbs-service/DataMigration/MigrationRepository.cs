@@ -29,6 +29,8 @@ namespace ntbs_service.DataMigration
         Task<IEnumerable<MigrationDbMBovisKnownCase>> GetMigrationMBovisExposureToKnownCase(List<string> legacyIds);
         Task<IEnumerable<MigrationDbMBovisOccupation>> GetMigrationMBovisOccupationExposures(List<string> legacyIds);
         Task<IEnumerable<MigrationDbMBovisMilkConsumption>> GetMigrationMBovisUnpasteurisedMilkConsumption(List<string> legacyIds);
+        Task<IEnumerable<MigrationLegacyUser>> GetLegacyUserByUsername(string username);
+        Task<IEnumerable<MigrationLegacyUserHospital>> GetLegacyUserHospitalsByUsername(string username);
 
         Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>> GetReferenceLaboratoryMatches(
             IEnumerable<string> legacyIds);
@@ -58,7 +60,8 @@ namespace ntbs_service.DataMigration
             SELECT *
             FROM MigrationNotificationsView n
             WITH (NOLOCK)
-            WHERE n.OldNotificationId IN @Ids";
+            WHERE n.OldNotificationId IN @Ids
+        ";
         private const string NotificationSitesQuery = @"
             SELECT *
             FROM NotificationSite
@@ -124,6 +127,18 @@ namespace ntbs_service.DataMigration
             FROM EtsLaboratoryResultsView
             WITH (NOLOCK)
             WHERE LegacyId IN @Ids
+        ";
+        const string LegacyUserByUsernameQuery = @"
+            SELECT *
+            FROM MigrationLegacyUser u
+            WITH (NOLOCK)
+            WHERE u.Username = @Username
+        ";
+        const string LegacyUserHospitalsByUsernameQuery = @"
+            SELECT *
+            FROM MigrationLegacyUserHospital h
+            WITH (NOLOCK)
+            WHERE h.Username = @Username
         ";
 
         private readonly string connectionString;
@@ -244,12 +259,31 @@ namespace ntbs_service.DataMigration
             }
         }
 
+        public async Task<IEnumerable<MigrationLegacyUser>> GetLegacyUserByUsername(string username)
+        {
+            return await ExecuteByUsernameQuery<MigrationLegacyUser>(LegacyUserByUsernameQuery, username);
+        }
+
+        public async Task<IEnumerable<MigrationLegacyUserHospital>> GetLegacyUserHospitalsByUsername(string username)
+        {
+            return await ExecuteByUsernameQuery<MigrationLegacyUserHospital>(LegacyUserHospitalsByUsernameQuery, username);
+        }
+
         private async Task<IEnumerable<T>> ExecuteByIdQuery<T>(string query, IEnumerable<string> legacyIds)
         {
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 return await connection.QueryAsync<T>(query, new { Ids = legacyIds });
+            }
+        }
+
+        private async Task<IEnumerable<T>> ExecuteByUsernameQuery<T>(string query, string username)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                return await connection.QueryAsync<T>(query, new {Username = username});
             }
         }
     }
