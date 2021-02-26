@@ -9,7 +9,7 @@
 
 @if (Model.Count != 0)
 {
-    <nhs-table id="treatment-events" caption="Treatment Events" classes="nhsuk-table--reduced-font">
+    <nhs-table id="treatment-events" aria-label="Treatment Events" classes="nhsuk-table--reduced-font" responsive>
         <nhs-table-head>
             <nhs-table-item>
                 @Html.DisplayNameFor(_ => header.EventDate)
@@ -35,24 +35,24 @@
             @foreach (var result in orderedResults)
             {
                 <nhs-table-body-row id="treatment-event-@result.TreatmentEventId">
-                    <nhs-table-item>
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.EventDate)">
                         @result.EventDate?.ConvertToString()
                     </nhs-table-item>
-                    <nhs-table-item>
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.TreatmentEventType)">
                         @result.TreatmentEventType.GetDisplayName()
                     </nhs-table-item>
-                    <nhs-table-item>
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.TreatmentOutcome.TreatmentOutcomeType)">
                         @result.TreatmentOutcome?.TreatmentOutcomeType.GetDisplayName()
                     </nhs-table-item>
-                    <nhs-table-item>
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.TreatmentOutcome.TreatmentOutcomeSubType)">
                         @result.TreatmentOutcome?.TreatmentOutcomeSubType?.GetDisplayName()
                     </nhs-table-item>
-                    <nhs-table-item>
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.Note)">
                         @result.Note
                     </nhs-table-item>
                     @if (showEditLinks)
                     {
-                        <nhs-table-item>
+                        <nhs-table-item heading-text="Edit">
                             @if(result.IsEditable)
                             {
                                 var subPath = NotificationSubPaths.EditTreatmentEvent(result.TreatmentEventId);

@@ -10,9 +10,10 @@
 
 @if (Model.Count != 0)
 {
-    <nhs-table id="manual-results" 
-           caption="Manual Test Results" 
-           classes="@(isReducedTable ? "nhsuk-table--reduced-font" : null)">
+    <nhs-table id="manual-results"
+           aria-label="Manual Test Results"
+           classes="@(isReducedTable ? "nhsuk-table--reduced-font" : null)"
+           responsive>
         <nhs-table-head>
             <nhs-table-item>
                 @Html.DisplayNameFor(_ => header.TestDate)
@@ -35,23 +36,23 @@
             @foreach (var result in orderedResults)
             {
                 <nhs-table-body-row id="manual-test-result-@result.ManualTestResultId">
-                    <nhs-table-item>
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.TestDate)">
                         @result.TestDate?.ConvertToString()
                     </nhs-table-item>
-                    <nhs-table-item>
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.ManualTestTypeId)">
                         @result.ManualTestType.Description
                     </nhs-table-item>
-                    <nhs-table-item>
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.SampleTypeId)">
                         @result?.SampleType?.Description
                     </nhs-table-item>
-                    <nhs-table-item>
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.Result)">
                         @result.Result.GetDisplayName()
                     </nhs-table-item>
                     @if (showEditLinks)
                     {
                         var subPath = NotificationSubPaths.EditManualTestResult(result.ManualTestResultId);
                         var path = RouteHelper.GetNotificationPath(result.NotificationId, subPath);
-                        <nhs-table-item>
+                        <nhs-table-item heading-text="Edit">
                             <a href="@path" class="govuk-link--no-visited-state"> Edit </a>
                         </nhs-table-item>
                     }

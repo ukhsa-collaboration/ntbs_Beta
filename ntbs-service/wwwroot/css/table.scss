@@ -10,7 +10,27 @@
 // NHS UK tables have changed their internal padding.
 // See https://nhsuk.github.io/nhsuk-frontend/components/tables/tables-panel.html
 // Overall it's an improvement, but the lack of LHS space looks odd in the first column - this hack alleviates that.
-.nhsuk-table__header:first-child,
-.nhsuk-table__cell:first-child {
-  padding-left: 8px;
+
+.nhsuk-table-responsive .nhsuk-table__head .nhsuk-table__row .nhsuk-table__header:first-child,
+.nhsuk-table-responsive .nhsuk-table__body .nhsuk-table__row .nhsuk-table__cell:first-child {
+    padding-left: 8px;
+}
+
+.nhsuk-table-responsive .nhsuk-table__head .nhsuk-table__row .nhsuk-table__header:last-child,
+.nhsuk-table-responsive .nhsuk-table__body .nhsuk-table__row .nhsuk-table__cell:last-child {
+    padding-right: 8px;
+}
+
+// Add some padding to the responsive table cells as well, because for narrow screens each cell gets its own
+// row (visually, not semantically). The hover highlighting doesn't look great without this padding, with the
+// highlighting finishing on the edge of the last letter.
+.nhsuk-table-responsive .nhsuk-table__body .nhsuk-table__row td.nhsuk-table__cell {
+  @include mq($until: desktop) {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  @include mq($from: desktop) {
+    padding-right: nhsuk-spacing(3);
+  }
 }
