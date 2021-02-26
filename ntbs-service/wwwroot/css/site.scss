@@ -1,12 +1,17 @@
-﻿@use "../../node_modules/govuk-frontend/govuk/all.scss" with (
-    $govuk-assets-path: "../../node_modules/govuk-frontend/govuk/assets/"
+﻿// Govuk css - needed for things like conditionally revealed radios sections
+// Set use a relative path for assets, to allow the CSS loader to find the assets and then pass them to the
+// file/URL loaders.
+// Also, change the font-family so we don't use the GDS Transport font, because this is not a GDS service.
+@use "../../node_modules/govuk-frontend/govuk/all.scss" with (
+  $govuk-assets-path: "../../node_modules/govuk-frontend/govuk/assets/",
+  $govuk-font-family: (arial, sans-serif)
 );
 
 @import "./reset.scss";
 // We're importing the raw scss instaed of a packaged css bundle since we're using some of the dynamic elements ourselves (colour variables, functions etc)
 @import "../../node_modules/nhsuk-frontend/packages/nhsuk.scss";
-// Govuk css - needed for things like conditionally revealed radios sections
 @import "../../node_modules/vue-accessible-modal/dist/index.css";
+@import "./_colors.scss";
 @import "./checkboxes.scss";
 @import "./buttons.scss";
 @import "./notification.scss";
@@ -232,10 +237,6 @@ body {
             font-size: 16px;
         }
     }
-}
-
-.nhsuk-panel-with-label__label {
-  background-color: #002776;
 }
 
 .draft-notifications-container {

@@ -72,7 +72,7 @@ namespace ntbs_integration_tests.LabResultsPage
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-                var specimenDetailsSections = document.QuerySelectorAll(".specimen-details");
+                var specimenDetailsSections = document.QuerySelectorAll(".nhsuk-care-card--specimen");
                 Assert.Equal(expectedLabReferenceNumbers.Count, specimenDetailsSections.Length);
 
                 foreach (var expectedLabReferenceNumber in expectedLabReferenceNumbers)
@@ -102,7 +102,7 @@ namespace ntbs_integration_tests.LabResultsPage
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-                var specimenDetailsSections = document.QuerySelectorAll(".specimen-details");
+                var specimenDetailsSections = document.QuerySelectorAll(".nhsuk-care-card--specimen");
                 Assert.Equal(0, specimenDetailsSections.Length);
             }
         }
@@ -130,7 +130,7 @@ namespace ntbs_integration_tests.LabResultsPage
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-                var specimenDetailsSections = document.QuerySelectorAll(".specimen-details");
+                var specimenDetailsSections = document.QuerySelectorAll(".nhsuk-care-card--specimen");
                 Assert.Equal(expectedLabReferenceNumbers.Count, specimenDetailsSections.Length);
 
                 foreach (var expectedLabReferenceNumber in expectedLabReferenceNumbers)
@@ -167,7 +167,7 @@ namespace ntbs_integration_tests.LabResultsPage
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-                var specimenDetailsSections = document.QuerySelectorAll(".specimen-details");
+                var specimenDetailsSections = document.QuerySelectorAll(".nhsuk-care-card--specimen");
                 Assert.Equal(expectedLabReferenceNumbers.Count, specimenDetailsSections.Length);
 
                 foreach (var expectedLabReferenceNumber in expectedLabReferenceNumbers)
@@ -194,7 +194,7 @@ namespace ntbs_integration_tests.LabResultsPage
                 const string url = "/LabResults";
                 var response = await client.GetAsync(url);
                 var document = await GetDocumentAsync(response);
-                
+
                 var formData = new Dictionary<string, string>
                 {
                     [$"PotentialMatchSelections[{specimenNumber}].NotificationId"] =
@@ -214,7 +214,7 @@ namespace ntbs_integration_tests.LabResultsPage
                 // rendered values.
             }
         }
-        
+
         [Fact]
         public async Task NationalTeam_CanMatchSpecimenForManualNotificationId()
         {
@@ -233,7 +233,7 @@ namespace ntbs_integration_tests.LabResultsPage
 
                 var formData = new Dictionary<string, string>
                 {
-                    [$"PotentialMatchSelections[{specimenNumber}].NotificationId"] = 
+                    [$"PotentialMatchSelections[{specimenNumber}].NotificationId"] =
                         IndexModel.ManualNotificationIdValue.ToString(),
                     [$"PotentialMatchSelections[{specimenNumber}].ManualNotificationId"] =
                         manualMatchNotificationId.ToString(),
@@ -244,14 +244,14 @@ namespace ntbs_integration_tests.LabResultsPage
 
                 // Assert
                 await AssertAndFollowRedirect(postResponse, url);
-                
+
                 // As session/tempData aren't functional by default with webApplicationFactory, and configuring this
                 // wasn't deemed a good use of time, cannot confirm that the flash message is shown here.
                 // Additionally as we're using a mocked specimen service, the unmatched specimen is not removed from the
                 // rendered values.
             }
         }
-        
+
         [Fact]
         public async Task NationalTeam_CanNotManuallyMatchToNonExistentNotificationId_ValidationError()
         {
@@ -270,7 +270,7 @@ namespace ntbs_integration_tests.LabResultsPage
 
                 var formData = new Dictionary<string, string>
                 {
-                    [$"PotentialMatchSelections[{specimenNumber}].NotificationId"] = 
+                    [$"PotentialMatchSelections[{specimenNumber}].NotificationId"] =
                         IndexModel.ManualNotificationIdValue.ToString(),
                     [$"PotentialMatchSelections[{specimenNumber}].ManualNotificationId"] =
                         manualMatchNotificationId.ToString(),
@@ -282,10 +282,10 @@ namespace ntbs_integration_tests.LabResultsPage
 
                 // Assert
                 result.AssertValidationErrorResponse();
-                
+
                 resultDocument.AssertErrorSummaryMessage(
-                    $"PotentialMatchSelections[{specimenNumber}]-ManualNotificationId", 
-                    $"PotentialMatchSelections[{specimenNumber}]-ManualNotificationId", 
+                    $"PotentialMatchSelections[{specimenNumber}]-ManualNotificationId",
+                    $"PotentialMatchSelections[{specimenNumber}]-ManualNotificationId",
                     "The notification ID does not exist, verify you have entered the correct ID before moving forward");
 
             }
