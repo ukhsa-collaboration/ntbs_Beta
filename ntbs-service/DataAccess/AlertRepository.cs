@@ -16,7 +16,9 @@ namespace ntbs_service.DataAccess
 
         Task<DataQualityPotentialDuplicateAlert> GetDuplicateAlertByNotificationIdAndDuplicateId(int notificationId,
             int duplicateId);
-        Task<IList<Alert>> GetOpenAlertsForNotificationAsync(int notificationId);
+
+        Task<IList<AlertWithTbServiceForDisplay>> GetOpenAlertsForNotificationAsync(int notificationId);
+        Task<List<AlertWithTbServiceForDisplay>> GetOpenAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
         Task<IList<UnmatchedLabResultAlert>> GetAllOpenUnmatchedLabResultAlertsAsync();
         Task<DataQualityDraftAlert> GetOpenDraftAlertForNotificationAsync(int notificationId);
         Task AddAlertAsync(Alert alert);
@@ -25,7 +27,6 @@ namespace ntbs_service.DataAccess
         Task CloseAlertRangeAsync(IEnumerable<Alert> alerts);
         Task CloseUnmatchedLabResultAlertsForSpecimenIdAsync(string specimenId);
         Task SaveAlertChangesAsync(NotificationAuditType auditType = NotificationAuditType.Edited);
-        IQueryable<Alert> GetBaseOpenAlertIQueryable();
     }
 
     public class AlertRepository : IAlertRepository
@@ -68,6 +69,14 @@ namespace ntbs_service.DataAccess
                          && m.DuplicateId == duplicateId);
         }
 
+        public async Task<List<AlertWithTbServiceForDisplay>> GetOpenAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices)
+        {
+            return await GetOpenAlertWithTbServiceForDisplayIQueryable()
+                .Where(a => tbServices.Contains(a.TbServiceCode))
+                .OrderByDescending(a => a.CreationDate)
+                .ToListAsync();
+        }
+
         public async Task<IList<UnmatchedLabResultAlert>> GetAllOpenUnmatchedLabResultAlertsAsync()
         {
             return await GetBaseOpenAlertIQueryable()
@@ -84,17 +93,43 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync();
         }
         
-        public async Task<IList<Alert>> GetOpenAlertsForNotificationAsync(int notificationId)
+        public async Task<IList<AlertWithTbServiceForDisplay>> GetOpenAlertsForNotificationAsync(int notificationId)
         {
-            return await GetBaseOpenAlertIQueryable()
+            return await GetOpenAlertWithTbServiceForDisplayIQueryable()
                 .Where(a => a.NotificationId == notificationId)
                 .ToListAsync();
         }
 
-        public IQueryable<Alert> GetBaseOpenAlertIQueryable()
+        private IQueryable<Alert> GetBaseOpenAlertIQueryable()
         {
             return _context.Alert
                 .Where(n => n.AlertStatus != AlertStatus.Closed);
+        }
+
+        private IQueryable<AlertWithTbServiceForDisplay> GetOpenAlertWithTbServiceForDisplayIQueryable()
+        {
+            return GetBaseOpenAlertIQueryable()
+                .Select(alert =>
+                    new AlertWithTbServiceForDisplay
+                    {
+                        AlertId = alert.AlertId,
+                        CreationDate = alert.CreationDate,
+                        NotificationId = alert.NotificationId,
+                        TbServiceCode = alert is TransferAlert
+                            ? ((TransferAlert)alert).TbServiceCode
+                            : alert.Notification.HospitalDetails.TBServiceCode,
+                        TbServiceName = alert is TransferAlert
+                            ? ((TransferAlert)alert).TbService.Name
+                            : alert.Notification.HospitalDetails.TBServiceName,
+                        CaseManagerName = alert is TransferAlert
+                            ? ((TransferAlert)alert).CaseManager.DisplayName
+                            : alert.Notification.HospitalDetails.CaseManagerName,
+                        AlertType = alert.AlertType,
+                        Action = alert.Action,
+                        ActionLink = alert.ActionLink,
+                        NotDismissable = alert.NotDismissable,
+                    }
+                );
         }
 
         public async Task AddAlertAsync(Alert alert)

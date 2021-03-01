@@ -34,7 +34,7 @@ namespace ntbs_service.Pages
             _homepageKpiService = homepageKpiService;
         }
 
-        public IList<Alert> Alerts { get; set; }
+        public IList<AlertWithTbServiceForDisplay> Alerts { get; set; }
         public IList<Notification> DraftNotifications { get;set; }
         public IList<Notification> RecentNotifications { get;set; }
         public SelectList TbServices { get; set; }
@@ -81,7 +81,8 @@ namespace ntbs_service.Pages
                 return;
             var services = (await _userService.GetTbServicesAsync(User)).ToList();
             TbServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
-            Alerts = await _authorizationService.FilterAlertsForUserAsync(User, _alertRepository.GetBaseOpenAlertIQueryable().ToList());
+            var alertsForTbServices = await _alertRepository.GetOpenAlertsByTbServiceCodesAsync(services.Select(tb => tb.Code));
+            Alerts = await _authorizationService.FilterAlertsForUserAsync(User, alertsForTbServices);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace ntbs_service.Services
         Task DismissAlertAsync(int alertId, string userId);
         Task AutoDismissAlertAsync<T>(Notification notification) where T : Alert;
         Task DismissMatchingAlertAsync<T>(int notificationId, string auditUsername = AuditService.AuditUserSystem) where T : Alert;
-        Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId, ClaimsPrincipal user);
+        Task<IList<AlertWithTbServiceForDisplay>> GetAlertsForNotificationAsync(int notificationId, ClaimsPrincipal user);
         Task CreateAlertsForUnmatchedLabResults(IEnumerable<SpecimenMatchPairing> specimenMatchPairings);
     }
 
@@ -145,7 +145,7 @@ namespace ntbs_service.Services
             }
         }
 
-        public async Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId, ClaimsPrincipal user)
+        public async Task<IList<AlertWithTbServiceForDisplay>> GetAlertsForNotificationAsync(int notificationId, ClaimsPrincipal user)
         {
             var alerts = await _alertRepository.GetOpenAlertsForNotificationAsync(notificationId);
             var filteredAlerts = await _authorizationService.FilterAlertsForUserAsync(user, alerts);

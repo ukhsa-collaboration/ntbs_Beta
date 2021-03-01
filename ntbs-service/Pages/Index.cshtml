@@ -44,14 +44,9 @@
                             @Html.DisplayNameFor(model => model.Alerts[0].AlertType)
                         </nhs-table-item>
                         <nhs-table-item>
-<<<<<<< HEAD
-                            @Html.DisplayNameFor(model => model.Alerts[0].Notification.HospitalDetails.CaseManager)
+                            @Html.DisplayNameFor(model => model.Alerts[0].CaseManagerName)
                             <br />
-=======
-                            @Html.DisplayNameFor(model => model.Alerts[0].Notification.HospitalDetails.CaseManagerName)
-                            <br/>
->>>>>>> c500ac29... NTBS-2111: Fix when transfer requests should be shown
-                            @Html.DisplayNameFor(model => model.Alerts[0].Notification.HospitalDetails.TBServiceName)
+                            @Html.DisplayNameFor(model => model.Alerts[0].TbServiceName)
                         </nhs-table-item>
                         <nhs-table-item>
                             Dismiss
@@ -60,7 +55,7 @@
                     <nhs-table-body>
                         @foreach (var item in Model.Alerts)
                         {
-                            <nhs-table-body-row id="alert-@item.AlertId">
+                            <nhs-table-body-row id="alert-@item.AlertId" v-if="TbServiceCode === '@item.TbServiceCode' || TbServiceCode === 'Show all'">
                                 <nhs-table-item>
                                     @if (item.NotificationId != null)
                                     {
@@ -81,12 +76,12 @@
                                     @Html.DisplayFor(_ => item.Action)
                                 </nhs-table-item>
                                 <nhs-table-item>
-                                    @if (!string.IsNullOrWhiteSpace(item.Notification?.HospitalDetails?.CaseManagerName))
+                                    @if (!string.IsNullOrWhiteSpace(item.CaseManagerName))
                                     {
-                                        @item.Notification.HospitalDetails.CaseManagerName
+                                        @item.CaseManagerName
                                         <br />
                                     }
-                                    @item.Notification?.HospitalDetails?.TBServiceName
+                                    @item.TbServiceName
                                 </nhs-table-item>
                                 <nhs-table-item>
                                     @if (!item.NotDismissable)
