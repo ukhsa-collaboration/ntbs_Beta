@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
@@ -35,7 +34,7 @@ namespace ntbs_service.Pages
             _homepageKpiService = homepageKpiService;
         }
 
-        public IList<Alert> Alerts { get; set; }
+        public IList<AlertWithTbServiceForDisplay> Alerts { get; set; }
         public IList<Notification> DraftNotifications { get;set; }
         public IList<Notification> RecentNotifications { get;set; }
         public SelectList TbServices { get; set; }
@@ -81,10 +80,9 @@ namespace ntbs_service.Pages
             if (_userService.GetUserType(User) == UserType.NationalTeam)
                 return;
             var services = (await _userService.GetTbServicesAsync(User)).ToList();
-            var tbServiceCodes = services.Select(s => s.Code);
             TbServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
-            var nonFilteredAlerts = await _alertRepository.GetOpenAlertsByTbServiceCodesAsync(tbServiceCodes);
-            Alerts = await _authorizationService.FilterAlertsForUserAsync(User, nonFilteredAlerts);
+            var alertsForTbServices = await _alertRepository.GetOpenAlertsByTbServiceCodesAsync(services.Select(tb => tb.Code));
+            Alerts = await _authorizationService.FilterAlertsForUserAsync(User, alertsForTbServices);
         }
     }
 }

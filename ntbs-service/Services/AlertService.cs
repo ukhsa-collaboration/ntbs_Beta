@@ -20,7 +20,7 @@ namespace ntbs_service.Services
         Task DismissAlertAsync(int alertId, string userId);
         Task AutoDismissAlertAsync<T>(Notification notification) where T : Alert;
         Task DismissMatchingAlertAsync<T>(int notificationId, string auditUsername = AuditService.AuditUserSystem) where T : Alert;
-        Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId, ClaimsPrincipal user);
+        Task<IList<AlertWithTbServiceForDisplay>> GetAlertsForNotificationAsync(int notificationId, ClaimsPrincipal user);
         Task CreateAlertsForUnmatchedLabResults(IEnumerable<SpecimenMatchPairing> specimenMatchPairings);
     }
 
@@ -145,7 +145,7 @@ namespace ntbs_service.Services
             }
         }
 
-        public async Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId, ClaimsPrincipal user)
+        public async Task<IList<AlertWithTbServiceForDisplay>> GetAlertsForNotificationAsync(int notificationId, ClaimsPrincipal user)
         {
             var alerts = await _alertRepository.GetOpenAlertsForNotificationAsync(notificationId);
             var filteredAlerts = await _authorizationService.FilterAlertsForUserAsync(user, alerts);
@@ -172,8 +172,6 @@ namespace ntbs_service.Services
                     AlertStatus = AlertStatus.Open,
                     NotificationId = notification.NotificationId,
                     SpecimenId = specimenMatchPairing.ReferenceLaboratoryNumber,
-                    CaseManagerUsername = notification.HospitalDetails.CaseManagerUsername,
-                    TbServiceCode = notification.HospitalDetails.TBServiceCode,
                     CreationDate = DateTime.Now
                 });
             }
@@ -183,27 +181,8 @@ namespace ntbs_service.Services
         
         private async Task PopulateAndAddAlertAsync(Alert alert)
         {
-            await PopulateAlertAsync(alert);
+            alert.CreationDate = DateTime.Today;
             await _alertRepository.AddAlertAsync(alert);
-        }
-
-        private async Task PopulateAlertAsync(Alert alert)
-        {
-            if (alert.NotificationId != null)
-            {
-                var notification = await _notificationRepository.GetNotificationAsync(alert.NotificationId.Value);
-                
-                alert.CreationDate = DateTime.Today;
-                if (alert.CaseManagerUsername == null && alert.AlertType != AlertType.TransferRequest)
-                {
-                    alert.CaseManagerUsername = notification?.HospitalDetails?.CaseManagerUsername;
-                }
-
-                if (alert.TbServiceCode == null)
-                {
-                    alert.TbServiceCode = notification?.HospitalDetails?.TBServiceCode;
-                }
-            }
         }
     }
 }

@@ -6,7 +6,6 @@ using Hangfire;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
-using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 using Serilog;
 
@@ -87,11 +86,6 @@ namespace ntbs_service.Jobs
                         T alert = (T)Activator.CreateInstance(typeof(T));
                         alert.NotificationId = n.NotificationId;
                         alert.CreationDate = now;
-                        alert.TbServiceCode = n.HospitalDetails?.TBServiceCode;
-                        if (alert.AlertType != AlertType.TransferRequest)
-                        {
-                            alert.CaseManagerUsername = n.HospitalDetails?.CaseManagerUsername;
-                        }
 
                         return (Alert) alert;
                     })

@@ -16,8 +16,9 @@ namespace ntbs_service.DataAccess
 
         Task<DataQualityPotentialDuplicateAlert> GetDuplicateAlertByNotificationIdAndDuplicateId(int notificationId,
             int duplicateId);
-        Task<IList<Alert>> GetOpenAlertsForNotificationAsync(int notificationId);
-        Task<IList<Alert>> GetOpenAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
+
+        Task<IList<AlertWithTbServiceForDisplay>> GetOpenAlertsForNotificationAsync(int notificationId);
+        Task<List<AlertWithTbServiceForDisplay>> GetOpenAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
         Task<IList<UnmatchedLabResultAlert>> GetAllOpenUnmatchedLabResultAlertsAsync();
         Task<DataQualityDraftAlert> GetOpenDraftAlertForNotificationAsync(int notificationId);
         Task AddAlertAsync(Alert alert);
@@ -68,11 +69,10 @@ namespace ntbs_service.DataAccess
                          && m.DuplicateId == duplicateId);
         }
 
-        public async Task<IList<Alert>> GetOpenAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices)
+        public async Task<List<AlertWithTbServiceForDisplay>> GetOpenAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices)
         {
-            return await GetBaseOpenAlertIQueryable()
+            return await GetOpenAlertWithTbServiceForDisplayIQueryable()
                 .Where(a => tbServices.Contains(a.TbServiceCode))
-                .Where(a => a.NotificationId == null || a.Notification.NotificationStatus != NotificationStatus.Draft || a.AlertType == AlertType.DataQualityDraft)
                 .OrderByDescending(a => a.CreationDate)
                 .ToListAsync();
         }
@@ -93,9 +93,9 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync();
         }
         
-        public async Task<IList<Alert>> GetOpenAlertsForNotificationAsync(int notificationId)
+        public async Task<IList<AlertWithTbServiceForDisplay>> GetOpenAlertsForNotificationAsync(int notificationId)
         {
-            return await GetBaseOpenAlertIQueryable()
+            return await GetOpenAlertWithTbServiceForDisplayIQueryable()
                 .Where(a => a.NotificationId == notificationId)
                 .ToListAsync();
         }
@@ -103,10 +103,33 @@ namespace ntbs_service.DataAccess
         private IQueryable<Alert> GetBaseOpenAlertIQueryable()
         {
             return _context.Alert
-                .Where(n => n.AlertStatus != AlertStatus.Closed)
-                .Include(n => n.TbService)
-                    .ThenInclude(s => s.PHEC)
-                .Include(n => n.CaseManager);
+                .Where(n => n.AlertStatus != AlertStatus.Closed);
+        }
+
+        private IQueryable<AlertWithTbServiceForDisplay> GetOpenAlertWithTbServiceForDisplayIQueryable()
+        {
+            return GetBaseOpenAlertIQueryable()
+                .Select(alert =>
+                    new AlertWithTbServiceForDisplay
+                    {
+                        AlertId = alert.AlertId,
+                        CreationDate = alert.CreationDate,
+                        NotificationId = alert.NotificationId,
+                        TbServiceCode = alert is TransferAlert
+                            ? ((TransferAlert)alert).TbServiceCode
+                            : alert.Notification.HospitalDetails.TBServiceCode,
+                        TbServiceName = alert is TransferAlert
+                            ? ((TransferAlert)alert).TbService.Name
+                            : alert.Notification.HospitalDetails.TBServiceName,
+                        CaseManagerName = alert is TransferAlert
+                            ? ((TransferAlert)alert).CaseManager.DisplayName
+                            : alert.Notification.HospitalDetails.CaseManagerName,
+                        AlertType = alert.AlertType,
+                        Action = alert.Action,
+                        ActionLink = alert.ActionLink,
+                        NotDismissable = alert.NotDismissable,
+                    }
+                );
         }
 
         public async Task AddAlertAsync(Alert alert)

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
@@ -17,7 +18,7 @@ namespace ntbs_service.Services
             Notification notification);
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
-        Task<IList<Alert>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<Alert> alerts);
+        Task<IList<AlertWithTbServiceForDisplay>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<AlertWithTbServiceForDisplay> alerts);
         Task SetFullAccessOnNotificationBannersAsync(
             IEnumerable<NotificationBannerModel> notificationBanners,
             ClaimsPrincipal user);
@@ -27,16 +28,29 @@ namespace ntbs_service.Services
     {
         private readonly IUserService _userService;
         private UserPermissionsFilter _userPermissionsFilter;
+        private readonly INotificationRepository _notificationRepository;
 
-        public AuthorizationService(IUserService userService)
+        public AuthorizationService(IUserService userService, INotificationRepository notificationRepository)
         {
             _userService = userService;
+            _notificationRepository = notificationRepository;
         }
 
         public async Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert)
         {
-            var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code);
-            return userTbServiceCodes.Contains(alert.TbServiceCode);
+            var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code).ToList();
+            if (alert is TransferAlert transferAlert)
+            {
+                return userTbServiceCodes.Contains(transferAlert.TbServiceCode);
+            }
+
+            if (alert.NotificationId != null)
+            {
+                return userTbServiceCodes.Contains(
+                    (await _notificationRepository.GetNotificationAsync((int)alert.NotificationId)).HospitalDetails.TBServiceCode);
+            }
+
+            return false;
         }
 
         public async Task SetFullAccessOnNotificationBannersAsync(
@@ -182,23 +196,17 @@ namespace ntbs_service.Services
             return notifications;
         }
 
-        public async Task<IList<Alert>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<Alert> alerts)
+        public async Task<IList<AlertWithTbServiceForDisplay>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<AlertWithTbServiceForDisplay> alerts)
         {
-            var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code);
+            var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code).ToList();
             var userType = _userService.GetUserType(user);
-            for (int i = alerts.Count - 1; i >= 0; i--)
+            alerts = alerts.Where(a => userTbServiceCodes.Contains(a.TbServiceCode)).ToList();
+            if (userType == UserType.PheUser)
             {
-                // For transfer alerts PHE users belonging to a PHEC cannot see and action transfer alerts as they are
-                // aimed to be actioned on a TB service level
-                if (userType == UserType.PheUser && (alerts[i].AlertType == AlertType.TransferRequest ||
-                                                     alerts[i].AlertType == AlertType.TransferRejected))
-                {
-                    alerts.RemoveAt(i);
-                }
-                else if (alerts[i].TbServiceCode != null && !userTbServiceCodes.Contains(alerts[i].TbServiceCode))
-                    alerts.RemoveAt(i);
+                alerts = alerts.Where(a => a.AlertType != AlertType.TransferRequest && 
+                                           a.AlertType != AlertType.TransferRejected).ToList();
             }
-            return alerts;
+            return alerts.ToList();
         }
 
         private async Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)

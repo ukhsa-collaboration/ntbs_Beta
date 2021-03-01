@@ -159,11 +159,9 @@ namespace ntbs_service.Pages.Alerts
             var user = await _referenceDataRepository.GetUserByUsernameAsync(User.Username());
             var transferRejectedAlert = new TransferRejectedAlert
             {
-                CaseManagerUsername = Notification.HospitalDetails.CaseManagerUsername,
                 NotificationId = NotificationId,
                 RejectionReason = DeclineTransferReason ?? "No reason was given when declining this transfer.",
-                DecliningUserAndTbServiceString = $"{user.DisplayName}, {TransferAlert.TbServiceName}",
-                TbServiceCode = Notification.HospitalDetails.TBServiceCode
+                DecliningUserAndTbServiceString = $"{user.DisplayName}, {TransferAlert.TbService.Name}"
             };
 
             // Dismiss any existing transfer rejected alert so that the new one can be created
