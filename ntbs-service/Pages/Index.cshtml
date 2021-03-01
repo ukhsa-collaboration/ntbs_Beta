@@ -7,13 +7,14 @@
 }
 
 <nhs-width-container container-width="Standard">
+    <h1>Dashboard</h1>
     <a href="/Search" role="button" draggable="false" class="nhsuk-button ntbsuk-button--primary">
         Search and create notification
     </a>
 
     @if (Model.KpiFilter.Any())
     {
-        <partial name="_HomepageKpiDetails" model="@Model"/>
+        <partial name="_HomepageKpiDetails" model="@Model" />
     }
 
     @if (Model.Alerts != null)
@@ -44,7 +45,7 @@
                         </nhs-table-item>
                         <nhs-table-item>
                             @Html.DisplayNameFor(model => model.Alerts[0].CaseManagerFullName)
-                            <br/>
+                            <br />
                             @Html.DisplayNameFor(model => model.Alerts[0].TbServiceName)
                         </nhs-table-item>
                         <nhs-table-item>
@@ -71,14 +72,14 @@
                                     <a href="@item.ActionLink">
                                         @Html.DisplayFor(_ => item.AlertType)
                                     </a>
-                                    <br/>
+                                    <br />
                                     @Html.DisplayFor(_ => item.Action)
                                 </nhs-table-item>
                                 <nhs-table-item>
                                     @if (!string.IsNullOrWhiteSpace(item.CaseManagerFullName))
                                     {
                                         @item.CaseManagerFullName
-                                        <br/>
+                                        <br />
                                     }
                                     @item.TbServiceName
                                 </nhs-table-item>
