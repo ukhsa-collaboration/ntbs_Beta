@@ -64,8 +64,7 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<MBovisUnpasteurisedMilkConsumption> MBovisUnpasteurisedMilkConsumption { get; set; }
         public virtual DbSet<MBovisOccupationExposure> MBovisOccupationExposures { get; set; }
         public virtual DbSet<MBovisAnimalExposure> MBovisAnimalExposure { get; set; }
-
-        public DbQuery<NotificationAndDuplicateIds> NotificationAndDuplicateIds { get; set; }
+        public DbSet<NotificationAndDuplicateIds> NotificationAndDuplicateIds { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
@@ -120,6 +119,8 @@ namespace ntbs_service.DataAccess
 
             #endregion
 
+            modelBuilder.Entity<NotificationAndDuplicateIds>().HasNoKey();
+            
             modelBuilder.Entity<Country>(entity =>
             {
                 entity.Property(e => e.Name).HasMaxLength(200);
