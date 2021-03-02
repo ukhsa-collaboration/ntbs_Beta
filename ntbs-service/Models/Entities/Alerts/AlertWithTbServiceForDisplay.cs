@@ -12,9 +12,9 @@ namespace ntbs_service.Models.Entities.Alerts
         public int? NotificationId { get; set; }
         public DateTime CreationDate { get; set; }
         public bool NotDismissable  { get; set; }
-        [Display(Name = "Alert Date")]
+        [Display(Name = "Alert date")]
         public string FormattedCreationDate => CreationDate.ConvertToString();
-        [Display(Name = "Alert Type")]
+        [Display(Name = "Alert type")]
         public AlertType AlertType { get; set; }
         public string ActionLink { get; set; }
         public string Action { get; set; }
