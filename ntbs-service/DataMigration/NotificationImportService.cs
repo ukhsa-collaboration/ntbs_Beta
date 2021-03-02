@@ -263,7 +263,11 @@ namespace ntbs_service.DataMigration
             var legacyNotificationCaseManager =
                 (await _migrationRepository.GetNotificationsById(new List<string> {notification.LegacyId}))
                 .Select(n => n.CaseManager)
-                .First();
+                .SingleOrDefault();
+            if (legacyNotificationCaseManager == null)
+            {
+                return;
+            }
             var existingCaseManager = await _userRepository.GetUserByUsername(legacyNotificationCaseManager);
             var ntbsNotificationCaseManager = new User();
             if (existingCaseManager != null)
