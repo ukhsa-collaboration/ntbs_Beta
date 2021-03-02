@@ -130,13 +130,13 @@ namespace ntbs_service.DataMigration
         ";
         const string LegacyUserByUsernameQuery = @"
             SELECT *
-            FROM MigrationLegacyUser u
+            FROM LegacyUser u
             WITH (NOLOCK)
             WHERE u.Username = @Username
         ";
         const string LegacyUserHospitalsByUsernameQuery = @"
             SELECT *
-            FROM MigrationLegacyUserHospital h
+            FROM LegacyUserHospital h
             WITH (NOLOCK)
             WHERE h.Username = @Username
         ";

@@ -155,7 +155,7 @@ namespace ntbs_service.DataMigration
             var isAnyNotificationInvalid = false;
             foreach (var notification in notifications)
             {
-                await MigrateCaseManagerIfNeeded(notification, context, requestId);
+                await MigrateOrUpdateCaseManager(notification, context, requestId);
                 var linkedNotificationId = notification.LegacyId;
                 _logger.LogInformation(context, requestId, $"Validating notification with Id={linkedNotificationId}");
 
@@ -259,12 +259,12 @@ namespace ntbs_service.DataMigration
             return legacyIdsToImport;
         }
         
-        private async Task MigrateCaseManagerIfNeeded(Notification notification,
+        private async Task MigrateOrUpdateCaseManager(Notification notification,
             PerformContext context,
             string requestId)
         {
             var legacyNotificationCaseManager =
-                (await _migrationRepository.GetNotificationsById(new List<string> {notification.NotificationId.ToString()}))
+                (await _migrationRepository.GetNotificationsById(new List<string> {notification.LegacyId}))
                 .Select(n => n.CaseManager)
                 .First();
             var existingCaseManager = await _userRepository.GetUserByUsername(legacyNotificationCaseManager);
@@ -284,12 +284,12 @@ namespace ntbs_service.DataMigration
             ntbsNotificationCaseManager.FamilyName = legacyUser.FamilyName;
             ntbsNotificationCaseManager.DisplayName = ntbsNotificationCaseManager.GivenName + " " + ntbsNotificationCaseManager.FamilyName;
 
-            var ntbsNotificationCaseManagerTbServices = ntbsNotificationCaseManager.CaseManagerTbServices.Select(e => e.TbService).ToList();
+            var existingCaseManagerTbServices = await _referenceDataRepository.GetCaseManagerTbServicesByUsername
+                (ntbsNotificationCaseManager.Username);
+            var ntbsNotificationCaseManagerTbServices = existingCaseManagerTbServices.Select(e => e.TbService).ToList();
             if (!ntbsNotificationCaseManager.IsActive)
             {
-                var caseManagerTbServices = await _referenceDataRepository.GetCaseManagerTbServicesByUsername
-                    (ntbsNotificationCaseManager.Username);
-                if (caseManagerTbServices.All(cmtb => cmtb.TbServiceCode != notification.HospitalDetails.TBServiceCode))
+                if (existingCaseManagerTbServices.All(cmtb => cmtb.TbServiceCode != notification.HospitalDetails.TBServiceCode))
                 {
                     var legacyUserHospitals = (await _migrationRepository.GetLegacyUserHospitalsByUsername(legacyNotificationCaseManager))
                         .Where(h => h.HospitalId != null).Select(h => h.HospitalId).OfType<Guid>();
@@ -305,6 +305,7 @@ namespace ntbs_service.DataMigration
             }
             
             await _userRepository.AddOrUpdateUser(ntbsNotificationCaseManager, ntbsNotificationCaseManagerTbServices);
+            _logger.LogInformation(context, requestId, "Added/Updated the case manager assigned to the notification.");
         }
     }
 }
