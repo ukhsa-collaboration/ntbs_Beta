@@ -36,7 +36,7 @@ namespace ntbs_service.DataAccess
         Task<Hospital> GetHospitalByGuidAsync(Guid guid);
         Task<FilteredHospitalDetailsPageSelectLists> GetFilteredHospitalDetailsPageSelectListsByTbService(string tbServiceCode);
         Task<IList<User>> GetCaseManagersByTbServiceCodesAsync(IEnumerable<string> tbServiceCodes);
-        Task<IList<CaseManagerTbService>> GetCaseManagerTbServicesByUsername(string username);
+        Task<IList<CaseManagerTbService>> GetCaseManagerTbServicesByUsernameAsync(string username);
         Task<IList<Sex>> GetAllSexesAsync();
         Task<IList<Ethnicity>> GetAllOrderedEthnicitiesAsync();
         Task<IList<Site>> GetAllSitesAsync();
@@ -349,7 +349,7 @@ namespace ntbs_service.DataAccess
             return Postcode?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
         }
 
-        public async Task<IList<CaseManagerTbService>> GetCaseManagerTbServicesByUsername(string username)
+        public async Task<IList<CaseManagerTbService>> GetCaseManagerTbServicesByUsernameAsync(string username)
         {
             return await _context.CaseManagerTbService.Where(cmtb => cmtb.CaseManager.Username == username)
                 .ToListAsync();
