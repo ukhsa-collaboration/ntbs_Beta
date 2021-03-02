@@ -294,13 +294,11 @@ namespace ntbs_service.DataMigration
                     var legacyUserHospitals = (await _migrationRepository.GetLegacyUserHospitalsByUsername(legacyNotificationCaseManager))
                         .Where(h => h.HospitalId != null).Select(h => h.HospitalId).OfType<Guid>();
                     var legacyUserTbServices = await _referenceDataRepository.GetTbServicesFromHospitalIdsAsync(legacyUserHospitals);
-                    legacyUserTbServices.Where(tb => tb.Code == notification.HospitalDetails.TBServiceCode).Select(tbService =>
-                        {
-                            ntbsNotificationCaseManager.IsCaseManager = true;
-                            ntbsNotificationCaseManagerTbServices.Add(tbService);
-                            return tbService;
-                        }
-                    );
+                    foreach (var tbService in legacyUserTbServices.Where(tb => tb.Code == notification.HospitalDetails.TBServiceCode))
+                    {
+                        ntbsNotificationCaseManager.IsCaseManager = true;
+                        ntbsNotificationCaseManagerTbServices.Add(tbService);
+                    }
                 }
             }
             
