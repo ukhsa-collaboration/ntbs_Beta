@@ -21,6 +21,10 @@
     padding-right: 8px;
 }
 
+.wrap-cell-contents .nhsuk-table__header {
+    white-space: normal;
+}
+
 // Add some padding to the responsive table cells as well, because for narrow screens each cell gets its own
 // row (visually, not semantically). The hover highlighting doesn't look great without this padding, with the
 // highlighting finishing on the edge of the last letter.
