@@ -236,7 +236,7 @@ namespace ntbs_service.Models.SeedData
                 new Country { CountryId = 165, Name = "Northern Mariana Islands", IsoCode = "MP" },
                 new Country { CountryId = 166, Name = "Norway", IsoCode = "NO" },
                 new Country { CountryId = 167, Name = "Oman", IsoCode = "OM" },
-                new Country { CountryId = 168, Name = "Other", IsoCode = "  " },
+                new Country { CountryId = 168, Name = "Other", IsoCode = "  " },
                 new Country { CountryId = 169, Name = "Pakistan", IsoCode = "PK" },
                 new Country { CountryId = 170, Name = "Palau", IsoCode = "PW" },
                 new Country { CountryId = 171, Name = "Palestine, State of", IsoCode = "PS" },

@@ -119,7 +119,7 @@ namespace ntbs_service.DataAccess
 
             #endregion
 
-            modelBuilder.Entity<NotificationAndDuplicateIds>().HasNoKey();
+            modelBuilder.Entity<NotificationAndDuplicateIds>().ToTable(null).HasNoKey();
             
             modelBuilder.Entity<Country>(entity =>
             {
