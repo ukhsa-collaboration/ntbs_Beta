@@ -326,6 +326,7 @@ namespace ntbs_service.DataAccess
                 .Include(g => g.Notifications)
                     .ThenInclude(n => n.HospitalDetails)
                         .ThenInclude(e => e.CaseManager)
+                .AsSplitQuery()
                 .SingleOrDefaultAsync();
         }
 
@@ -339,7 +340,8 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.SocialContextAddresses)
                 .Include(n => n.SocialContextVenues)
                 .Include(n => n.TreatmentEvents)
-                    .ThenInclude(t => t.TreatmentOutcome);
+                    .ThenInclude(t => t.TreatmentOutcome)
+                .AsSplitQuery();
         }
 
         // Gets Notification model with basic information for use in notifications homepage lists.
