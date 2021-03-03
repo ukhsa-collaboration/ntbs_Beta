@@ -63,7 +63,6 @@ namespace ntbs_service
             });
 
             // Configuration
-            var adfsConfig = Configuration.GetSection("AdfsOptions");
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -71,8 +70,19 @@ namespace ntbs_service
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            var adConfig = Configuration.GetSection("AdOptions");
+            var adfsConfig = Configuration.GetSection("AdfsOptions");
             var azureAdConfig = Configuration.GetSection("AzureAdOptions");
 
+            var adOptions = new AdOptions();
+            var adfsOptions = new AdfsOptions();
+            var azureAdOptions = new AzureAdOptions();
+
+            adConfig.Bind(adOptions);
+            adfsConfig.Bind(adfsOptions);
+            azureAdConfig.Bind(azureAdOptions);
+
+            services.Configure<AdOptions>(adConfig);
             services.Configure<AdfsOptions>(adfsConfig);
             services.Configure<AzureAdOptions>(azureAdConfig);
             services.Configure<LdapSettings>(Configuration.GetSection("LdapSettings"));
@@ -101,23 +111,25 @@ namespace ntbs_service
             // select authentication method
             var httpBasicAuthConfig = Configuration.GetSection("HttpBasicAuth");
             var basicAuthEnabled = httpBasicAuthConfig.GetValue("Enabled", false);
-            var azureAdAuthEnabled = azureAdConfig.GetValue("Enabled", false);
+            var azureAdAuthEnabled = azureAdOptions.Enabled;
 
             Log.Information($"Basic Auth Enabled: {basicAuthEnabled}");
             Log.Information($"Azure Ad Auth Enabled: {azureAdAuthEnabled}");
 
-            var baseUserGroupRole = adfsConfig["BaseUserGroup"];
-
+            var baseUserGroupRole = adOptions.BaseUserGroup;
 
             if (basicAuthEnabled)
-                UseHttpBasicAuth(services, httpBasicAuthConfig, adfsConfig);
-            else if (azureAdAuthEnabled)
             {
-                UseAzureAdAuthentication(services, azureAdConfig);
-                baseUserGroupRole = azureAdConfig["BaseUserGroup"];
+                UseHttpBasicAuth(services, httpBasicAuthConfig, adOptions);
+            }
+            else if(azureAdAuthEnabled)
+            {
+                UseAzureAdAuthentication(services, adOptions, azureAdOptions);
             }
             else
-                UseAdfsAuthentication(services, adfsConfig);
+            {
+                UseAdfsAuthentication(services, adOptions, adfsOptions);
+            }
 
             services.AddControllersWithViews(options =>
             {
@@ -207,8 +219,8 @@ namespace ntbs_service
             AddReferenceLabResultServices(services);
             AddNotificationClusterRepository(services);
             AddReportingServices(services);
-            AddMicrosoftGraphServices(services);
-            AddAdImportService(services);
+            AddMicrosoftGraphServices(services, azureAdOptions);
+            AddAdImportService(services, azureAdOptions);
 
         }
 
@@ -236,9 +248,9 @@ namespace ntbs_service
             }
         }
 
-        private static void UseAdfsAuthentication(IServiceCollection services, IConfigurationSection adfsConfig)
+        private static void UseAdfsAuthentication(IServiceCollection services, AdOptions adOptions, AdfsOptions adfsOptions)
         {
-            var setupDummyAuth = adfsConfig.GetValue("UseDummyAuth", false);
+            var setupDummyAuth = adOptions.UseDummyAuth;
             var authSetup = services
                 .AddAuthentication(sharedOptions =>
                 {
@@ -250,9 +262,8 @@ namespace ntbs_service
                 {
                     options.CallbackPath = "/Index";
                     options.SkipUnrecognizedRequests = true;
-                    options.MetadataAddress =
-                        adfsConfig["AdfsUrl"] + "/FederationMetadata/2007-06/FederationMetadata.xml";
-                    options.Wtrealm = adfsConfig["Wtrealm"];
+                    options.MetadataAddress = adfsOptions.AdfsUrl + "/FederationMetadata/2007-06/FederationMetadata.xml";
+                    options.Wtrealm = adfsOptions.Wtrealm;
                     options.CorrelationCookie.SameSite = SameSiteMode.None;
                     options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
                     /*
@@ -290,9 +301,9 @@ namespace ntbs_service
             }
         }
 
-        private void UseAzureAdAuthentication(IServiceCollection services, IConfigurationSection azureAdConfig)
+        private void UseAzureAdAuthentication(IServiceCollection services, AdOptions adOptions, AzureAdOptions azureAdOptions)
         {
-            var setupDummyAuth = azureAdConfig.GetValue("UseDummyAuth", false);
+            var setupDummyAuth = adOptions.UseDummyAuth;
             var authSetup = services
                 .AddAuthentication(sharedOptions =>
                 {
@@ -303,10 +314,10 @@ namespace ntbs_service
                 .AddCookie(options => { options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null; })
                 .AddOpenIdConnect(options =>
                 {
-                    options.ClientId = azureAdConfig["ClientId"];
-                    options.ClientSecret = azureAdConfig["ClientSecret"];
-                    options.Authority = azureAdConfig["Authority"];
-                    options.CallbackPath = azureAdConfig["CallbackPath"];
+                    options.ClientId = azureAdOptions.ClientId;
+                    options.ClientSecret = azureAdOptions.ClientSecret;
+                    options.Authority = azureAdOptions.Authority;
+                    options.CallbackPath = azureAdOptions.CallbackPath;
                     options.CorrelationCookie.SameSite = SameSiteMode.None;
                     options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.NonceCookie.SecurePolicy = CookieSecurePolicy.Always;
@@ -371,10 +382,8 @@ namespace ntbs_service
 
         private static void UseHttpBasicAuth(IServiceCollection services,
             IConfigurationSection httpBasicAuthConfig,
-            IConfigurationSection adfsConfig)
+            AdOptions adOptions)
         {
-            var adfsOptions = new AdfsOptions();
-            adfsConfig.Bind(adfsOptions);
             services
                 .AddAuthentication(BasicAuthenticationDefaults.AuthenticationScheme)
                 .AddBasicAuthentication(
@@ -388,14 +397,14 @@ namespace ntbs_service
                                 if ((context.UserName.ToLower() == httpBasicAuthConfig["Username"].ToLower())
                                     && (context.Password == httpBasicAuthConfig["Password"]))
                                 {
-                                    string groupAdmin = adfsOptions.AdminUserGroup;
-                                    string groupDev = adfsOptions.DevGroup ?? adfsOptions.NationalTeamAdGroup;
+                                    string groupAdmin = adOptions.AdminUserGroup;
+                                    string groupDev = adOptions.DevGroup ?? adOptions.NationalTeamAdGroup;
                                     var claims = new List<Claim>
                                     {
                                         new Claim(ClaimTypes.Name,
                                             context.UserName,
                                             context.Options.ClaimsIssuer),
-                                        new Claim(ClaimTypes.Role, adfsOptions.BaseUserGroup, ClaimValueTypes.String),
+                                        new Claim(ClaimTypes.Role, adOptions.BaseUserGroup, ClaimValueTypes.String),
 
                                         new Claim(ClaimTypes.Role, groupAdmin, ClaimValueTypes.String),
                                         new Claim(ClaimTypes.Role, groupDev, ClaimValueTypes.String)
@@ -434,9 +443,9 @@ namespace ntbs_service
             }
         }
 
-        private void AddAdImportService(IServiceCollection services)
+        private void AddAdImportService(IServiceCollection services, AzureAdOptions azureAdOptions)
         {
-            if (Configuration.GetValue(Constants.AzureActiveDirectoryAuthEnabled, false))
+            if (azureAdOptions.Enabled)
             {
                 services.AddScoped<IAdImportService, AzureAdImportService>();
             }
@@ -498,9 +507,9 @@ namespace ntbs_service
             }
         }
 
-        private void AddMicrosoftGraphServices(IServiceCollection services)
+        private void AddMicrosoftGraphServices(IServiceCollection services, AzureAdOptions azureAdOptions)
         {
-            if (Configuration.GetValue(Constants.AzureActiveDirectoryAuthEnabled, false))
+            if (azureAdOptions.Enabled)
             {
                 services.AddScoped<IAzureAdDirectoryServiceFactory, AzureAdDirectoryServiceFactory>();
                 services.AddScoped<IAzureAdDirectoryService, AzureAdDirectoryService>();
@@ -619,8 +628,8 @@ namespace ntbs_service
 
         private string GetAdminRoleName()
         {
-            var adfsConfig = Configuration.GetSection("AdfsOptions");
-            return adfsConfig["AdminUserGroup"];
+            var adConfig = Configuration.GetSection("AdOptions");
+            return adConfig["AdminUserGroup"];
         }
     }
 }

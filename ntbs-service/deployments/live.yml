@@ -42,6 +42,23 @@ spec:
               value: "https://fs.caduceus.phe.gov.uk"
             - name: AdfsOptions__Wtrealm
               value: "https://ntbs.phe.nhs.uk/"
+            - name: AzureAdOptions__ClientId
+              valueFrom:
+                secretKeyRef:
+                  name: uat-phe-azuread-options
+                  key: clientId
+            - name: AzureAdOptions__ClientSecret
+              valueFrom:
+                secretKeyRef:
+                  name: uat-phe-azuread-options
+                  key: clientSecret
+            - name: AzureAdOptions__Authority
+              valueFrom:
+                secretKeyRef:
+                  name: uat-phe-azuread-options
+                  key: authority
+            - name: AzureAdOptions__Enabled
+              value: "true"
             - name: AppConfig__AuditingEnabled
               value: "true"
             - name: ConnectionStrings__ntbsContext
@@ -82,7 +99,7 @@ spec:
             - name: ExternalLinks__ReportingUri
               value: ""
             - name: HttpBasicAuth__Enabled
-              value: "true"
+              value: "false"
             - name: HttpBasicAuth__Username
               valueFrom:
                 secretKeyRef:

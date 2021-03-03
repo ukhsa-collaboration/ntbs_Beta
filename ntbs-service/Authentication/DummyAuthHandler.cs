@@ -14,9 +14,9 @@ namespace ntbs_service.Authentication
     {
         public static readonly string Name = "DummyAuth";
 
-        private readonly ClaimsPrincipal id;
+        private readonly ClaimsPrincipal claimsPrincipal;
 
-        public DummyAuthHandler(IOptionsMonitor<AdfsOptions> AdfsOptionsMonitor,
+        public DummyAuthHandler(IOptionsMonitor<AdOptions> AdOptionsMonitor,
                               IOptionsMonitor<AuthenticationSchemeOptions> options,
                               ILoggerFactory logger,
                               UrlEncoder encoder,
@@ -25,24 +25,24 @@ namespace ntbs_service.Authentication
             var id = new ClaimsIdentity(Name);
             // Add name claim
             id.AddClaim(new Claim(ClaimTypes.Name, "Developer", ClaimValueTypes.String));
-            var adfsOptions = AdfsOptionsMonitor.CurrentValue;
+            var adOptions = AdOptionsMonitor.CurrentValue;
 
             // Add role claim for base user role
-            id.AddClaim(new Claim(ClaimTypes.Role, adfsOptions.BaseUserGroup, ClaimValueTypes.String));
+            id.AddClaim(new Claim(ClaimTypes.Role, adOptions.BaseUserGroup, ClaimValueTypes.String));
 
             // Add role claim for user role - as specified in appsettings.Development.json
-            string groupDev = adfsOptions.DevGroup ?? adfsOptions.NationalTeamAdGroup;
+            string groupDev = adOptions.DevGroup ?? adOptions.NationalTeamAdGroup;
             id.AddClaim(new Claim(ClaimTypes.Role, groupDev, ClaimValueTypes.String));
 
             // Add role claim for user role - Admin
-            string groupAdmin = adfsOptions.AdminUserGroup;
+            string groupAdmin = adOptions.AdminUserGroup;
             id.AddClaim(new Claim(ClaimTypes.Role, groupAdmin, ClaimValueTypes.String));
 
             id.AddClaim(new Claim(ClaimTypes.Upn, "Developer@ntbs.phe.com", ClaimValueTypes.String));
-            this.id = new ClaimsPrincipal(id);
+            claimsPrincipal = new ClaimsPrincipal(id);
         }
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
-            => Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(id, Name)));
+            => Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(claimsPrincipal, Name)));
     }
 }

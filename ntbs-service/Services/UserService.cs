@@ -24,20 +24,19 @@ namespace ntbs_service.Services
         Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user);
         Task RecordUserLoginAsync(string username);
         Task<User> GetUser(ClaimsPrincipal user);
-
-        Task<string> GetUserDisplayName(ClaimsPrincipal user);
+        string GetUserDisplayName(ClaimsPrincipal user);
     }
 
     public class UserService : IUserService
     {
-        private readonly AdfsOptions _config;
+        private readonly AdOptions _config;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IUserRepository _userRepository;
 
         public UserService(
             IReferenceDataRepository referenceDataRepository,
             IUserRepository userRepository,
-            IOptionsMonitor<AdfsOptions> options)
+            IOptionsMonitor<AdOptions> options)
         {
             _referenceDataRepository = referenceDataRepository;
             _userRepository = userRepository;
@@ -116,9 +115,9 @@ namespace ntbs_service.Services
             });
         }
 
-        public async Task<string> GetUserDisplayName(ClaimsPrincipal user)
+        public string GetUserDisplayName(ClaimsPrincipal user)
         {
-            string displayName = NameFormattingHelper.FormatDisplayName(user.Identity.Name);
+            var displayName = NameFormattingHelper.FormatDisplayName(user.Identity.Name);
 
             if (displayName.Contains("@"))
             {

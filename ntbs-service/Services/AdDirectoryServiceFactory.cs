@@ -11,19 +11,19 @@ namespace ntbs_service.Services
     public class AdDirectoryServiceServiceFactory : IAdDirectoryServiceFactory
     {
         private readonly LdapSettings _ldapSettings;
-        private readonly AdfsOptions _adfsOptions;
+        private readonly AdOptions _adOptions;
 
         public AdDirectoryServiceServiceFactory(
             IOptions<LdapSettings> LdapSettings,
-            IOptions<AdfsOptions> adfsOptions)
+            IOptions<AdOptions> adfsOptions)
         {
-            this._ldapSettings = LdapSettings.Value;
-            this._adfsOptions = adfsOptions.Value;
+            _ldapSettings = LdapSettings.Value;
+            _adOptions = adfsOptions.Value;
         }
 
         public IAdDirectoryService Create()
         {
-            return new AdDirectoryService(_ldapSettings, _adfsOptions);
+            return new AdDirectoryService(_ldapSettings, _adOptions);
         }
     }
 }

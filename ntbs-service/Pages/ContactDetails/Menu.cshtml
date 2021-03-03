@@ -8,7 +8,7 @@
 }
 
 <nhs-width-container container-width="Standard">
-    <h2 class="nhsuk-heading-l"> @(await UserService.GetUserDisplayName(@User)) </h2>
+    <h2 class="nhsuk-heading-l"> @UserService.GetUserDisplayName(@User) </h2>
    
     <div>
         <a class="submenu-list-item-non-js" href="/ContactDetails">
