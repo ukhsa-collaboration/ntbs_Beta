@@ -308,6 +308,7 @@ namespace ntbs_service
                     options.CallbackPath =  azureAdConfig["CallbackPath"];
                     options.CorrelationCookie.SameSite = SameSiteMode.None;
                     options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.NonceCookie.SecurePolicy = CookieSecurePolicy.Always;
 
                     options.Events = new OpenIdConnectEvents();
                     options.Events.OnTokenValidated += async context =>
