@@ -27,14 +27,14 @@
                     <strong> Outcome at 12 months </strong> @(Model.OutcomeAt12Months?.TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded")
                 </div>
             }
-            
+
             @if (Model.Should24MonthOutcomeBeDisplayed)
             {
                 <div>
                     <strong> Outcome at 24 months </strong> @(Model.OutcomeAt24Months?.TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded")
                 </div>
             }
-            
+
             @if (Model.Should36MonthOutcomeBeDisplayed)
             {
                 <div>
@@ -46,7 +46,7 @@
         @for (var episodeNumber = 1; episodeNumber <= Model.GroupedTreatmentEvents.Count; episodeNumber++)
         {
             var treatmentEvents = Model.GroupedTreatmentEvents[episodeNumber];
-            
+
             <div>
                 <h4 class="episode-grouping-overview-heading">Treatment period @episodeNumber</h4>
                 @if (treatmentEvents.Last().IsEpisodeEndingTreatmentEvent())
@@ -58,7 +58,7 @@
                     <span>@treatmentEvents.First().FormattedEventDate to Present</span>
                 }
             </div>
-            <nhs-table classes="nhsuk-table--reduced-font">
+            <nhs-table classes="nhsuk-table--reduced-font" responsive>
                 <nhs-table-head>
                     <nhs-table-item classes="one-sixth-column">Date</nhs-table-item>
                     <nhs-table-item classes="two-sixth-column">Event</nhs-table-item>
@@ -69,8 +69,10 @@
                     @foreach (var treatmentEvent in treatmentEvents)
                     {
                         <nhs-table-body-row>
-                            <nhs-table-item>@treatmentEvent.FormattedEventDate</nhs-table-item>
-                            <nhs-table-item>
+                            <nhs-table-item heading-text="Date">
+                                @treatmentEvent.FormattedEventDate
+                            </nhs-table-item>
+                            <nhs-table-item heading-text="Event">
                                 @treatmentEvent.FormattedEventTypeAndOutcome
                                 @if (treatmentEvent.TreatmentOutcome?.TreatmentOutcomeSubType != null)
                                 {
@@ -78,12 +80,16 @@
                                     <span>@treatmentEvent.TreatmentOutcome.TreatmentOutcomeSubType.GetDisplayName()</span>
                                 }
                             </nhs-table-item>
-                            <nhs-table-item>@treatmentEvent.TbService?.Name</nhs-table-item>
-                            <nhs-table-item>@treatmentEvent.CaseManager?.DisplayName</nhs-table-item>
+                            <nhs-table-item heading-text="TB service">
+                                @treatmentEvent.TbService?.Name
+                            </nhs-table-item>
+                            <nhs-table-item heading-text="Case Manager">
+                                @treatmentEvent.CaseManager?.DisplayName
+                            </nhs-table-item>
                         </nhs-table-body-row>
                     }
                 </nhs-table-body>
             </nhs-table>
         }
-    </div>   
+    </div>
 }
