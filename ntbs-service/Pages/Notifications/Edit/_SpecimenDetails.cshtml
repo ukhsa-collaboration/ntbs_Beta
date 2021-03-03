@@ -6,104 +6,114 @@
     <div id="specimens-details">
         @foreach (var specimen in Model)
         {
-            <div class="notification-specimen-summary">
-                <h5 class="section-header-with-background">Specimen #@specimen.ReferenceLaboratoryNumber</h5>
-                <div>
-                    <nhs-grid-row>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.SpecimenDate) </dt>
-                            <dd class="cell-min-height"> @specimen.FormattedSpecimenDate </dd>
-                        </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.SpecimenTypeCode) </dt>
-                            <dd class="cell-min-height"> @specimen.SpecimenTypeCode </dd>
-                        </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Species) </dt>
-                            <dd class="cell-min-height"> @specimen.Species </dd>
-                        </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LaboratoryName) </dt>
-                            <dd class="cell-min-height"> @specimen.LaboratoryName </dd>
-                        </nhs-grid-column>
-                    </nhs-grid-row>
-                    <nhs-grid-row>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Isoniazid) </dt>
-                            <dd class="cell-min-height"> @specimen.Isoniazid </dd>
-                        </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Rifampicin) </dt>
-                            <dd class="cell-min-height"> @specimen.Rifampicin </dd>
-                        </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Pyrazinamide) </dt>
-                            <dd class="cell-min-height"> @specimen.Pyrazinamide </dd>
-                        </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Ethambutol) </dt>
-                            <dd class="cell-min-height"> @specimen.Ethambutol </dd>
-                        </nhs-grid-column>
-                    </nhs-grid-row>
-                    <nhs-grid-row>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Aminoglycoside) </dt>
-                            <dd class="cell-min-height"> @specimen.Aminoglycoside </dd>
-                        </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Quinolone) </dt>
-                            <dd class="cell-min-height"> @specimen.Quinolone </dd>
-                        </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.MDR) </dt>
-                            <dd class="cell-min-height"> @specimen.MDR </dd>
-                        </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.XDR) </dt>
-                            <dd class="cell-min-height"> @specimen.XDR </dd>
-                        </nhs-grid-column>
-                    </nhs-grid-row>
+            <div class="nhsuk-care-card nhsuk-care-card--specimen">
+                <div class="nhsuk-care-card__heading-container">
+                    <h5 class="nhsuk-care-card__heading">
+                        <span role="text">
+                            Specimen #@specimen.ReferenceLaboratoryNumber
+                        </span>
+                    </h5>
+                    <span class="nhsuk-care-card__arrow" aria-hidden="true"></span>
                 </div>
-                
-                <br>
-                <h6 class="section-header-with-background">Patient Details</h6>
 
-                <div>
-                    <nhs-grid-row>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabNhsNumber) </dt>
-                            <dd class="cell-min-height"> @specimen.FormattedNhsNumber </dd>
-                        </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneHalf">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabName) </dt>
-                            <dd class="cell-min-height"> @specimen.LabName </dd>
-                        </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabSex) </dt>
-                            <dd class="cell-min-height"> @specimen.LabSex </dd>
-                        </nhs-grid-column>
-                    </nhs-grid-row>
-                    <nhs-grid-row>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabBirthDate) </dt>
-                            <dd class="cell-min-height"> @specimen.FormattedLabDob </dd>
-                        </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneHalf">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabAddress) </dt>
-                            <dd class="cell-min-height"> @specimen.LabAddress </dd>
-                        </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabPostcode) </dt>
-                            <dd class="cell-min-height"> @specimen.LabPostcode </dd>
-                        </nhs-grid-column>
-                    </nhs-grid-row>                
+                <div class="nhsuk-care-card__content">
+                    <div>
+                        <nhs-grid-row>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.SpecimenDate) </dt>
+                                <dd class="cell-min-height"> @specimen.FormattedSpecimenDate </dd>
+                            </nhs-grid-column>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.SpecimenTypeCode) </dt>
+                                <dd class="cell-min-height"> @specimen.SpecimenTypeCode </dd>
+                            </nhs-grid-column>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Species) </dt>
+                                <dd class="cell-min-height"> @specimen.Species </dd>
+                            </nhs-grid-column>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LaboratoryName) </dt>
+                                <dd class="cell-min-height"> @specimen.LaboratoryName </dd>
+                            </nhs-grid-column>
+                        </nhs-grid-row>
+                        <nhs-grid-row>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Isoniazid) </dt>
+                                <dd class="cell-min-height"> @specimen.Isoniazid </dd>
+                            </nhs-grid-column>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Rifampicin) </dt>
+                                <dd class="cell-min-height"> @specimen.Rifampicin </dd>
+                            </nhs-grid-column>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Pyrazinamide) </dt>
+                                <dd class="cell-min-height"> @specimen.Pyrazinamide </dd>
+                            </nhs-grid-column>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Ethambutol) </dt>
+                                <dd class="cell-min-height"> @specimen.Ethambutol </dd>
+                            </nhs-grid-column>
+                        </nhs-grid-row>
+                        <nhs-grid-row>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Aminoglycoside) </dt>
+                                <dd class="cell-min-height"> @specimen.Aminoglycoside </dd>
+                            </nhs-grid-column>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Quinolone) </dt>
+                                <dd class="cell-min-height"> @specimen.Quinolone </dd>
+                            </nhs-grid-column>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.MDR) </dt>
+                                <dd class="cell-min-height"> @specimen.MDR </dd>
+                            </nhs-grid-column>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.XDR) </dt>
+                                <dd class="cell-min-height"> @specimen.XDR </dd>
+                            </nhs-grid-column>
+                        </nhs-grid-row>
+                    </div>
+
+                    <br>
+                    <h6 class="section-header-with-background">Patient Details</h6>
+
+                    <div>
+                        <nhs-grid-row>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabNhsNumber) </dt>
+                                <dd class="cell-min-height"> @specimen.FormattedNhsNumber </dd>
+                            </nhs-grid-column>
+                            <nhs-grid-column grid-column-width="OneHalf">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabName) </dt>
+                                <dd class="cell-min-height"> @specimen.LabName </dd>
+                            </nhs-grid-column>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabSex) </dt>
+                                <dd class="cell-min-height"> @specimen.LabSex </dd>
+                            </nhs-grid-column>
+                        </nhs-grid-row>
+                        <nhs-grid-row>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabBirthDate) </dt>
+                                <dd class="cell-min-height"> @specimen.FormattedLabDob </dd>
+                            </nhs-grid-column>
+                            <nhs-grid-column grid-column-width="OneHalf">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabAddress) </dt>
+                                <dd class="cell-min-height"> @specimen.LabAddress </dd>
+                            </nhs-grid-column>
+                            <nhs-grid-column grid-column-width="OneQuarter">
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabPostcode) </dt>
+                                <dd class="cell-min-height"> @specimen.LabPostcode </dd>
+                            </nhs-grid-column>
+                        </nhs-grid-row>
+                    </div>
+                    <button nhs-button-type="Standard"
+                        classes="ntbsuk-button--secondary unmatch-button"
+                        asp-page-handler="Unmatch"
+                        asp-route-labReferenceNumber="@specimen.ReferenceLaboratoryNumber">
+                            Unmatch
+                    </button>
                 </div>
-                <button nhs-button-type="Standard"
-                    classes="ntbsuk-button--secondary unmatch-button" 
-                    asp-page-handler="Unmatch" 
-                    asp-route-labReferenceNumber="@specimen.ReferenceLaboratoryNumber">
-                        Unmatch
-                </button>
             </div>
         }
     </div>

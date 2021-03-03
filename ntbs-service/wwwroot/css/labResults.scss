@@ -75,4 +75,7 @@
       border-color: $phe-navy;
     }
   }
+
+  @include nhsuk-responsive-margin(4, 'bottom');
+  @include nhsuk-responsive-margin(4, 'top');
 }
