@@ -328,7 +328,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 throw new NotImplementedException();
             }
 
-            public Task<IEnumerable<MigrationLegacyUser>> GetLegacyUserByUsername(string username)
+            public Task<MigrationLegacyUser> GetLegacyUserByUsername(string username)
             {
                 throw new NotImplementedException();
             }

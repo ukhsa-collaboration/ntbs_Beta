@@ -29,7 +29,7 @@ namespace ntbs_service.DataMigration
         Task<IEnumerable<MigrationDbMBovisKnownCase>> GetMigrationMBovisExposureToKnownCase(List<string> legacyIds);
         Task<IEnumerable<MigrationDbMBovisOccupation>> GetMigrationMBovisOccupationExposures(List<string> legacyIds);
         Task<IEnumerable<MigrationDbMBovisMilkConsumption>> GetMigrationMBovisUnpasteurisedMilkConsumption(List<string> legacyIds);
-        Task<IEnumerable<MigrationLegacyUser>> GetLegacyUserByUsername(string username);
+        Task<MigrationLegacyUser> GetLegacyUserByUsername(string username);
         Task<IEnumerable<MigrationLegacyUserHospital>> GetLegacyUserHospitalsByUsername(string username);
 
         Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>> GetReferenceLaboratoryMatches(
@@ -259,9 +259,9 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        public async Task<IEnumerable<MigrationLegacyUser>> GetLegacyUserByUsername(string username)
+        public async Task<MigrationLegacyUser> GetLegacyUserByUsername(string username)
         {
-            return await ExecuteByUsernameQuery<MigrationLegacyUser>(LegacyUserByUsernameQuery, username);
+            return (await ExecuteByUsernameQuery<MigrationLegacyUser>(LegacyUserByUsernameQuery, username)).SingleOrDefault();
         }
 
         public async Task<IEnumerable<MigrationLegacyUserHospital>> GetLegacyUserHospitalsByUsername(string username)
