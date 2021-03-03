@@ -56,10 +56,12 @@
     </validate-date>
     <br />
 
-    <h2> @title </h2>
-
     <filtered-dropdown filter-handler-path="GetFilteredListsByTbService" :filtering-refs="['caseManagers', 'hospitals']" inline-template>
-        <div>
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Large">
+                <h2 class="nhsuk-fieldset__heading"> @title </h2>
+            </nhs-fieldset-legend>
+
             @if (Model.Notification.NotificationStatus == NotificationStatus.Draft)
             {
                 <validate-input model="HospitalDetails" property="TBServiceCode" shouldvalidatefull="@fullValidation"
@@ -151,8 +153,7 @@
             </validate-input>
             <br />
 
-        </div>
+        </nhs-fieldset>
     </filtered-dropdown>
 
-    
 </div>

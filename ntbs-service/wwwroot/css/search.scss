@@ -39,7 +39,7 @@
 .nhs-form-group--search-date {
     display: inline-block;
 
-    @media(min-width: $tablet_breakpoint) {
+    @include mq($from: desktop) {
         display: flex;
         flex-wrap: wrap;
     }
@@ -49,7 +49,7 @@
     display: flex;
     flex-direction: column;
 
-    @media(min-width: $tablet_breakpoint) {
+    @include mq($from: desktop) {
         flex-direction: row;
     }
 }
@@ -60,14 +60,30 @@
     width: 160px;
 }
 
-.search-header {
-    margin-bottom: 12px;
-}
-
 .search-label--long {
     height: 100%;
     margin: auto 0;
     width: 180px;
+}
+
+.search-legend--standard {
+    height: 100%;
+    margin: auto 0;
+    width: 160px;
+
+    @include mq($from: desktop) {
+        float: left;
+    }
+}
+
+.search-legend--long {
+    height: 100%;
+    margin: auto 0;
+    width: 180px;
+
+    @include mq($from: desktop) {
+        float: left;
+    }
 }
 
 .search-hint {
@@ -83,7 +99,7 @@
     display: flex;
     margin: 5px 0;
 
-    @media(min-width: $tablet_breakpoint) {
+    @include mq($from: desktop) {
         margin: 0;
     }
 }
@@ -93,7 +109,7 @@
     width: 45px;
     height: 100%;
 
-    @media(min-width: $tablet_breakpoint) {
+    @include mq($from: desktop) {
         width: auto;
     }
 }
@@ -107,7 +123,7 @@
     display: block;
     margin: 10px 0 20px 0;
 
-    @media(min-width: $tablet_breakpoint) {
+    @include mq($from: desktop) {
         display: flex;
         margin: 0;
     }
