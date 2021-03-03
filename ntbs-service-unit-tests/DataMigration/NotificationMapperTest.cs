@@ -115,6 +115,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal("Dr McGown", notification.HospitalDetails.Consultant);
 
             Assert.Equal(HIVTestStatus.HIVStatusKnown, notification.ClinicalDetails.HIVTestState);
+            Assert.Equal(Status.Yes, notification.ClinicalDetails.HomeVisitCarriedOut);
             Assert.Equal("Patient did not begin course of treatment under DOT", notification.ClinicalDetails.Notes);
             
             Assert.Equal(Status.No, notification.SocialRiskFactors.RiskFactorDrugs.Status);
