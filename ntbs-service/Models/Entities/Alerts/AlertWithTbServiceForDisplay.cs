@@ -8,10 +8,13 @@ namespace ntbs_service.Models.Entities.Alerts
     public class AlertWithTbServiceForDisplay
     {
         public int AlertId { get; set; }
+        [Display(Name = "NTBS Id")]
         public int? NotificationId { get; set; }
         public DateTime CreationDate { get; set; }
         public bool NotDismissable  { get; set; }
+        [Display(Name = "Alert date")]
         public string FormattedCreationDate => CreationDate.ConvertToString();
+        [Display(Name = "Alert type")]
         public AlertType AlertType { get; set; }
         public string ActionLink { get; set; }
         public string Action { get; set; }
