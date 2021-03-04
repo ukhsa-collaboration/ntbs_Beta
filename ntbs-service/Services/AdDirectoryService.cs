@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,14 +28,14 @@ namespace ntbs_service.Services
     public class AdDirectoryService : IAdDirectoryService
     {
         private readonly LdapSettings _settings;
-        private readonly AdfsOptions _adOptions;
+        private readonly AdOptions _adOptions;
 
         // ReSharper disable once UnusedMember.Global - constructor needed for mocking in tests
         public AdDirectoryService() { }
 
         private readonly LdapConnection _connection;
 
-        public AdDirectoryService(LdapSettings settings, AdfsOptions adOptions)
+        public AdDirectoryService(LdapSettings settings, AdOptions adOptions)
         {
             // TODO NTBS-1672 run a DNS query that does the foollwing:
             // dig +short -t srv _ldap._tcp.SP4-0JG._sites.dc._msdcs.phe.gov.uk

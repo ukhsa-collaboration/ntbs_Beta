@@ -18,10 +18,11 @@ namespace ntbs_service.Pages
         {
             // We just want to return to the homepage (which will trigger going to login again)
             // Check to see if Azure Ad Auth is enabled.
-            if (azureAdOptions.CurrentValue.Enabled.ToLower() == "true")
+            if (azureAdOptions.CurrentValue.Enabled)
             {
                 BaseUrl = azureAdOptions.CurrentValue.Authority;
-                RedirectUrl = $"{BaseUrl}/oauth2/logout?client_id={azureAdOptions.CurrentValue.ClientId}&post_logout_redirect_uri={options.CurrentValue.Wtrealm}";
+                RedirectUrl =
+                    $"{BaseUrl}/oauth2/logout?client_id={azureAdOptions.CurrentValue.ClientId}&post_logout_redirect_uri={options.CurrentValue.Wtrealm}";
             }
             else
             {
@@ -29,7 +30,6 @@ namespace ntbs_service.Pages
                 BaseUrl = options.CurrentValue.AdfsUrl;
                 RedirectUrl = $"{BaseUrl}/adfs/ls/?wa=wsignout1.0&wreply={ReturnUrl}";
             }
-
         }
 
         public async Task<RedirectResult> OnGetAsync()

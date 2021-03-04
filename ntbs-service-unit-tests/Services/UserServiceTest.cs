@@ -20,13 +20,13 @@ namespace ntbs_service_unit_tests.Services
         private const string NationalTeam = "NTS";
         private const string ServicePrefix = "Service";
         private readonly IUserService _service;
-        private readonly AdfsOptions _options = new AdfsOptions
+        private readonly AdOptions _options = new AdOptions
         {
             NationalTeamAdGroup = NationalTeam,
             ServiceGroupAdPrefix = ServicePrefix,
         };
 
-        private readonly Mock<IOptionsMonitor<AdfsOptions>> _mockOptionsMonitor;
+        private readonly Mock<IOptionsMonitor<AdOptions>> _mockOptionsMonitor;
         private readonly Mock<IReferenceDataRepository> _mockReferenceDataRepository;
         private readonly Mock<IUserRepository> _mockUserRepository;
         private readonly Mock<ClaimsPrincipal> _mockUser;
@@ -34,7 +34,7 @@ namespace ntbs_service_unit_tests.Services
         public UserServiceTest()
         {
             _mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
-            _mockOptionsMonitor = new Mock<IOptionsMonitor<AdfsOptions>>();
+            _mockOptionsMonitor = new Mock<IOptionsMonitor<AdOptions>>();
             _mockUserRepository = new Mock<IUserRepository>();
             _mockOptionsMonitor.Setup(o => o.CurrentValue).Returns(_options);
             _service = new UserService(_mockReferenceDataRepository.Object, _mockUserRepository.Object, _mockOptionsMonitor.Object);

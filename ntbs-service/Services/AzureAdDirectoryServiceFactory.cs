@@ -14,20 +14,22 @@ namespace ntbs_service.Services
     public class AzureAdDirectoryServiceFactory : IAzureAdDirectoryServiceFactory
     {
         private IGraphServiceClient _graphServiceClient;
+        private readonly AdOptions _adSettings;
         private readonly AzureAdOptions _azureAdSettings;
 
         public AzureAdDirectoryServiceFactory(
-            IOptions<AzureAdOptions> AzureAdSettings
-            )
+            IOptions<AdOptions> AdSettings,
+            IOptions<AzureAdOptions> AzureAdSettings)
         {
-            this._azureAdSettings = AzureAdSettings.Value;
+            _azureAdSettings = AzureAdSettings.Value;
+            _adSettings = AdSettings.Value;
         }
 
         public IAzureAdDirectoryService Create()
         {
             IConfidentialClientApplication clientApplication = ConfidentialClientApplicationBuilder
             .Create(_azureAdSettings.ClientId)
-            .WithAuthority(this._azureAdSettings.Authority)
+            .WithAuthority(_azureAdSettings.Authority)
             .WithClientSecret(_azureAdSettings.ClientSecret)
             .Build();
 
@@ -35,8 +37,8 @@ namespace ntbs_service.Services
             var authProvider = new ClientCredentialProvider(clientApplication, scopes);
 
 
-            this._graphServiceClient = new GraphServiceClient(authProvider);
-            return new AzureAdDirectoryService(this._graphServiceClient, this._azureAdSettings);
+            _graphServiceClient = new GraphServiceClient(authProvider);
+            return new AzureAdDirectoryService(_graphServiceClient, _adSettings);
         }
     }
 }

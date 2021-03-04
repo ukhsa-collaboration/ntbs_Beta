@@ -93,7 +93,7 @@
                     <navigation-with-submenu inline-template>
                         <li class="nav-with-submenu-header govuk-header__navigation-item header-navigation-link">
                             <a v-on:click="toggleMenu" href="/ContactDetails/Menu" class="govuk-header__link header-navigation-list-item nav-with-submenu-header-link">
-                                @(await UserService.GetUserDisplayName(@User)) <i class="arrow down"></i>
+                                @UserService.GetUserDisplayName(@User) <i class="arrow down"></i>
                             </a>
                             <ul ref="navigation-submenu" v-if="showMenu" class="nav-submenu-list" >
                                 <li class="header-navigation-link nav-submenu-list-item">
