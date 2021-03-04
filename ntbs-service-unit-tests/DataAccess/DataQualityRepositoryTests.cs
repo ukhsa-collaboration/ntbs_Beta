@@ -38,42 +38,42 @@ namespace ntbs_service_unit_tests.DataAccess
             {
                 await context.Database.EnsureDeletedAsync();
                 await context.Database.EnsureCreatedAsync();
-                
+
                 // We will use the birth country alert as a proxy for testing the common path ways of the
                 // data quality repository
                 // All seeded notifications will be eligible for this alert
-                
+
                 var notification1 = NotificationEligibleForCountryOfBirthDqAlert(NoAlertsName);
 
                 var notification2 = NotificationEligibleForCountryOfBirthDqAlert(BirthCountryAlertName);
-                notification2.Alerts = new List<Alert> {new DataQualityBirthCountryAlert()};
+                notification2.Alerts = new List<Alert> { new DataQualityBirthCountryAlert() };
 
                 var notification3 = NotificationEligibleForCountryOfBirthDqAlert(ClinicalDatesAlertName);
-                notification3.Alerts = new List<Alert> {new DataQualityClinicalDatesAlert()};
+                notification3.Alerts = new List<Alert> { new DataQualityClinicalDatesAlert() };
 
                 await context.AddRangeAsync(notification1, notification2, notification3);
-                
+
                 await context.SaveChangesAsync();
             }
-            
+
             using (var context = new NtbsContext(ContextOptions))
             {
                 var repo = new DataQualityRepository(context);
-                
+
                 // ACT
                 // Get all possible ones
                 var notifications = await repo.GetNotificationsEligibleForDqBirthCountryAlertsAsync(100, 0);
-                
+
                 // ASSERT
                 // Out of the 3 eligible notifications, 1 already has the alert
-                Assert.True(notifications.Any(n => n.PatientDetails.FamilyName == NoAlertsName), 
+                Assert.True(notifications.Any(n => n.PatientDetails.FamilyName == NoAlertsName),
                     "Eligible notification with no other alerts not selected");
                 Assert.True(notifications.Any(n => n.PatientDetails.FamilyName == ClinicalDatesAlertName),
                     "Eligible notification with only other alerts types not selected");
                 Assert.Equal(2, notifications.Count);
             }
         }
-        
+
         private static Notification NotificationEligibleForCountryOfBirthDqAlert(string name)
         {
             return new Notification

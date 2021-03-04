@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
@@ -62,7 +61,7 @@ namespace ntbs_service.Pages.Notifications
         public async Task<IActionResult> OnPostConfirmAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            
+
             var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
             if (permissionLevel != PermissionLevel.Edit)
             {
@@ -84,7 +83,7 @@ namespace ntbs_service.Pages.Notifications
             if (Notification.NotificationStatus == NotificationStatus.Notified)
             {
                 await Service.DenotifyNotificationAsync(
-                    NotificationId, 
+                    NotificationId,
                     DenotificationDetails,
                     User.Username());
             }

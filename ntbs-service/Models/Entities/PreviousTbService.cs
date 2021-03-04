@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +11,7 @@ namespace ntbs_service.Models.Entities
         public string TbServiceCode { get; set; }
         public string PhecCode { get; set; }
         public DateTime TransferDate { get; set; }
-        
+
         public int NotificationId { get; set; }
         public virtual Notification Notification { get; set; }
         string IHasRootEntityForAuditing.RootEntityType => RootEntities.Notification;

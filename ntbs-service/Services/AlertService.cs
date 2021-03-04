@@ -59,7 +59,7 @@ namespace ntbs_service.Services
             var alert = await _alertRepository.GetOpenAlertByNotificationId<T>(notification.NotificationId);
             if (alert == null) { return; }
 
-            Func<Notification,bool> notificationQualifiesCheck;
+            Func<Notification, bool> notificationQualifiesCheck;
             switch (alert)
             {
                 case DataQualityBirthCountryAlert _:
@@ -88,7 +88,7 @@ namespace ntbs_service.Services
                     break;
                 default: throw new ArgumentException("Unexpected alert type passed for automatic closing");
             }
-            
+
             if (!notificationQualifiesCheck(notification))
             {
                 await DismissAlertAsync(alert.AlertId, null);
@@ -107,7 +107,7 @@ namespace ntbs_service.Services
             await PopulateAndAddAlertAsync(alert);
             return true;
         }
-        
+
         public async Task AddAlertsRangeAsync(List<Alert> alerts)
         {
             await _alertRepository.AddAlertRangeAsync(alerts);
@@ -166,7 +166,7 @@ namespace ntbs_service.Services
                     throw new DataException(
                         $"Reporting database sourced NotificationId {specimenMatchPairing.NotificationId} was not found in NTBS database.");
                 }
-                
+
                 alerts.Add(new UnmatchedLabResultAlert
                 {
                     AlertStatus = AlertStatus.Open,
@@ -178,7 +178,7 @@ namespace ntbs_service.Services
 
             await _alertRepository.AddAlertRangeAsync(alerts);
         }
-        
+
         private async Task PopulateAndAddAlertAsync(Alert alert)
         {
             alert.CreationDate = DateTime.Today;

@@ -19,7 +19,7 @@ namespace ntbs_service.Pages.Reports
 
         [BindProperty(SupportsGet = true)]
         public string Id { get; set; }
-        
+
         public string ReportingUri { get; }
 
 

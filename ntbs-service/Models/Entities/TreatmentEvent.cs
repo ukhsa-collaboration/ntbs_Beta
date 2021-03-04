@@ -41,10 +41,10 @@ namespace ntbs_service.Models.Entities
 
         public int NotificationId { get; set; }
         public virtual Notification Notification { get; set; }
-        
+
         public string TbServiceCode { get; set; }
         public virtual TBService TbService { get; set; }
-        
+
         public string CaseManagerUsername { get; set; }
         public User CaseManager { get; set; }
 
@@ -54,7 +54,7 @@ namespace ntbs_service.Models.Entities
         public DateTime? DateOfNotification { get; set; }
         [NotMapped]
         public bool IsNotificationPostMortem { get; set; }
-        
+
         public bool TreatmentEventTypeIsOutcome => TreatmentEventType == Enums.TreatmentEventType.TreatmentOutcome;
         public bool TreatmentEventTypeIsNotRestart => TreatmentEventType != Enums.TreatmentEventType.TreatmentRestart;
         private bool TreatmentEventIsDeathEvent => TreatmentOutcome?.TreatmentOutcomeType == TreatmentOutcomeType.Died;
@@ -94,11 +94,11 @@ namespace ntbs_service.Models.Entities
 
         private static IList<TreatmentEventType> StartingTreatmentEventTypes => new List<TreatmentEventType>
         {
-            Enums.TreatmentEventType.TreatmentStart, 
+            Enums.TreatmentEventType.TreatmentStart,
             Enums.TreatmentEventType.DiagnosisMade
         };
 
-        public bool IsEditable => TreatmentEventType != null 
+        public bool IsEditable => TreatmentEventType != null
                                   && EditableTreatmentEventTypes.Contains(TreatmentEventType.Value);
 
         public bool IsStartingEvent => TreatmentEventType != null

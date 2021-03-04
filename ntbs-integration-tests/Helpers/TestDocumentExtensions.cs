@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using Xunit;
@@ -28,7 +27,7 @@ namespace ntbs_integration_tests.Helpers
             string expectedMessage)
         {
             // assert the error appears in the error summary
-            var errorLink = (IHtmlAnchorElement) document?.QuerySelector(EscapeQuerySelector($"a#error-summary-{summaryInputName}"));
+            var errorLink = (IHtmlAnchorElement)document?.QuerySelector(EscapeQuerySelector($"a#error-summary-{summaryInputName}"));
             Assert.NotNull(errorLink);
             Assert.Equal(expectedMessage, errorLink.TextContent);
 

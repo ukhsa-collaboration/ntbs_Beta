@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
@@ -16,7 +15,7 @@ namespace ntbs_service.Helpers
                             .GetCustomAttribute<DisplayAttribute>()
                             ?.GetName() ?? string.Empty;
         }
-        
+
         public static string GetDisplayName(this Type model)
         {
             return model.GetCustomAttribute<DisplayAttribute>()

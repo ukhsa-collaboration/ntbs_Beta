@@ -58,20 +58,29 @@ namespace ntbs_service_unit_tests.Services
                 RiskFactorDrugs =
                     new RiskFactorDetails(RiskFactorType.Drugs)
                     {
-                        IsCurrent = true, MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = parsedStatus
+                        IsCurrent = true,
+                        MoreThanFiveYearsAgo = true,
+                        InPastFiveYears = true,
+                        Status = parsedStatus
                     },
                 RiskFactorHomelessness =
                     new RiskFactorDetails(RiskFactorType.Homelessness)
                     {
-                        IsCurrent = true, MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = parsedStatus
+                        IsCurrent = true,
+                        MoreThanFiveYearsAgo = true,
+                        InPastFiveYears = true,
+                        Status = parsedStatus
                     },
                 RiskFactorImprisonment =
                     new RiskFactorDetails(RiskFactorType.Imprisonment)
                     {
-                        IsCurrent = true, MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = parsedStatus
+                        IsCurrent = true,
+                        MoreThanFiveYearsAgo = true,
+                        InPastFiveYears = true,
+                        Status = parsedStatus
                     },
             };
-            var notification = new Notification {SocialRiskFactors = socialRiskFactors};
+            var notification = new Notification { SocialRiskFactors = socialRiskFactors };
 
             // Act
             await _notificationService.UpdateSocialRiskFactorsAsync(notification, socialRiskFactors);
@@ -110,20 +119,29 @@ namespace ntbs_service_unit_tests.Services
                 RiskFactorDrugs =
                     new RiskFactorDetails(RiskFactorType.Drugs)
                     {
-                        IsCurrent = null, MoreThanFiveYearsAgo = null, InPastFiveYears = null, Status = yes
+                        IsCurrent = null,
+                        MoreThanFiveYearsAgo = null,
+                        InPastFiveYears = null,
+                        Status = yes
                     },
                 RiskFactorHomelessness =
                     new RiskFactorDetails(RiskFactorType.Homelessness)
                     {
-                        IsCurrent = null, MoreThanFiveYearsAgo = null, InPastFiveYears = null, Status = yes
+                        IsCurrent = null,
+                        MoreThanFiveYearsAgo = null,
+                        InPastFiveYears = null,
+                        Status = yes
                     },
                 RiskFactorImprisonment =
                     new RiskFactorDetails(RiskFactorType.Imprisonment)
                     {
-                        IsCurrent = null, MoreThanFiveYearsAgo = null, InPastFiveYears = null, Status = yes
+                        IsCurrent = null,
+                        MoreThanFiveYearsAgo = null,
+                        InPastFiveYears = null,
+                        Status = yes
                     },
             };
-            var notification = new Notification {SocialRiskFactors = socialRiskFactors};
+            var notification = new Notification { SocialRiskFactors = socialRiskFactors };
 
             // Act
             await _notificationService.UpdateSocialRiskFactorsAsync(notification, socialRiskFactors);
@@ -154,9 +172,9 @@ namespace ntbs_service_unit_tests.Services
 
         public static IEnumerable<object[]> UkBornTestCases()
         {
-            yield return new object[] {new Country() {CountryId = 1, IsoCode = Countries.UkCode}, true};
-            yield return new object[] {new Country() {CountryId = 2, IsoCode = Countries.UnknownCode}, null};
-            yield return new object[] {new Country() {CountryId = 3, IsoCode = "Other code"}, false};
+            yield return new object[] { new Country() { CountryId = 1, IsoCode = Countries.UkCode }, true };
+            yield return new object[] { new Country() { CountryId = 2, IsoCode = Countries.UnknownCode }, null };
+            yield return new object[] { new Country() { CountryId = 3, IsoCode = "Other code" }, false };
         }
 
         [Theory, MemberData(nameof(UkBornTestCases))]
@@ -166,7 +184,7 @@ namespace ntbs_service_unit_tests.Services
             _mockReferenceDataRepository.Setup(rep => rep.GetCountryByIdAsync(country.CountryId))
                 .Returns(Task.FromResult(country));
             var notification = new Notification();
-            var patient = new PatientDetails() {CountryId = country.CountryId};
+            var patient = new PatientDetails() { CountryId = country.CountryId };
 
             // Act
             await _notificationService.UpdatePatientDetailsAsync(notification, patient);
@@ -182,7 +200,7 @@ namespace ntbs_service_unit_tests.Services
         {
             // Arrange
             var notification = new Notification();
-            var patient = new PatientDetails() {UkBorn = true};
+            var patient = new PatientDetails() { UkBorn = true };
 
             // Act
             await _notificationService.UpdatePatientDetailsAsync(notification, patient);
@@ -287,7 +305,9 @@ namespace ntbs_service_unit_tests.Services
         {
             var reference = new ImmunosuppressionDetails
             {
-                Status = Status.Yes, HasOther = false, OtherDescription = "Test description"
+                Status = Status.Yes,
+                HasOther = false,
+                OtherDescription = "Test description"
             };
             var input = new ImmunosuppressionDetails
             {
@@ -311,10 +331,11 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public async Task UpdatePatientFlags_StripsNhsNumberIfNotKnownAsync()
         {
-            var reference = new PatientDetails {NhsNumberNotKnown = true, NhsNumber = "12345"};
+            var reference = new PatientDetails { NhsNumberNotKnown = true, NhsNumber = "12345" };
             var input = new PatientDetails
             {
-                NhsNumberNotKnown = reference.NhsNumberNotKnown, NhsNumber = reference.NhsNumber
+                NhsNumberNotKnown = reference.NhsNumberNotKnown,
+                NhsNumber = reference.NhsNumber
             };
 
             await _notificationService.UpdatePatientFlagsAsync(input);
@@ -327,10 +348,11 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public async Task UpdatePatientFlags_DoesNotStripNhsNumberIfKnown()
         {
-            var reference = new PatientDetails {NhsNumberNotKnown = false, NhsNumber = "12345"};
+            var reference = new PatientDetails { NhsNumberNotKnown = false, NhsNumber = "12345" };
             var input = new PatientDetails
             {
-                NhsNumberNotKnown = reference.NhsNumberNotKnown, NhsNumber = reference.NhsNumber
+                NhsNumberNotKnown = reference.NhsNumberNotKnown,
+                NhsNumber = reference.NhsNumber
             };
 
             await _notificationService.UpdatePatientFlagsAsync(input);
@@ -342,8 +364,8 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public async Task UpdatePatientFlags_StripsPostcodeIfNoFixedAbode()
         {
-            var reference = new PatientDetails {NoFixedAbode = true, Postcode = "12345"};
-            var input = new PatientDetails {NoFixedAbode = reference.NoFixedAbode, Postcode = reference.Postcode};
+            var reference = new PatientDetails { NoFixedAbode = true, Postcode = "12345" };
+            var input = new PatientDetails { NoFixedAbode = reference.NoFixedAbode, Postcode = reference.Postcode };
 
             await _notificationService.UpdatePatientFlagsAsync(input);
 
@@ -355,8 +377,8 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public async Task UpdatePatientFlags_DoesNotStripPostcodeIfFixedAbode()
         {
-            var reference = new PatientDetails {NoFixedAbode = false, Postcode = "12345"};
-            var input = new PatientDetails {NoFixedAbode = reference.NoFixedAbode, Postcode = reference.Postcode};
+            var reference = new PatientDetails { NoFixedAbode = false, Postcode = "12345" };
+            var input = new PatientDetails { NoFixedAbode = reference.NoFixedAbode, Postcode = reference.Postcode };
 
             await _notificationService.UpdatePatientFlagsAsync(input);
 
@@ -367,13 +389,14 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public async Task UpdatePatientFlags_StripsOccupationFreeTextIfNoFreeTextForOccupation()
         {
-            var reference = new PatientDetails {OccupationId = 1, OccupationOther = "12345"};
+            var reference = new PatientDetails { OccupationId = 1, OccupationOther = "12345" };
             var input = new PatientDetails
             {
-                OccupationId = reference.OccupationId, OccupationOther = reference.OccupationOther
+                OccupationId = reference.OccupationId,
+                OccupationOther = reference.OccupationOther
             };
             _mockReferenceDataRepository.Setup(rep => rep.GetOccupationByIdAsync(input.OccupationId.Value))
-                .Returns(Task.FromResult(new Occupation {HasFreeTextField = false}));
+                .Returns(Task.FromResult(new Occupation { HasFreeTextField = false }));
 
             await _notificationService.UpdatePatientFlagsAsync(input);
 
@@ -385,13 +408,14 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public async Task UpdatePatientFlags_DoesNotStripOccupationFreeTextIfFreeTextForOccupation()
         {
-            var reference = new PatientDetails {OccupationId = 1, OccupationOther = "12345"};
+            var reference = new PatientDetails { OccupationId = 1, OccupationOther = "12345" };
             var input = new PatientDetails
             {
-                OccupationId = reference.OccupationId, OccupationOther = reference.OccupationOther
+                OccupationId = reference.OccupationId,
+                OccupationOther = reference.OccupationOther
             };
             _mockReferenceDataRepository.Setup(rep => rep.GetOccupationByIdAsync(input.OccupationId.Value))
-                .Returns(Task.FromResult(new Occupation {HasFreeTextField = true}));
+                .Returns(Task.FromResult(new Occupation { HasFreeTextField = true }));
 
             await _notificationService.UpdatePatientFlagsAsync(input);
 
@@ -447,7 +471,7 @@ namespace ntbs_service_unit_tests.Services
             var notification = new Notification
             {
                 NotificationId = notificationId,
-                ClinicalDetails = new ClinicalDetails {TreatmentStartDate = treatmentDate}
+                ClinicalDetails = new ClinicalDetails { TreatmentStartDate = treatmentDate }
             };
 
             // Act
@@ -470,7 +494,7 @@ namespace ntbs_service_unit_tests.Services
             var notification = new Notification
             {
                 NotificationId = notificationId,
-                ClinicalDetails = new ClinicalDetails {DiagnosisDate = diagnosisDate}
+                ClinicalDetails = new ClinicalDetails { DiagnosisDate = diagnosisDate }
             };
 
             // Act

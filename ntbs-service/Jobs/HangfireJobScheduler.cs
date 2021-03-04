@@ -21,7 +21,7 @@ namespace ntbs_service.Jobs
 
 
 
-        
+
         public static void ScheduleRecurringJobs(ScheduledJobsConfig scheduledJobsConfig)
         {
             if (scheduledJobsConfig.UserSyncEnabled)
@@ -36,7 +36,7 @@ namespace ntbs_service.Jobs
             {
                 RecurringJob.RemoveIfExists(UserSyncJobId);
             }
-            
+
             if (scheduledJobsConfig.CloseInactiveNotificationsEnabled)
             {
                 RecurringJob.AddOrUpdate<CloseInactiveNotificationsJob>(

@@ -1,8 +1,8 @@
-﻿using ntbs_integration_tests.Helpers;
-using ntbs_service;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using ntbs_integration_tests.Helpers;
+using ntbs_service;
 using ntbs_service.Helpers;
 using Xunit;
 
@@ -58,9 +58,9 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
             var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
-            result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}"); 
+            result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
         }
-        
+
         // Rather than testing all possible validation rules in here, we check one to verify the errors
         // are correctly wired up on the page.
         // The more extensive checks are left to unit tests
@@ -74,7 +74,7 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
-                
+
                 ["TravelDetails.HasTravel"] = "Yes",
                 ["TravelDetails.TotalNumberOfCountries"] = "3",
                 ["TravelDetails.Country1Id"] = "1",
@@ -121,10 +121,10 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 ["NotificationId"] = id.ToString(),
                 // These would normally make the models invalid...
-                ["TravelDetails.StayLengthInMonths1"] = "30", 
-                ["VisitorDetails.StayLengthInMonths1"] = "30", 
+                ["TravelDetails.StayLengthInMonths1"] = "30",
+                ["VisitorDetails.StayLengthInMonths1"] = "30",
                 // ... but the user says they are not providing these details
-                ["TravelDetails.HasTravel"] = "No", 
+                ["TravelDetails.HasTravel"] = "No",
                 ["VisitorDetails.HasVisitor"] = "No"
             };
 

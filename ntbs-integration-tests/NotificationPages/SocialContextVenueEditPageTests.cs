@@ -7,7 +7,6 @@ using ntbs_service;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
-using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -187,7 +186,7 @@ namespace ntbs_integration_tests.NotificationPages
             result.AssertValidationErrorResponse();
             resultDocument.AssertErrorSummaryMessage(
                 "Venue-DateTo",
-                "date-to", 
+                "date-to",
                 "To must be later than date from");
         }
 
@@ -248,7 +247,7 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await response.Content.ReadAsStringAsync();
             Assert.Contains("To must be later than date from", result);
         }
-        
+
         [Fact]
         public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
         {
@@ -265,7 +264,7 @@ namespace ntbs_integration_tests.NotificationPages
             var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(notificationSubPath);
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
         }
-        
+
         [Fact]
         public async Task NotifiedPageHasReturnLinkToOverview()
         {

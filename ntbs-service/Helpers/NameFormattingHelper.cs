@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace ntbs_service.Helpers
+﻿namespace ntbs_service.Helpers
 {
     public static class NameFormattingHelper
     {

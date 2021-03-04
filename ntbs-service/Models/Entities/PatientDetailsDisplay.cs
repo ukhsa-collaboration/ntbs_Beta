@@ -10,19 +10,19 @@ namespace ntbs_service.Models.Entities
     {
         [Display(Name = "Name")]
         public string FullName =>
-            string.Join(", ", new[] {FamilyName?.ToUpper(), GivenName}.Where(s => !String.IsNullOrEmpty(s)));
- 
+            string.Join(", ", new[] { FamilyName?.ToUpper(), GivenName }.Where(s => !String.IsNullOrEmpty(s)));
+
         public string FormattedNhsNumber => NhsNumberNotKnown
             ? "Not known"
             : NotificationFieldFormattingHelper.FormatNHSNumber(NhsNumber);
-        
+
         public string SexLabel => Sex?.Label;
         public string EthnicityLabel => Ethnicity?.Label;
         public string CountryName => Country?.Name;
         public IList<string> FormattedAddress => (Address ?? string.Empty).Split(Environment.NewLine);
         public string FormattedNoAbodeOrPostcodeString => NoFixedAbode ? "No fixed abode" : Postcode?.Trim();
         public string FormattedDob => Dob.ConvertToString();
-        
+
         public string FormattedOccupationString
         {
             get

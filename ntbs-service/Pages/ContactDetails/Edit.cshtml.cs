@@ -23,10 +23,10 @@ namespace ntbs_service.Pages.ContactDetails
             _userRepository = userRepository;
             _validationService = new ValidationService(this);
         }
-        
+
         [BindProperty]
         public User ContactDetails { get; set; }
-        
+
         public async Task<IActionResult> OnGetAsync()
         {
             ContactDetails = await _userService.GetUser(User);
@@ -34,10 +34,10 @@ namespace ntbs_service.Pages.ContactDetails
                 .OrderBy(x => x.TbService.Name)
                 .ThenBy(x => x.TbService.PHEC.Name)
                 .ToList();
-            
+
             return Page();
         }
-        
+
         public bool IsValid(string key)
         {
             return _validationService.IsValid(key);
@@ -56,7 +56,7 @@ namespace ntbs_service.Pages.ContactDetails
             {
                 return Page();
             }
-            
+
             await _userRepository.UpdateUserContactDetails(ContactDetails);
             return RedirectToPage("/ContactDetails/Index");
         }

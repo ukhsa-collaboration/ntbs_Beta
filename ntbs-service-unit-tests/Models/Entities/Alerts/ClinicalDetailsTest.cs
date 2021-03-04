@@ -29,15 +29,15 @@ namespace ntbs_service_unit_tests.Models.Entities.Alerts
             var allStatuses = allRisks ? Status.Yes : (Status?)null;
             var notification = new Notification
             {
-                ClinicalDetails = new ClinicalDetails {IsDotOffered = dotOffered},
+                ClinicalDetails = new ClinicalDetails { IsDotOffered = dotOffered },
                 SocialRiskFactors = new SocialRiskFactors
                 {
                     AlcoholMisuseStatus = alcoholMisuseStatus,
-                    RiskFactorDrugs = new RiskFactorDetails(RiskFactorType.Drugs) {Status = allStatuses},
-                    RiskFactorHomelessness = new RiskFactorDetails(RiskFactorType.Homelessness) {Status = allStatuses},
-                    RiskFactorImprisonment = new RiskFactorDetails(RiskFactorType.Imprisonment) {Status = allStatuses},
+                    RiskFactorDrugs = new RiskFactorDetails(RiskFactorType.Drugs) { Status = allStatuses },
+                    RiskFactorHomelessness = new RiskFactorDetails(RiskFactorType.Homelessness) { Status = allStatuses },
+                    RiskFactorImprisonment = new RiskFactorDetails(RiskFactorType.Imprisonment) { Status = allStatuses },
                     MentalHealthStatus = allStatuses,
-                    RiskFactorSmoking =   new RiskFactorDetails(RiskFactorType.Smoking) {Status = allStatuses},
+                    RiskFactorSmoking = new RiskFactorDetails(RiskFactorType.Smoking) { Status = allStatuses },
                     AsylumSeekerStatus = allStatuses,
                     ImmigrationDetaineeStatus = allStatuses
                 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -17,31 +16,31 @@ namespace ntbs_service.Pages.ContactDetails
     {
         private readonly IUserService _userService;
         private readonly IReferenceDataRepository _referenceDataRepository;
-        
+
         public IndexModel(IUserService userService, IReferenceDataRepository userRepository)
         {
             _userService = userService;
             _referenceDataRepository = userRepository;
         }
-        
+
         public User ContactDetails { get; set; }
-        
+
         [BindProperty(SupportsGet = true)]
         public string Username { get; set; }
-        
+
         public async Task<IActionResult> OnGetAsync()
         {
             ContactDetails = (Username == null)
                 ? await _userService.GetUser(User)
                 : await _referenceDataRepository.GetUserByUsernameAsync(Username);
-            
+
             if (ContactDetails == null)
             {
                 return NotFound();
             }
-            
+
             ViewData["IsEditable"] = Username == null || Username == User.Username();
-            
+
             ContactDetails.CaseManagerTbServices = ContactDetails.CaseManagerTbServices
                 .OrderBy(x => x.TbService.PHEC.Name)
                 .ThenBy(x => x.TbService.Name)
@@ -52,7 +51,7 @@ namespace ntbs_service.Pages.ContactDetails
                 : Request.Headers["Referer"].ToString();
 
             PrepareBreadcrumbs();
-            
+
             return Page();
         }
 
@@ -67,12 +66,13 @@ namespace ntbs_service.Pages.ContactDetails
 
             if (region != null)
             {
-                breadcrumbs.Add(new Breadcrumb {
-                    Label = region.Name, 
+                breadcrumbs.Add(new Breadcrumb
+                {
+                    Label = region.Name,
                     Url = $"/ServiceDirectory/Region/{region.Code}"
                 });
             }
-            breadcrumbs.Add((new Breadcrumb {Label = ContactDetails.DisplayName, Url = $"/ContactDetails/{ContactDetails.Username}"}));
+            breadcrumbs.Add((new Breadcrumb { Label = ContactDetails.DisplayName, Url = $"/ContactDetails/{ContactDetails.Username}" }));
 
             ViewData["Breadcrumbs"] = breadcrumbs;
         }

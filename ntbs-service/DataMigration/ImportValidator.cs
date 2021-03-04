@@ -18,7 +18,7 @@ namespace ntbs_service.DataMigration
             Notification notification);
     }
 
-    public class ImportValidator: IImportValidator
+    public class ImportValidator : IImportValidator
     {
         private readonly IImportLogger _logger;
         private readonly IReferenceDataRepository _referenceDataRepository;
@@ -123,13 +123,13 @@ namespace ntbs_service.DataMigration
                 notification.MBovisDetails.MBovisOccupationExposures,
                 notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions,
             }.Where(collection => collection != null).ToList();
-            
+
             // Set correct validation context everywhere
             NotificationHelper.SetShouldValidateFull(notification);
             void SetValidationContext(ModelBase model) => model.SetValidationContext(notification);
             singletonModels.ForEach(SetValidationContext);
             // patient details has special treatment due to the await-ed results below 
-            notification.PatientDetails.SetValidationContext(notification); 
+            notification.PatientDetails.SetValidationContext(notification);
             modelCollections.ForEach(collection => collection.ForEach(SetValidationContext));
 
             // Validate all models
@@ -171,7 +171,7 @@ namespace ntbs_service.DataMigration
             }
 
             var message = $"Case manager {details.CaseManagerUsername} is not present in NTBS database";
-            validationsResults.Add(new ValidationResult(message, new[] {nameof(details.CaseManagerUsername)}));
+            validationsResults.Add(new ValidationResult(message, new[] { nameof(details.CaseManagerUsername) }));
 
             return validationsResults;
         }

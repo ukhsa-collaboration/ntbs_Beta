@@ -14,10 +14,10 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         private readonly IItemRepository<MBovisUnpasteurisedMilkConsumption> _mBovisUnpasteurisedMilkConsumptionRepository;
         private readonly IReferenceDataRepository _referenceDataRepository;
 
-        [BindProperty(SupportsGet = true)] 
+        [BindProperty(SupportsGet = true)]
         public int? RowId { get; set; }
 
-        [BindProperty] 
+        [BindProperty]
         public MBovisUnpasteurisedMilkConsumption MBovisUnpasteurisedMilkConsumption { get; set; }
 
         public SelectList Countries { get; set; }
@@ -48,7 +48,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             {
                 return NotFound();
             }
-            
+
             if (RowId == null)
             {
                 return Page();
@@ -103,7 +103,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
             await _mBovisUnpasteurisedMilkConsumptionRepository.DeleteAsync(mBovisUnpasteurisedMilkConsumption);
 
-            return RedirectToPage("/Notifications/Edit/MBovisExposureToKnownCases", new {NotificationId});
+            return RedirectToPage("/Notifications/Edit/MBovisExposureToKnownCases", new { NotificationId });
         }
 
         public ContentResult OnGetValidateMBovisUnpasteurisedMilkConsumptionProperty(string key, string value,
@@ -115,12 +115,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         protected override IActionResult RedirectForNotified()
         {
-            return RedirectToPage("/Notifications/Edit/MBovisUnpasteurisedMilkConsumptions", new {NotificationId});
+            return RedirectToPage("/Notifications/Edit/MBovisUnpasteurisedMilkConsumptions", new { NotificationId });
         }
 
         protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
-            return RedirectToPage("/Notifications/Edit/MBovisUnpasteurisedMilkConsumptions", new {NotificationId});
+            return RedirectToPage("/Notifications/Edit/MBovisUnpasteurisedMilkConsumptions", new { NotificationId });
         }
 
         protected override async Task<Notification> GetNotificationAsync(int notificationId)

@@ -43,7 +43,7 @@ namespace ntbs_service.Services
                 var propertyDisplayName = model.GetMemberDisplayName(key);
                 ModelState.AddModelError(key, ValidationMessages.ValueInvalid(propertyDisplayName));
             }
-            
+
             return GetValidationResult(model, key);
         }
 
@@ -61,7 +61,7 @@ namespace ntbs_service.Services
             foreach (var (key, value) in propertyValueTuples)
             {
                 keys.Add(key);
-                
+
                 try
                 {
                     SetProperty(model, key, value);
@@ -74,7 +74,7 @@ namespace ntbs_service.Services
             }
             return GetValidationResult(model, keys);
         }
-        
+
         /// <exception cref="Exception">Throws a range of exceptions corresponding to invalid conversions to the property type</exception>
         private static void SetProperty(object model, string key, object value)
         {
@@ -96,7 +96,7 @@ namespace ntbs_service.Services
                      Ignore conversion issues when attempting to convert to a non-supported type e.g. List.
                 */
             }
-            
+
             property.SetValue(model, value);
         }
 

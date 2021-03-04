@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Hangfire;
 using ntbs_service.DataAccess;
-using ntbs_service.Models;
 using ntbs_service.Services;
 using Serilog;
 
@@ -27,7 +26,7 @@ namespace ntbs_service.Jobs
         public async Task Run(IJobCancellationToken token)
         {
             Log.Information($"Starting unmatched lab results alert job");
-            
+
             var dbPotentialMatches =
                 await _specimenService.GetAllSpecimenPotentialMatchesAsync();
 
@@ -35,10 +34,10 @@ namespace ntbs_service.Jobs
                 await _alertRepository.GetAllOpenUnmatchedLabResultAlertsAsync();
 
             var unneededAlerts = currentUnmatchedLabResultAlerts.Where(
-                alert => !dbPotentialMatches.Any(dbMatch => 
-                    dbMatch.NotificationId == alert.NotificationId && 
+                alert => !dbPotentialMatches.Any(dbMatch =>
+                    dbMatch.NotificationId == alert.NotificationId &&
                     dbMatch.ReferenceLaboratoryNumber == alert.SpecimenId)).ToList();
-            
+
             Log.Debug($"Number of redundant unmatched lab result alerts to be closed: {unneededAlerts.Count}");
             await _alertRepository.CloseAlertRangeAsync(unneededAlerts);
 
@@ -46,7 +45,7 @@ namespace ntbs_service.Jobs
                 dbMatch => !currentUnmatchedLabResultAlerts.Any(alert =>
                     alert.NotificationId == dbMatch.NotificationId &&
                     alert.SpecimenId == dbMatch.ReferenceLaboratoryNumber)).ToList();
-            
+
             Log.Debug($"Number of unmatched lab result alerts to be created: {dbMatchesRequiringAlerts.Count}");
             await _alertService.CreateAlertsForUnmatchedLabResults(dbMatchesRequiringAlerts);
 

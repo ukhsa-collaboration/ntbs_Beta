@@ -57,7 +57,7 @@ namespace EFAuditer
 
             var serializerSettings = Audit.Core.Configuration.JsonSettings;
             serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-            
+
             switch (audit.EventType)
             {
                 case "Insert":

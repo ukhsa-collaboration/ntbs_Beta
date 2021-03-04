@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -95,7 +94,7 @@ namespace ntbs_service.Pages.LabResults
 
         public async Task<IActionResult> OnGetPotentialMatchDataAsync(string manualNotificationId)
         {
-            var dynamicModel = new SpecimenPotentialMatchSelection {ManualNotificationId = manualNotificationId};
+            var dynamicModel = new SpecimenPotentialMatchSelection { ManualNotificationId = manualNotificationId };
 
             const string dynamicValidationModelName = "DynamicModel";
             const string propertyName = nameof(SpecimenPotentialMatchSelection.ManualNotificationId);
@@ -106,20 +105,20 @@ namespace ntbs_service.Pages.LabResults
             if (!ValidationService.IsValid(combinedModelPropertyKey))
             {
                 var errorMessage = ModelState[combinedModelPropertyKey].Errors.First().ErrorMessage;
-                return new JsonResult(new {errorMessage});
+                return new JsonResult(new { errorMessage });
             }
 
             var parsedManualNotificationId = int.Parse(manualNotificationId);
             var notification = await _notificationRepository.GetNotifiedNotificationAsync(parsedManualNotificationId);
             if (notification == null)
             {
-                return new JsonResult(new {errorMessage = ValidationMessages.LabResultNotificationDoesNotExist});
+                return new JsonResult(new { errorMessage = ValidationMessages.LabResultNotificationDoesNotExist });
             }
 
             var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, notification);
             if (permissionLevel != PermissionLevel.Edit)
             {
-                return new JsonResult(new {errorMessage = ValidationMessages.LabResultNotificationMatchNoPermission});
+                return new JsonResult(new { errorMessage = ValidationMessages.LabResultNotificationMatchNoPermission });
             }
 
             var potentialMatch = MapNotificationToSpecimenPotentialMatch(notification);
@@ -218,7 +217,7 @@ namespace ntbs_service.Pages.LabResults
                         ValidationMessages.LabResultNotificationMatchNoPermission);
                 }
             }
-            
+
             return notificationId;
         }
 

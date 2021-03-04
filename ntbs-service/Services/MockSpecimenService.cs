@@ -112,7 +112,7 @@ namespace ntbs_service.Services
             var specimens = new List<MatchedSpecimen>();
             if (notificationId == _notificationIdWithResults)
             {
-                specimens.Add(new MatchedSpecimen {NotificationId = _notificationIdWithResults});
+                specimens.Add(new MatchedSpecimen { NotificationId = _notificationIdWithResults });
             }
 
             return Task.FromResult((IEnumerable<MatchedSpecimen>)specimens);

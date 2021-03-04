@@ -23,9 +23,9 @@ namespace ntbs_service_unit_tests.Services
         [InlineData("RR/MDR/XDR", true, true, false)]
         [InlineData("NonMDR", false, false, true)]
         [InlineData("NonMDR", true, true, false)]
-        public void CreateOrDismissMdrAlert(string drugResistance, 
+        public void CreateOrDismissMdrAlert(string drugResistance,
             bool isMdrPlanned,
-            bool shouldCreateAlert, 
+            bool shouldCreateAlert,
             bool shouldDismissAlert)
         {
             // Arrange
@@ -34,32 +34,33 @@ namespace ntbs_service_unit_tests.Services
                 NotificationId = 1,
                 DrugResistanceProfile = new DrugResistanceProfile
                 {
-                    Species = "Random Species", DrugResistanceProfileString = drugResistance
+                    Species = "Random Species",
+                    DrugResistanceProfileString = drugResistance
                 },
                 ClinicalDetails = new ClinicalDetails
                 {
                     TreatmentRegimen = isMdrPlanned ? TreatmentRegimen.MdrTreatment : TreatmentRegimen.StandardTherapy
                 }
             };
-            
+
             // Act
             EnhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(notification);
-            
+
             // Assert
             var numberOfCallsToCreate = shouldCreateAlert ? Times.Once() : Times.Never();
-            mockAlertService.Verify(x =>x.AddUniqueAlertAsync(It.IsAny<MdrAlert>()), numberOfCallsToCreate);
+            mockAlertService.Verify(x => x.AddUniqueAlertAsync(It.IsAny<MdrAlert>()), numberOfCallsToCreate);
 
             var numberOfCallsToDismiss = shouldDismissAlert ? Times.Once() : Times.Never();
             mockAlertService.Verify(
                 x => x.DismissMatchingAlertAsync<MdrAlert>(notification.NotificationId, AuditService.AuditUserSystem),
                 numberOfCallsToDismiss);
         }
-        
+
         [Theory]
         [InlineData("M. bovis", true, false)]
         [InlineData("Non M. bovis", false, true)]
         public void CreateOrDismissMBovisAlert(string drugSpecies,
-            bool shouldCreateAlert, 
+            bool shouldCreateAlert,
             bool shouldDismissAlert)
         {
             // Arrange
@@ -68,17 +69,18 @@ namespace ntbs_service_unit_tests.Services
                 NotificationId = 1,
                 DrugResistanceProfile = new DrugResistanceProfile
                 {
-                    Species = drugSpecies, DrugResistanceProfileString = "Random string"
+                    Species = drugSpecies,
+                    DrugResistanceProfileString = "Random string"
                 }
             };
-            
+
             // Act
             EnhancedSurveillanceAlertsService.CreateOrDismissMBovisAlert(notification);
-            
+
             // Assert
             var numberOfCallsToCreate = shouldCreateAlert ? Times.Once() : Times.Never();
-            mockAlertService.Verify(x =>x.AddUniqueAlertAsync(It.IsAny<MBovisAlert>()), numberOfCallsToCreate);
-            
+            mockAlertService.Verify(x => x.AddUniqueAlertAsync(It.IsAny<MBovisAlert>()), numberOfCallsToCreate);
+
             var numberOfCallsToDismiss = shouldDismissAlert ? Times.Once() : Times.Never();
             mockAlertService.Verify(
                 x => x.DismissMatchingAlertAsync<MBovisAlert>(notification.NotificationId,

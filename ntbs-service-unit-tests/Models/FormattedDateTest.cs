@@ -9,9 +9,9 @@ namespace ntbs_service_unit_tests.Models
     {
         public static IEnumerable<object[]> InvalidDates()
         {
-            yield return new object[] { new FormattedDate() { Day = null, Month = "2", Year = "2000"}};
-            yield return new object[] { new FormattedDate() { Day = "hello", Month = "2", Year = "2000"}};
-            yield return new object[] { new FormattedDate() { Day = "31", Month = "2", Year = "2000"}};
+            yield return new object[] { new FormattedDate() { Day = null, Month = "2", Year = "2000" } };
+            yield return new object[] { new FormattedDate() { Day = "hello", Month = "2", Year = "2000" } };
+            yield return new object[] { new FormattedDate() { Day = "31", Month = "2", Year = "2000" } };
         }
 
         [Theory, MemberData(nameof(InvalidDates))]
@@ -28,7 +28,7 @@ namespace ntbs_service_unit_tests.Models
         public void IfDateParsable_CanConvertReturnsTrueAndDateTime()
         {
             // Arrange
-            var formattedDate = new FormattedDate() { Day = "28", Month = "2", Year = "2000"};
+            var formattedDate = new FormattedDate() { Day = "28", Month = "2", Year = "2000" };
             var expectedResult = new DateTime(2000, 2, 28);
 
             // Act
@@ -41,10 +41,10 @@ namespace ntbs_service_unit_tests.Models
 
         public static IEnumerable<object[]> TestEmptyDates()
         {
-            yield return new object[] { new FormattedDate() { Day = null, Month = "2", Year = "2000"}, false};
-            yield return new object[] { new FormattedDate() { Day = "31", Month = "2", Year = "2000"}, false};
-            yield return new object[] { new FormattedDate() { Day = null, Month = null, Year = null}, true};
-            yield return new object[] { new FormattedDate() { Day = null, Month = "", Year = null}, true};
+            yield return new object[] { new FormattedDate() { Day = null, Month = "2", Year = "2000" }, false };
+            yield return new object[] { new FormattedDate() { Day = "31", Month = "2", Year = "2000" }, false };
+            yield return new object[] { new FormattedDate() { Day = null, Month = null, Year = null }, true };
+            yield return new object[] { new FormattedDate() { Day = null, Month = "", Year = null }, true };
         }
 
         [Theory, MemberData(nameof(TestEmptyDates))]

@@ -8,7 +8,7 @@ namespace ntbs_service.TagHelpers
     public class NhsTableHeaderClassesTagHelper : TagHelper
     {
         public string Classes { get; set; }
-        
+
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             // Defer to other tag helpers first

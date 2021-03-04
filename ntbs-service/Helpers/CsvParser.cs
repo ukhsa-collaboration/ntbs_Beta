@@ -28,7 +28,7 @@ namespace ntbs_service.Helpers
 
             return records;
         }
-        
+
         public static IEnumerable<T> GetRecordsFromCsv<T>(string relativePathToFile)
         {
             var filePath = GetFullFilePath(relativePathToFile);

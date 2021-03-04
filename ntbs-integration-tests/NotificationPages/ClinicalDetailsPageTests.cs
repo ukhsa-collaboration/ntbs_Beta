@@ -511,7 +511,7 @@ namespace ntbs_integration_tests.NotificationPages
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-IsMDRTreatment", "regimen",
                 "You cannot change the value of this field because an MDR Enhanced Surveillance Questionnaire exists. Please contact NTBS@phe.gov.uk");
         }
-        
+
         [Fact]
         public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
         {
@@ -553,7 +553,7 @@ namespace ntbs_integration_tests.NotificationPages
             var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
         }
-        
+
         [Fact]
         public async Task NotifiedPageHasReturnLinkToOverview()
         {

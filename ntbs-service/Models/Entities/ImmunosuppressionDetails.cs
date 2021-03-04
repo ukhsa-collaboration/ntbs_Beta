@@ -12,7 +12,7 @@ namespace ntbs_service.Models.Entities
     public partial class ImmunosuppressionDetails : ModelBase, IOwnedEntityForAuditing
     {
         [Display(Name = "Is the patient Immunosuppressed?")]
-        [AssertThat(nameof(TestAtLeastOneSelectedWhenYes), 
+        [AssertThat(nameof(TestAtLeastOneSelectedWhenYes),
             ErrorMessage = ValidationMessages.ImmunosuppressionTypeRequired)]
         public Status? Status { get; set; }
 
@@ -26,10 +26,10 @@ namespace ntbs_service.Models.Entities
         [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Immunosuppression type description")]
         public string OtherDescription { get; set; }
-        
+
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
 
-        public bool TestAtLeastOneSelectedWhenYes 
+        public bool TestAtLeastOneSelectedWhenYes
             => Status != Enums.Status.Yes
                 || HasBioTherapy == true || HasTransplantation == true || HasOther == true;
     }

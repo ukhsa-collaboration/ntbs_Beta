@@ -34,7 +34,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             var countries = await _referenceDataRepository.GetAllCountriesAsync();
             Countries = new SelectList(countries, nameof(Country.CountryId), nameof(Country.Name));
-            
+
             PreviousTbHistory = Notification.PreviousTbHistory;
             await SetNotificationProperties(isBeingSubmitted, PreviousTbHistory);
 
@@ -58,7 +58,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             PreviousTbHistory.DobYear = Notification.PatientDetails.Dob?.Year;
 
             TryValidateModel(PreviousTbHistory, nameof(PreviousTbHistory));
-            
+
             if (ModelState.IsValid)
             {
                 await Service.UpdatePreviousTbHistoryAsync(Notification, PreviousTbHistory);

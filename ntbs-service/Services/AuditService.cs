@@ -23,7 +23,7 @@ namespace ntbs_service.Services
 
     public class AuditService : IAuditService
     {
-        public const string AuditUserSystem = "SYSTEM"; 
+        public const string AuditUserSystem = "SYSTEM";
         private readonly AuditDatabaseContext _auditContext;
 
         private const string READ_EVENT = "Read";

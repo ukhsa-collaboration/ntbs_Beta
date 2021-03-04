@@ -4,6 +4,6 @@ namespace ntbs_service.Pages.Help
 {
     public class MenuModel : PageModel
     {
-        public void OnGet() {}
+        public void OnGet() { }
     }
 }

@@ -1,6 +1,7 @@
-namespace ntbs_service.Models.Enums 
+namespace ntbs_service.Models.Enums
 {
-    public enum PermissionLevel {
+    public enum PermissionLevel
+    {
         Edit,
         ReadOnly,
         None

@@ -33,11 +33,11 @@ namespace ntbs_service_unit_tests.DataMigration
             // Arrange
             const string clusterId = "ABC123";
             const int etsId = 11;
-            var notification = new Notification {NotificationId = 400, ETSID = etsId.ToString()};
+            var notification = new Notification { NotificationId = 400, ETSID = etsId.ToString() };
             SetupClusterIdForEtsId(etsId, clusterId);
 
             // Act
-            var notifications = new List<Notification> {notification};
+            var notifications = new List<Notification> { notification };
             await _clusterImportService.UpdateClusterInformation(notifications);
 
             // Assert

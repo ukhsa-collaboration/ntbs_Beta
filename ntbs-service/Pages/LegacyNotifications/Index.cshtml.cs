@@ -19,14 +19,14 @@ namespace ntbs_service.Pages.LegacyNotifications
         private readonly INotificationRepository _notificationRepository;
 
         public NotificationBannerModel NotificationBannerModel { get; set; }
-        
+
         [BindProperty(SupportsGet = true)]
         public string LegacyNotificationId { get; set; }
-        
+
         public string RequestId { get; set; }
         public ImportResult LegacyImportResult { get; set; }
 
-        public Index(ILegacySearchService legacySearchService, 
+        public Index(ILegacySearchService legacySearchService,
             INotificationImportService notificationImportService,
             INotificationRepository notificationRepository)
         {
@@ -34,21 +34,21 @@ namespace ntbs_service.Pages.LegacyNotifications
             _notificationImportService = notificationImportService;
             _notificationRepository = notificationRepository;
         }
-        
+
         public async Task<IActionResult> OnGetAsync()
         {
             ViewData["Breadcrumbs"] = new List<Breadcrumb>
             {
                 HttpContext.Session.GetTopLevelBreadcrumb(),
             };
-            
+
             return await GetPageAsync();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             RequestId = HttpContext.TraceIdentifier;
-            var idsList = new List<string> {LegacyNotificationId};
+            var idsList = new List<string> { LegacyNotificationId };
             LegacyImportResult = (await _notificationImportService.ImportByLegacyIdsAsync(null, RequestId, idsList)).FirstOrDefault();
 
             if (LegacyImportResult != null && LegacyImportResult.IsValid)
@@ -68,14 +68,14 @@ namespace ntbs_service.Pages.LegacyNotifications
                 var notificationId = await _notificationRepository.GetNotificationIdByLegacyIdAsync(LegacyNotificationId);
                 if (notificationId != 0)
                 {
-                    return RedirectToPage("/Notifications/Overview", new {NotificationId = notificationId});
+                    return RedirectToPage("/Notifications/Overview", new { NotificationId = notificationId });
                 }
 
                 return NotFound();
             }
-            
+
             NotificationBannerModel.ShowLink = false;
-            return Page(); 
+            return Page();
         }
     }
 }

@@ -43,7 +43,7 @@ namespace ntbs_service.Models.Entities
                 return false;
             }
 
-            return Equals((CaseManagerTbService) obj);
+            return Equals((CaseManagerTbService)obj);
         }
 
         public override int GetHashCode()

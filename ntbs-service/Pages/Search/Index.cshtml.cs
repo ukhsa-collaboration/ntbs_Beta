@@ -7,15 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
-using MoreLinq.Extensions;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
-using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;
-using Serilog;
 
 namespace ntbs_service.Pages.Search
 {
@@ -81,7 +78,10 @@ namespace ntbs_service.Pages.Search
 
             PaginationParameters = new PaginationParameters()
             {
-                PageSize = 50, PageIndex = pageIndex ?? 1, LegacyOffset = legacyOffset, NtbsOffset = ntbsOffset
+                PageSize = 50,
+                PageIndex = pageIndex ?? 1,
+                LegacyOffset = legacyOffset,
+                NtbsOffset = ntbsOffset
             };
 
             var ntbsQueryable = _notificationRepository.GetBaseNotificationsIQueryable();
@@ -116,7 +116,7 @@ namespace ntbs_service.Pages.Search
                 .FilterByBirthCountry(SearchParameters.CountryId)
                 .FilterByTBService(SearchParameters.TBServiceCode);
         }
-        
+
         private async Task<(IList<NotificationBannerModel> results, int count)> SearchAsync(
             INtbsSearchBuilder ntbsQueryable,
             ILegacySearchBuilder legacySqlQuery)
@@ -154,7 +154,7 @@ namespace ntbs_service.Pages.Search
                 User);
             var allPossibleNotifications = ntbsNotifications.Concat(legacyNotifications);
             var permittedTbServiceCodes = (await _userService.GetTbServicesAsync(User)).Select(s => s.Code);
-            
+
             var notifications = allPossibleNotifications
                 .OrderByDescending(n => permittedTbServiceCodes.Contains(n.TbServiceCode))
                 .ThenByDescending(n => n.NotificationStatus == NotificationStatus.Draft)
@@ -182,7 +182,7 @@ namespace ntbs_service.Pages.Search
                 User);
             var allPossibleNotifications = ntbsNotifications.Concat(legacyNotifications);
             var permittedTbServiceCodes = (await _userService.GetTbServicesAsync(User)).Select(s => s.Code);
-            
+
             var notifications = allPossibleNotifications
                 .OrderByDescending(n => permittedTbServiceCodes.Contains(n.TbServiceCode))
                 .ThenByDescending(n => n.NotificationStatus == NotificationStatus.Draft)

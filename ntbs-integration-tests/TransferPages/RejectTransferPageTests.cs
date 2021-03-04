@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
@@ -20,7 +19,7 @@ namespace ntbs_integration_tests.TransferPage
             var overviewUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview);
             var initialOverviewPage = await GetDocumentForUrlAsync(overviewUrl);
             Assert.NotNull(initialOverviewPage.QuerySelector("#alert-20005"));
-            
+
             var url = GetCurrentPathForId(id);
             var initialDocument = await GetDocumentForUrlAsync(url);
 

@@ -377,7 +377,7 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await response.Content.ReadAsStringAsync();
             Assert.Empty(result);
         }
-        
+
         [Fact]
         public async Task GetTreatmentEvents_DoesNotShowEditLink_ForNonEditableTreatmentEvents()
         {
@@ -390,7 +390,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var treatmentTable = document.QuerySelector("#treatment-events");
             Assert.NotNull(treatmentTable);
-            
+
             var treatmentRestartRow = treatmentTable.QuerySelector($"#treatment-event-{RESTART_TREATMENT_EVENT_ID}");
             Assert.NotNull(treatmentRestartRow);
             Assert.NotNull(treatmentRestartRow.QuerySelector($"#edit-link-{RESTART_TREATMENT_EVENT_ID}"));

@@ -6,7 +6,6 @@ using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.Jobs;
 using ntbs_service.Models;
-using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Services;
 using Xunit;
@@ -26,7 +25,7 @@ namespace ntbs_service_unit_tests.Jobs
             _mockSpecimenService = new Mock<ISpecimenService>();
             _mockAlertRepository = new Mock<IAlertRepository>();
             _mockAlertService = new Mock<IAlertService>();
-            
+
             _unmatchedLabResultAlertsJob = new UnmatchedLabResultAlertsJob(
                 _mockSpecimenService.Object,
                 _mockAlertRepository.Object,
@@ -103,10 +102,10 @@ namespace ntbs_service_unit_tests.Jobs
 
             // Assert
             _mockAlertRepository.Verify(s =>
-                s.CloseAlertRangeAsync(It.Is<IEnumerable<Alert>>(n => 
-                    n.All(alert => 
+                s.CloseAlertRangeAsync(It.Is<IEnumerable<Alert>>(n =>
+                    n.All(alert =>
                         alert.AlertId == 3 || alert.AlertId == 4))));
-            
+
             _mockAlertService.Verify(s =>
                 s.CreateAlertsForUnmatchedLabResults(new List<SpecimenMatchPairing>
                 {

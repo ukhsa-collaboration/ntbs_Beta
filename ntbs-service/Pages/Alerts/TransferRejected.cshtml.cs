@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
@@ -23,7 +22,7 @@ namespace ntbs_service.Pages.Alerts
 
         public TransferRejectedModel(
             INotificationService notificationService,
-            IAlertService alertService, 
+            IAlertService alertService,
             IAlertRepository alertRepository,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository) : base(notificationService, authorizationService, notificationRepository)
@@ -39,7 +38,7 @@ namespace ntbs_service.Pages.Alerts
             TransferRejectedAlert =
                 await _alertRepository.GetOpenAlertByNotificationId<TransferRejectedAlert>(NotificationId);
             await AuthorizeAndSetBannerAsync();
-            
+
             // Check edit permission of user and redirect if they don't have permission or the alert does not exist
             var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
             if (permissionLevel != PermissionLevel.Edit || TransferRejectedAlert == null)
@@ -52,7 +51,7 @@ namespace ntbs_service.Pages.Alerts
 
         public async Task<IActionResult> OnPostAsync()
         {
-            TransferRejectedAlert = 
+            TransferRejectedAlert =
                 await _alertRepository.GetOpenAlertByNotificationId<TransferRejectedAlert>(NotificationId);
             await _alertService.DismissAlertAsync(TransferRejectedAlert.AlertId, User.Username());
             return RedirectToPage("/Notifications/Overview", new { NotificationId });

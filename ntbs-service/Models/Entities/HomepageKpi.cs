@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.Models.Entities
 {

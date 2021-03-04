@@ -11,7 +11,7 @@ namespace ntbs_service.Models.Entities.Alerts
         [Display(Name = "NTBS Id")]
         public int? NotificationId { get; set; }
         public DateTime CreationDate { get; set; }
-        public bool NotDismissable  { get; set; }
+        public bool NotDismissable { get; set; }
         [Display(Name = "Alert date")]
         public string FormattedCreationDate => CreationDate.ConvertToString();
         [Display(Name = "Alert type")]
@@ -19,9 +19,9 @@ namespace ntbs_service.Models.Entities.Alerts
         public string ActionLink { get; set; }
         public string Action { get; set; }
         public string TbServiceCode { get; set; }
-        [Display(Name =  "TB Service")]
+        [Display(Name = "TB Service")]
         public string TbServiceName { get; set; }
-        [Display(Name =  "Case Manager")]
+        [Display(Name = "Case Manager")]
         public string CaseManagerName { get; set; }
     }
 

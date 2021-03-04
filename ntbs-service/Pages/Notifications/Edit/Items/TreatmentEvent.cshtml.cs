@@ -76,7 +76,8 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             TreatmentEventTypes = TreatmentEvent.EditableTreatmentEventTypes
                 .Select(t => new SelectListItem
                 {
-                    Value = ((int)t).ToString(), Text = t.GetDisplayName()
+                    Value = ((int)t).ToString(),
+                    Text = t.GetDisplayName()
                 });
 
             return Page();

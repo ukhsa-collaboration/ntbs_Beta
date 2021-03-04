@@ -25,7 +25,7 @@ namespace ntbs_service.Jobs
             _reportingDatabaseConnectionString = _configuration.GetConnectionString(Constants.DbConnectionStringReporting);
             _specimenMatchingConnectionString = _configuration.GetConnectionString(Constants.DbConnectionStringSpecimenMatching);
             _migrationConnectionString = _configuration.GetConnectionString(Constants.DbConnectionStringMigration);
-            
+
             this._sqlString = "";
             this._parameters = null;
         }
@@ -35,14 +35,14 @@ namespace ntbs_service.Jobs
         {
             this._context = context;
             Log.Information($"Starting weekly reporting data processing job.");
-                        
+
             var stepOneResults = await ExecuteProcessingMIDataStoredProcedure(token);
             var stepTwoResults = await ExecutePopulateForestExtractStoredProcedure(token);
-            
+
             List<dynamic> allResults = new List<dynamic>();
             allResults.AddRange(stepOneResults);
             allResults.AddRange(stepTwoResults);
-            
+
             var success = this.DidExecuteSuccessfully(allResults);
 
             Log.Information($"Finishing weekly reporting data processing job.");
@@ -50,8 +50,8 @@ namespace ntbs_service.Jobs
 
         protected virtual async Task<IEnumerable<dynamic>> ExecuteProcessingMIDataStoredProcedure(IJobCancellationToken token)
         {
-            IEnumerable<dynamic> result = new List<dynamic>();    
-            
+            IEnumerable<dynamic> result = new List<dynamic>();
+
             using (var connection = new SqlConnection(_reportingDatabaseConnectionString))
             {
                 connection.Open();
@@ -63,8 +63,8 @@ namespace ntbs_service.Jobs
 
         protected virtual async Task<IEnumerable<dynamic>> ExecutePopulateForestExtractStoredProcedure(IJobCancellationToken token)
         {
-            IEnumerable<dynamic> result = new List<dynamic>();    
-            
+            IEnumerable<dynamic> result = new List<dynamic>();
+
             using (var connection = new SqlConnection(_reportingDatabaseConnectionString))
             {
                 connection.Open();
@@ -82,9 +82,12 @@ namespace ntbs_service.Jobs
             Log.Information(serialisedResult);
             _context.WriteLine($"Result: {serialisedResult}");
 
-            if(resultToTest.Count() == 0){
+            if (resultToTest.Count() == 0)
+            {
                 success = true;
-            } else {
+            }
+            else
+            {
                 throw new ApplicationException("Stored procedure did not execute successfully as result has messages, check the logs.");
             }
 

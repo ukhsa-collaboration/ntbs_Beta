@@ -29,7 +29,7 @@ namespace ntbs_service.DataMigration
                 _context.NotificationGroup.Add(group);
                 notifications.ForEach(n => n.Group = group);
             }
-            
+
             _context.Notification.AddRange(notifications);
             _context.AddAuditCustomField(CustomFields.AuditDetails, NotificationAuditType.Imported);
             await _context.SaveChangesAsync();

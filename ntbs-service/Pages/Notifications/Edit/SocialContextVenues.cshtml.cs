@@ -29,13 +29,13 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        #pragma warning disable 1998
+#pragma warning disable 1998
         protected override async Task ValidateAndSave()
         {
             // No validation or saving happening on list
         }
-        #pragma warning restore 1998
-        
+#pragma warning restore 1998
+
         protected override IActionResult RedirectToCreate()
         {
             return RedirectToPage("./Items/NewSocialContextVenue", "", new { NotificationId }, "social-context-venue-form");

@@ -64,7 +64,7 @@ namespace ntbs_service.DataMigration
                             throw new ApplicationException(
                                 "The imported notification does not have either LTBR or ETS id");
                         }
-                            
+
                         // For many notifications it will be overkill to create an imported record against both
                         // its ETS id and its LTBR id, but since NTBS doesn't collect information about which of the
                         // ids the migration code treated as the primary one, this is the safest way to do it.
@@ -72,7 +72,7 @@ namespace ntbs_service.DataMigration
                         {
                             await connection.ExecuteAsync(
                                 _importHelper.InsertImportedNotificationQuery,
-                                new {LegacyId = notification.ETSID, ImportedAt = importedAt}
+                                new { LegacyId = notification.ETSID, ImportedAt = importedAt }
                             );
                         }
 
@@ -80,7 +80,7 @@ namespace ntbs_service.DataMigration
                         {
                             await connection.ExecuteAsync(
                                 _importHelper.InsertImportedNotificationQuery,
-                                new {LegacyId = notification.LTBRID, ImportedAt = importedAt}
+                                new { LegacyId = notification.LTBRID, ImportedAt = importedAt }
                             );
                         }
                     }

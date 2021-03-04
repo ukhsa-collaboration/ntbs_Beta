@@ -22,10 +22,10 @@ namespace ntbs_service.Jobs
         public async Task Run(IJobCancellationToken token)
         {
             Log.Information($"Starting notification cluster update job");
-            
+
             var clusterValues = await _notificationClusterRepository.GetNotificationClusterValues();
             await _notificationService.UpdateNotificationClustersAsync(clusterValues);
-            
+
             Log.Information($"Finishing notification cluster update job");
         }
     }

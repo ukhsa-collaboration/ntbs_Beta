@@ -31,7 +31,7 @@ namespace ntbs_service_unit_tests.Pages
             PercentResistant = 11,
             PercentTreatmentDelay = 14
         };
-        
+
         private readonly HomepageKpi mockHomepageKpiWithTbService = new HomepageKpi
         {
             Code = "TB001",
@@ -40,8 +40,8 @@ namespace ntbs_service_unit_tests.Pages
             PercentResistant = 12,
             PercentTreatmentDelay = 13
         };
-        
-        public IndexPageTests() 
+
+        public IndexPageTests()
         {
             _mockNotificationRepository = new Mock<INotificationRepository>();
             _mockAuthorizationService = new Mock<IAuthorizationService>();
@@ -62,21 +62,21 @@ namespace ntbs_service_unit_tests.Pages
 
             _mockUserService.Setup(s => s.GetUserType(It.IsAny<ClaimsPrincipal>())).Returns(UserType.NationalTeam);
             _mockUserService.Setup(s => s.GetPhecCodesAsync(It.IsAny<ClaimsPrincipal>()))
-                .Returns(Task.FromResult(new List<string> {mockHomepageKpiWithPhec.Code} as IEnumerable<string>));
-            _mockHomepageKpiService.Setup(s => s.GetKpiForPhec(new List<string> {mockHomepageKpiWithPhec.Code}))
-                .Returns(Task.FromResult(new List<HomepageKpi> {mockHomepageKpiWithPhec} as IEnumerable<HomepageKpi>));             
-            _mockHomepageKpiService.Setup(s => s.GetKpiForTbService(new List<string> {mockHomepageKpiWithTbService.Code}))
-                .Returns(Task.FromResult(new List<HomepageKpi> {mockHomepageKpiWithTbService} as IEnumerable<HomepageKpi>));
+                .Returns(Task.FromResult(new List<string> { mockHomepageKpiWithPhec.Code } as IEnumerable<string>));
+            _mockHomepageKpiService.Setup(s => s.GetKpiForPhec(new List<string> { mockHomepageKpiWithPhec.Code }))
+                .Returns(Task.FromResult(new List<HomepageKpi> { mockHomepageKpiWithPhec } as IEnumerable<HomepageKpi>));
+            _mockHomepageKpiService.Setup(s => s.GetKpiForTbService(new List<string> { mockHomepageKpiWithTbService.Code }))
+                .Returns(Task.FromResult(new List<HomepageKpi> { mockHomepageKpiWithTbService } as IEnumerable<HomepageKpi>));
         }
 
         [Fact]
         public async Task OnGetAsync_PopulatesPageModel_WithRecentAndDraftNotifications()
         {
             // Arrange
-            var pageModel = new IndexModel(_mockNotificationRepository.Object, 
-                _mockAlertRepository.Object, 
-                _mockAuthorizationService.Object, 
-                _mockUserService.Object, 
+            var pageModel = new IndexModel(_mockNotificationRepository.Object,
+                _mockAlertRepository.Object,
+                _mockAuthorizationService.Object,
+                _mockUserService.Object,
                 _mockHomepageKpiService.Object);
             pageModel.MockOutSession();
 
@@ -98,12 +98,12 @@ namespace ntbs_service_unit_tests.Pages
             // Arrange
             _mockUserService.Setup(s => s.GetUserType(It.IsAny<ClaimsPrincipal>())).Returns(UserType.PheUser);
             _mockUserService.Setup(s => s.GetPhecCodesAsync(It.IsAny<ClaimsPrincipal>()))
-                .Returns(Task.FromResult(new List<string> {mockHomepageKpiWithPhec.Code} as IEnumerable<string>));
-            
-            var pageModel = new IndexModel(_mockNotificationRepository.Object, 
-                _mockAlertRepository.Object, 
-                _mockAuthorizationService.Object, 
-                _mockUserService.Object, 
+                .Returns(Task.FromResult(new List<string> { mockHomepageKpiWithPhec.Code } as IEnumerable<string>));
+
+            var pageModel = new IndexModel(_mockNotificationRepository.Object,
+                _mockAlertRepository.Object,
+                _mockAuthorizationService.Object,
+                _mockUserService.Object,
                 _mockHomepageKpiService.Object);
             pageModel.MockOutSession();
 
@@ -111,25 +111,25 @@ namespace ntbs_service_unit_tests.Pages
             await pageModel.OnGetAsync();
             var phecCodes = Assert.IsAssignableFrom<SelectList>(pageModel.KpiFilter);
             var homepageKpiDetails = Assert.IsAssignableFrom<List<HomepageKpi>>(pageModel.HomepageKpiDetails);
-            
+
             Assert.True(phecCodes.Count() == 1);
             Assert.True(homepageKpiDetails.Count == 1);
             Assert.True(homepageKpiDetails[0] == mockHomepageKpiWithPhec);
         }
-        
+
         [Fact]
         public async Task OnGetAsync_PopulatesHomepageKpisDetailsWithTbServiceCodes_WhenUserIsNhsUser()
         {
             // Arrange
             _mockUserService.Setup(s => s.GetUserType(It.IsAny<ClaimsPrincipal>())).Returns(UserType.NhsUser);
-            var mockTbService = new TBService() {Code = mockHomepageKpiWithTbService.Code};
+            var mockTbService = new TBService() { Code = mockHomepageKpiWithTbService.Code };
             _mockUserService.Setup(s => s.GetTbServicesAsync(It.IsAny<ClaimsPrincipal>()))
                 .Returns(Task.FromResult(new List<TBService> { mockTbService } as IEnumerable<TBService>));
-            
-            var pageModel = new IndexModel(_mockNotificationRepository.Object, 
-                _mockAlertRepository.Object, 
-                _mockAuthorizationService.Object, 
-                _mockUserService.Object, 
+
+            var pageModel = new IndexModel(_mockNotificationRepository.Object,
+                _mockAlertRepository.Object,
+                _mockAuthorizationService.Object,
+                _mockUserService.Object,
                 _mockHomepageKpiService.Object);
             pageModel.MockOutSession();
 
@@ -137,7 +137,7 @@ namespace ntbs_service_unit_tests.Pages
             await pageModel.OnGetAsync();
             var phecCodes = Assert.IsAssignableFrom<SelectList>(pageModel.KpiFilter);
             var homepageKpiDetails = Assert.IsAssignableFrom<List<HomepageKpi>>(pageModel.HomepageKpiDetails);
-            
+
             Assert.True(phecCodes.Count() == 1);
             Assert.True(homepageKpiDetails.Count == 1);
             Assert.True(homepageKpiDetails[0] == mockHomepageKpiWithTbService);
@@ -147,14 +147,14 @@ namespace ntbs_service_unit_tests.Pages
         {
             var patient = new PatientDetails() { GivenName = "Bob" };
 
-            return new List<Notification> { new Notification{ PatientDetails = patient } };
+            return new List<Notification> { new Notification { PatientDetails = patient } };
         }
 
         public IEnumerable<Notification> GetDraftNotifications()
         {
             var patient = new PatientDetails() { GivenName = "Ross" };
 
-            return new List<Notification> { new Notification{ PatientDetails = patient } };
+            return new List<Notification> { new Notification { PatientDetails = patient } };
         }
     }
 }

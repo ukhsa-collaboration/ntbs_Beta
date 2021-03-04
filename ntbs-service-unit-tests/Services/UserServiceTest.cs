@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Moq;
 using ntbs_service.DataAccess;
-using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Properties;
@@ -113,10 +112,10 @@ namespace ntbs_service_unit_tests.Services
             var claim = new Claim("User", NationalTeam);
             SetupClaimMocking(claim);
             _mockUser.Setup(u => u.IsInRole(NationalTeam)).Returns(true);
-            
+
             // Act
             await _service.GetPhecCodesAsync(_mockUser.Object);
-            
+
             // Assert
             _mockReferenceDataRepository.Verify(x => x.GetAllPhecs(), Times.Once);
         }
@@ -127,12 +126,12 @@ namespace ntbs_service_unit_tests.Services
             // Arrange
             var claim = new Claim(ClaimsIdentity.DefaultRoleClaimType, "PHE");
             SetupClaimMocking(claim);
-            
+
             // Act
             await _service.GetPhecCodesAsync(_mockUser.Object);
-            
+
             // Asser
-            _mockReferenceDataRepository.Verify(x => x.GetPhecCodesMatchingRolesAsync(new List<string> {"PHE"}), Times.Once);
+            _mockReferenceDataRepository.Verify(x => x.GetPhecCodesMatchingRolesAsync(new List<string> { "PHE" }), Times.Once);
         }
 
         // TODO: The following tests currently fail with "The provider for the source IQueryable doesn't implement IAsyncQueryProvider".

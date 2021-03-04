@@ -1,6 +1,4 @@
-﻿using ntbs_service.Helpers;
-
-namespace ntbs_integration_tests.Helpers
+﻿namespace ntbs_integration_tests.Helpers
 {
     public static class Routes
     {

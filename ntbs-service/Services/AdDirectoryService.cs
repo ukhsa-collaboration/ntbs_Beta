@@ -84,8 +84,8 @@ namespace ntbs_service.Services
                 $"(&(objectCategory=person)(objectClass=user)(memberof:1.2.840.113556.1.4.1941:={distinguishedName}))",
                 null, // TODO Specify which attributes we want - speed things up
                 false,
-                new LdapSearchConstraints {ReferralFollowing = true});
-            
+                new LdapSearchConstraints { ReferralFollowing = true });
+
             // We don't want to use LdapSearchResults directly as Enumerable, since it can throw on `Next` 
             while (searchResults.HasMore())
             {

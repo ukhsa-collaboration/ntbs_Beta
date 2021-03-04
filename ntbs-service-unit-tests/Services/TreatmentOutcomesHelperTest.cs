@@ -15,10 +15,10 @@ namespace ntbs_service_unit_tests.Services
         // GetTreatmentOutcomeAtXYears_ReturnsCorrectOutcomeAtXYear should return
         public static IEnumerable<object[]> NotificationsAndExpectedOutcome()
         {
-            yield return new object[] 
+            yield return new object[]
             {
                 "Example 1",
-                CreateNotificationWithNotificationEvents(1, 
+                CreateNotificationWithNotificationEvents(1,
                     new List<TreatmentEvent>
                     {
                         new TreatmentEvent
@@ -40,10 +40,10 @@ namespace ntbs_service_unit_tests.Services
                     null,
                     null
                 };
-            yield return new object[] 
-            { 
+            yield return new object[]
+            {
                 "Example 2",
-                CreateNotificationWithNotificationEvents(2, 
+                CreateNotificationWithNotificationEvents(2,
                     new List<TreatmentEvent>
                     {
                         new TreatmentEvent
@@ -74,13 +74,13 @@ namespace ntbs_service_unit_tests.Services
                                 TreatmentOutcomeType = TreatmentOutcomeType.Completed,
                             }
                         }
-                    }), 
+                    }),
                 TreatmentOutcomeType.Completed,
                 null,
                 null
             };
-            yield return new object[] 
-            { 
+            yield return new object[]
+            {
                 "Example 3",
                 CreateNotificationWithNotificationEvents(3, new List<TreatmentEvent>
                     {
@@ -113,13 +113,13 @@ namespace ntbs_service_unit_tests.Services
                                 TreatmentOutcomeType = TreatmentOutcomeType.Failed,
                             }
                         }
-                    }), 
+                    }),
                 TreatmentOutcomeType.Failed,
                 null,
                 null
             };
-            yield return new object[] 
-            { 
+            yield return new object[]
+            {
                 "Example 4",
                 CreateNotificationWithNotificationEvents(4, new List<TreatmentEvent>
                     {
@@ -151,7 +151,7 @@ namespace ntbs_service_unit_tests.Services
                                 TreatmentOutcomeType = TreatmentOutcomeType.Cured,
                             }
                         }
-                    }), 
+                    }),
                 null,
                 TreatmentOutcomeType.Cured,
                 null
@@ -508,33 +508,33 @@ namespace ntbs_service_unit_tests.Services
         // unused as "_" and "__"
         [Theory, MemberData(nameof(NotificationsAndExpectedOutcome))]
         public void GetTreatmentOutcomeAtXYears_ReturnsCorrectOutcomeAt1Year(
-            String exampleName, 
-            Notification notification, 
-            TreatmentOutcomeType? expectedOutcomeAt1Year, 
-            TreatmentOutcomeType? _, 
+            String exampleName,
+            Notification notification,
+            TreatmentOutcomeType? expectedOutcomeAt1Year,
+            TreatmentOutcomeType? _,
             TreatmentOutcomeType? __)
         {
             var treatmentOutcomeAt1Year = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(notification, 1);
             Assert.Equal(treatmentOutcomeAt1Year?.TreatmentOutcomeType, expectedOutcomeAt1Year);
         }
-        
+
         [Theory, MemberData(nameof(NotificationsAndExpectedOutcome))]
         public void GetTreatmentOutcomeAtXYears_ReturnsCorrectOutcomeAt2Years(
-            String exampleName, 
-            Notification notification, 
-            TreatmentOutcomeType? _, 
-            TreatmentOutcomeType? expectedOutcomeAt2Years, 
+            String exampleName,
+            Notification notification,
+            TreatmentOutcomeType? _,
+            TreatmentOutcomeType? expectedOutcomeAt2Years,
             TreatmentOutcomeType? __)
         {
             var treatmentOutcomeAt1Year = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(notification, 2);
             Assert.Equal(treatmentOutcomeAt1Year?.TreatmentOutcomeType, expectedOutcomeAt2Years);
         }
-        
+
         [Theory, MemberData(nameof(NotificationsAndExpectedOutcome))]
         public void GetTreatmentOutcomeAtXYears_ReturnsCorrectOutcomeAt3Years(
-            String exampleName, 
-            Notification notification, 
-            TreatmentOutcomeType? _, 
+            String exampleName,
+            Notification notification,
+            TreatmentOutcomeType? _,
             TreatmentOutcomeType? __,
             TreatmentOutcomeType? expectedOutcomeAt3Years)
         {
@@ -547,7 +547,7 @@ namespace ntbs_service_unit_tests.Services
             return new Notification
             {
                 NotificationId = notificationId,
-                ClinicalDetails = new ClinicalDetails {TreatmentStartDate = new DateTime(2010, 1, 1)},
+                ClinicalDetails = new ClinicalDetails { TreatmentStartDate = new DateTime(2010, 1, 1) },
                 TreatmentEvents = treatmentEvents
             };
         }

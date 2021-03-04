@@ -8,7 +8,7 @@ namespace ntbs_service.Models
     public class UserPermissionsFilter
     {
         public List<string> IncludedTBServiceCodes { get; set; } = new List<string>();
-        public List<string> IncludedPHECCodes { get; set; }  = new List<string>();
+        public List<string> IncludedPHECCodes { get; set; } = new List<string>();
         public UserType Type { get; set; }
 
         public bool FilterByTBService => Type == UserType.NhsUser;

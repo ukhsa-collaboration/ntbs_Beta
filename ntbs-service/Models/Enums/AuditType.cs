@@ -1,6 +1,7 @@
-namespace ntbs_service.Models.Enums 
+namespace ntbs_service.Models.Enums
 {
-    public enum NotificationAuditType {
+    public enum NotificationAuditType
+    {
         Added,
         Edited,
         Notified,

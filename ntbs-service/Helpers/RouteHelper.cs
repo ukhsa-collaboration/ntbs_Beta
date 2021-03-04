@@ -46,7 +46,7 @@ namespace ntbs_service.Helpers
         {
             return $"/ContactDetails/{subPath}";
         }
-      
+
         public static string GetFaqPageWithSectionAnchor(string anchorId)
         {
             return $"/Help?faqId={anchorId}#{anchorId}";
@@ -98,13 +98,13 @@ namespace ntbs_service.Helpers
 
         public static string EditMBovisExposureToKnownCase(int mBovisExposureToKnownCaseId) => $"Edit/MBovis/ExposureToKnownCase/{mBovisExposureToKnownCaseId}";
         public static string AddMBovisExposureToKnownCase => "Edit/MBovis/ExposureToKnownCase/New";
-        
+
         public static string EditMBovisUnpasteurisedMilkConsumption(int mBovisUnpasteurisedMilkConsumptionId) => $"Edit/MBovis/UnpasteurisedMilkConsumption/{mBovisUnpasteurisedMilkConsumptionId}";
         public static string AddMBovisUnpasteurisedMilkConsumption => "Edit/MBovis/UnpasteurisedMilkConsumption/New";
-        
+
         public static string EditMBovisOccupationExposure(int mBovisOccupationExposureId) => $"Edit/MBovis/OccupationExposure/{mBovisOccupationExposureId}";
         public static string AddMBovisOccupationExposure => "Edit/MBovis/OccupationExposure/New";
-        
+
         public static string EditMBovisAnimalExposure(int mBovisAnimalExposureId) => $"Edit/MBovis/AnimalExposure/{mBovisAnimalExposureId}";
         public static string AddMBovisAnimalExposure => "Edit/MBovis/AnimalExposure/New";
     }
@@ -138,7 +138,7 @@ namespace ntbs_service.Helpers
             {
                 return null;
             }
-            
+
             return _subPathToAnchorId.ContainsKey(notificationSubPath) ? _subPathToAnchorId[notificationSubPath] : null;
         }
     }

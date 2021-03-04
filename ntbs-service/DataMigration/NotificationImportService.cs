@@ -56,7 +56,7 @@ namespace ntbs_service.DataMigration
         {
             sentryHub.ConfigureScope(s =>
             {
-                s.SetTag("context", "migration"); 
+                s.SetTag("context", "migration");
             });
 
             _notificationMapper = notificationMapper;
@@ -127,14 +127,14 @@ namespace ntbs_service.DataMigration
 
             return importResults;
         }
-        
+
         private async Task<ImportResult> ValidateAndImportNotificationGroupAsync(PerformContext context, string requestId, List<Notification> notifications)
         {
             var patientName = notifications.First().PatientDetails.FullName;
             var importResult = new ImportResult(patientName);
 
             _logger.LogInformation(context, requestId, $"{notifications.Count} notifications found to import for {patientName}");
-            
+
             // Verify that no repeated NotificationIds have returned
             var ids = notifications.Select(n => n.LegacyId).ToList();
             if (ids.Distinct().Count() != ids.Count)

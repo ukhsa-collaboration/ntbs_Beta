@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Helpers;
-using ntbs_service.Services;
 
 namespace ntbs_service.Pages
 {
@@ -11,7 +10,7 @@ namespace ntbs_service.Pages
         {
             var isActive = SessionStateHelper.IsUpdatedRecently(HttpContext.Session);
 
-            return new JsonResult(new 
+            return new JsonResult(new
             {
                 IsActive = isActive
             });

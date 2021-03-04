@@ -176,7 +176,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                     }),
                     Results = ((Result[])Enum.GetValues(typeof(Result)))
                         .Where(result => result.IsValidForTestType(value))
-                        .Select(result => new OptionValue {Value = result.ToString(), Text = result.GetDisplayName()})
+                        .Select(result => new OptionValue { Value = result.ToString(), Text = result.GetDisplayName() })
                 });
         }
     }

@@ -25,7 +25,7 @@ namespace ntbs_integration_tests.NotificationPages
             return new List<Notification>
             {
                 new Notification
-                { 
+                {
                     NotificationId = Utilities.NOTIFICATION_DATE_TODAY,
                     NotificationStatus = NotificationStatus.Notified,
                     NotificationDate = DateTime.Now
@@ -141,7 +141,7 @@ namespace ntbs_integration_tests.NotificationPages
                 Assert.Contains(Messages.UnauthorizedWarning, document.Body.InnerHtml);
             }
         }
-        
+
         [Fact]
         public async Task OverviewPageReturnsEditVersion_ForUserWithEditPermission()
         {
@@ -149,12 +149,12 @@ namespace ntbs_integration_tests.NotificationPages
             // Act
             var url = GetPathForId(NotificationSubPaths.Overview, Utilities.DRAFT_ID);
             var document = await GetDocumentForUrlAsync(url);
-            
+
             // Assert
             Assert.NotNull(document.QuerySelectorAll("#patient-details-overview-header"));
             Assert.Null(document.QuerySelector("#patient-details-edit-link"));
         }
-        
+
         [Fact]
         public async Task Get_ReturnsOverviewPageReadOnlyVersion_ForUserWithReadOnlyPermissionFromLinkedNotification()
         {
@@ -174,7 +174,7 @@ namespace ntbs_integration_tests.NotificationPages
                 Assert.Null(document.QuerySelector("#patient-details-edit-link"));
             }
         }
-        
+
         [Fact]
         public async Task OverviewPageReturnsReadOnlyVersion_ForPheUserWithMatchingPostcodePermission()
         {
@@ -193,7 +193,7 @@ namespace ntbs_integration_tests.NotificationPages
                 Assert.Null(document.QuerySelector("patient-details-edit-link"));
             }
         }
-        
+
         [Fact]
         public async Task OverviewPageReturnsReadOnlyVersion_ForUserWhoHadEditPermissionsBeforeATransfer()
         {
@@ -213,7 +213,7 @@ namespace ntbs_integration_tests.NotificationPages
                 Assert.Null(document.QuerySelector("patient-details-edit-link"));
             }
         }
-        
+
         [Fact]
         public async Task GetOnClosedNotification_ReturnsOverviewPageReadOnlyVersion_ForUserWithEditPermission()
         {
@@ -259,7 +259,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFICATION_DATE_TODAY);
             var document = await GetDocumentForUrlAsync(url);
-            
+
             // Assert
             Assert.Null(document.QuerySelector("#new-linked-notification-button"));
         }
@@ -270,21 +270,21 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFICATION_DATE_OVER_YEAR_AGO);
             var document = await GetDocumentForUrlAsync(url);
-            
+
             // Assert
             Assert.NotNull(document.QuerySelector("#new-linked-notification-button"));
         }
-        
+
         [Fact]
         public async Task OverviewPageShowsPrintOverviewButton_IfNotificationIsNotified()
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
             var document = await GetDocumentForUrlAsync(url);
-            
+
             Assert.NotNull(document.QuerySelector("#print-notification-overview-button"));
         }
-        
+
         [Fact]
         public async Task OverviewPageShowsDenotificationDetails_ForDenotifiedRecord()
         {
@@ -293,7 +293,7 @@ namespace ntbs_integration_tests.NotificationPages
             var document = await GetDocumentForUrlAsync(url);
             Assert.Contains("Other - a great reason", document.QuerySelector("#overview-denotification-reason").TextContent);
         }
-        
+
         [Fact]
         public async Task OverviewPageDoesNotShowDenotificationDetails_ForNotifiedRecord()
         {
@@ -308,10 +308,10 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
-            
+
             // Act
             var document = await GetDocumentForUrlAsync(url);
-            
+
             // Assert
             new List<string>
             {

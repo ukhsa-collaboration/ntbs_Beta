@@ -20,7 +20,7 @@ namespace ntbs_integration_tests.HomePage
                 .WithNotificationAndTbServiceConnected(Utilities.NOTIFIED_ID, Utilities.PERMITTED_SERVICE_CODE)
                 .CreateClientWithoutRedirects())
             {
-                
+
                 // Arrange
                 var initialPage = await client.GetAsync(PageRoute);
                 var pageContent = await GetDocumentAsync(initialPage);
@@ -43,7 +43,7 @@ namespace ntbs_integration_tests.HomePage
             // Arrange
             var initialPage = await Client.GetAsync(PageRoute);
             var pageContent = await GetDocumentAsync(initialPage);
-        
+
             // Assert
             Assert.NotNull(pageContent.QuerySelector("#homepage-kpi-details"));
         }
@@ -72,7 +72,7 @@ namespace ntbs_integration_tests.HomePage
                 // Arrange
                 var initialPage = await client.GetAsync(PageRoute);
                 var pageContent = await GetDocumentAsync(initialPage);
-            
+
                 // Assert
                 Assert.NotNull(pageContent.QuerySelector("#homepage-kpi-details"));
             }

@@ -85,14 +85,14 @@ namespace ntbs_service.Services
                         notification.NotificationStatus == NotificationStatus.Closed ? Messages.Closed : null);
             }
 
-            if (UserHasDirectRelationToNotification(notification)) 
+            if (UserHasDirectRelationToNotification(notification))
             {
                 return notification.NotificationStatus == NotificationStatus.Closed
                     ? (PermissionLevel.ReadOnly, Messages.ClosedNoEdit)
                     : (PermissionLevel.Edit, null);
             }
 
-            if (UserBelongsToResidencePhecOfNotification(notification) 
+            if (UserBelongsToResidencePhecOfNotification(notification)
                 || UserHasDirectRelationToLinkedNotification(notification)
                 || UserPreviouslyHadDirectionRelationToNotification(notification))
             {
@@ -101,7 +101,7 @@ namespace ntbs_service.Services
 
             return (PermissionLevel.None, Messages.UnauthorizedWarning);
         }
-        
+
         private async Task<bool> CanEditBannerModelAsync(
             ClaimsPrincipal user,
             NotificationBannerModel notificationBannerModel)
@@ -110,24 +110,24 @@ namespace ntbs_service.Services
             {
                 _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
             }
-            
+
             switch (_userPermissionsFilter.Type)
             {
                 case UserType.NationalTeam:
                     return true;
                 case UserType.PheUser:
-                {
-                    var allowedCodes = _userPermissionsFilter.IncludedPHECCodes;
-                    return allowedCodes.Contains(notificationBannerModel.TbServicePHECCode) ||
-                           allowedCodes.Contains(notificationBannerModel.LocationPHECCode);
-                }
+                    {
+                        var allowedCodes = _userPermissionsFilter.IncludedPHECCodes;
+                        return allowedCodes.Contains(notificationBannerModel.TbServicePHECCode) ||
+                               allowedCodes.Contains(notificationBannerModel.LocationPHECCode);
+                    }
                 case UserType.NhsUser:
                     return _userPermissionsFilter.IncludedTBServiceCodes.Contains(notificationBannerModel.TbServiceCode);
                 default:
                     return false;
             }
         }
-        
+
         private bool UserHasDirectRelationToLinkedNotification(Notification notification)
         {
             var linkedNotifications = notification.Group?.Notifications;
@@ -155,16 +155,16 @@ namespace ntbs_service.Services
         {
             return _userPermissionsFilter.Type == UserType.NhsUser && _userPermissionsFilter.IncludedTBServiceCodes.Contains(tbServiceCode);
         }
-        
+
         private bool UserBelongsToTreatmentPhecOfNotification(string treatmentPhecCode)
         {
             return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(treatmentPhecCode);
         }
-        
+
         private bool UserBelongsToResidencePhecOfNotification(Notification notification)
         {
             var phecCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
-            return _userPermissionsFilter.Type == UserType.PheUser 
+            return _userPermissionsFilter.Type == UserType.PheUser
                    && _userPermissionsFilter.IncludedPHECCodes.Contains(phecCode);
         }
 
@@ -182,14 +182,14 @@ namespace ntbs_service.Services
             else if (_userPermissionsFilter.Type == UserType.PheUser)
             {
                 // Having a method in LINQ clause breaks IQueryable abstraction. We have to use inline expression over methods
-                notifications = notifications.Where(n => 
+                notifications = notifications.Where(n =>
                     (
-                        n.HospitalDetails.TBService != null && 
+                        n.HospitalDetails.TBService != null &&
                         _userPermissionsFilter.IncludedPHECCodes.Contains(n.HospitalDetails.TBService.PHECCode)
                     ) || (
-                        n.PatientDetails.PostcodeLookup != null && 
-                        n.PatientDetails.PostcodeLookup.LocalAuthority != null && 
-                        n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC != null && 
+                        n.PatientDetails.PostcodeLookup != null &&
+                        n.PatientDetails.PostcodeLookup.LocalAuthority != null &&
+                        n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC != null &&
                         _userPermissionsFilter.IncludedPHECCodes.Contains(n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC.PHECCode)
                     )
                 );
@@ -204,7 +204,7 @@ namespace ntbs_service.Services
             alerts = alerts.Where(a => userTbServiceCodes.Contains(a.TbServiceCode)).ToList();
             if (userType == UserType.PheUser)
             {
-                alerts = alerts.Where(a => a.AlertType != AlertType.TransferRequest && 
+                alerts = alerts.Where(a => a.AlertType != AlertType.TransferRequest &&
                                            a.AlertType != AlertType.TransferRejected).ToList();
             }
             return alerts.ToList();

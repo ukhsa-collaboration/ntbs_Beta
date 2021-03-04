@@ -1,9 +1,9 @@
-using ntbs_service.Models.Enums;
-using ntbs_service.Models.Validations;
 using System.ComponentModel.DataAnnotations;
 using EFAuditer;
 using ntbs_service.Helpers;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities.Alerts
 
@@ -14,7 +14,7 @@ namespace ntbs_service.Models.Entities.Alerts
         {
             AlertType = AlertType.TransferRequest;
         }
-        
+
         public TransferReason TransferReason { get; set; }
 
         [MaxLength(200)]
@@ -33,7 +33,7 @@ namespace ntbs_service.Models.Entities.Alerts
         public override string Action => "Transfer request to your TB service";
         public override string ActionLink => RouteHelper.GetNotificationPath(NotificationId.GetValueOrDefault(), NotificationSubPaths.ActionTransferRequest);
         public override bool NotDismissable => true;
-        public string TransferReasonString => TransferReason.GetDisplayName() + 
+        public string TransferReasonString => TransferReason.GetDisplayName() +
             (TransferReason == TransferReason.Other ? $" - {OtherReasonDescription}" : "");
 
         public string RootEntityType => RootEntities.Notification;

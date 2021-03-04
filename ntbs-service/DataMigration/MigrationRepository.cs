@@ -155,11 +155,11 @@ namespace ntbs_service.DataMigration
                 connection.Open();
                 return (await connection.QueryAsync<(string notificationId, string groupId)>(
                         NotificationIdsWithGroupIdsByIdQuery,
-                        new {Ids = legacyIds}))
+                        new { Ids = legacyIds }))
                     .GroupBy(
                         // Prefix "ETS" guarantees that we don't accidentally combine an ets notification 123 with the
                         // ltbr notifications 123-1 and 123-2 into a single group
-                        t => t.groupId ?? $"ETS-{t.notificationId}", 
+                        t => t.groupId ?? $"ETS-{t.notificationId}",
                         t => t.notificationId);
             }
         }
@@ -173,7 +173,7 @@ namespace ntbs_service.DataMigration
                 connection.Open();
                 return (await connection.QueryAsync<(string notificationId, string groupId)>(
                         NotificationsIdsWithGroupIdsByDateQuery,
-                        new {StartDate = rangeStartDate.ToString("s"), EndDate = endStartDate.ToString("s")}))
+                        new { StartDate = rangeStartDate.ToString("s"), EndDate = endStartDate.ToString("s") }))
                     .GroupBy(t => t.groupId ?? t.notificationId, t => t.notificationId);
             }
         }
@@ -247,7 +247,7 @@ namespace ntbs_service.DataMigration
                 connection.Open();
                 return (await connection.QueryAsync<(int LegacyId, string ReferenceLaboratoryNumber)>(
                         ReferenceLaboratoryMatchesQuery,
-                        new {Ids = intIds}))
+                        new { Ids = intIds }))
                     .Select(tuple =>
                     {
                         string legacyId = tuple.LegacyId.ToString();
@@ -261,7 +261,7 @@ namespace ntbs_service.DataMigration
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                return await connection.QueryAsync<T>(query, new {Ids = legacyIds});
+                return await connection.QueryAsync<T>(query, new { Ids = legacyIds });
             }
         }
     }

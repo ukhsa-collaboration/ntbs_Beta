@@ -46,7 +46,7 @@ namespace ntbs_service.Pages.Admin
         public bool Triggered { get; private set; }
         public ValidationService ValidationService { get; }
 
-        private string RequestId =>  HttpContext.TraceIdentifier;
+        private string RequestId => HttpContext.TraceIdentifier;
 
 
         public IActionResult OnGetAsync()
@@ -111,7 +111,7 @@ namespace ntbs_service.Pages.Admin
 
             var rangeEnd = notificationDateRangeEnd ?? DateTime.Now.AddDays(1);
 
-            for (var batchStart = (DateTime) notificationDateRangeStart;
+            for (var batchStart = (DateTime)notificationDateRangeStart;
                 batchStart < rangeEnd;
                 batchStart = batchStart.AddDays(_config.DateRangeJobIntervalInDays))
             {

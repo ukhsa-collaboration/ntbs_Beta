@@ -1,8 +1,8 @@
-﻿using ntbs_service.Models.Enums;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using ntbs_service.Helpers;
-using System;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Models
 {
@@ -36,7 +36,7 @@ namespace ntbs_service.Models
         // Access level is treated as a bool for either able to edit or not. This differs from the standard PermissionLevel
         // implemented across the codebase due to there being no visual difference between no permission level and readonly
         // permission on notification banner models
-        public NotificationBannerModel(Notification notification, bool showPadlock = false, bool showLink = false) 
+        public NotificationBannerModel(Notification notification, bool showPadlock = false, bool showLink = false)
         {
             NotificationId = notification.NotificationId.ToString();
             SortByDate = notification.NotificationDate ?? notification.CreationDate;
@@ -71,6 +71,6 @@ namespace ntbs_service.Models
                        ?.TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded";
         }
 
-        public NotificationBannerModel() {}
+        public NotificationBannerModel() { }
     }
 }

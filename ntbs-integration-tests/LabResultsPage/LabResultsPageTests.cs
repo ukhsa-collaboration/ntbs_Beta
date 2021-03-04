@@ -179,7 +179,7 @@ namespace ntbs_integration_tests.LabResultsPage
         }
         public static IEnumerable<object[]> TbServiceCandidateMatchNotificationIds =>
             MockSpecimenService.MockUnmatchedSpecimenForTbService.PotentialMatches
-                .Select(candidateMatch => new object[] {candidateMatch.NotificationId});
+                .Select(candidateMatch => new object[] { candidateMatch.NotificationId });
 
         [Theory]
         [MemberData(nameof(TbServiceCandidateMatchNotificationIds))]

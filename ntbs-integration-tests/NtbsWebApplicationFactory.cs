@@ -62,8 +62,8 @@ namespace ntbs_integration_tests
                 services.AddScoped<ISpecimenService>(
                     sp => new MockSpecimenService(Utilities.NOTIFIED_ID,
                         Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
-                        Utilities.PERMITTED_PHEC_CODE)); 
-                
+                        Utilities.PERMITTED_PHEC_CODE));
+
                 services.AddScoped<IHomepageKpiService>(sp => new MockHomepageKpiService());
             });
         }

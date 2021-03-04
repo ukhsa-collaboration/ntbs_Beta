@@ -11,7 +11,7 @@ namespace ntbs_integration_tests.AdminPages
         public CloneNotificationTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
         private const string PageRoute = "/Admin/CloneNotification";
-        
+
         [Fact]
         public async Task DismissAlert_CorrectlyDismissesAlertAndReturnsHomePage()
         {

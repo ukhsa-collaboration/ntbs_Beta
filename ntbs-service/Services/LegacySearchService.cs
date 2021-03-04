@@ -4,14 +4,14 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using ntbs_service.Models;
 using Dapper;
 using Microsoft.Extensions.Configuration;
-using ntbs_service.Models.Enums;
-using ntbs_service.Helpers;
 using ntbs_service.DataAccess;
-using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.DataMigration;
+using ntbs_service.Helpers;
+using ntbs_service.Models;
+using ntbs_service.Models.Enums;
+using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.Services
 {
@@ -64,7 +64,7 @@ namespace ntbs_service.Services
             _notificationImportHelper = notificationImportHelper;
             if (LegacySearchEnabled)
             {
-                Sexes = _referenceDataRepository.GetAllSexesAsync().Result;    
+                Sexes = _referenceDataRepository.GetAllSexesAsync().Result;
             }
             _userService = userService;
         }
@@ -106,12 +106,12 @@ namespace ntbs_service.Services
         {
             string fullQuery = SelectQueryStart + SelectByIdCondition;
             dynamic result;
-            
+
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
-                result = (await connection.QueryAsync(fullQuery, new { id = notificationId})).FirstOrDefault();
+                result = (await connection.QueryAsync(fullQuery, new { id = notificationId })).FirstOrDefault();
             }
 
             return result == null ? null : await AsNotificationBannerAsync(result);

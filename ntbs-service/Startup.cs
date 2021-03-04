@@ -17,9 +17,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.SpaServices.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -113,14 +111,16 @@ namespace ntbs_service
 
             if (basicAuthEnabled)
                 UseHttpBasicAuth(services, httpBasicAuthConfig, adfsConfig);
-            else if(azureAdAuthEnabled) {
+            else if (azureAdAuthEnabled)
+            {
                 UseAzureAdAuthentication(services, azureAdConfig);
                 baseUserGroupRole = azureAdConfig["BaseUserGroup"];
             }
             else
                 UseAdfsAuthentication(services, adfsConfig);
 
-            services.AddControllersWithViews(options => {
+            services.AddControllersWithViews(options =>
+            {
                 var policy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
                     .RequireRole(baseUserGroupRole)
@@ -301,11 +301,12 @@ namespace ntbs_service
                     sharedOptions.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
                 })
                 .AddCookie(options => { options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null; })
-                .AddOpenIdConnect(options => {
+                .AddOpenIdConnect(options =>
+                {
                     options.ClientId = azureAdConfig["ClientId"];
-                    options.ClientSecret =  azureAdConfig["ClientSecret"];
+                    options.ClientSecret = azureAdConfig["ClientSecret"];
                     options.Authority = azureAdConfig["Authority"];
-                    options.CallbackPath =  azureAdConfig["CallbackPath"];
+                    options.CallbackPath = azureAdConfig["CallbackPath"];
                     options.CorrelationCookie.SameSite = SameSiteMode.None;
                     options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.NonceCookie.SecurePolicy = CookieSecurePolicy.Always;
@@ -314,12 +315,14 @@ namespace ntbs_service
                     options.Events.OnTokenValidated += async context =>
                     {
                         var username = context.Principal.Username();
-                        if (username == null) {
+                        if (username == null)
+                        {
                             username = context.Principal.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name");
                         }
 
                         // add group claims.
-                        if (username != null) {
+                        if (username != null)
+                        {
 
                             var claims = new List<Claim>();
                             var azureAdFactory = context.HttpContext.RequestServices.GetRequiredService<IAzureAdDirectoryServiceFactory>();
@@ -512,7 +515,7 @@ namespace ntbs_service
             {
                 app.UseForwardedHeaders();
                 app.UseDeveloperExceptionPage();
-                
+
                 // TODO Find an alternative for using webpack middleware in dotnet 5.0
                 // app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 // {
@@ -556,7 +559,7 @@ namespace ntbs_service
                         : LogEventLevel.Information;
                 });
             }
-            
+
             app.UseRouting();
 
             app.UseAuthentication();
@@ -596,7 +599,7 @@ namespace ntbs_service
 
             var dashboardOptions = new DashboardOptions
             {
-                Authorization = new[] {new HangfireAuthorisationFilter(GetAdminRoleName())},
+                Authorization = new[] { new HangfireAuthorisationFilter(GetAdminRoleName()) },
                 DisplayStorageConnectionString = false,
                 // Added to squash intermittent 'The required antiforgery cookie token must be provided' exceptions
                 // Does not pose a significant attack vector as all jobs are essentially idempotent.
@@ -607,7 +610,7 @@ namespace ntbs_service
             {
                 WorkerCount = Configuration.GetValue<int>(Constants.HangfireWorkerCount)
             });
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute {Attempts = 0});
+            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
 
             var scheduledJobConfig = new ScheduledJobsConfig();
             Configuration.GetSection(Constants.ScheduledJobsConfig).Bind(scheduledJobConfig);

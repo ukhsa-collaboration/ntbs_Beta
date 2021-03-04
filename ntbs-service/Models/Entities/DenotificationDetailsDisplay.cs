@@ -7,7 +7,7 @@ namespace ntbs_service.Models.Entities
     {
         public string FormattedDenotificationDate => DateOfDenotification.ConvertToString();
 
-        public string DenotificationReasonString => 
-            Reason.GetDisplayName() +  (Reason == DenotificationReason.Other ? $" - {OtherDescription}" : "");
+        public string DenotificationReasonString =>
+            Reason.GetDisplayName() + (Reason == DenotificationReason.Other ? $" - {OtherDescription}" : "");
     }
 }

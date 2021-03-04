@@ -27,13 +27,13 @@ namespace ntbs_service.Models.Entities
         [AssertThat(nameof(DateFromAfterDob), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         [ValidDateRange(ValidDates.EarliestBirthDate)]
         [Display(Name = "From")]
-        public DateTime? DateFrom { get ; set; }
+        public DateTime? DateFrom { get; set; }
 
         [AssertThat(nameof(DateToAfterDob), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         [AssertThat(@"DateFrom == null || DateTo > DateFrom", ErrorMessage = ValidationMessages.VenueDateToShouldBeLaterThanDateFrom)]
         [ValidDateRange(ValidDates.EarliestBirthDate)]
         [Display(Name = "To")]
-        public DateTime? DateTo { get ; set; }
+        public DateTime? DateTo { get; set; }
 
         [MaxLength(250)]
         [RegularExpression(

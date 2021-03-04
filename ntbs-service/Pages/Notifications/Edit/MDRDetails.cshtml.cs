@@ -44,10 +44,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 return NotFound();
             }
-            
+
             var countries = await _referenceDataRepository.GetAllCountriesAsync();
             Countries = new SelectList(countries, nameof(Country.CountryId), nameof(Country.Name));
-            
+
             MDRDetails = Notification.MDRDetails;
             await SetNotificationProperties(isBeingSubmitted, MDRDetails);
 
@@ -55,7 +55,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 TryValidateModel(MDRDetails, MDRDetails.GetType().Name);
             }
-            
+
             RenderConditionalCountryFieldIds = countries
                 .Where(c => c.IsoCode == Models.Countries.UkCode)
                 .Select(c => c.CountryId.ToString())
@@ -79,9 +79,9 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             if (MDRDetails.CountryId != null)
             {
-                MDRDetails.Country = await _referenceDataRepository.GetCountryByIdAsync((int) MDRDetails.CountryId);
+                MDRDetails.Country = await _referenceDataRepository.GetCountryByIdAsync((int)MDRDetails.CountryId);
             }
-            
+
             UpdateFlags();
             ValidateRelatedNotificationId();
             MDRDetails.SetValidationContext(Notification);

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
-using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;

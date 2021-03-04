@@ -23,7 +23,7 @@ namespace ntbs_service.Services
             {
                 return null;
             }
-            
+
             // If a treatment outcome is not missing that is because one either exists as the last event of the 1 year period
             // or one is not needed and so is null
             return GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, yearsAfterTreatmentStartDate)
@@ -36,19 +36,19 @@ namespace ntbs_service.Services
             for (var i = yearsAfterTreatmentStartDate; i >= 1; i--)
             {
                 var lastTreatmentEventsBetweenIAndIMinusOneYears = GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, i)?.LastOrDefault();
-                
+
                 // Check if any events have happened in this year window, look back a year if none exist
                 if (lastTreatmentEventsBetweenIAndIMinusOneYears == null)
                 {
                     continue;
                 }
-                
+
                 // If the last event was not a treatment outcome event a treatment outcome event is missing
                 if (!lastTreatmentEventsBetweenIAndIMinusOneYears.TreatmentEventTypeIsOutcome)
                 {
                     return true;
                 }
-                
+
                 // If a previous year has a treatment outcome of not evaluated this is not an ending treatment outcome
                 // so a new treatment outcome will be needed for this 12 month period
                 if (i < yearsAfterTreatmentStartDate &&
@@ -57,7 +57,7 @@ namespace ntbs_service.Services
                 {
                     return true;
                 }
-                
+
                 // If a treatment outcome event exists then a new one is not needed
                 if (lastTreatmentEventsBetweenIAndIMinusOneYears.TreatmentEventTypeIsOutcome)
                 {
@@ -74,7 +74,7 @@ namespace ntbs_service.Services
             {
                 return false;
             }
-            
+
             if (GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, yearsAfterTreatmentStartDate)
                     ?.LastOrDefault(x => x.TreatmentOutcome != null) != null)
             {
@@ -82,23 +82,23 @@ namespace ntbs_service.Services
             }
             return IsTreatmentOutcomeMissingAtXYears(notification, yearsAfterTreatmentStartDate);
         }
-        
-    private static IEnumerable<TreatmentEvent> GetOrderedTreatmentEventsInWindowXtoXMinus1Years(
-        Notification notification,
-        int numberOfYears)
-    {
-        return notification.TreatmentEvents?.Where(t =>
-            {
-                var startDate = notification.ClinicalDetails.StartingDate;
-                if (numberOfYears == 1)
+
+        private static IEnumerable<TreatmentEvent> GetOrderedTreatmentEventsInWindowXtoXMinus1Years(
+            Notification notification,
+            int numberOfYears)
+        {
+            return notification.TreatmentEvents?.Where(t =>
                 {
-                    // For outcome at 12 months we don't want to set a lower boundary, so that pre-notification date
-                    // events can be taken into account (i.e. death events for post mortem cases)
-                    return t.EventDate < startDate?.AddYears(numberOfYears);    
-                }
-                return startDate?.AddYears(numberOfYears - 1) <= t.EventDate 
-                       && t.EventDate < startDate?.AddYears(numberOfYears);
-            }).OrderForEpisodes();
+                    var startDate = notification.ClinicalDetails.StartingDate;
+                    if (numberOfYears == 1)
+                    {
+                        // For outcome at 12 months we don't want to set a lower boundary, so that pre-notification date
+                        // events can be taken into account (i.e. death events for post mortem cases)
+                        return t.EventDate < startDate?.AddYears(numberOfYears);
+                    }
+                    return startDate?.AddYears(numberOfYears - 1) <= t.EventDate
+                           && t.EventDate < startDate?.AddYears(numberOfYears);
+                }).OrderForEpisodes();
         }
     }
 }

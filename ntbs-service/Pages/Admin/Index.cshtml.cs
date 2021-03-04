@@ -8,7 +8,7 @@ namespace ntbs_service.Pages.Admin
     {
         public void OnGet()
         {
-            
+
         }
     }
 }

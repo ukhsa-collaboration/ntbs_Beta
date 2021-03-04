@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
@@ -25,7 +24,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             _cultureAndResistanceService = cultureAndResistanceService;
             _specimenService = specimenService;
-            
+
             CurrentPage = NotificationSubPaths.EditTestResults;
         }
 

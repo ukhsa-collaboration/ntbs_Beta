@@ -9,7 +9,7 @@ namespace ntbs_service.Models.ReferenceEntities
         public string Code { get; set; }
         public string Name { get; set; }
         public string ServiceAdGroup { get; set; }
-        [MaxLength(50)] 
+        [MaxLength(50)]
         public string PHECCode { get; set; }
         public virtual PHEC PHEC { get; set; }
         public virtual ICollection<CaseManagerTbService> CaseManagerTbServices { get; set; }

@@ -35,8 +35,8 @@ namespace ntbs_service_unit_tests.Services
         public async Task AddUniqueAlert_AddsIfNoAlertWithSameNotificationIdAndAlertType()
         {
             // Arrange
-            var matchingAlert = Task.FromResult(new TestAlert {AlertId = 2});
-            var testAlert = new TestAlert {NotificationId = 2, AlertType = AlertType.TransferRequest};
+            var matchingAlert = Task.FromResult(new TestAlert { AlertId = 2 });
+            var testAlert = new TestAlert { NotificationId = 2, AlertType = AlertType.TransferRequest };
             _mockAlertRepository.Setup(x =>
                     x.GetAlertByNotificationIdAndTypeAsync<TestAlert>(testAlert.NotificationId.Value))
                 .Returns(matchingAlert);
@@ -55,7 +55,7 @@ namespace ntbs_service_unit_tests.Services
             _mockAlertRepository.Setup(x =>
                     x.GetAlertByNotificationIdAndTypeAsync<TestAlert>(It.IsAny<int>()))
                 .Returns(Task.FromResult((TestAlert)null));
-            var testAlert = new TestAlert {NotificationId = 2, AlertType = AlertType.TransferRequest};
+            var testAlert = new TestAlert { NotificationId = 2, AlertType = AlertType.TransferRequest };
 
             // Act
             var result = await _alertService.AddUniqueAlertAsync(testAlert);
@@ -90,14 +90,14 @@ namespace ntbs_service_unit_tests.Services
             _mockAlertRepository
                 .Setup(r => r.AddAlertRangeAsync(It.IsAny<IEnumerable<Alert>>()))
                 .Callback<IEnumerable<Alert>>(param => alertsToBeAdded = param.ToList());
-            
+
             // Act
             await _alertService.CreateAlertsForUnmatchedLabResults(matchesRequiringAlerts);
-            
+
             // Assert
             Assert.Single(alertsToBeAdded);
             var alert = alertsToBeAdded.First() as UnmatchedLabResultAlert;
-            
+
             Assert.NotNull(alert);
             Assert.Equal(AlertType.UnmatchedLabResult, alert.AlertType);
             Assert.Equal(AlertStatus.Open, alert.AlertStatus);

@@ -18,7 +18,7 @@ namespace ntbs_service.Models.Entities
             RiskFactorImprisonment = new RiskFactorDetails(RiskFactorType.Imprisonment);
             RiskFactorSmoking = new RiskFactorDetails(RiskFactorType.Smoking);
         }
-        
+
         [Display(Name = "Is the patient’s ability to self-administer treatment affected by alcohol misuse or abuse?")]
         public Status? AlcoholMisuseStatus { get; set; }
         [Display(Name = "Is the patient’s ability to self-administer treatment affected by mental health illness?")]
@@ -27,7 +27,7 @@ namespace ntbs_service.Models.Entities
         public Status? AsylumSeekerStatus { get; set; }
         [Display(Name = "Is the patient an immigration removal centre detainee?")]
         public Status? ImmigrationDetaineeStatus { get; set; }
-        
+
         [Display(Name = "History of smoking")]
         public virtual RiskFactorDetails RiskFactorSmoking { get; set; }
         [Display(Name = "History of drug misuse")]

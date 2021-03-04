@@ -15,7 +15,7 @@ namespace ntbs_service.Models.Entities.Alerts
 
         public static readonly Func<Notification, bool> NotificationQualifies =
             NotificationQualifiesExpression.Compile();
-        
+
         public override string Action => "Please review social context information.";
 
         public override string ActionLink =>

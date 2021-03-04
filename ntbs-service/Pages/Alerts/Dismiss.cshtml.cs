@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
@@ -16,7 +15,7 @@ namespace ntbs_service.Pages.Alerts
         [BindProperty]
         public int AlertId { get; set; }
 
-        public DismissModel(IAlertService alertService, 
+        public DismissModel(IAlertService alertService,
             IAlertRepository alertRepository,
             IAuthorizationService authorizationService)
         {
@@ -28,8 +27,8 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnPostAsync()
         {
             var alertToDismiss = await alertRepository.GetOpenAlertByIdAsync(AlertId);
-            
-            if(await authorizationService.IsUserAuthorizedToManageAlert(User, alertToDismiss))
+
+            if (await authorizationService.IsUserAuthorizedToManageAlert(User, alertToDismiss))
             {
                 await alertService.DismissAlertAsync(AlertId, User.Username());
             }

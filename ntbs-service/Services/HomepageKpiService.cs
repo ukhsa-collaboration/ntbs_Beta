@@ -32,7 +32,7 @@ namespace ntbs_service.Services
             var homepageKpiResults = await ExecuteGetKpiQuery(query, formattedPhecCodes);
             return homepageKpiResults;
         }
-        
+
         public async Task<IEnumerable<HomepageKpi>> GetKpiForTbService(IEnumerable<string> tbServiceCodes)
         {
             var query = HomepageKpiQueryHelper.GetKpiForServiceQuery;
@@ -41,28 +41,28 @@ namespace ntbs_service.Services
             var homepageKpiResults = await ExecuteGetKpiQuery(query, formattedServiceCodes);
             return homepageKpiResults;
         }
-        
+
         private async Task<IEnumerable<HomepageKpi>> ExecuteGetKpiQuery(string query, string param = null)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                return await connection.QueryAsync<HomepageKpi>(query, new {param});
+                return await connection.QueryAsync<HomepageKpi>(query, new { param });
             }
         }
     }
-    
+
     public class MockHomepageKpiService : IHomepageKpiService
     {
         public Task<IEnumerable<HomepageKpi>> GetKpiForPhec(IEnumerable<string> phecCodes)
         {
-            var homepageKpiDetails = phecCodes.Select(x => new HomepageKpi {Code = x, Name = x});
+            var homepageKpiDetails = phecCodes.Select(x => new HomepageKpi { Code = x, Name = x });
             return Task.FromResult(homepageKpiDetails);
         }
 
         public Task<IEnumerable<HomepageKpi>> GetKpiForTbService(IEnumerable<string> tbServiceCodes)
         {
-            var homepageKpiDetails = tbServiceCodes.Select(x => new HomepageKpi {Code = x, Name = x});
+            var homepageKpiDetails = tbServiceCodes.Select(x => new HomepageKpi { Code = x, Name = x });
             return Task.FromResult(homepageKpiDetails);
         }
     }

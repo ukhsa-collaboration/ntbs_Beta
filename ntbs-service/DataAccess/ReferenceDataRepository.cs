@@ -221,7 +221,7 @@ namespace ntbs_service.DataAccess
 
         public async Task<FilteredHospitalDetailsPageSelectLists> GetFilteredHospitalDetailsPageSelectListsByTbService(string tbServiceCode)
         {
-            var tbServiceCodeAsList = new List<string> {tbServiceCode};
+            var tbServiceCodeAsList = new List<string> { tbServiceCode };
             var filteredHospitals = await GetHospitalsByTbServiceCodesAsync(tbServiceCodeAsList);
             var filteredCaseManagers = await GetCaseManagersByTbServiceCodesAsync(tbServiceCodeAsList);
 

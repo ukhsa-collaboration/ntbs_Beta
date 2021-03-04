@@ -19,13 +19,13 @@ namespace ntbs_service.Models
         {
             dateTime = null;
 
-            if (IsEmpty()) 
+            if (IsEmpty())
             {
                 return true;
             }
-                        
-            if (int.TryParse(Day, out var parsedDay) 
-                && int.TryParse(Month, out var parsedMonth) 
+
+            if (int.TryParse(Day, out var parsedDay)
+                && int.TryParse(Month, out var parsedMonth)
                 && int.TryParse(Year, out var parsedYear))
             {
                 try

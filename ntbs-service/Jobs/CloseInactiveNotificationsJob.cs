@@ -20,7 +20,7 @@ namespace ntbs_service.Jobs
             Log.Information($"Starting close inactive notifications job");
 
             await _notificationService.CloseInactiveNotifications();
-            
+
             Log.Information($"Finishing close inactive notifications job");
         }
     }

@@ -16,7 +16,7 @@ namespace ntbs_service_unit_tests.Services
 
         public NtbsSearchBuilderTest(DatabaseFixture fixture)
         {
-            this._builder = new NtbsSearchBuilder(fixture.Context.Notification);;
+            this._builder = new NtbsSearchBuilder(fixture.Context.Notification); ;
         }
 
         [Fact]
@@ -112,11 +112,11 @@ namespace ntbs_service_unit_tests.Services
         public void SearchByFamilyName_WhitespacePrefixAndSuffix()
         {
             var result = ((INtbsSearchBuilder)_builder.FilterByFamilyName("   Merry  ")).GetResult().ToList();
-            
+
             Assert.Equal(2, result.Count);
             Assert.Equal("Merry", result.FirstOrDefault().PatientDetails.FamilyName);
         }
-        
+
         [Fact]
         public void SearchByFamilyName_NoResults()
         {
@@ -260,7 +260,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var result =
                 ((INtbsSearchBuilder)_builder.FilterByPartialNotificationDate(
-                    new PartialDate() {Day = "1", Month = "1", Year = "2000"})).GetResult().ToList();
+                    new PartialDate() { Day = "1", Month = "1", Year = "2000" })).GetResult().ToList();
 
             Assert.Single(result);
             Assert.Equal(new DateTime(2000, 1, 1), result.FirstOrDefault().NotificationDate);
@@ -271,7 +271,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var result =
                 ((INtbsSearchBuilder)_builder.FilterByPartialNotificationDate(
-                    new PartialDate() {Day = "1", Month = "1", Year = "3000"})).GetResult().ToList();
+                    new PartialDate() { Day = "1", Month = "1", Year = "3000" })).GetResult().ToList();
 
             Assert.Empty(result);
         }
@@ -282,7 +282,9 @@ namespace ntbs_service_unit_tests.Services
             var result =
                 ((INtbsSearchBuilder)_builder.FilterByPartialDob(new PartialDate()
                 {
-                    Day = "1", Month = "1", Year = "1990"
+                    Day = "1",
+                    Month = "1",
+                    Year = "1990"
                 })).GetResult().ToList();
 
             Assert.Single(result);
@@ -295,7 +297,9 @@ namespace ntbs_service_unit_tests.Services
             var result =
                 ((INtbsSearchBuilder)_builder.FilterByPartialDob(new PartialDate()
                 {
-                    Day = "1", Month = "1", Year = "3000"
+                    Day = "1",
+                    Month = "1",
+                    Year = "3000"
                 })).GetResult().ToList();
 
             Assert.Empty(result);

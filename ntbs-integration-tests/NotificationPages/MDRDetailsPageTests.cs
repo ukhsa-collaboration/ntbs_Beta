@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
@@ -174,7 +173,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Act
             var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateMDRDetailsProperty"));
 
-             // Assert
+            // Assert
             var result = await response.Content.ReadAsStringAsync();
             Assert.Equal("Relationship of the current case to the contact can only contain letters and the symbols ' - . ,", result);
         }
@@ -204,7 +203,7 @@ namespace ntbs_integration_tests.NotificationPages
             var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
         }
-        
+
         [Fact]
         public async Task NotifiedPageHasReturnLinkToOverview()
         {

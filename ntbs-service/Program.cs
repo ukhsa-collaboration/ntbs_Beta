@@ -76,7 +76,7 @@ namespace ntbs_service
                 Log.Information("Starting app db migration");
                 // We're using DesignTimeFactory rather than NtbsContext directly in order to use a different login
                 var factory = services.GetRequiredService<NtbsContextDesignTimeFactory>();
-                var context = factory.CreateDbContext(new string[]{});
+                var context = factory.CreateDbContext(new string[] { });
                 context.Database.Migrate();
             }
             catch (Exception ex)

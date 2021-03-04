@@ -19,7 +19,7 @@ namespace ntbs_service.Middleware
             {
                 SessionStateHelper.UpdateSessionActivity(context.Session);
             }
-            
+
             await _next(context);
         }
     }

@@ -10,7 +10,7 @@ namespace ntbs_service.Models.Entities
     {
         public string Species { get; set; }
         public string DrugResistanceProfileString { get; set; }
-        
+
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
 }

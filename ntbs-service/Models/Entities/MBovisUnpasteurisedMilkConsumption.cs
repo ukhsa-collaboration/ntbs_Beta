@@ -21,7 +21,7 @@ namespace ntbs_service.Models.Entities
     {
         public int MBovisUnpasteurisedMilkConsumptionId { get; set; }
         public int NotificationId { get; set; }
-        
+
         [AssertThat(nameof(YearOfConsumptionAfterBirth), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDobYear)]
         [AssertThat(nameof(YearOfConsumptionNotInFuture), ErrorMessage = ValidationMessages.BeforeCurrentYear)]
         [Range(1900, 2100, ErrorMessage = ValidationMessages.InvalidYearForAttribute)]
@@ -30,29 +30,29 @@ namespace ntbs_service.Models.Entities
 
         [Display(Name = "Product type")]
         public MilkProductType? MilkProductType { get; set; }
-        
+
         [Display(Name = "Frequency")]
         public ConsumptionFrequency? ConsumptionFrequency { get; set; }
-        
+
         [Display(Name = "Country")]
         public int? CountryId { get; set; }
         public virtual Country Country { get; set; }
-        
+
         [MaxLength(150)]
-        
+
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Other details")]
         public string OtherDetails { get; set; }
-        
+
         public bool YearOfConsumptionAfterBirth => !DobYear.HasValue || YearOfConsumption >= DobYear;
         public bool YearOfConsumptionNotInFuture => YearOfConsumption <= DateTime.Now.Year;
-        
+
         // For validation purposes only
         [NotMapped]
         public int? DobYear { get; set; }
-        
+
         string IHasRootEntityForAuditing.RootEntityType => RootEntities.Notification;
         string IHasRootEntityForAuditing.RootId => NotificationId.ToString();
     }

@@ -56,7 +56,7 @@ namespace ntbs_service_unit_tests.Pages
 
             _mockNotificationRepository
                 .Setup(s => s.GetQueryableNotificationByStatus(It.IsAny<List<NotificationStatus>>()))
-                .Returns(new List<Notification> {new Notification() {NotificationId = 1}}.AsQueryable());
+                .Returns(new List<Notification> { new Notification() { NotificationId = 1 } }.AsQueryable());
 
             var unionAndPaginateResult = Task.FromResult(GetNotificationIdsAndCount());
             _mockSearchService.Setup(s => s.OrderAndPaginateQueryableAsync(It.IsAny<INtbsSearchBuilder>(),
@@ -75,7 +75,7 @@ namespace ntbs_service_unit_tests.Pages
                     s.SetFullAccessOnNotificationBannersAsync(It.IsAny<IEnumerable<NotificationBannerModel>>(),
                         It.IsAny<ClaimsPrincipal>()))
                 .Verifiable();
-            
+
 
             var httpContext = new DefaultHttpContext();
             var modelState = new ModelStateDictionary();
@@ -113,9 +113,9 @@ namespace ntbs_service_unit_tests.Pages
 
         public IEnumerable<NotificationBannerModel> GetNotificationBanners()
         {
-            return new List<NotificationBannerModel> { 
-                new NotificationBannerModel { Name = "Bob Ross", NotificationId = "1", SortByDate = DateTime.Now }, 
-                new NotificationBannerModel { Name = "Jack Jill", NotificationId = "2", SortByDate = DateTime.Now.AddDays(-1) } 
+            return new List<NotificationBannerModel> {
+                new NotificationBannerModel { Name = "Bob Ross", NotificationId = "1", SortByDate = DateTime.Now },
+                new NotificationBannerModel { Name = "Jack Jill", NotificationId = "2", SortByDate = DateTime.Now.AddDays(-1) }
                 };
         }
 
@@ -126,10 +126,10 @@ namespace ntbs_service_unit_tests.Pages
 
         public IEnumerable<NotificationBannerModel> GetAuthorisedBanners()
         {
-            return new List<NotificationBannerModel> { 
-                new NotificationBannerModel { Name = "Bob Ross", NotificationId = "1", SortByDate = DateTime.Now }, 
-                new NotificationBannerModel { Name = "Jack Jill", NotificationId = "2", SortByDate = DateTime.Now.AddDays(-1) }, 
-                new NotificationBannerModel { Name = "Luke Arrow", NotificationId = "134-1", SortByDate = DateTime.Now.AddDays(-2) } 
+            return new List<NotificationBannerModel> {
+                new NotificationBannerModel { Name = "Bob Ross", NotificationId = "1", SortByDate = DateTime.Now },
+                new NotificationBannerModel { Name = "Jack Jill", NotificationId = "2", SortByDate = DateTime.Now.AddDays(-1) },
+                new NotificationBannerModel { Name = "Luke Arrow", NotificationId = "134-1", SortByDate = DateTime.Now.AddDays(-2) }
                 };
         }
     }

@@ -17,7 +17,7 @@ namespace ntbs_service.Jobs
         public async Task Run(IJobCancellationToken token)
         {
             Log.Information($"Starting mark imported notifications as imported job");
-            
+
             await _notificationsMarker.BulkMarkNotificationsAsImportedAsync();
 
             Log.Information($"Finishing mark imported notifications as imported job");

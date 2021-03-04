@@ -349,7 +349,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Contains(Utilities.CASEMANAGER_ABINGDON_EMAIL, filteredLists.CaseManagers.Select(x => x.Value));
             Assert.Contains(Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID, filteredLists.Hospitals.Select(x => x.Value.ToUpperInvariant()));
         }
-        
+
         [Fact]
         public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
         {
@@ -377,7 +377,7 @@ namespace ntbs_integration_tests.NotificationPages
             var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
         }
-        
+
         [Fact]
         public async Task NotifiedPageHasReturnLinkToOverview()
         {

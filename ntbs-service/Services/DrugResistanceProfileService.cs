@@ -20,7 +20,7 @@ namespace ntbs_service.Services
         private readonly IDrugResistanceProfileRepository _drugResistanceProfileRepository;
 
         public DrugResistanceProfileService(
-            INotificationService notificationService, 
+            INotificationService notificationService,
             INotificationRepository notificationRepository,
             IDrugResistanceProfileRepository drugResistanceProfileRepository,
             IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService)
@@ -72,7 +72,7 @@ namespace ntbs_service.Services
             }
         }
     }
-    
+
     class MockDrugResistanceProfilesService : IDrugResistanceProfilesService
     {
         public Task<int> UpdateDrugResistanceProfiles(int maxNumberOfUpdates)

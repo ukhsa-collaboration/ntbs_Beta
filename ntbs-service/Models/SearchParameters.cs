@@ -6,7 +6,7 @@ namespace ntbs_service.Models
 {
     [NotMapped]
     [AtLeastOneProperty(
-        nameof(IdFilter), 
+        nameof(IdFilter),
         nameof(FamilyName),
         nameof(PartialDobExists),
         nameof(Postcode),

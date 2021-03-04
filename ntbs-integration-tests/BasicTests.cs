@@ -8,7 +8,7 @@ namespace ntbs_integration_tests
 {
     public class BasicTests : TestRunnerBase
     {
-        public BasicTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
+        public BasicTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
         [Theory]
         [InlineData(Routes.HomePage)]

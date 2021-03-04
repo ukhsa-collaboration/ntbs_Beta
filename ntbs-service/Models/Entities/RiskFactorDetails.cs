@@ -33,7 +33,7 @@ namespace ntbs_service.Models.Entities
                 IsCurrent = value;
             }
         }
-        
+
         [NotMapped]
         public bool InPastFiveYearsView
         {
@@ -46,7 +46,7 @@ namespace ntbs_service.Models.Entities
                 InPastFiveYears = value;
             }
         }
-        
+
         [NotMapped]
         public bool MoreThanFiveYearsAgoView
         {

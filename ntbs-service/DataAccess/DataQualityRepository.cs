@@ -237,7 +237,8 @@ namespace ntbs_service.DataAccess
             IList<NotificationAndDuplicateIds> notificationsWithDuplicateNhsNumber = await GetNotificationIdsEligibleForDqPotentialDuplicateAlertsBasedOnMatchingNhsNumberAsync();
 
             var duplicateNotifications = notificationsWithDuplicateFamilyName;
-            foreach(var notification in notificationsWithDuplicateNhsNumber){
+            foreach (var notification in notificationsWithDuplicateNhsNumber)
+            {
                 duplicateNotifications.Add(notification);
             }
 
@@ -279,7 +280,7 @@ AND (N1.[GroupId] <> N2.[GroupId] OR N1.[GroupId] is NULL or N2.[GroupId] is NUL
         {
             return await _context.Notification
                 .SelectMany(_ => _context.Notification,
-                    (notification, duplicate) => new {notification, duplicate})
+                    (notification, duplicate) => new { notification, duplicate })
                 .Where(t =>
                     // Check that one of the following cases are true:
                     // Check that the notification's nhs numbers match, the notification is notified and the notifications
@@ -287,7 +288,7 @@ AND (N1.[GroupId] <> N2.[GroupId] OR N1.[GroupId] is NULL or N2.[GroupId] is NUL
                     (
                         (
                             t.notification.PatientDetails.NhsNumber == t.duplicate.PatientDetails.NhsNumber &&
-                            t.notification.PatientDetails.NhsNumber != null 
+                            t.notification.PatientDetails.NhsNumber != null
                         ) // check that the notifications have happened long enough in the past
                         &&
                         (
@@ -296,7 +297,7 @@ AND (N1.[GroupId] <> N2.[GroupId] OR N1.[GroupId] is NULL or N2.[GroupId] is NUL
                             DateTime.Now.AddDays(-DataQualityPotentialDuplicateAlert.MinNumberDaysNotifiedForAlert) &&
                             t.duplicate.NotificationDate <
                             DateTime.Now.AddDays(-DataQualityPotentialDuplicateAlert.MinNumberDaysNotifiedForAlert)
-                        ) 
+                        )
                         // Check that notifications are not already linked.
                         &&
                         (
@@ -308,7 +309,8 @@ AND (N1.[GroupId] <> N2.[GroupId] OR N1.[GroupId] is NULL or N2.[GroupId] is NUL
                 )
                 .Select(t => new NotificationAndDuplicateIds
                 {
-                    NotificationId = t.notification.NotificationId, DuplicateId = t.duplicate.NotificationId
+                    NotificationId = t.notification.NotificationId,
+                    DuplicateId = t.duplicate.NotificationId
                 }).ToListAsync();
         }
 

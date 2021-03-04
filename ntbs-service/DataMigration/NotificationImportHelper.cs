@@ -1,9 +1,9 @@
 using System;
-using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
-using Dapper;
 using System.Threading.Tasks;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using ntbs_service.DataAccess;
 using ntbs_service.Properties;
@@ -49,7 +49,7 @@ namespace ntbs_service.DataMigration
             _connectionString = configuration.GetConnectionString("migration");
             var tablePrefix = migrationConfig.Value.TablePrefix;
             _importedNotificationsTableName = $"{tablePrefix}ImportedNotifications";
-            
+
             // The BulkInsertImportedNotificationsQueryTemplate query needs the name of the app
             // database - see its doc for more info
             try
@@ -77,7 +77,7 @@ namespace ntbs_service.DataMigration
             INSERT INTO {_importedNotificationsTableName} (LegacyId, ImportedAt)
             VALUES (@LegacyId, @ImportedAt);
         ";
-        
+
         /// <summary>
         /// This query does something not done elsewhere in the app, by referencing tables from both the app db and
         /// the migration db. As such, it relies on the fact that the two databases are hosted in such a way that

@@ -41,7 +41,7 @@ namespace ntbs_service.Pages.Notifications
             LinkedNotifications = Notification.Group.Notifications
                 .Where(n => n.NotificationId != NotificationId)
                 .CreateNotificationBanners(User, _authorizationService).ToList();
-            
+
             PrepareBreadcrumbs();
 
             return Page();
