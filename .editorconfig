@@ -109,6 +109,8 @@ csharp_style_inlined_variable_declaration = true:suggestion
 # C# Formatting Rules         #
 ###############################
 
+dotnet_diagnostic.IDE0055.severity = suggestion
+
 # New line preferences
 csharp_new_line_before_open_brace = all
 csharp_new_line_before_else = true
