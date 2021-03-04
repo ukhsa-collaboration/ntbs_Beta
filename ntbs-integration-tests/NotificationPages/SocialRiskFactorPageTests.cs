@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
@@ -36,7 +35,7 @@ namespace ntbs_integration_tests.NotificationPages
             var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
         }
-        
+
         [Fact]
         public async Task NotifiedPageHasReturnLinkToOverview()
         {

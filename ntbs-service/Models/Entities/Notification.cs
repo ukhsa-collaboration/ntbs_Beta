@@ -64,7 +64,7 @@ namespace ntbs_service.Models.Entities
         [ValidClinicalDate]
         public DateTime? NotificationDate { get; set; }
         public NotificationStatus NotificationStatus { get; set; }
-        
+
         #endregion
 
         #region Navigation Properties
@@ -97,11 +97,11 @@ namespace ntbs_service.Models.Entities
         public virtual ICollection<PreviousTbService> PreviousTbServices { get; set; }
 
         #endregion
-        
-        public bool HasBeenNotified => NotificationStatus == NotificationStatus.Notified 
-                                       || NotificationStatus == NotificationStatus.Closed 
+
+        public bool HasBeenNotified => NotificationStatus == NotificationStatus.Notified
+                                       || NotificationStatus == NotificationStatus.Closed
                                        || NotificationStatus == NotificationStatus.Legacy;
-        
+
         [AssertThat(@"ShouldValidateFull && HasDeathEventForPostMortemCase", ErrorMessage = ValidationMessages.DeathEventRequiredForPostMortemCase)]
         public bool HasDeathEventForPostMortemCase =>
             ClinicalDetails.IsPostMortem != true || (TreatmentEvents != null && TreatmentEvents.Any(x =>

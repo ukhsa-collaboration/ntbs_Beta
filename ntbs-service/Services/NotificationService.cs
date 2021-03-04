@@ -63,8 +63,8 @@ namespace ntbs_service.Services
             IReferenceDataRepository referenceDataRepository,
             IUserService userService,
             ITreatmentEventRepository treatmentEventRepository,
-            NtbsContext context, 
-            ISpecimenService specimenService, 
+            NtbsContext context,
+            ISpecimenService specimenService,
             IAlertService alertService)
         {
             _notificationRepository = notificationRepository;
@@ -163,7 +163,7 @@ namespace ntbs_service.Services
             var startingEventAffected =
                 clinicalDetails.TreatmentStartDate != notification.ClinicalDetails.TreatmentStartDate
                 || clinicalDetails.DiagnosisDate != notification.ClinicalDetails.DiagnosisDate;
-            
+
             _context.SetValues(notification.ClinicalDetails, clinicalDetails);
 
             await _notificationRepository.SaveChangesAsync();
@@ -406,7 +406,7 @@ namespace ntbs_service.Services
                     throw new DataException(
                         $"Reporting database sourced NotificationId {clusterValue.NotificationId} was not found in NTBS database.");
                 }
-                
+
                 notification.ClusterId = clusterValue.ClusterId;
             }
 
@@ -425,26 +425,26 @@ namespace ntbs_service.Services
 
         public async Task UpdateMBovisDetailsExposureToKnownCasesAsync(Notification notification, MBovisDetails mBovisDetails)
         {
-            _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasExposureToKnownCases});
+            _context.SetValues(notification.MBovisDetails, new { mBovisDetails.HasExposureToKnownCases });
             await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateMBovisDetailsUnpasteurisedMilkConsumptionAsync(Notification notification, MBovisDetails mBovisDetails)
         {
-            _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasUnpasteurisedMilkConsumption});
-            await _notificationRepository.SaveChangesAsync();        
+            _context.SetValues(notification.MBovisDetails, new { mBovisDetails.HasUnpasteurisedMilkConsumption });
+            await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateMBovisDetailsOccupationExposureAsync(Notification notification, MBovisDetails mBovisDetails)
         {
-            _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasOccupationExposure});
+            _context.SetValues(notification.MBovisDetails, new { mBovisDetails.HasOccupationExposure });
             await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateMBovisDetailsAnimalExposureAsync(Notification notification, MBovisDetails mBovisDetails)
         {
-            _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasAnimalExposure});
-            await _notificationRepository.SaveChangesAsync();            
+            _context.SetValues(notification.MBovisDetails, new { mBovisDetails.HasAnimalExposure });
+            await _notificationRepository.SaveChangesAsync();
         }
 
         private async Task<string> GetDefaultCaseManagerEmail(ClaimsPrincipal user, string tbServiceCode)
@@ -481,7 +481,7 @@ namespace ntbs_service.Services
             notification.NotificationStatus = NotificationStatus.Denotified;
 
             await _notificationRepository.SaveChangesAsync(NotificationAuditType.Denotified);
-            
+
             Log.Debug($"{notificationId} denotified, removing lab result matches");
             var success = await _specimenService.UnmatchAllSpecimensForNotification(notificationId, auditUsername);
             if (!success)

@@ -14,7 +14,8 @@ namespace ntbs_service.Services
     {
         private readonly NtbsContext _context;
 
-        public PostcodeService(NtbsContext context) {
+        public PostcodeService(NtbsContext context)
+        {
             this._context = context;
         }
 

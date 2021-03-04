@@ -15,16 +15,16 @@ namespace ntbs_service_unit_tests.Models.Entities
         public void Postcode_WithMatchingLookup_IsValid(string postcode)
         {
             // Arrange
-            var patientDetails = new PatientDetails {Postcode = postcode, PostcodeToLookup = postcode};
+            var patientDetails = new PatientDetails { Postcode = postcode, PostcodeToLookup = postcode };
             var validationResults = new List<ValidationResult>();
-            
+
             // Act
-            var isValid = Validator.TryValidateObject(patientDetails, new ValidationContext(patientDetails), validationResults, true); 
+            var isValid = Validator.TryValidateObject(patientDetails, new ValidationContext(patientDetails), validationResults, true);
 
             // Assert
             Assert.True(isValid, "Expected no postcode errors");
         }
-        
+
         [Theory]
         [InlineData("DE142GL")]
         [InlineData("W187SB")]
@@ -32,19 +32,19 @@ namespace ntbs_service_unit_tests.Models.Entities
         public void Postcode_WithNoMatchingLookup_IsInvalid(string postcode)
         {
             // Arrange
-            var patientDetails = new PatientDetails {Postcode = postcode};
+            var patientDetails = new PatientDetails { Postcode = postcode };
             var validationResults = new List<ValidationResult>();
-            
+
             // Act
-            var isValid = Validator.TryValidateObject(patientDetails, new ValidationContext(patientDetails), validationResults, true); 
+            var isValid = Validator.TryValidateObject(patientDetails, new ValidationContext(patientDetails), validationResults, true);
 
             // Assert
             Assert.False(isValid, "Expected postcode errors");
             validationResults.ForEach(result =>
                 Assert.Equal("Postcode is not found", result.ErrorMessage));
-            
+
         }
-        
+
         [Theory]
         [InlineData("DE142GL")]
         [InlineData("W187SB")]
@@ -52,16 +52,16 @@ namespace ntbs_service_unit_tests.Models.Entities
         public void Postcode_WithNoMatchingLookupForLegacyNotification_IsValid(string postcode)
         {
             // Arrange
-            var patientDetails = new PatientDetails {Postcode = postcode, IsLegacy = true};
+            var patientDetails = new PatientDetails { Postcode = postcode, IsLegacy = true };
             var validationResults = new List<ValidationResult>();
-            
+
             // Act
-            var isValid = Validator.TryValidateObject(patientDetails, new ValidationContext(patientDetails), validationResults, true); 
+            var isValid = Validator.TryValidateObject(patientDetails, new ValidationContext(patientDetails), validationResults, true);
 
             // Assert
             Assert.True(isValid, "Expected no postcode errors for legacy notifications");
         }
-        
+
         [Theory]
         [InlineData("CB29J")]
         [InlineData("4156255")]
@@ -69,24 +69,24 @@ namespace ntbs_service_unit_tests.Models.Entities
         public void Postcode_WithJunkContent_IsInvalidEvenForLegacyNotifications(string postcode)
         {
             // Arrange
-            var patientDetails = new PatientDetails {Postcode = postcode, IsLegacy = true};
+            var patientDetails = new PatientDetails { Postcode = postcode, IsLegacy = true };
             var validationResults = new List<ValidationResult>();
-            
+
             // Act
-            var isValid = Validator.TryValidateObject(patientDetails, new ValidationContext(patientDetails), validationResults, true); 
+            var isValid = Validator.TryValidateObject(patientDetails, new ValidationContext(patientDetails), validationResults, true);
 
             // Assert
             Assert.False(isValid, "Expected postcode errors as postcode doesn't conform to postcode format");
             validationResults.ForEach(result =>
                 Assert.Equal("Postcode is not valid", result.ErrorMessage));
-            
+
         }
-        
+
         [Fact]
         public void FormatsFullNameCorrectly()
         {
             // Arrange
-            var patientDetails = new PatientDetails {FamilyName = "example", GivenName = "name"};
+            var patientDetails = new PatientDetails { FamilyName = "example", GivenName = "name" };
 
             // Act
             var fullName = patientDetails.FullName;

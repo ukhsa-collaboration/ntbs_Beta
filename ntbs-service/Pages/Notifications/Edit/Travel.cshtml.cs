@@ -31,7 +31,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 referenceDataRepository.GetAllHighTbIncidenceCountriesAsync().Result,
                 nameof(Country.CountryId),
                 nameof(Country.Name));
-            
+
             CurrentPage = NotificationSubPaths.EditTravel;
         }
 

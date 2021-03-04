@@ -26,7 +26,7 @@ namespace ntbs_service.DataMigration
 
         public void AddGroupError(string error)
         {
-            ValidationErrors.Add("groupFailedToImport", new List<string> {error});
+            ValidationErrors.Add("groupFailedToImport", new List<string> { error });
         }
 
         public void AddValidNotification(string legacyId)
@@ -42,7 +42,7 @@ namespace ntbs_service.DataMigration
             }
             else
             {
-                ValidationErrors.Add(legacyId, new List<string> {error});
+                ValidationErrors.Add(legacyId, new List<string> { error });
             }
         }
     }

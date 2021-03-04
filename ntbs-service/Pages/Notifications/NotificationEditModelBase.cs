@@ -130,7 +130,7 @@ namespace ntbs_service.Pages.Notifications
             await Service.SubmitNotificationAsync(Notification);
 
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
-        }           
+        }
 
         private IActionResult RedirectAfterSave(bool isBeingSubmitted)
         {
@@ -148,9 +148,9 @@ namespace ntbs_service.Pages.Notifications
         {
             var overviewAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(CurrentPage);
             return RedirectToPage(
-                pageName: "/Notifications/Overview", 
-                pageHandler: null,  
-                routeValues: new { NotificationId }, 
+                pageName: "/Notifications/Overview",
+                pageHandler: null,
+                routeValues: new { NotificationId },
                 fragment: overviewAnchorId);
         }
 

@@ -13,7 +13,7 @@ namespace ntbs_service.Helpers
             session.SetString(LabelKey, label);
             session.SetString(UrlKey, url);
         }
-        
+
         public static Breadcrumb GetTopLevelBreadcrumb(this ISession session)
         {
             return new Breadcrumb

@@ -6,7 +6,7 @@ namespace ntbs_service.Pages
     {
         public void OnGet()
         {
-            
+
         }
     }
 }

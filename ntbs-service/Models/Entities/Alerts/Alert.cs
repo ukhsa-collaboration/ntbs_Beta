@@ -19,7 +19,7 @@ namespace ntbs_service.Models.Entities.Alerts
         public AlertType AlertType { get; set; }
         public virtual string ActionLink { get; }
         public virtual string Action { get; }
-        public virtual bool NotDismissable  { get; }
+        public virtual bool NotDismissable { get; }
         [Display(Name = "Alert date")]
         public string FormattedCreationDate => CreationDate.ConvertToString();
     }

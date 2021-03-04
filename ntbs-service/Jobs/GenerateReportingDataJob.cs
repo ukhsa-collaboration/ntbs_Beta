@@ -23,7 +23,7 @@ namespace ntbs_service.Jobs
         public override async Task Run(PerformContext context, IJobCancellationToken token)
         {
             Log.Information($"Starting generate reporting data job");
-            
+
             await base.Run(context, token);
 
             Log.Information($"Finishing generate reporting data job.");
@@ -37,9 +37,12 @@ namespace ntbs_service.Jobs
             Log.Information(serialisedResult);
             _context.WriteLine($"Result: {serialisedResult}");
 
-            if(resultToTest.Count() == 0){
+            if (resultToTest.Count() == 0)
+            {
                 success = true;
-            } else {
+            }
+            else
+            {
                 throw new ApplicationException("Stored procedure did not execute successfully as result has messages, check the logs.");
             }
 

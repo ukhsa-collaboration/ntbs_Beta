@@ -53,10 +53,10 @@ namespace ntbs_service.Services
         private readonly string _specimenMatchingDbConnectionString;
         private readonly IAuditService _auditService;
         private readonly IAlertRepository _alertRepository;
-       
+
         public SpecimenService(
-            IConfiguration configuration, 
-            IAuditService auditService, 
+            IConfiguration configuration,
+            IAuditService auditService,
             IAlertRepository alertRepository)
         {
             _reportingDbConnectionString = configuration.GetConnectionString(Constants.DbConnectionStringReporting);
@@ -73,7 +73,7 @@ namespace ntbs_service.Services
                 connection.Open();
                 return await connection.QueryAsync<MatchedSpecimen>(
                     SpecimenQueryHelper.GetMatchedSpecimensForNotificationQuery,
-                    new {param = notificationId});
+                    new { param = notificationId });
             }
         }
 
@@ -123,10 +123,11 @@ namespace ntbs_service.Services
                     query,
                     (specimen, potentialMatch) => new UnmatchedQueryResultRow
                     {
-                        SpecimenBase = specimen, SpecimenPotentialMatch = potentialMatch
+                        SpecimenBase = specimen,
+                        SpecimenPotentialMatch = potentialMatch
                     },
                     splitOn: nameof(SpecimenPotentialMatch.NotificationId),
-                    param: new {param});
+                    param: new { param });
             }
         }
 
@@ -153,12 +154,12 @@ namespace ntbs_service.Services
                         LabSex = specimenData.LabSex,
                         LabAddress = specimenData.LabAddress,
                         LabPostcode = specimenData.LabPostcode,
-                        
+
                         PotentialMatches = groupedRows.Select(r => r.SpecimenPotentialMatch)
                     };
                 });
         }
-        
+
         public async Task<bool> UnmatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName)
         {
             using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
@@ -168,7 +169,7 @@ namespace ntbs_service.Services
                     @"DECLARE @result int;  
                         exec @result = uspUnmatchSpecimen @referenceLaboratoryNumber, @notificationId;
                         SELECT @result",
-                    new {referenceLaboratoryNumber = labReferenceNumber, notificationId});
+                    new { referenceLaboratoryNumber = labReferenceNumber, notificationId });
 
                 var success = returnValue == 0;
 
@@ -193,7 +194,7 @@ namespace ntbs_service.Services
                     @"DECLARE @result int;  
                     exec @result = uspMatchSpecimen @referenceLaboratoryNumber, @notificationId, @isMigrating;
                     SELECT @result",
-                    new {referenceLaboratoryNumber = labReferenceNumber, notificationId, isMigrating});
+                    new { referenceLaboratoryNumber = labReferenceNumber, notificationId, isMigrating });
 
                 var success = returnValue == 0;
 
@@ -203,7 +204,7 @@ namespace ntbs_service.Services
                     await _auditService.AuditMatchSpecimen(notificationId, labReferenceNumber, userName, auditType);
                     await _alertRepository.CloseUnmatchedLabResultAlertsForSpecimenIdAsync(labReferenceNumber);
                 }
-                
+
                 return success;
             }
         }

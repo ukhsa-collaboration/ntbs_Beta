@@ -12,16 +12,16 @@ namespace ntbs_service_unit_tests.Models.Entities
     {
         public static IEnumerable<object[]> BaseDetails()
         {
-            yield return new object[] {new TravelDetails {ShouldValidateFull = false, HasTravel = Status.Yes}};
-            yield return new object[] {new TravelDetails {ShouldValidateFull = true, HasTravel = Status.Yes}};
-            yield return new object[] {new VisitorDetails {ShouldValidateFull = false, HasVisitor = Status.Yes}};
-            yield return new object[] {new VisitorDetails {ShouldValidateFull = true, HasVisitor = Status.Yes}};
+            yield return new object[] { new TravelDetails { ShouldValidateFull = false, HasTravel = Status.Yes } };
+            yield return new object[] { new TravelDetails { ShouldValidateFull = true, HasTravel = Status.Yes } };
+            yield return new object[] { new VisitorDetails { ShouldValidateFull = false, HasVisitor = Status.Yes } };
+            yield return new object[] { new VisitorDetails { ShouldValidateFull = true, HasVisitor = Status.Yes } };
         }
-        
+
         public static IEnumerable<object[]> NotifiedBaseDetails()
         {
-            yield return new object[] {new TravelDetails {ShouldValidateFull = true, HasTravel = Status.Yes}};
-            yield return new object[] {new VisitorDetails {ShouldValidateFull = true, HasVisitor = Status.Yes}};
+            yield return new object[] { new TravelDetails { ShouldValidateFull = true, HasTravel = Status.Yes } };
+            yield return new object[] { new VisitorDetails { ShouldValidateFull = true, HasVisitor = Status.Yes } };
         }
 
         [Theory, MemberData(nameof(BaseDetails))]
@@ -58,7 +58,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             // Arrange
             var validationResults = new List<ValidationResult>();
             details.TotalNumberOfCountries = 3;
-    
+
             // Act
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
 
@@ -74,7 +74,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             details.TotalNumberOfCountries = 1;
             details.Country1Id = 1;
             details.Country2Id = 2;
-    
+
             // Act
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
 
@@ -94,7 +94,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             details.StayLengthInMonths2 = 10;
             details.Country3Id = 3;
             details.StayLengthInMonths3 = 10;
-            
+
             // Act
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
 
@@ -110,7 +110,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             details.TotalNumberOfCountries = 2;
             details.Country1Id = 1;
             details.Country2Id = 1;
-            
+
             // Act
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
 
@@ -126,7 +126,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             details.TotalNumberOfCountries = 2;
             details.Country1Id = 1;
             details.Country3Id = 3;
-            
+
             // Act
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
 
@@ -143,7 +143,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             details.Country1Id = 1;
             details.Country2Id = 2;
             details.Country3Id = 3;
-    
+
             // Act
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
 
@@ -160,7 +160,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             details.StayLengthInMonths1 = 1;
             details.StayLengthInMonths2 = 2;
             details.StayLengthInMonths3 = 3;
-    
+
             // Act
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
 

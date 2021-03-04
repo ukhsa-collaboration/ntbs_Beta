@@ -11,13 +11,14 @@ namespace ntbs_service.DataAccess
         public NtbsContext CreateDbContext(string[] args)
         {
             string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
-            
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{environment}.json", optional: false);
 
-            if (environment == "Development") {
+            if (environment == "Development")
+            {
                 builder.AddUserSecrets<Program>(true);
             }
 

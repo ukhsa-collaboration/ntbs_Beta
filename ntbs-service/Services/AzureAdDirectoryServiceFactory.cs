@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.Graph;
 using Microsoft.Graph.Auth;
 using Microsoft.Identity.Client;
@@ -11,7 +10,7 @@ namespace ntbs_service.Services
     {
         IAzureAdDirectoryService Create();
     }
-    
+
     public class AzureAdDirectoryServiceFactory : IAzureAdDirectoryServiceFactory
     {
         private IGraphServiceClient _graphServiceClient;

@@ -62,9 +62,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (HospitalDetails.ShouldValidateFull)
             {
                 ValidationService.TrySetFormattedDate(
-                    Notification, 
-                    nameof(Notification), 
-                    nameof(Notification.NotificationDate), 
+                    Notification,
+                    nameof(Notification),
+                    nameof(Notification.NotificationDate),
                     FormattedNotificationDate);
                 TryValidateModel(HospitalDetails, nameof(HospitalDetails));
             }
@@ -92,10 +92,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
 
             var hospitals = (await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(tbServiceCodes))
-                .Where(h => 
-                    h.IsLegacy == false 
+                .Where(h =>
+                    h.IsLegacy == false
                     || h.HospitalId == Notification.HospitalDetails.Hospital?.HospitalId);
-            
+
             Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
 
             var caseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(tbServiceCodes);
@@ -174,7 +174,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public async Task<JsonResult> OnGetGetFilteredListsByTbService(string value)
         {
-            var filteredHospitalDetailsPageSelectLists = 
+            var filteredHospitalDetailsPageSelectLists =
                 await _referenceDataRepository.GetFilteredHospitalDetailsPageSelectListsByTbService(value);
             return new JsonResult(filteredHospitalDetailsPageSelectLists);
         }

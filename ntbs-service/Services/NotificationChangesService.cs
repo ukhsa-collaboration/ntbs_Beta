@@ -211,7 +211,7 @@ namespace ntbs_service.Services
             // Imported notifications don't have the draft stage, so don't skip anything
             if (auditLogs.Any(log => GetNotificationAuditType(log) == NotificationAuditType.Imported))
                 return auditLogs;
-            
+
             var createAuditLog = auditLogs.Take(1);
             var auditLogsFromSubmissionOnwards = auditLogs
                 .SkipWhile(log => GetNotificationAuditType(log) != NotificationAuditType.Notified);

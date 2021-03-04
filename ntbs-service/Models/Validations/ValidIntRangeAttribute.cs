@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace ntbs_service.Models.Validations
 {
-     public class PositiveIntegerSmallerThanValue : ValidationAttribute
+    public class PositiveIntegerSmallerThanValue : ValidationAttribute
     {
 
         public string ComparisonValue { get; set; }
@@ -24,7 +24,8 @@ namespace ntbs_service.Models.Validations
                 // TryParse will set the value to 0 if it is given null to parse (this is to allow for input field being empty)
                 int.TryParse(propertyValue?.ToString(), out int maxValue);
                 int.TryParse(value?.ToString(), out int valueToValidate);
-                if(valueToValidate >= 0 && valueToValidate <= maxValue) {
+                if (valueToValidate >= 0 && valueToValidate <= maxValue)
+                {
                     return null;
                 }
             }
@@ -58,7 +59,8 @@ namespace ntbs_service.Models.Validations
                 int.TryParse(propertyValueToSum?.ToString(), out int valueToSum);
                 int.TryParse(value?.ToString(), out int valueToValidate);
 
-                if(valueToValidate >= 0 && valueToValidate <= maxValue - valueToSum) {
+                if (valueToValidate >= 0 && valueToValidate <= maxValue - valueToSum)
+                {
                     return null;
                 }
             }

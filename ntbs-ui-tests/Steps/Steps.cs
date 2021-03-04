@@ -55,15 +55,17 @@ namespace ntbs_ui_tests.StepDefinitions
             int notificationId;
             switch (notificationIdName)
             {
-                case "TO_BE_DENOTIFIED": notificationId = Utilities.TO_BE_DENOTIFIED_ID;
+                case "TO_BE_DENOTIFIED":
+                    notificationId = Utilities.TO_BE_DENOTIFIED_ID;
                     break;
-                case "M_BOVIS": notificationId = Utilities.M_BOVIS_NOTIFICATION;
+                case "M_BOVIS":
+                    notificationId = Utilities.M_BOVIS_NOTIFICATION;
                     break;
                 default:
-                    throw new ArgumentException($"Unexpected notification name {notificationIdName} given");  
-            } 
+                    throw new ArgumentException($"Unexpected notification name {notificationIdName} given");
+            }
             Browser.Navigate().GoToUrl($"{Server.RootUri}/Notifications/{notificationId}");
-            
+
             if (!Settings.IsHeadless)
             {
                 Thread.Sleep(4000);

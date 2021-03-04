@@ -8,7 +8,7 @@ namespace ntbs_service.DataAccess
     {
         IEnumerable<FrequentlyAskedQuestion> GetAll();
     }
-    
+
     public class FaqRepository : IFaqRepository
     {
         private readonly NtbsContext _context;
@@ -17,7 +17,7 @@ namespace ntbs_service.DataAccess
         {
             _context = context;
         }
-        
+
         public IEnumerable<FrequentlyAskedQuestion> GetAll()
         {
             return _context.FrequentlyAskedQuestion

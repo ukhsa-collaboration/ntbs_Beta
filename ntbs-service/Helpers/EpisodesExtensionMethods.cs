@@ -28,7 +28,7 @@ namespace ntbs_service.Helpers
             {
                 if (!groupedEpisodes.ContainsKey(episodeCount))
                 {
-                    groupedEpisodes.Add(episodeCount, new List<TreatmentEvent> {treatmentEvent});
+                    groupedEpisodes.Add(episodeCount, new List<TreatmentEvent> { treatmentEvent });
                 }
                 else
                 {

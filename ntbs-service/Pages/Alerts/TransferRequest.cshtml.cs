@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -58,7 +57,7 @@ namespace ntbs_service.Pages.Alerts
             // Check edit permission and redirect if not allowed
             if (PermissionLevel != PermissionLevel.Edit)
             {
-                return RedirectToPage("/Notifications/Overview", new {NotificationId});
+                return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
 
             var pendingTransferAlert =
@@ -98,7 +97,7 @@ namespace ntbs_service.Pages.Alerts
             };
             await _alertService.AddUniqueOpenAlertAsync(transferAlert);
 
-            return RedirectToPage("/Notifications/Overview", new {NotificationId});
+            return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
 
         private async Task GetRelatedEntities()
@@ -159,7 +158,7 @@ namespace ntbs_service.Pages.Alerts
         public async Task<JsonResult> OnGetFilteredCaseManagersListByTbServiceCode(string value)
         {
             var filteredCaseManagers =
-                await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(new List<string> {value});
+                await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(new List<string> { value });
 
             return new JsonResult(
                 new FilteredCaseManagerList

@@ -14,7 +14,7 @@ namespace ntbs_service.Models.Entities
     public class VisitorDetails : ModelBase, ITravelOrVisitorDetails, IOwnedEntityForAuditing
     {
         private const int MaxTotalLengthOfStay = 24;
-        
+
         [Display(Name = "Has the patient received visitors from one or more high TB incidence countries within last 24 months?")]
         public Status? HasVisitor { get; set; }
 

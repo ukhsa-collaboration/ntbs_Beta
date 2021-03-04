@@ -32,7 +32,7 @@ namespace ntbs_service_unit_tests.DataMigration
         // closer
         private readonly NotificationMapper _notificationMapper;
         private readonly IImportValidator _importValidator;
-        
+
         private readonly MigrationRepositoryStub _migrationRepository = new MigrationRepositoryStub();
 
         private readonly Mock<IReferenceDataRepository> _referenceDataRepositoryMock =
@@ -55,8 +55,8 @@ namespace ntbs_service_unit_tests.DataMigration
                     TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown
                 });
             _postcodeService.Setup(service => service.FindPostcodeAsync(It.IsAny<string>()))
-                .ReturnsAsync((string postcode) => new PostcodeLookup {Postcode = postcode.Replace(" ", "").ToUpper()});
-            
+                .ReturnsAsync((string postcode) => new PostcodeLookup { Postcode = postcode.Replace(" ", "").ToUpper() });
+
             // Needs to happen after the mocking, as the constructor uses a method from reference data repo
             var importLogger = new ImportLogger();
             _notificationMapper = new NotificationMapper(
@@ -75,7 +75,7 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyCreates_basicNotification()
         {
             // Arrange
-            var legacyIds = new List<string> {"130331"};
+            var legacyIds = new List<string> { "130331" };
             SetupNotificationsInGroups(("130331", "1"));
             const string royalBerkshireCode = "TBS001";
             const string bristolRoyalCode = "TBS002";
@@ -116,7 +116,7 @@ namespace ntbs_service_unit_tests.DataMigration
 
             Assert.Equal(HIVTestStatus.HIVStatusKnown, notification.ClinicalDetails.HIVTestState);
             Assert.Equal("Patient did not begin course of treatment under DOT", notification.ClinicalDetails.Notes);
-            
+
             Assert.Equal(Status.No, notification.SocialRiskFactors.RiskFactorDrugs.Status);
             Assert.Null(notification.SocialRiskFactors.RiskFactorDrugs.IsCurrent);
             Assert.Null(notification.SocialRiskFactors.RiskFactorDrugs.InPastFiveYears);
@@ -129,7 +129,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal(false, notification.SocialRiskFactors.RiskFactorImprisonment.IsCurrent);
             Assert.Equal(true, notification.SocialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
             Assert.Equal(false, notification.SocialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
-            
+
             Assert.Empty(validationErrors);
         }
 
@@ -139,7 +139,7 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyMaps_ContactTracingNumbers()
         {
             // Arrange
-            var legacyIds = new List<string> {"235676", "237137", "241256", "242084"};
+            var legacyIds = new List<string> { "235676", "237137", "241256", "242084" };
             SetupNotificationsInGroups(("235676", "2"),
                 ("237137", "3"),
                 ("241256", "4"),
@@ -157,7 +157,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 {new Guid("44C3608F-231E-4DD7-963C-4492D804E894"), new TBService {Code = frimleyParkCode}},
                 {new Guid("0EEE2EC2-1F3E-4175-BE90-85AA33F0686C"), new TBService {Code = colchesterGeneralCode}}
             };
-            
+
             // Act
             var notifications = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
                     "test-request-1",
@@ -167,7 +167,7 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Assert
             Assert.Equal(4, notifications.Count);
-            
+
             var notification242084 = notifications.Find(n => n.ETSID == "242084").ContactTracing;
             Assert.Equal(2, notification242084.AdultsIdentified);
             Assert.Equal(2, notification242084.AdultsScreened);
@@ -177,13 +177,13 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Null(notification242084.ChildrenScreened);
             Assert.Null(notification242084.ChildrenActiveTB);
             Assert.Null(notification242084.ChildrenLatentTB);
-                
+
             var notification237137 = notifications.Find(n => n.ETSID == "237137").ContactTracing;
             Assert.Equal(3, notification237137.AdultsIdentified);
             Assert.Equal(3, notification237137.AdultsScreened);
             Assert.Equal(4, notification237137.ChildrenIdentified);
             Assert.Equal(4, notification237137.ChildrenScreened);
-            
+
             var notification235676 = notifications.Find(n => n.ETSID == "235676").ContactTracing;
             Assert.Equal(1, notification235676.AdultsIdentified);
             Assert.Equal(1, notification235676.AdultsScreened);
@@ -197,7 +197,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal(0, notification235676.ChildrenLatentTB);
             Assert.Equal(0, notification235676.ChildrenStartedTreatment);
             Assert.Equal(0, notification235676.ChildrenFinishedTreatment);
-            
+
             var notification241256 = notifications.Find(n => n.ETSID == "241256").ContactTracing;
             Assert.Equal(0, notification241256.AdultsIdentified);
             Assert.Equal(0, notification241256.AdultsScreened);
@@ -212,13 +212,13 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal(0, notification241256.ChildrenStartedTreatment);
             Assert.Equal(0, notification241256.ChildrenFinishedTreatment);
         }
-        
+
         // This is based on NTBS-1650
         [Fact]
         public async Task correctlyCreates_PostMortemNotification()
         {
             // Arrange
-            var legacyIds = new List<string> {"132465"};
+            var legacyIds = new List<string> { "132465" };
             SetupNotificationsInGroups(("132465", "6"));
 
             const string colchesterGeneralCode = "TBS0049";
@@ -226,7 +226,7 @@ namespace ntbs_service_unit_tests.DataMigration
             {
                 {new Guid("0EEE2EC2-1F3E-4175-BE90-85AA33F0686C"), new TBService {Code = colchesterGeneralCode}}
             };
-            
+
             // Act
             var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
                     "test-request-3",
@@ -252,7 +252,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 .ToList();
             _migrationRepository.GroupedNotificationsStub = grouped;
         }
-        
+
         private class MigrationRepositoryStub : IMigrationRepository
         {
             public Task<IEnumerable<MigrationDbNotification>> GetNotificationsById(List<string> legacyIds)

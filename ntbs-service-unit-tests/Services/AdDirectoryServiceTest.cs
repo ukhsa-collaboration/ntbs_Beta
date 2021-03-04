@@ -15,7 +15,7 @@ namespace ntbs_service_unit_tests.Services
 
         public AdDirectoryServiceTest()
         {
-            var firstUserPrincipal = new LdapEntry( "CN=First,CN=Users,DC=ntbs,DC=phe,DC=com", new LdapAttributeSet
+            var firstUserPrincipal = new LdapEntry("CN=First,CN=Users,DC=ntbs,DC=phe,DC=com", new LdapAttributeSet
             {
                 new LdapAttribute("userPrincipalName", "First@phe.ntbs.com"),
                 new LdapAttribute("givenName", "First"),
@@ -27,7 +27,7 @@ namespace ntbs_service_unit_tests.Services
                     "CN=Global.NIS.NTBS.EMS,CN=Users,DC=ntbs,DC=phe,DC=com"
                 })
             });
-            var secondUserPrincipal = new LdapEntry( "CN=Second,CN=Users,DC=ntbs,DC=phe,DC=com", new LdapAttributeSet
+            var secondUserPrincipal = new LdapEntry("CN=Second,CN=Users,DC=ntbs,DC=phe,DC=com", new LdapAttributeSet
             {
                 new LdapAttribute("userPrincipalName", "Second@phe.ntbs.com"),
                 new LdapAttribute("givenName", "Second"),

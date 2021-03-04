@@ -8,12 +8,12 @@ namespace ntbs_service.Helpers
             {
                 return string.Empty;
             }
-            
+
             if (nhsNumber.Length != 10)
             {
                 return nhsNumber;
             }
-            
+
             return string.Join(" ",
                 nhsNumber.Substring(0, 3),
                 nhsNumber.Substring(3, 3),

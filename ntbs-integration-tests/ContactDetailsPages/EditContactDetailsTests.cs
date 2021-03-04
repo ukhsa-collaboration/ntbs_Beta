@@ -13,9 +13,9 @@ namespace ntbs_integration_tests.ContactDetailsPages
 {
     public class EditContactDetailsTests : TestRunnerBase
     {
-        public EditContactDetailsTests(NtbsWebApplicationFactory<Startup> factory) 
+        public EditContactDetailsTests(NtbsWebApplicationFactory<Startup> factory)
             : base(factory) { }
-        
+
         private const string PageRoute = "/ContactDetails/Edit";
 
         [Fact]

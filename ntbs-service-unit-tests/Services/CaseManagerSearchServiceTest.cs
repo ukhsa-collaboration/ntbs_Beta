@@ -13,7 +13,7 @@ namespace ntbs_service_unit_tests.Services
     public class CaseManagerSearchServiceTest
     {
         private static readonly PaginationParameters DefaultPaginationParameters =
-            new PaginationParameters {Offset = 0, PageSize = 20};
+            new PaginationParameters { Offset = 0, PageSize = 20 };
 
         private static readonly List<User> DefaultDisplayNameCaseManagers = new List<User>
         {
@@ -117,7 +117,7 @@ namespace ntbs_service_unit_tests.Services
         {
             // Arrange
             const string searchString = "UserT";
-            var expectedResults = new List<User> {DefaultDisplayNameCaseManagers[1], DefaultDisplayNameCaseManagers[2]};
+            var expectedResults = new List<User> { DefaultDisplayNameCaseManagers[1], DefaultDisplayNameCaseManagers[2] };
 
             _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered())
                 .ReturnsAsync(DefaultDisplayNameCaseManagers);
@@ -135,7 +135,7 @@ namespace ntbs_service_unit_tests.Services
         {
             // Arrange
             const string searchString = "UserT";
-            var expectedResults = new List<User> {DefaultGivenNameCaseManagers[1], DefaultGivenNameCaseManagers[2]};
+            var expectedResults = new List<User> { DefaultGivenNameCaseManagers[1], DefaultGivenNameCaseManagers[2] };
 
             _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered())
                 .ReturnsAsync(DefaultGivenNameCaseManagers);
@@ -153,7 +153,7 @@ namespace ntbs_service_unit_tests.Services
         {
             // Arrange
             const string searchString = "UserT";
-            var expectedResults = new List<User> {DefaultFamilyNameCaseManagers[1], DefaultFamilyNameCaseManagers[2]};
+            var expectedResults = new List<User> { DefaultFamilyNameCaseManagers[1], DefaultFamilyNameCaseManagers[2] };
 
             _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered())
                 .ReturnsAsync(DefaultFamilyNameCaseManagers);
@@ -171,7 +171,7 @@ namespace ntbs_service_unit_tests.Services
         {
             // Arrange
             const string searchString = "oNe";
-            var expectedResults = new List<User> {DefaultDisplayNameCaseManagers[0]};
+            var expectedResults = new List<User> { DefaultDisplayNameCaseManagers[0] };
 
             _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered())
                 .ReturnsAsync(DefaultDisplayNameCaseManagers);
@@ -190,9 +190,9 @@ namespace ntbs_service_unit_tests.Services
             // Arrange
             const string searchString = "Test";
             var caseManagers = Enumerable.Range(1, 10).Select(i => CreateDefaultCaseManager($"Test {i}")).ToList();
-            var paginationParameters = new PaginationParameters {Offset = 2, PageSize = 3};
+            var paginationParameters = new PaginationParameters { Offset = 2, PageSize = 3 };
 
-            var expectedResults = new List<User> {caseManagers[2], caseManagers[3], caseManagers[4]};
+            var expectedResults = new List<User> { caseManagers[2], caseManagers[3], caseManagers[4] };
 
             _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered()).ReturnsAsync(caseManagers);
 

@@ -14,10 +14,10 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         private readonly IItemRepository<MBovisOccupationExposure> _mBovisOccupationExposureRepository;
         private readonly IReferenceDataRepository _referenceDataRepository;
 
-        [BindProperty(SupportsGet = true)] 
+        [BindProperty(SupportsGet = true)]
         public int? RowId { get; set; }
 
-        [BindProperty] 
+        [BindProperty]
         public MBovisOccupationExposure MBovisOccupationExposure { get; set; }
 
         public SelectList Countries { get; set; }
@@ -48,7 +48,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             {
                 return NotFound();
             }
-            
+
             if (RowId == null)
             {
                 return Page();
@@ -102,7 +102,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
             await _mBovisOccupationExposureRepository.DeleteAsync(mBovisOccupationExposure);
 
-            return RedirectToPage("/Notifications/Edit/MBovisOccupationExposures", new {NotificationId});
+            return RedirectToPage("/Notifications/Edit/MBovisOccupationExposures", new { NotificationId });
         }
 
         public ContentResult OnGetValidateMBovisOccupationExposureProperty(string key, string value,
@@ -113,12 +113,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         protected override IActionResult RedirectForNotified()
         {
-            return RedirectToPage("/Notifications/Edit/MBovisOccupationExposures", new {NotificationId});
+            return RedirectToPage("/Notifications/Edit/MBovisOccupationExposures", new { NotificationId });
         }
 
         protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
-            return RedirectToPage("/Notifications/Edit/MBovisOccupationExposures", new {NotificationId});
+            return RedirectToPage("/Notifications/Edit/MBovisOccupationExposures", new { NotificationId });
         }
 
         protected override async Task<Notification> GetNotificationAsync(int notificationId)

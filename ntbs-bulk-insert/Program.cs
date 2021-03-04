@@ -23,7 +23,7 @@ namespace ConsoleApp2
             bool addTreatmentEvents = true;
             if (args.Length > 0)
             {
-                 addTreatmentEvents = args[0] != "--withDqAlerts";
+                addTreatmentEvents = args[0] != "--withDqAlerts";
             }
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -31,15 +31,15 @@ namespace ConsoleApp2
 
             Directory.SetCurrentDirectory("./bin/debug/netcoreapp2.2");
             builder.SetBasePath(Directory.GetCurrentDirectory());
-                
+
             var configuration = builder.Build();
 
             var connectionString = configuration.GetConnectionString("ntbsContext");
-            
+
             var options = new DbContextOptionsBuilder<NtbsContext>()
                 .UseSqlServer(connectionString)
                 .Options;
-            
+
             using (var context = new NtbsContext(options))
             {
                 if (!context.Database.GetService<IRelationalDatabaseCreator>().Exists())
@@ -59,7 +59,7 @@ namespace ConsoleApp2
             var numberOfNotifications = 3000;
             var rand = new Random();
             var hospitals = (await context.Hospital.ToListAsync());
-            
+
             var notificationsOperable = Builder<Notification>.CreateListOfSize(numberOfNotifications)
                 .All()
                 .With(n => n.NotificationId = 0)
@@ -91,19 +91,19 @@ namespace ConsoleApp2
                     new NotificationSite
                     {
                         SiteId = 1
-                        
+
                     }
                 })
                 .With(n => n.ClinicalDetails.DiagnosisDate = new DateTime(2014, 1, 1))
                 .With(n => n.DeletionReason = null);
-            
+
 
             if (addTreatmentEvents)
             {
                 notificationsOperable = await AddDataQualityTreatmentEvents(notificationsOperable, context);
             }
-            
-            var notifications= notificationsOperable.Build();
+
+            var notifications = notificationsOperable.Build();
 
             context.AddRange(notifications);
             await context.SaveChangesAsync();
@@ -120,7 +120,7 @@ namespace ConsoleApp2
             var days = rand.Next(1, 1000);
             return new DateTime(2014, 1, 1).AddDays(days);
         }
-        
+
         private static DateTime AddRandomDateTimeBetween1950And2000(Random rand)
         {
             var days = rand.Next(1, 18262);
@@ -158,6 +158,6 @@ namespace ConsoleApp2
                 });
             return notificationsOperableWithTreatmentEvents;
         }
-        
+
     }
 }

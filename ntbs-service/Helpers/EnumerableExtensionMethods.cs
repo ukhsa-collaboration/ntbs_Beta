@@ -21,7 +21,7 @@ namespace ntbs_service.Helpers
                     // The group is done: yield it out
                     // and create a fresh group with the item.
                     yield return currentGroup;
-                    currentGroup = new List<T> {item};
+                    currentGroup = new List<T> { item };
                 }
             }
 

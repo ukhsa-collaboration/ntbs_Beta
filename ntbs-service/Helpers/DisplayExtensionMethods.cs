@@ -29,7 +29,7 @@ namespace ntbs_service.Helpers
         {
             return dateTime.ToString("dd MMM yyyy");
         }
-    }       
+    }
 
     public static class NullableBoolExtensions
     {
@@ -50,7 +50,7 @@ namespace ntbs_service.Helpers
     {
         public static string FormatStringToPostcodeFormat(this string postcode)
         {
-            if(postcode != null)
+            if (postcode != null)
             {
                 if (postcode.Length < 3) // If the postcode is too short (e.g. from the legacy database) the Substring methods will fail
                 {
@@ -77,7 +77,7 @@ namespace ntbs_service.Helpers
             {
                 return string.Empty;
             }
-            if(nhsNumber.Length != 10) // If the NHS number is the wrong length (e.g. from the legacy database) the Substring methods will fail
+            if (nhsNumber.Length != 10) // If the NHS number is the wrong length (e.g. from the legacy database) the Substring methods will fail
             {
                 return nhsNumber;
             }

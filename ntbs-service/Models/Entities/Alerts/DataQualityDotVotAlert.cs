@@ -35,7 +35,7 @@ namespace ntbs_service.Models.Entities.Alerts
 
         public static readonly Func<Notification, bool> NotificationQualifies =
             NotificationQualifiesExpression.Compile();
-        
+
         public override string Action => "Please review whether value given for DOT is correct.";
 
         public override string ActionLink =>

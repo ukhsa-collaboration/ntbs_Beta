@@ -9,7 +9,7 @@ namespace ntbs_integration_tests.NotificationPages
     public class NotificationSummaryTests : TestRunnerBase
     {
         public NotificationSummaryTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
-        
+
         private static string PageRoute(string notificationId) => $"/NotificationSummary/{notificationId}";
 
         [Theory]
@@ -30,7 +30,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task ValidateMDRDetailsRelatedNotification_ReturnsErrorIfIdNotInteger()
         {
             // Arrange
-            var formData = new Dictionary<string, string> {["value"] = "1e1"};
+            var formData = new Dictionary<string, string> { ["value"] = "1e1" };
 
             // Act
             var response = await Client.GetAsync(PageRoute("1e1"));

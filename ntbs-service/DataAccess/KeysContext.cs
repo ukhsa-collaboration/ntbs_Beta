@@ -7,7 +7,7 @@ namespace ntbs_service.DataAccess
 {
     public class KeysContext : DbContext, IDataProtectionKeyContext
     {
-        public KeysContext(DbContextOptions<KeysContext> options) 
+        public KeysContext(DbContextOptions<KeysContext> options)
             : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

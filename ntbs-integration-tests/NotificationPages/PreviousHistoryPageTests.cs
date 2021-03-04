@@ -35,7 +35,7 @@ namespace ntbs_integration_tests.NotificationPages
             var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
         }
-        
+
         [Fact]
         public async Task PageWithModelErrors_CorrectlyWiresUpErrorSummaryToFields()
         {
@@ -61,7 +61,7 @@ namespace ntbs_integration_tests.NotificationPages
                 "previous-tb-diagnosis-year",
                 "Please enter a valid year");
         }
-        
+
         [Fact]
         public async Task NotifiedPageHasReturnLinkToOverview()
         {

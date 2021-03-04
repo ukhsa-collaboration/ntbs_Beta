@@ -24,35 +24,39 @@ namespace ntbs_service_unit_tests.Services
 
         private static readonly DrugResistanceProfile drpWithMdr = new DrugResistanceProfile
         {
-            Species = "TestSpecies", DrugResistanceProfileString = "RR/MDR/XDR"
+            Species = "TestSpecies",
+            DrugResistanceProfileString = "RR/MDR/XDR"
         };
 
         private static readonly DrugResistanceProfile drpWithoutMdr = new DrugResistanceProfile
         {
-            Species = "TestSpecies", DrugResistanceProfileString = "No Mdr"
+            Species = "TestSpecies",
+            DrugResistanceProfileString = "No Mdr"
         };
 
         private static readonly DrugResistanceProfile drpWithMbovis = new DrugResistanceProfile
         {
-            Species = "M. bovis", DrugResistanceProfileString = "No Mdr"
+            Species = "M. bovis",
+            DrugResistanceProfileString = "No Mdr"
         };
 
         private static readonly DrugResistanceProfile drpWithoutMbovis = new DrugResistanceProfile
         {
-            Species = "No M. bovis", DrugResistanceProfileString = "No Mdr"
+            Species = "No M. bovis",
+            DrugResistanceProfileString = "No Mdr"
         };
 
         private readonly NotificationForDrugResistanceImport mockNotificationWithMdr =
             new NotificationForDrugResistanceImport { NotificationId = 1, DrugResistanceProfile = drpWithMdr };
 
         private readonly NotificationForDrugResistanceImport mockNotificationWithoutMdr =
-            new NotificationForDrugResistanceImport { NotificationId = 2, DrugResistanceProfile = drpWithoutMdr};
+            new NotificationForDrugResistanceImport { NotificationId = 2, DrugResistanceProfile = drpWithoutMdr };
 
         private readonly NotificationForDrugResistanceImport mockNotificationWithMbovis =
-            new NotificationForDrugResistanceImport { NotificationId = 3, DrugResistanceProfile = drpWithMbovis};
+            new NotificationForDrugResistanceImport { NotificationId = 3, DrugResistanceProfile = drpWithMbovis };
 
         private readonly NotificationForDrugResistanceImport mockNotificationWithoutMbovis =
-            new NotificationForDrugResistanceImport { NotificationId = 4, DrugResistanceProfile = drpWithoutMbovis};
+            new NotificationForDrugResistanceImport { NotificationId = 4, DrugResistanceProfile = drpWithoutMbovis };
 
         public DrugResistanceProfileServiceTest()
         {
@@ -62,9 +66,9 @@ namespace ntbs_service_unit_tests.Services
             mockDrugResistanceProfileService = new Mock<IDrugResistanceProfileRepository>();
 
             drpService = new DrugResistanceProfileService(
-                mockNotificationService.Object, 
-                mockNotificationRepository.Object, 
-                mockDrugResistanceProfileService.Object, 
+                mockNotificationService.Object,
+                mockNotificationRepository.Object,
+                mockDrugResistanceProfileService.Object,
                 mockMdrService.Object);
         }
 
@@ -91,7 +95,7 @@ namespace ntbs_service_unit_tests.Services
             mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<INotificationForDrugResistanceImport>()), Times.Never);
             mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<INotificationForDrugResistanceImport>()), Times.Never);
         }
-        
+
         [Fact]
         public async Task UpdateDrugResistanceProfile_DoesUpdateRecordIfMatching()
         {
@@ -249,7 +253,8 @@ namespace ntbs_service_unit_tests.Services
         {
             return Task.FromResult(new NotificationForDrugResistanceImport
             {
-                NotificationId = notificationId, DrugResistanceProfile = new DrugResistanceProfile()
+                NotificationId = notificationId,
+                DrugResistanceProfile = new DrugResistanceProfile()
             });
         }
     }

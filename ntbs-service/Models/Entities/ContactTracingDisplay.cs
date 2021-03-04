@@ -14,8 +14,10 @@
 
         public int? TotalContactsFinishedTreatment => CalculateSum(AdultsFinishedTreatment, ChildrenFinishedTreatment);
 
-        private int? CalculateSum(int? x, int? y) {
-            if (x == null && y == null) {
+        private int? CalculateSum(int? x, int? y)
+        {
+            if (x == null && y == null)
+            {
                 return null;
             }
             return (x ?? 0) + (y ?? 0);

@@ -21,10 +21,10 @@ namespace ntbs_service.Pages
         private readonly IUserService _userService;
         private readonly IHomepageKpiService _homepageKpiService;
 
-        public IndexModel(INotificationRepository notificationRepository, 
-            IAlertRepository alertRepository, 
-            IAuthorizationService authorizationService, 
-            IUserService userService, 
+        public IndexModel(INotificationRepository notificationRepository,
+            IAlertRepository alertRepository,
+            IAuthorizationService authorizationService,
+            IUserService userService,
             IHomepageKpiService homepageKpiService)
         {
             _notificationRepository = notificationRepository;
@@ -35,12 +35,12 @@ namespace ntbs_service.Pages
         }
 
         public IList<AlertWithTbServiceForDisplay> Alerts { get; set; }
-        public IList<Notification> DraftNotifications { get;set; }
-        public IList<Notification> RecentNotifications { get;set; }
+        public IList<Notification> DraftNotifications { get; set; }
+        public IList<Notification> RecentNotifications { get; set; }
         public SelectList TbServices { get; set; }
         public SelectList KpiFilter { get; set; }
         public IEnumerable<HomepageKpi> HomepageKpiDetails { get; set; }
-        
+
         public async Task OnGetAsync()
         {
             HttpContext.Session.SetTopLevelBreadcrumb("Index", "/Index");

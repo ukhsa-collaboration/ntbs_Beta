@@ -63,7 +63,7 @@ namespace ntbs_service.DataAccess
 
             await _context.SaveChangesAsync();
         }
-        
+
         public async Task AddNotificationAsync(Notification notification)
         {
             await _context.Notification.AddAsync(notification);
@@ -73,7 +73,7 @@ namespace ntbs_service.DataAccess
         public IQueryable<Notification> GetRecentNotificationsIQueryable()
         {
             return GetNotificationsWithBasicInformationIQueryable()
-                .Where(n => n.NotificationStatus == NotificationStatus.Notified 
+                .Where(n => n.NotificationStatus == NotificationStatus.Notified
                             || n.NotificationStatus == NotificationStatus.Closed)
                 .OrderByDescending(n => n.SubmissionDate);
         }
@@ -96,7 +96,7 @@ namespace ntbs_service.DataAccess
             return await GetBannerReadyNotificationsIQueryable()
                 .SingleOrDefaultAsync(
                     n => n.NotificationId == notificationId
-                         && (n.NotificationStatus == NotificationStatus.Notified 
+                         && (n.NotificationStatus == NotificationStatus.Notified
                              || n.NotificationStatus == NotificationStatus.Closed));
         }
 
@@ -112,12 +112,12 @@ namespace ntbs_service.DataAccess
             return await _context.Notification
                 .Select(
                     n => new NotificationForDrugResistanceImport
-                        {
-                            NotificationId = n.NotificationId,
-                            DrugResistanceProfile = n.DrugResistanceProfile,
-                            TreatmentRegimen = n.ClinicalDetails.TreatmentRegimen,
-                            ExposureToKnownCaseStatus = n.MDRDetails.ExposureToKnownCaseStatus
-                        })
+                    {
+                        NotificationId = n.NotificationId,
+                        DrugResistanceProfile = n.DrugResistanceProfile,
+                        TreatmentRegimen = n.ClinicalDetails.TreatmentRegimen,
+                        ExposureToKnownCaseStatus = n.MDRDetails.ExposureToKnownCaseStatus
+                    })
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
@@ -146,7 +146,7 @@ namespace ntbs_service.DataAccess
         public async Task<IList<int>> GetNotificationIdsByNhsNumberAsync(string nhsNumber)
         {
             return await _context.Notification
-                .Where(n => (n.NotificationStatus == NotificationStatus.Notified 
+                .Where(n => (n.NotificationStatus == NotificationStatus.Notified
                              || n.NotificationStatus == NotificationStatus.Closed
                              || n.NotificationStatus == NotificationStatus.Denotified)
                             && n.PatientDetails.NhsNumber == nhsNumber)
@@ -212,7 +212,7 @@ namespace ntbs_service.DataAccess
             return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.MBovisDetails.MBovisUnpasteurisedMilkConsumptions)
                     .ThenInclude(m => m.Country)
-                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);        
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
         public async Task<Notification> GetNotificationWithMBovisOccupationExposureAsync(int notificationId)
@@ -220,15 +220,15 @@ namespace ntbs_service.DataAccess
             return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.MBovisDetails.MBovisOccupationExposures)
                     .ThenInclude(m => m.Country)
-                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);           
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
         public async Task<Notification> GetNotificationWithMBovisAnimalExposuresAsync(int notificationId)
         {
-            return await GetBannerReadyNotificationsIQueryable()                
+            return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.MBovisDetails.MBovisAnimalExposures)
                     .ThenInclude(m => m.Country)
-                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);           
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
         public async Task<Notification> GetNotificationWithAllInfoAsync(int notificationId)

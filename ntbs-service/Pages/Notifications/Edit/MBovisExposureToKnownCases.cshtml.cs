@@ -20,7 +20,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             CurrentPage = NotificationSubPaths.EditMBovisExposureToKnownCases;
         }
 
-        [BindProperty] 
+        [BindProperty]
         public MBovisDetails MBovisDetails { get; set; }
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
@@ -29,9 +29,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 return NotFound();
             }
-            
+
             MBovisDetails = Notification.MBovisDetails;
-            
+
             await SetNotificationProperties(isBeingSubmitted, MBovisDetails);
 
             if (MBovisDetails.ShouldValidateFull)
@@ -41,17 +41,17 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             return Page();
         }
-        
+
         protected override IActionResult RedirectToCreate()
         {
             return RedirectToPage("./Items/NewMBovisExposureToKnownCase", new { NotificationId });
         }
-        
+
         protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("./MBovisUnpasteurisedMilkConsumptions", new { NotificationId, isBeingSubmitted });
         }
-        
+
         protected override async Task ValidateAndSave()
         {
             if (ActionName == ActionNameString.Create)
@@ -62,18 +62,18 @@ namespace ntbs_service.Pages.Notifications.Edit
             MBovisDetails.MBovisExposureToKnownCases = Notification.MBovisDetails.MBovisExposureToKnownCases;
             MBovisDetails.ProceedingToAdd = ActionName == ActionNameString.Create;
             MBovisDetails.SetValidationContext(Notification);
-            
+
             if (TryValidateModel(MBovisDetails, nameof(MBovisDetails)))
             {
                 await Service.UpdateMBovisDetailsExposureToKnownCasesAsync(Notification, MBovisDetails);
             }
         }
-        
+
         public ContentResult OnGetValidateMBovisDetailsProperty(string key, string value, bool shouldValidateFull)
         {
             return ValidationService.GetPropertyValidationResult<MBovisDetails>(key, value, shouldValidateFull);
         }
-        
+
         protected override async Task<Notification> GetNotificationAsync(int notificationId)
         {
             return await NotificationRepository.GetNotificationWithMBovisExposureToKnownCasesAsync(notificationId);

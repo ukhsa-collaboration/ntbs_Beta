@@ -50,7 +50,7 @@ namespace ntbs_service.Pages.Admin
             CaseManagers = new SelectList(caseManagers,
                 nameof(Models.Entities.User.Username),
                 nameof(Models.Entities.User.DisplayName));
-            
+
             Sexes = _referenceDataRepository.GetAllSexesAsync().Result.ToList();
         }
 
@@ -81,7 +81,7 @@ namespace ntbs_service.Pages.Admin
             ErrorMessage = ValidationMessages.StandardStringFormat)]
         [Display(Name = "Family name")]
         public string FamilyName { get; set; }
-        
+
         [BindProperty(SupportsGet = true)]
         [Display(Name = "Sex")]
         public int? SexId { get; set; }

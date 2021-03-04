@@ -27,14 +27,14 @@ namespace ntbs_service.Jobs
 
         private delegate Task<int> GetNotificationsEligibleForDqAlertsCount();
         private delegate Task<IList<Notification>> GetMultipleNotificationsEligibleForDataQualityDraftAlerts(
-            int countPerBatch, 
+            int countPerBatch,
             int offset);
 
         private async Task CreateDraftAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityDraftAlert>(
             _dataQualityRepository.GetNotificationsEligibleForDqDraftAlertsCountAsync,
             _dataQualityRepository.GetNotificationsEligibleForDqDraftAlertsAsync
         );
-        
+
         private async Task CreateBirthCountryAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityBirthCountryAlert>(
             _dataQualityRepository.GetNotificationsEligibleForDqBirthCountryAlertsCountAsync,
             _dataQualityRepository.GetNotificationsEligibleForDqBirthCountryAlertsAsync
@@ -49,7 +49,7 @@ namespace ntbs_service.Jobs
             _dataQualityRepository.GetNotificationsEligibleForDqClusterAlertsCountAsync,
             _dataQualityRepository.GetNotificationsEligibleForDqClusterAlertsAsync
         );
-        
+
         private async Task CreateDotVotAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityDotVotAlert>(
             _dataQualityRepository.GetNotificationsEligibleForDqDotVotAlertsCountAsync,
             _dataQualityRepository.GetNotificationsEligibleForDqDotVotAlertsAsync
@@ -59,17 +59,17 @@ namespace ntbs_service.Jobs
             _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome12AlertsCountAsync,
             _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome12AlertsAsync
         );
-        
+
         private async Task CreateTreatmentOutcome24MonthAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityTreatmentOutcome24>(
             _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome24AlertsCountAsync,
             _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome24AlertsAsync
         );
 
-        private async Task CreateTreatmentOutcome36MonthAlertsInBulkAsync()  => await CreateAlertsInBulkAsync<DataQualityTreatmentOutcome36>(
+        private async Task CreateTreatmentOutcome36MonthAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityTreatmentOutcome36>(
             _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome36AlertsCountAsync,
             _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome36AlertsAsync
         );
-        
+
         private async Task CreateAlertsInBulkAsync<T>(
             GetNotificationsEligibleForDqAlertsCount getCount,
             GetMultipleNotificationsEligibleForDataQualityDraftAlerts getNotifications) where T : Alert
@@ -79,15 +79,16 @@ namespace ntbs_service.Jobs
             while (offset < notificationsForAlertsCount)
             {
                 var notificationsForAlerts = await getNotifications(CountPerBatch, offset);
-                
+
                 var now = DateTime.Now;
                 List<Alert> dqAlerts = notificationsForAlerts
-                    .Select(n => {
+                    .Select(n =>
+                    {
                         T alert = (T)Activator.CreateInstance(typeof(T));
                         alert.NotificationId = n.NotificationId;
                         alert.CreationDate = now;
 
-                        return (Alert) alert;
+                        return (Alert)alert;
                     })
                     .ToList();
 
@@ -97,7 +98,7 @@ namespace ntbs_service.Jobs
                 offset += CountPerBatch;
             }
         }
-        
+
         public async Task Run(IJobCancellationToken token)
         {
             Log.Information($"Starting data quality alerts job");

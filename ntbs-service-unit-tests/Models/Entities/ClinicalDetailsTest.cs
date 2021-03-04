@@ -11,7 +11,7 @@ namespace ntbs_service_unit_tests.Models.Entities
         public void FormatsDateCorrectly()
         {
             // Arrange
-            var clinicalDetails = new ClinicalDetails {SymptomStartDate = new DateTime(2000, 1, 1)};
+            var clinicalDetails = new ClinicalDetails { SymptomStartDate = new DateTime(2000, 1, 1) };
 
             // Act
             var formattedDate = clinicalDetails.FormattedSymptomStartDate;
@@ -19,7 +19,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             // Assert
             Assert.Equal("01 Jan 2000", formattedDate);
         }
-        
+
         [Fact]
         public void CalculatesDaysBetweenDates()
         {
@@ -36,12 +36,12 @@ namespace ntbs_service_unit_tests.Models.Entities
             // Assert
             Assert.Equal("3 days", days);
         }
-        
+
         [Fact]
         public void CreatesVaccinationStateStringCorrectly()
         {
             // Arrange
-            var clinicalDetails = new ClinicalDetails {BCGVaccinationState = Status.Yes, BCGVaccinationYear = 2000,};
+            var clinicalDetails = new ClinicalDetails { BCGVaccinationState = Status.Yes, BCGVaccinationYear = 2000, };
 
             // Act
             var stateAndYear = clinicalDetails.BCGVaccinationStateAndYear;
@@ -55,7 +55,7 @@ namespace ntbs_service_unit_tests.Models.Entities
         [InlineData(null, null, null, "RR/MDR/XDR treatment")]
         public void CreatesMdrTreatmentStringCorrectly(int? year, int? month, int? day, string expectedResult)
         {
-            
+
             // Arrange
             var clinicalDetails = new ClinicalDetails();
             if (year != null && month != null && day != null)

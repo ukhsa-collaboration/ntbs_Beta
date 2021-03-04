@@ -30,7 +30,7 @@ namespace ntbs_service.Models.Entities
 
         [Display(Name = "Occupation setting")]
         public OccupationSetting? OccupationSetting { get; set; }
-        
+
         [Range(1, 99)]
         [Display(Name = "Duration (years)")]
         public int? OccupationDuration { get; set; }

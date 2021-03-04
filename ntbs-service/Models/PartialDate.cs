@@ -8,9 +8,9 @@ namespace ntbs_service.Models
     [ValidPartialDate]
     public class PartialDate
     {
-        public string Day {get; set; }
-        public string Month {get; set; }
-        public string Year  {get; set; }
+        public string Day { get; set; }
+        public string Month { get; set; }
+        public string Year { get; set; }
 
         public bool IsEmpty()
         {
@@ -22,7 +22,7 @@ namespace ntbs_service.Models
             dateTimeStart = null;
             dateTimeEnd = null;
 
-            if(!ParseDateStrings(out int parsedYear, out int parsedMonth, out int parsedDay)) 
+            if (!ParseDateStrings(out int parsedYear, out int parsedMonth, out int parsedDay))
             {
                 return false;
             }
@@ -31,15 +31,15 @@ namespace ntbs_service.Models
             {
                 dateTimeStart = new DateTime(parsedYear, parsedMonth, parsedDay);
 
-                if (!string.IsNullOrEmpty(Day)) 
+                if (!string.IsNullOrEmpty(Day))
                 {
                     dateTimeEnd = dateTimeStart?.AddDays(1);
                 }
-                else if(!string.IsNullOrEmpty(Month)) 
+                else if (!string.IsNullOrEmpty(Month))
                 {
                     dateTimeEnd = dateTimeStart?.AddMonths(1);
                 }
-                else 
+                else
                 {
                     dateTimeEnd = dateTimeStart?.AddYears(1);
                 }
@@ -51,15 +51,19 @@ namespace ntbs_service.Models
             }
         }
 
-        public bool ParseDateStrings(out int year, out int month, out int day) {
+        public bool ParseDateStrings(out int year, out int month, out int day)
+        {
             var canParseYear = true;
-            if (!int.TryParse(Year, out int parsedYear)) {
+            if (!int.TryParse(Year, out int parsedYear))
+            {
                 canParseYear = false;
             }
-            if (!int.TryParse(Month, out int parsedMonth)) {
+            if (!int.TryParse(Month, out int parsedMonth))
+            {
                 parsedMonth = 1;
             };
-            if (!int.TryParse(Day, out int parsedDay)) {
+            if (!int.TryParse(Day, out int parsedDay))
+            {
                 parsedDay = 1;
             };
             year = parsedYear;

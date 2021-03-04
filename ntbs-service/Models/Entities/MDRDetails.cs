@@ -20,7 +20,7 @@ namespace ntbs_service.Models.Entities
         [RequiredIf(@"ExposureToKnownCaseStatus == Enums.Status.Yes", ErrorMessage = ValidationMessages.RelationshipToCaseIsRequired)]
         [Display(Name = "Relationship of the current case to the contact")]
         public string RelationshipToCase { get; set; }
-        
+
         public bool IsCountryUK => Country?.IsoCode == Countries.UkCode;
         [RequiredIf(nameof(IsCountryUK), ErrorMessage = ValidationMessages.NotifiedToPheStatusIsRequired)]
         [Display(Name = "Was the case notified to PHE?")]
@@ -31,7 +31,7 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Contact's Notification ID")]
         [RequiredIf(@"NotifiedToPheStatus == Enums.Status.Yes", ErrorMessage = ValidationMessages.FieldRequired)]
         public int? RelatedNotificationId { get; set; }
-        
+
         [RequiredIf(@"ExposureToKnownCaseStatus == Enums.Status.Yes", ErrorMessage = ValidationMessages.RequiredSelect)]
         [Display(Name = "Country of exposure")]
         public int? CountryId { get; set; }

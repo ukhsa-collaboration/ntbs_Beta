@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -19,7 +18,7 @@ namespace ntbs_service.Helpers
             foreach (var key in modelState.Keys)
             {
                 var errorMessageList = modelState[key]?.Errors?.Select(e => e.ErrorMessage).ToList();
-                foreach(var errorMessage in errorMessageList)
+                foreach (var errorMessage in errorMessageList)
                 {
                     AddErrorMessageIntoDictionary(key, errorMessage);
                 }

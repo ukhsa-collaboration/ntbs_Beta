@@ -23,22 +23,22 @@ namespace ntbs_service.Models.Validations
             {
                 return new ValidationResult(ValidationMessages.NhsNumberLength);
             }
-            
-            var monodigitNumbers = new List<string> {"0000000000", "1111111111", "9999999999"};
+
+            var monodigitNumbers = new List<string> { "0000000000", "1111111111", "9999999999" };
             if (monodigitNumbers.Contains(nhsNumber))
             {
                 return new ValidationResult(ValidationMessages.NhsNumberMonodigit);
             }
-            
+
             var firstDigit = nhsNumber.Substring(0, 1);
             // Scotland uses different validation and has NHS numbers starting with 0, 1 and 2. 9 is a generally used test digit for NHS numbers.
-            var  scottishAndTestDigits = new List<string> {"0", "1", "2", "9"};
+            var scottishAndTestDigits = new List<string> { "0", "1", "2", "9" };
             if (scottishAndTestDigits.Contains(firstDigit))
             {
                 return null;
             }
 
-            if(!ValidateNhsNumber(nhsNumber))
+            if (!ValidateNhsNumber(nhsNumber))
             {
                 return new ValidationResult(ValidationMessages.InvalidNhsNumber);
             }
@@ -54,7 +54,7 @@ namespace ntbs_service.Models.Validations
             string currentString;
             int currentNumber;
 
-            for(var i = 0; i <= 8; i++)
+            for (var i = 0; i <= 8; i++)
             {
                 currentString = nhsNumber.Substring(i, 1);
                 currentNumber = Convert.ToInt16(currentString);

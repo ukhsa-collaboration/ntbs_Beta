@@ -25,7 +25,7 @@ namespace ntbs_service.Jobs
             _reportingDatabaseConnectionString = _configuration.GetConnectionString(Constants.DbConnectionStringReporting);
             _specimenMatchingConnectionString = _configuration.GetConnectionString(Constants.DbConnectionStringSpecimenMatching);
             _migrationConnectionString = _configuration.GetConnectionString(Constants.DbConnectionStringMigration);
-            
+
             this._sqlString = "";
             this._parameters = null;
         }
@@ -36,7 +36,8 @@ namespace ntbs_service.Jobs
             this._context = context;
             Log.Information($"Starting reporting data refresh job.");
 
-            try {
+            try
+            {
                 var stepOneResults = await ExecuteReportingLabSpecimanStoredProcedure(token);
                 var stepTwoResults = await ExecuteSpecimenMatchingGenerateStoredProcedure(token);
                 var stepThreeResults = await ExecuteReportingGenerateStoredProcedure(token);
@@ -49,7 +50,9 @@ namespace ntbs_service.Jobs
                 allResults.AddRange(stepFourResults);
 
                 var success = this.DidExecuteSuccessfully(allResults);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 this._context.WriteLine(ex.Message);
                 Log.Error(ex, "Error occured during reporting data refresh job.");
                 throw;
@@ -60,8 +63,8 @@ namespace ntbs_service.Jobs
 
         protected virtual async Task<IEnumerable<dynamic>> ExecuteReportingLabSpecimanStoredProcedure(IJobCancellationToken token)
         {
-            IEnumerable<dynamic> result = new List<dynamic>();    
-            
+            IEnumerable<dynamic> result = new List<dynamic>();
+
             using (var connection = new SqlConnection(_reportingDatabaseConnectionString))
             {
                 connection.Open();
@@ -73,8 +76,8 @@ namespace ntbs_service.Jobs
 
         protected virtual async Task<IEnumerable<dynamic>> ExecuteSpecimenMatchingGenerateStoredProcedure(IJobCancellationToken token)
         {
-            IEnumerable<dynamic> result = new List<dynamic>();    
-            
+            IEnumerable<dynamic> result = new List<dynamic>();
+
             using (var connection = new SqlConnection(_specimenMatchingConnectionString))
             {
                 connection.Open();
@@ -86,8 +89,8 @@ namespace ntbs_service.Jobs
 
         protected virtual async Task<IEnumerable<dynamic>> ExecuteReportingGenerateStoredProcedure(IJobCancellationToken token)
         {
-            IEnumerable<dynamic> result = new List<dynamic>();    
-            
+            IEnumerable<dynamic> result = new List<dynamic>();
+
             using (var connection = new SqlConnection(_reportingDatabaseConnectionString))
             {
                 connection.Open();
@@ -99,8 +102,8 @@ namespace ntbs_service.Jobs
 
         protected virtual async Task<IEnumerable<dynamic>> ExecuteMigrationGenerateStoredProcedure(IJobCancellationToken token)
         {
-            IEnumerable<dynamic> result = new List<dynamic>();    
-            
+            IEnumerable<dynamic> result = new List<dynamic>();
+
             using (var connection = new SqlConnection(_migrationConnectionString))
             {
                 connection.Open();
@@ -118,9 +121,12 @@ namespace ntbs_service.Jobs
             Log.Information(serialisedResult);
             _context.WriteLine($"Result: {serialisedResult}");
 
-            if(resultToTest.Count() == 0){
+            if (resultToTest.Count() == 0)
+            {
                 success = true;
-            } else {
+            }
+            else
+            {
                 throw new ApplicationException("Stored procedure did not execute successfully as result has messages, check the logs.");
             }
 

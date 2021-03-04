@@ -1,12 +1,12 @@
-﻿using EFAuditer;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.AspNetCore.Hosting.Server.Features;
+﻿using System;
 using System.Linq;
+using EFAuditer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using ntbs_service.DataAccess;
 using ntbs_service.Services;
 using ntbs_ui_tests.Helpers;
@@ -102,7 +102,7 @@ namespace ntbs_ui_tests
             // This is a 'fake' server, needed to be returned by the method but will not actually be used.
             return new TestServer(new WebHostBuilder().UseEnvironment("CI").UseStartup<TStartup>());
         }
-        
+
         public void ConfigureLogger(string testName)
         {
             var logger = new LoggerConfiguration()

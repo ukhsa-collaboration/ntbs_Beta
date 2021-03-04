@@ -6,7 +6,6 @@ using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
-using ntbs_service.Pages.Notifications;
 
 namespace ntbs_service.Models.Entities
 {
@@ -51,16 +50,16 @@ namespace ntbs_service.Models.Entities
         /// the "outcome at 12 months" means 12 months after the starting date. 
         /// </summary>
         public DateTime? StartingDate => TreatmentStartDate ?? DiagnosisDate;
-        
+
         [Display(Name = "Has the patient started treatment?")]
         public bool? DidNotStartTreatment { get; set; }
-        
+
         [Display(Name = "Was the TB diagnosis made at post-mortem?")]
         public bool? IsPostMortem { get; set; }
 
         [Display(Name = "Has the patient had a BCG vaccination?")]
         public Status? BCGVaccinationState { get; set; }
-        
+
         [Display(Name = "BCG vaccination year")]
         public int? BCGVaccinationYear { get; set; }
         public HIVTestStatus? HIVTestState { get; set; }
@@ -69,50 +68,50 @@ namespace ntbs_service.Models.Entities
         public bool IsMDRTreatment => TreatmentRegimen == Enums.TreatmentRegimen.MdrTreatment;
 
         [ValidClinicalDate]
-        [Display(Name ="RR/MDR/XDR treatment date")]
+        [Display(Name = "RR/MDR/XDR treatment date")]
         [RequiredIf(@"IsMDRTreatment && IsLegacy != true", ErrorMessage = ValidationMessages.FieldRequired)]
         [AssertThat(@"AfterDob(MDRTreatmentStartDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? MDRTreatmentStartDate { get; set; }
-        
+
         [MaxLength(100)]
         [Display(Name = "Treatment regimen other description")]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         [Column]
         public string TreatmentRegimenOtherDescription { get; set; }
-        
-        [Display(Name="Notes")]
+
+        [Display(Name = "Notes")]
         [MaxLength(1000)]
-        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine, 
+        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string Notes { get; set; }
 
-        [Display(Name = "DOT offered")] 
+        [Display(Name = "DOT offered")]
         public Status? IsDotOffered { get; set; }
-        
+
         public DotStatus? DotStatus { get; set; }
         public Status? EnhancedCaseManagementStatus { get; set; }
-        
+
         [Display(Name = "Enhanced Case Management Level")]
         public byte EnhancedCaseManagementLevel { get; set; }
-        
+
         [Display(Name = "Home visit carried out?")]
         public Status? HomeVisitCarriedOut { get; set; }
-        
+
         [Display(Name = "First home visit date")]
         [ValidClinicalDate]
         [AssertThat(@"AfterDob(FirstHomeVisitDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
-        public DateTime? FirstHomeVisitDate { get; set; } 
-        
+        public DateTime? FirstHomeVisitDate { get; set; }
+
         [Display(Name = "Healthcare setting")]
         public HealthcareSetting? HealthcareSetting { get; set; }
-        
+
         [MaxLength(100)]
         [Display(Name = "Other description")]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string HealthcareDescription { get; set; }
-        
+
         #endregion
-        
+
         [NotMapped]
         public DateTime? Dob { get; set; }
         public bool AfterDob(DateTime date) => Dob == null || date >= Dob;

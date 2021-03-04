@@ -6,23 +6,24 @@ namespace ntbs_service.Models.Enums
     public enum Result
     {
         // Tb X-ray results
-        [Display(Name="Consistent with TB - cavities")]
+        [Display(Name = "Consistent with TB - cavities")]
         ConsistentWithTbCavities,
-        [Display(Name="Consistent with TB - other")]
+        [Display(Name = "Consistent with TB - other")]
         ConsistentWithTbOther,
-        [Display(Name="Not consistent with TB")]
+        [Display(Name = "Not consistent with TB")]
         NotConsistentWithTb,
         // Other test types
-        [Display(Name="Positive")]
+        [Display(Name = "Positive")]
         Positive,
-        [Display(Name="Negative")]
+        [Display(Name = "Negative")]
         Negative,
         // Universal
-        [Display(Name="Awaiting")]
+        [Display(Name = "Awaiting")]
         Awaiting
     }
-    
-    public static class ResultHelper {
+
+    public static class ResultHelper
+    {
         public static bool IsValidForTestType(this Result result, int testTypeId)
         {
             switch (result)

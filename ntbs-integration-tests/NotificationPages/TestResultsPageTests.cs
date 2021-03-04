@@ -47,7 +47,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Null(document.QuerySelector("#lab-results-summary"));
             Assert.Null(document.QuerySelector("#specimens-details"));
         }
-        
+
         [Fact]
         public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
         {
@@ -69,7 +69,7 @@ namespace ntbs_integration_tests.NotificationPages
             var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
         }
-        
+
         [Fact]
         public async Task NotifiedPageHasReturnLinkToOverview()
         {

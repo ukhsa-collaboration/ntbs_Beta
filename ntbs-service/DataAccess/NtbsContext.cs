@@ -120,11 +120,11 @@ namespace ntbs_service.DataAccess
             #endregion
 
             modelBuilder.Entity<NotificationAndDuplicateIds>().ToTable(null).HasNoKey();
-            
+
             modelBuilder.Entity<Country>(entity =>
             {
                 entity.Property(e => e.Name).HasMaxLength(200);
-                entity.HasIndex(e => new {e.IsLegacy, e.Name});
+                entity.HasIndex(e => new { e.IsLegacy, e.Name });
 
                 entity.ToTable(nameof(Country), ReferenceDataSchemaName);
 
@@ -140,24 +140,27 @@ namespace ntbs_service.DataAccess
                 entity.ToTable(nameof(Ethnicity), ReferenceDataSchemaName);
 
                 entity.HasData(
-                    new Ethnicity {EthnicityId = 1, Code = "WW", Label = "White", Order = 1},
-                    new Ethnicity {EthnicityId = 8, Code = "H", Label = "Indian", Order = 2},
-                    new Ethnicity {EthnicityId = 9, Code = "J", Label = "Pakistani", Order = 3},
-                    new Ethnicity {EthnicityId = 10, Code = "K", Label = "Bangladeshi", Order = 4},
-                    new Ethnicity {EthnicityId = 11, Code = "L", Label = "Any other Asian background", Order = 5},
-                    new Ethnicity {EthnicityId = 13, Code = "N", Label = "Black African", Order = 6},
-                    new Ethnicity {EthnicityId = 12, Code = "M", Label = "Black Caribbean", Order = 7},
-                    new Ethnicity {EthnicityId = 14, Code = "P", Label = "Any other Black Background", Order = 8},
-                    new Ethnicity {EthnicityId = 16, Code = "R", Label = "Chinese", Order = 9},
-                    new Ethnicity {EthnicityId = 6, Code = "F", Label = "Mixed - White and Asian", Order = 10},
-                    new Ethnicity {EthnicityId = 5, Code = "E", Label = "Mixed - White and Black African", Order = 11},
+                    new Ethnicity { EthnicityId = 1, Code = "WW", Label = "White", Order = 1 },
+                    new Ethnicity { EthnicityId = 8, Code = "H", Label = "Indian", Order = 2 },
+                    new Ethnicity { EthnicityId = 9, Code = "J", Label = "Pakistani", Order = 3 },
+                    new Ethnicity { EthnicityId = 10, Code = "K", Label = "Bangladeshi", Order = 4 },
+                    new Ethnicity { EthnicityId = 11, Code = "L", Label = "Any other Asian background", Order = 5 },
+                    new Ethnicity { EthnicityId = 13, Code = "N", Label = "Black African", Order = 6 },
+                    new Ethnicity { EthnicityId = 12, Code = "M", Label = "Black Caribbean", Order = 7 },
+                    new Ethnicity { EthnicityId = 14, Code = "P", Label = "Any other Black Background", Order = 8 },
+                    new Ethnicity { EthnicityId = 16, Code = "R", Label = "Chinese", Order = 9 },
+                    new Ethnicity { EthnicityId = 6, Code = "F", Label = "Mixed - White and Asian", Order = 10 },
+                    new Ethnicity { EthnicityId = 5, Code = "E", Label = "Mixed - White and Black African", Order = 11 },
                     new Ethnicity
                     {
-                        EthnicityId = 4, Code = "D", Label = "Mixed - White and Black Caribbean", Order = 12
+                        EthnicityId = 4,
+                        Code = "D",
+                        Label = "Mixed - White and Black Caribbean",
+                        Order = 12
                     },
-                    new Ethnicity {EthnicityId = 7, Code = "G", Label = "Any other mixed background", Order = 13},
-                    new Ethnicity {EthnicityId = 15, Code = "S", Label = "Any other ethnic group", Order = 14},
-                    new Ethnicity {EthnicityId = Ethnicities.NotStatedId, Code = "Z", Label = "Not stated", Order = 15}
+                    new Ethnicity { EthnicityId = 7, Code = "G", Label = "Any other mixed background", Order = 13 },
+                    new Ethnicity { EthnicityId = 15, Code = "S", Label = "Any other ethnic group", Order = 14 },
+                    new Ethnicity { EthnicityId = Ethnicities.NotStatedId, Code = "Z", Label = "Not stated", Order = 15 }
                 );
             });
 
@@ -175,7 +178,7 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.ServiceAdGroup).HasMaxLength(64);
                 entity.HasIndex(e => e.ServiceAdGroup).IsUnique();
                 entity.HasIndex(e => e.Name);
-                entity.HasIndex(e => new {e.IsLegacy, e.Name});
+                entity.HasIndex(e => new { e.IsLegacy, e.Name });
 
                 entity.HasOne(e => e.PHEC)
                     .WithMany()
@@ -243,7 +246,7 @@ namespace ntbs_service.DataAccess
                     .HasForeignKey(ns => ns.LocalAuthorityCode);
 
                 entity.ToTable(nameof(PostcodeLookup), ReferenceDataSchemaName);
-                
+
                 // We don't use HasData to populate postcode lookup due to the size of this dataset - 
                 // it would completely clog up any EF actions. We've used manually created migrations instead.
             });
@@ -492,9 +495,9 @@ namespace ntbs_service.DataAccess
                 entity.ToTable(nameof(Sex), ReferenceDataSchemaName);
 
                 entity.HasData(
-                    new Sex {SexId = 1, Label = "Male"},
-                    new Sex {SexId = 2, Label = "Female"},
-                    new Sex {SexId = Sexes.UnknownId, Label = "Unknown"}
+                    new Sex { SexId = 1, Label = "Male" },
+                    new Sex { SexId = 2, Label = "Female" },
+                    new Sex { SexId = Sexes.UnknownId, Label = "Unknown" }
                 );
             });
 
@@ -507,30 +510,30 @@ namespace ntbs_service.DataAccess
                     .HasForeignKey(ns => ns.SiteId);
             });
 
-            modelBuilder.Entity<Site>(entity => 
+            modelBuilder.Entity<Site>(entity =>
             {
                 entity.ToTable(nameof(Site), ReferenceDataSchemaName);
-                
+
                 entity.HasData(
-                    new Site {SiteId = (int)SiteId.PULMONARY, Description = "Pulmonary"},
-                    new Site {SiteId = (int)SiteId.BONE_SPINE, Description = "Spine"},
-                    new Site {SiteId = (int)SiteId.BONE_OTHER, Description = "Bone/joint: Other"},
-                    new Site {SiteId = (int)SiteId.CNS_MENINGITIS, Description = "Meningitis"},
-                    new Site {SiteId = (int)SiteId.CNS_OTHER, Description = "CNS: Other"},
-                    new Site {SiteId = (int)SiteId.OCULAR, Description = "Ocular"},
-                    new Site {SiteId = (int)SiteId.CRYPTIC, Description = "Cryptic disseminated"},
-                    new Site {SiteId = (int)SiteId.GASTROINTESTINAL, Description = "Gastrointestinal/peritoneal"},
-                    new Site {SiteId = (int)SiteId.GENITOURINARY, Description = "Genitourinary"},
-                    new Site {SiteId = (int)SiteId.LYMPH_INTRA, Description = "Lymph nodes: Intra-thoracic"},
-                    new Site {SiteId = (int)SiteId.LYMPH_EXTRA, Description = "Lymph nodes: Extra-thoracic"},
-                    new Site {SiteId = (int)SiteId.LARYNGEAL, Description = "Laryngeal"},
-                    new Site {SiteId = (int)SiteId.MILIARY, Description = "Miliary"},
-                    new Site {SiteId = (int)SiteId.PLEURAL, Description = "Pleural"},
-                    new Site {SiteId = (int)SiteId.PERICARDIAL, Description = "Pericardial"},
-                    new Site {SiteId = (int)SiteId.SKIN, Description = "Soft tissue/Skin"},
-                    new Site {SiteId = (int)SiteId.OTHER, Description = "Other extra-pulmonary"}
+                    new Site { SiteId = (int)SiteId.PULMONARY, Description = "Pulmonary" },
+                    new Site { SiteId = (int)SiteId.BONE_SPINE, Description = "Spine" },
+                    new Site { SiteId = (int)SiteId.BONE_OTHER, Description = "Bone/joint: Other" },
+                    new Site { SiteId = (int)SiteId.CNS_MENINGITIS, Description = "Meningitis" },
+                    new Site { SiteId = (int)SiteId.CNS_OTHER, Description = "CNS: Other" },
+                    new Site { SiteId = (int)SiteId.OCULAR, Description = "Ocular" },
+                    new Site { SiteId = (int)SiteId.CRYPTIC, Description = "Cryptic disseminated" },
+                    new Site { SiteId = (int)SiteId.GASTROINTESTINAL, Description = "Gastrointestinal/peritoneal" },
+                    new Site { SiteId = (int)SiteId.GENITOURINARY, Description = "Genitourinary" },
+                    new Site { SiteId = (int)SiteId.LYMPH_INTRA, Description = "Lymph nodes: Intra-thoracic" },
+                    new Site { SiteId = (int)SiteId.LYMPH_EXTRA, Description = "Lymph nodes: Extra-thoracic" },
+                    new Site { SiteId = (int)SiteId.LARYNGEAL, Description = "Laryngeal" },
+                    new Site { SiteId = (int)SiteId.MILIARY, Description = "Miliary" },
+                    new Site { SiteId = (int)SiteId.PLEURAL, Description = "Pleural" },
+                    new Site { SiteId = (int)SiteId.PERICARDIAL, Description = "Pericardial" },
+                    new Site { SiteId = (int)SiteId.SKIN, Description = "Soft tissue/Skin" },
+                    new Site { SiteId = (int)SiteId.OTHER, Description = "Other extra-pulmonary" }
                 );
-            });                   
+            });
 
             modelBuilder.Entity<Occupation>(entity =>
             {
@@ -623,7 +626,7 @@ namespace ntbs_service.DataAccess
                 entity.HasKey(e => e.NotificationId);
                 entity.HasMany(e => e.ManualTestResults);
             });
-            
+
             modelBuilder.Entity<ManualTestResult>(entity =>
             {
                 entity.Property(e => e.Result)
@@ -639,7 +642,7 @@ namespace ntbs_service.DataAccess
                 entity.HasOne(e => e.SampleType)
                     .WithMany()
                     .HasForeignKey(e => e.SampleTypeId);
-                
+
                 entity.HasOne<TestData>()
                     .WithMany(e => e.ManualTestResults)
                     .HasForeignKey(e => e.NotificationId)
@@ -666,7 +669,7 @@ namespace ntbs_service.DataAccess
                     .WithMany(e => e.MBovisExposureToKnownCases)
                     .HasForeignKey(e => e.NotificationId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired(false);;
+                    .IsRequired(false); ;
             });
 
             modelBuilder.Entity<MBovisUnpasteurisedMilkConsumption>(entity =>
@@ -685,7 +688,7 @@ namespace ntbs_service.DataAccess
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired(false);
             });
-            
+
             modelBuilder.Entity<MBovisOccupationExposure>(entity =>
             {
                 entity.Property(e => e.OccupationSetting)
@@ -704,11 +707,11 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.AnimalType)
                     .HasConversion(animalTypeEnumConverter)
                     .HasMaxLength(EnumMaxLength);
-                
+
                 entity.Property(e => e.AnimalTbStatus)
                     .HasConversion(animalTbStatusEnumConverter)
                     .HasMaxLength(EnumMaxLength);
-                
+
                 entity.ToTable("MBovisAnimalExposure");
                 entity.HasOne<MBovisDetails>()
                     .WithMany(e => e.MBovisAnimalExposures)
@@ -753,7 +756,7 @@ namespace ntbs_service.DataAccess
                     .HasConversion(transferReasonEnumConverter)
                     .HasMaxLength(EnumMaxLength);
                 entity.Property(e => e.TbServiceCode).HasColumnName("TbServiceCode").HasMaxLength(16);
-                entity.Property(e => e.CaseManagerUsername).HasColumnName("CaseManagerUsername").HasMaxLength(64);;
+                entity.Property(e => e.CaseManagerUsername).HasColumnName("CaseManagerUsername").HasMaxLength(64); ;
             });
             modelBuilder.Entity<UnmatchedLabResultAlert>(entity =>
             {
@@ -808,7 +811,7 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.OrderIndex)
                     .HasDefaultValueSql("NEXT VALUE FOR shared.OrderIndex");
             });
-            
+
             modelBuilder.Entity<UserLoginEvent>(entity =>
             {
                 entity.Property(e => e.Username)

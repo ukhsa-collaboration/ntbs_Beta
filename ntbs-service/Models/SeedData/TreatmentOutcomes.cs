@@ -32,7 +32,7 @@ namespace ntbs_service.Models.SeedData
                 new TreatmentOutcome { TreatmentOutcomeId = 15, TreatmentOutcomeType = TreatmentOutcomeType.NotEvaluated, TreatmentOutcomeSubType = TreatmentOutcomeSubType.TransferredAbroad },
                 new TreatmentOutcome { TreatmentOutcomeId = 16, TreatmentOutcomeType = TreatmentOutcomeType.NotEvaluated, TreatmentOutcomeSubType = TreatmentOutcomeSubType.StillOnTreatment },
                 new TreatmentOutcome { TreatmentOutcomeId = 17, TreatmentOutcomeType = TreatmentOutcomeType.NotEvaluated, TreatmentOutcomeSubType = TreatmentOutcomeSubType.Other },
-                
+
                 new TreatmentOutcome { TreatmentOutcomeId = 18, TreatmentOutcomeType = TreatmentOutcomeType.Failed, TreatmentOutcomeSubType = TreatmentOutcomeSubType.CulturePositive },
                 new TreatmentOutcome { TreatmentOutcomeId = 19, TreatmentOutcomeType = TreatmentOutcomeType.Failed, TreatmentOutcomeSubType = TreatmentOutcomeSubType.AdditionalResistance },
                 new TreatmentOutcome { TreatmentOutcomeId = 20, TreatmentOutcomeType = TreatmentOutcomeType.Failed, TreatmentOutcomeSubType = TreatmentOutcomeSubType.AdverseReaction },

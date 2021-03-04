@@ -152,15 +152,15 @@ namespace ntbs_integration_tests.NotificationPages
 
             resultDocument.AssertErrorSummaryMessage(
                 "TestResultForEdit-TestDate",
-                "test-date", 
+                "test-date",
                 string.Format(ValidationMessages.RequiredEnter, "Test date"));
             resultDocument.AssertErrorSummaryMessage(
                 "TestResultForEdit-ManualTestTypeId",
-                "test-type", 
+                "test-type",
                 string.Format(ValidationMessages.RequiredSelect, "Test type"));
             resultDocument.AssertErrorSummaryMessage(
                 "TestResultForEdit-Result",
-                "result", 
+                "result",
                 string.Format(ValidationMessages.RequiredSelect, "Result"));
         }
 

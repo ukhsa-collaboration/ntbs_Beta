@@ -7,7 +7,7 @@ namespace ntbs_service.Services
     {
         IAdDirectoryService Create();
     }
-    
+
     public class AdDirectoryServiceServiceFactory : IAdDirectoryServiceFactory
     {
         private readonly LdapSettings _ldapSettings;

@@ -14,10 +14,10 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         private readonly IItemRepository<MBovisAnimalExposure> _mBovisAnimalExposureRepository;
         private readonly IReferenceDataRepository _referenceDataRepository;
 
-        [BindProperty(SupportsGet = true)] 
+        [BindProperty(SupportsGet = true)]
         public int? RowId { get; set; }
 
-        [BindProperty] 
+        [BindProperty]
         public MBovisAnimalExposure MBovisAnimalExposure { get; set; }
 
         public SelectList Countries { get; set; }
@@ -48,7 +48,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             {
                 return NotFound();
             }
-            
+
             if (RowId == null)
             {
                 return Page();
@@ -102,7 +102,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
             await _mBovisAnimalExposureRepository.DeleteAsync(mBovisAnimalExposure);
 
-            return RedirectToPage("/Notifications/Edit/MBovisAnimalExposures", new {NotificationId});
+            return RedirectToPage("/Notifications/Edit/MBovisAnimalExposures", new { NotificationId });
         }
 
         public ContentResult OnGetValidateMBovisAnimalExposureProperty(string key, string value, bool shouldValidateFull)
@@ -112,12 +112,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         protected override IActionResult RedirectForNotified()
         {
-            return RedirectToPage("/Notifications/Edit/MBovisAnimalExposures", new {NotificationId});
+            return RedirectToPage("/Notifications/Edit/MBovisAnimalExposures", new { NotificationId });
         }
 
         protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
-            return RedirectToPage("/Notifications/Edit/MBovisAnimalExposures", new {NotificationId});
+            return RedirectToPage("/Notifications/Edit/MBovisAnimalExposures", new { NotificationId });
         }
 
         protected override async Task<Notification> GetNotificationAsync(int notificationId)

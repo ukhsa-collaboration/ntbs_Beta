@@ -6,13 +6,13 @@
         public static string InvalidDate(string name) => $"{name} does not have a valid date selection";
         public static string InvalidYear(string name) => $"{name} has an invalid year";
         public static string TodayOrEarlier(string name) => $"{name} must be today or earlier";
-        public static string DateValidityRangeStart(string name, string startDate) => 
+        public static string DateValidityRangeStart(string name, string startDate) =>
             $"{name} must not be before {startDate}";
         public static string ValidYearLaterThanBirthYear(string name, int birthYear) =>
             $"{name} should be later than birth year ({birthYear})";
 
         #region Shared
-        
+
         public const string InvalidYearForAttribute = "{0} has an invalid year";
         public const string StandardStringFormat = "{0} can only contain letters and the symbols ' - . ,";
         public const string StandardStringWithNumbersFormat = "{0} can only contain letters, numbers and the symbols ' - . ,";
@@ -145,7 +145,7 @@
             "The notification ID does not exist, verify you have entered the correct ID before moving forward";
         public const string LabResultNotificationMatchNoPermission =
             "The notification does not belong to one of your services. If you believe this is the correct notification, please contact ntbs@phe.gov.uk";
-        
+
         #endregion
 
         #region MBovisDetails

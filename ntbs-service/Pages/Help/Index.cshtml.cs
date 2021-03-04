@@ -16,7 +16,7 @@ namespace ntbs_service.Pages.Help
         {
             _faqRepository = faqRepository;
         }
-        
+
         public IActionResult OnGet()
         {
             FAQs = _faqRepository.GetAll();

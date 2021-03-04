@@ -48,15 +48,15 @@ namespace ntbs_integration_tests.NotificationPages
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
-                EditSubPaths.ForEach( subPath =>
-                {
-                    // Act
-                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
+                EditSubPaths.ForEach(subPath =>
+               {
+                   // Act
+                   var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
-                    _output.WriteLine("Testing subpath {0}", subPath);
-                    // Assert
-                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-                });
+                   _output.WriteLine("Testing subpath {0}", subPath);
+                   // Assert
+                   Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+               });
             }
         }
 
@@ -68,15 +68,15 @@ namespace ntbs_integration_tests.NotificationPages
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
-                EditSubPaths.ForEach( subPath =>
-                {
-                    // Act
-                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
+                EditSubPaths.ForEach(subPath =>
+               {
+                   // Act
+                   var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
-                    _output.WriteLine("Testing subpath {0}", subPath);
-                    // Assert
-                    Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-                });
+                   _output.WriteLine("Testing subpath {0}", subPath);
+                   // Assert
+                   Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+               });
             }
         }
 
@@ -88,15 +88,15 @@ namespace ntbs_integration_tests.NotificationPages
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
-                EditSubPaths.ForEach( subPath =>
-                {
-                    // Act
-                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
+                EditSubPaths.ForEach(subPath =>
+               {
+                   // Act
+                   var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
-                    _output.WriteLine("Testing subpath {0}", subPath);
-                    // Assert
-                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-                });
+                   _output.WriteLine("Testing subpath {0}", subPath);
+                   // Assert
+                   Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+               });
             }
         }
 
@@ -108,17 +108,17 @@ namespace ntbs_integration_tests.NotificationPages
                                         .WithNotificationAndPostcodeConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_POSTCODE)
                                         .CreateClientWithoutRedirects())
             {
-                EditSubPaths.ForEach( subPath =>
-                {
-                    // ActAccessToDisposedClosure
-                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
+                EditSubPaths.ForEach(subPath =>
+               {
+                   // ActAccessToDisposedClosure
+                   var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
-                    _output.WriteLine("Testing subpath {0}", subPath);
-                    // Assert
-                    Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-                    
-                    response.AssertRedirectTo($"/Notifications/{Utilities.DRAFT_ID}");
-                });
+                   _output.WriteLine("Testing subpath {0}", subPath);
+                   // Assert
+                   Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+
+                   response.AssertRedirectTo($"/Notifications/{Utilities.DRAFT_ID}");
+               });
             }
         }
 
@@ -130,15 +130,15 @@ namespace ntbs_integration_tests.NotificationPages
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
-                EditSubPaths.ForEach( subPath =>
-                {
-                    // Act
-                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
+                EditSubPaths.ForEach(subPath =>
+               {
+                   // Act
+                   var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
-                    _output.WriteLine("Testing subpath {0}", subPath);
-                    // Assert
-                    Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-                });
+                   _output.WriteLine("Testing subpath {0}", subPath);
+                   // Assert
+                   Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+               });
             }
         }
 
@@ -150,15 +150,15 @@ namespace ntbs_integration_tests.NotificationPages
                                         .WithNotificationAndPostcodeConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_POSTCODE)
                                         .CreateClientWithoutRedirects())
             {
-                EditSubPaths.ForEach( subPath =>
-                {
-                    // Act
-                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
+                EditSubPaths.ForEach(subPath =>
+               {
+                   // Act
+                   var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
-                    _output.WriteLine("Testing subpath {0}", subPath);
-                    // Assert
-                    Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-                });
+                   _output.WriteLine("Testing subpath {0}", subPath);
+                   // Assert
+                   Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+               });
             }
         }
 

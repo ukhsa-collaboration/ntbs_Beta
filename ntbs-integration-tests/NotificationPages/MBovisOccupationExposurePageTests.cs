@@ -6,7 +6,6 @@ using ntbs_service;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
-using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -92,7 +91,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             var formData = new Dictionary<string, string>
             {
-                ["NotificationId"] = id.ToString(), 
+                ["NotificationId"] = id.ToString(),
                 ["MBovisDetails.HasOccupationExposure"] = "false"
             };
 

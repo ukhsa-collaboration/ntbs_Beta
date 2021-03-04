@@ -10,7 +10,8 @@ namespace ntbs_service.Models.ReferenceEntities
         public virtual List<NotificationSite> NotificationSites { get; set; }
     }
 
-    public enum SiteId {
+    public enum SiteId
+    {
         PULMONARY = 1,
         BONE_SPINE = 2,
         BONE_OTHER = 3,

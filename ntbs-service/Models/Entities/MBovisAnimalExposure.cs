@@ -32,12 +32,12 @@ namespace ntbs_service.Models.Entities
 
         [Display(Name = "Animal type")]
         public AnimalType? AnimalType { get; set; }
-        
+
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         [MaxLength(35)]
         [Display(Name = "Animal")]
         public string Animal { get; set; }
-        
+
         [Display(Name = "Animal TB status")]
         public AnimalTbStatus? AnimalTbStatus { get; set; }
 

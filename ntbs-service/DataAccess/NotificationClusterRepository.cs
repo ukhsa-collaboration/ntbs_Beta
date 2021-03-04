@@ -13,7 +13,7 @@ namespace ntbs_service.DataAccess
         Task<NotificationClusterValue> GetNotificationClusterValue(int etsNotificationId);
         Task SetNotificationClusterValue(int etsNotificationId, int ntbsNotificationId);
     }
-    
+
     public class NotificationClusterRepository : INotificationClusterRepository
     {
         private readonly string _reportingDbConnectionString;
@@ -22,7 +22,7 @@ namespace ntbs_service.DataAccess
         {
             _reportingDbConnectionString = configuration.GetConnectionString(Constants.DbConnectionStringReporting);
         }
-        
+
         public async Task<IEnumerable<NotificationClusterValue>> GetNotificationClusterValues()
         {
             var query = $@"

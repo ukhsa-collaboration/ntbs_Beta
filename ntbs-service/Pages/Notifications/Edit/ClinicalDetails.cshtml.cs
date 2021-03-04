@@ -83,10 +83,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (ClinicalDetails.ShouldValidateFull)
             {
                 TryValidateModel(ClinicalDetails, nameof(ClinicalDetails));
-                
+
                 // EditPageErrorDictionary is null only if coming from a GET call, we want to guard here
                 // only in a GET call
-                if (EditPageErrorDictionary == null && 
+                if (EditPageErrorDictionary == null &&
                     (!NotificationSiteMap.ContainsKey(SiteId.OTHER) || !NotificationSiteMap[SiteId.OTHER]))
                 {
                     ModelState.Remove("OtherSite.SiteDescription");
@@ -115,11 +115,11 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             if (Request.Form?["SaveAndRouteToTreatmentEvents"].FirstOrDefault() != null)
             {
-                return RedirectToPage("./TreatmentEvents", new {NotificationId, isBeingSubmitted});
+                return RedirectToPage("./TreatmentEvents", new { NotificationId, isBeingSubmitted });
             }
             return RedirectToPage("./TestResults", new { NotificationId, isBeingSubmitted });
         }
-        
+
         protected override IActionResult RedirectForNotified()
         {
             if (Request.Method == "POST" && Request.Form?["SaveAndRouteToTreatmentEvents"].FirstOrDefault() != null)
@@ -128,8 +128,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
             var overviewAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(CurrentPage);
             return RedirectToPage(
-                pageName: "/Notifications/Overview", 
-                pageHandler: null,  
+                pageName: "/Notifications/Overview",
+                pageHandler: null,
                 routeValues: new { NotificationId },
                 fragment: overviewAnchorId);
         }
@@ -145,7 +145,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 (nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate),
                 (nameof(ClinicalDetails.FirstHomeVisitDate), FormattedHomeVisitDate),
                 (nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMdrTreatmentDate)
-            }.ForEach(item => 
+            }.ForEach(item =>
                 ValidationService.TrySetFormattedDate(ClinicalDetails, "ClinicalDetails", item.key, item.date)
             );
 
@@ -323,7 +323,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
             return ValidationService.GetMultiplePropertiesValidationResult<ClinicalDetails>(propertyValueTuples);
         }
-        
+
         public ContentResult OnGetValidateClinicalDetailsProperty(string key, string value, bool shouldValidateFull)
         {
             return ValidationService.GetPropertyValidationResult<ClinicalDetails>(key, value, shouldValidateFull);

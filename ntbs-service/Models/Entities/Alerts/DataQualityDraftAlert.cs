@@ -10,13 +10,13 @@ namespace ntbs_service.Models.Entities.Alerts
     {
         private const int MinNumberDaysDraftForAlert = 90;
 
-        public static readonly Expression<Func<Notification, bool>> NotificationQualifiesExpression = 
-            n => n.NotificationStatus == NotificationStatus.Draft && 
+        public static readonly Expression<Func<Notification, bool>> NotificationQualifiesExpression =
+            n => n.NotificationStatus == NotificationStatus.Draft &&
                  n.CreationDate < DateTime.Now.AddDays(-MinNumberDaysDraftForAlert);
 
         public static readonly Func<Notification, bool> NotificationQualifies =
             NotificationQualifiesExpression.Compile();
-        
+
         public override string Action => "Please review and action.";
 
         public override string ActionLink => RouteHelper.GetNotificationPath(

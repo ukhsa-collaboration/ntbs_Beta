@@ -76,10 +76,10 @@ namespace ntbs_service.Services
         {
             return await GetTbServicesQuery(user).ToListAsync();
         }
-        
+
         public async Task<User> GetUser(ClaimsPrincipal user)
         {
-           return await _userRepository.GetUserByUsername(user.Username());
+            return await _userRepository.GetUserByUsername(user.Username());
         }
 
         public UserType GetUserType(ClaimsPrincipal user)
@@ -120,9 +120,11 @@ namespace ntbs_service.Services
         {
             string displayName = NameFormattingHelper.FormatDisplayName(user.Identity.Name);
 
-            if(displayName.Contains("@")){
+            if (displayName.Contains("@"))
+            {
                 var nameClaim = user.Claims.FirstOrDefault(c => c.Type == "name");
-                if(nameClaim != null) {
+                if (nameClaim != null)
+                {
                     displayName = NameFormattingHelper.FormatDisplayName(nameClaim.Value);
                 }
             }

@@ -12,7 +12,7 @@ namespace ntbs_service.DataAccess
     {
         Task<Dictionary<int, DrugResistanceProfile>> GetDrugResistanceProfilesAsync();
     }
-    
+
     public class DrugResistanceProfileRepository : IDrugResistanceProfileRepository
     {
         private readonly string _reportingDbConnectionString;
@@ -21,7 +21,7 @@ namespace ntbs_service.DataAccess
         {
             _reportingDbConnectionString = configuration.GetConnectionString(Constants.DbConnectionStringReporting);
         }
-        
+
         public async Task<Dictionary<int, DrugResistanceProfile>> GetDrugResistanceProfilesAsync()
         {
             var query = $@"
@@ -34,7 +34,7 @@ namespace ntbs_service.DataAccess
             {
                 connection.Open();
                 return (await connection.QueryAsync(query)).ToDictionary(
-                    t => (int) t.NotificationId,
+                    t => (int)t.NotificationId,
                     t => new DrugResistanceProfile
                     {
                         DrugResistanceProfileString = t.DrugResistanceProfile,

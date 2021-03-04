@@ -41,7 +41,7 @@ namespace ntbs_service.Pages.Notifications
 
         [BindProperty(SupportsGet = true)]
         public int NotificationId { get; set; }
-        
+
         protected virtual async Task<Notification> GetNotificationAsync(int notificationId)
         {
             return await NotificationRepository.GetNotificationAsync(notificationId);
@@ -49,7 +49,7 @@ namespace ntbs_service.Pages.Notifications
 
         protected async Task AuthorizeAndSetBannerAsync()
         {
-            var (permissionLevel,  reason) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
+            var (permissionLevel, reason) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
             PermissionLevel = permissionLevel;
             PermissionReason = reason;
             NotificationBannerModel = new NotificationBannerModel(Notification, PermissionLevel != PermissionLevel.Edit);

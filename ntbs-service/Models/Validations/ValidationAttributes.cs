@@ -35,7 +35,7 @@ namespace ntbs_service.Models.Validations
             return ValidationMessages.DateValidityRangeStart(name, _startDate.ToShortDateString());
         }
     }
-    
+
     /// <summary>
     /// This attribute should only be used on DateTime properties on entity models inheriting from ModelBase
     /// 
@@ -50,7 +50,7 @@ namespace ntbs_service.Models.Validations
             {
                 return null;
             }
-            
+
             var date = (DateTime)value;
             var isLegacy = ((ModelBase)validationContext.ObjectInstance).IsLegacy;
             if (date < _startDate && isLegacy == false)

@@ -44,7 +44,7 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync(m => m.AlertId == alertId);
         }
 
-        public async Task<T> GetAlertByNotificationIdAndTypeAsync<T>(int notificationId) where T : Alert 
+        public async Task<T> GetAlertByNotificationIdAndTypeAsync<T>(int notificationId) where T : Alert
         {
             return await _context.Alert
                 .OfType<T>()
@@ -58,14 +58,14 @@ namespace ntbs_service.DataAccess
                 .OfType<T>()
                 .SingleOrDefaultAsync();
         }
-        
+
         public async Task<DataQualityPotentialDuplicateAlert> GetDuplicateAlertByNotificationIdAndDuplicateId(int notificationId,
             int duplicateId)
         {
             return await _context.Alert
                 .OfType<DataQualityPotentialDuplicateAlert>()
                 .SingleOrDefaultAsync(
-                    m => m.NotificationId == notificationId 
+                    m => m.NotificationId == notificationId
                          && m.DuplicateId == duplicateId);
         }
 
@@ -92,7 +92,7 @@ namespace ntbs_service.DataAccess
                 .OfType<DataQualityDraftAlert>()
                 .SingleOrDefaultAsync();
         }
-        
+
         public async Task<IList<AlertWithTbServiceForDisplay>> GetOpenAlertsForNotificationAsync(int notificationId)
         {
             return await GetOpenAlertWithTbServiceForDisplayIQueryable()

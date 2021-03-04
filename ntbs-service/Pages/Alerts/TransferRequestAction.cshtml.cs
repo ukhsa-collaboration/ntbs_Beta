@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,15 +22,15 @@ namespace ntbs_service.Pages.Alerts
         private readonly IAlertService _alertService;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly ITreatmentEventRepository _treatmentEventRepository;
-        
+
         public ValidationService ValidationService;
-        
+
         [BindProperty]
         [Required(ErrorMessage = "Please accept or decline the transfer")]
         public bool? AcceptTransfer { get; set; }
         [BindProperty]
         [MaxLength(200)]
-        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, 
+        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
             ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
         [Display(Name = "Explanatory comment")]
         public string DeclineTransferReason { get; set; }
@@ -50,7 +48,7 @@ namespace ntbs_service.Pages.Alerts
 
         public TransferRequestActionModel(
             INotificationService notificationService,
-            IAlertService alertService, 
+            IAlertService alertService,
             IAlertRepository alertRepository,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
@@ -69,13 +67,13 @@ namespace ntbs_service.Pages.Alerts
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             TransferAlert = await _alertRepository.GetOpenAlertByNotificationId<TransferAlert>(NotificationId);
             await AuthorizeAndSetBannerAsync();
-            
+
             // Check edit permission of user and redirect if not allowed
             if (!await _authorizationService.IsUserAuthorizedToManageAlert(User, TransferAlert))
             {
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
-            
+
             if (TransferAlert == null)
             {
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
@@ -83,12 +81,12 @@ namespace ntbs_service.Pages.Alerts
 
             var hospitals = await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(
                 new List<string> { TransferAlert.TbServiceCode });
-            Hospitals = new SelectList(hospitals, 
-                nameof(Hospital.HospitalId), 
+            Hospitals = new SelectList(hospitals,
+                nameof(Hospital.HospitalId),
                 nameof(Hospital.Name));
             var caseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(
-                new List<string> {TransferAlert.TbServiceCode});
-            CaseManagers = new SelectList(caseManagers, 
+                new List<string> { TransferAlert.TbServiceCode });
+            CaseManagers = new SelectList(caseManagers,
                 nameof(Models.Entities.User.Username),
                 nameof(Models.Entities.User.DisplayName));
             TargetCaseManagerUsername = TransferAlert.CaseManagerUsername;
@@ -100,17 +98,17 @@ namespace ntbs_service.Pages.Alerts
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             TransferAlert = await _alertRepository.GetOpenAlertByNotificationId<TransferAlert>(NotificationId);
             await AuthorizeAndSetBannerAsync();
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            if(AcceptTransfer == true)
+            if (AcceptTransfer == true)
             {
                 await AcceptTransferAndDismissAlertAsync();
                 return Partial("_AcceptedTransferConfirmation", this);
             }
-            
+
             await RejectTransferAndDismissAlertAsync();
             return Partial("_RejectedTransferConfirmation", this);
         }
@@ -165,7 +163,7 @@ namespace ntbs_service.Pages.Alerts
             };
 
             // Dismiss any existing transfer rejected alert so that the new one can be created
-            var pendingTransferRejectedAlert = 
+            var pendingTransferRejectedAlert =
                 await _alertRepository.GetOpenAlertByNotificationId<TransferRejectedAlert>(NotificationId);
             if (pendingTransferRejectedAlert != null)
             {

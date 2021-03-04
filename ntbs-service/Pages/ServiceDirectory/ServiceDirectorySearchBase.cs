@@ -9,10 +9,10 @@ namespace ntbs_service.Pages.ServiceDirectory
     public class ServiceDirectorySearchBase : PageModel
     {
         private readonly ValidationService _validationService;
-        
+
         [BindProperty(SupportsGet = true)]
         [Display(Name = "Search keyword")]
-        [RegularExpression(ValidationRegexes.CharacterValidation, 
+        [RegularExpression(ValidationRegexes.CharacterValidation,
             ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string SearchKeyword { get; set; }
 
@@ -20,7 +20,7 @@ namespace ntbs_service.Pages.ServiceDirectory
         {
             _validationService = new ValidationService(this);
         }
-        
+
         public ContentResult OnGetValidateProperty(string key, string value)
         {
             return _validationService.GetPropertyValidationResult(this, key, value);

@@ -13,7 +13,7 @@ namespace ntbs_service.Models.Entities
         public string ImprisonmentRiskFactorTimePeriods => CreateTimePeriodsString(RiskFactorImprisonment);
         [Display(Name = "Time periods")]
         public string SmokingRiskFactorTimePeriods => CreateTimePeriodsString(RiskFactorSmoking);
-        
+
         private static string CreateTimePeriodsString(RiskFactorDetails riskFactor)
         {
             var timeStrings = new List<string>();

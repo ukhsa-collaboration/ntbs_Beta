@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
-using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.SearchPage

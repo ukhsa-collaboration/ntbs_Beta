@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ntbs_service.Models.Enums 
+namespace ntbs_service.Models.Enums
 {
-    public enum NotificationStatus {
+    public enum NotificationStatus
+    {
         [Display(Name = "Draft")]
         Draft,
         [Display(Name = "Notification")]

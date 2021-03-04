@@ -73,7 +73,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             resultDocument.AssertErrorSummaryMessage(
                 "ImmunosuppressionDetails-Status",
-                "status", 
+                "status",
                 "At least one immunosuppression type must be selected");
         }
 
@@ -100,7 +100,7 @@ namespace ntbs_integration_tests.NotificationPages
             result.EnsureSuccessStatusCode();
 
             resultDocument.AssertErrorSummaryMessage(
-                "ImmunosuppressionDetails-OtherDescription", 
+                "ImmunosuppressionDetails-OtherDescription",
                 "description",
                 "Please supply other immunosuppression details");
         }
@@ -164,7 +164,7 @@ namespace ntbs_integration_tests.NotificationPages
             }
             Assert.Equal(validationResult, result);
         }
-        
+
         [Fact]
         public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
         {
@@ -188,7 +188,7 @@ namespace ntbs_integration_tests.NotificationPages
             var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
         }
-        
+
         [Fact]
         public async Task NotifiedPageHasReturnLinkToOverview()
         {

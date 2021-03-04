@@ -46,9 +46,9 @@ namespace ntbs_service.Services
             _context.Entry(notification).State = EntityState.Detached;
             notification.NotificationId = 0;
             notification.GroupId = null;
-            
+
             notification.NotificationSites.ForEach(site => _context.Entry(site).State = EntityState.Detached);
-            
+
             _context.Entry(notification.TestData).State = EntityState.Detached;
             notification.TestData.NotificationId = 0;
             notification.TestData.ManualTestResults.ForEach(result =>
@@ -57,7 +57,7 @@ namespace ntbs_service.Services
                 result.ManualTestResultId = 0;
                 _context.ManualTestResult.Add(result);
             });
-            
+
             notification.TreatmentEvents.ForEach(treatmentEvent =>
             {
                 _context.Entry(treatmentEvent).State = EntityState.Detached;
@@ -77,7 +77,7 @@ namespace ntbs_service.Services
                 venue.SocialContextVenueId = 0;
                 _context.SocialContextVenue.Add(venue);
             });
-            
+
             notification.MBovisDetails.MBovisAnimalExposures.ForEach(answer =>
             {
                 _context.Entry(answer).State = EntityState.Detached;
@@ -102,9 +102,9 @@ namespace ntbs_service.Services
                 answer.MBovisExposureToKnownCaseId = 0;
                 _context.MBovisExposureToKnownCase.Add(answer);
             });
-            
+
             _context.Notification.Add(notification);
-            
+
             return notification;
         }
     }

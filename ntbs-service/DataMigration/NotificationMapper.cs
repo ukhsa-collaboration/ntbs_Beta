@@ -84,7 +84,7 @@ namespace ntbs_service.DataMigration
                 var manualTestResults = _migrationRepository.GetManualTestResults(legacyIds);
                 var socialContextVenues = _migrationRepository.GetSocialContextVenues(legacyIds);
                 var socialContextAddresses = _migrationRepository.GetSocialContextAddresses(legacyIds);
-                var transferEvents =  _migrationRepository.GetTransferEvents(legacyIds);
+                var transferEvents = _migrationRepository.GetTransferEvents(legacyIds);
                 var outcomeEvents = _migrationRepository.GetOutcomeEvents(legacyIds);
                 var mbovisAnimalExposure = _migrationRepository.GetMigrationMBovisAnimalExposure(legacyIds);
                 var mbovisExposureToKnownCase = _migrationRepository.GetMigrationMBovisExposureToKnownCase(legacyIds);
@@ -166,13 +166,14 @@ namespace ntbs_service.DataMigration
                 var notificationMBovisUnpasteurisedMilkConsumption = mbovisUnpasteurisedMilkConsumption
                     .Where(sc => sc.OldNotificationId == id)
                     .Select(AsMBovisUnpasteurisedMilkConsumption)
-                    .ToList();                
+                    .ToList();
 
                 Notification notification = await AsNotificationAsync(rawNotification);
                 notification.NotificationSites = notificationSites;
                 notification.TestData = new TestData
                 {
-                    HasTestCarriedOut = notificationTestResults.Any(), ManualTestResults = notificationTestResults
+                    HasTestCarriedOut = notificationTestResults.Any(),
+                    ManualTestResults = notificationTestResults
                 };
                 notification.SocialContextAddresses = notificationSocialContextAddresses;
                 notification.SocialContextVenues = notificationSocialContextVenues;
@@ -250,7 +251,7 @@ namespace ntbs_service.DataMigration
             {
                 notification.NotificationStatus = NotificationStatus.Notified;
             }
-            
+
             notification.PatientDetails = await ExtractPatientDetails(rawNotification);
             notification.ClinicalDetails = ExtractClinicalDetails(rawNotification);
             notification.TravelDetails = ExtractTravelDetails(rawNotification);
@@ -289,7 +290,7 @@ namespace ntbs_service.DataMigration
                     details.TBServiceCode = tbService.Code;
                 }
             }
-            
+
             // we are not doing the same check to case manager here, because leaving it empty would make it pass
             // validation - it is not a mandatory field. we don't want to lose it where it exists, so that check
             // is explicitly done during the validation step
@@ -327,7 +328,7 @@ namespace ntbs_service.DataMigration
             }
 
             var site = new NotificationSite();
-            site.SiteId = (int) result.SiteId;
+            site.SiteId = (int)result.SiteId;
             site.SiteDescription = result.SiteDescription;
             return site;
         }
@@ -444,9 +445,9 @@ namespace ntbs_service.DataMigration
                 }.Distinct()
                 .Count(c => c != null);
             int? totalNumberOfCountries = hasTravel == Status.Yes && numberOfCountries != null
-                ? Math.Max(numberOfCountries.Value, countriesRecorded) 
-                : (int?) null;
-            
+                ? Math.Max(numberOfCountries.Value, countriesRecorded)
+                : (int?)null;
+
             var details = new TravelDetails();
             details.HasTravel = hasTravel;
             details.TotalNumberOfCountries = totalNumberOfCountries;
@@ -469,9 +470,9 @@ namespace ntbs_service.DataMigration
                         notification.visitor_Country1, notification.visitor_Country2, notification.visitor_Country3
                     }.Distinct()
                     .Count(c => c != null);
-            int? totalNumberOfCountries = hasVisitor == Status.Yes && numberOfCountries != null 
-                ? Math.Max(numberOfCountries.Value, countriesRecorded) 
-                : (int?) null;
+            int? totalNumberOfCountries = hasVisitor == Status.Yes && numberOfCountries != null
+                ? Math.Max(numberOfCountries.Value, countriesRecorded)
+                : (int?)null;
 
             var details = new VisitorDetails();
             details.HasVisitor = hasVisitor;
@@ -564,7 +565,7 @@ namespace ntbs_service.DataMigration
                 notification.OccupationFreetext);
 
             ForceValidNhsNumber(details);
-            
+
             return details;
         }
 
@@ -583,7 +584,7 @@ namespace ntbs_service.DataMigration
         private static void ForceValidNhsNumber(PatientDetails details)
         {
             var validationResults = new List<ValidationResult>();
-            var context = new ValidationContext(details) { MemberName = nameof(PatientDetails.NhsNumber)};
+            var context = new ValidationContext(details) { MemberName = nameof(PatientDetails.NhsNumber) };
             Validator.TryValidateProperty(details.NhsNumber, context, validationResults);
             if (validationResults.Any())
             {
@@ -643,7 +644,7 @@ namespace ntbs_service.DataMigration
             var manualTest = new ManualTestResult();
             manualTest.ManualTestTypeId = rawResult.ManualTestTypeId;
             manualTest.SampleTypeId = rawResult.SampleTypeId;
-            manualTest.Result =  Converter.GetEnumValue<Result>(rawResult.Result);
+            manualTest.Result = Converter.GetEnumValue<Result>(rawResult.Result);
             manualTest.TestDate = rawResult.TestDate;
             return manualTest;
         }
@@ -666,12 +667,12 @@ namespace ntbs_service.DataMigration
         private static SocialContextAddress AsSocialContextAddress(MigrationDbSocialContextAddress rawAddress)
         {
             var address = new SocialContextAddress();
-             address.Address = rawAddress.Address;
-             address.Postcode = rawAddress.Postcode;
-             address.DateFrom = rawAddress.DateFrom;
-             address.DateTo = rawAddress.DateTo;
-             var details = RemoveCharactersNotIn(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, rawAddress.Details);
-             address.Details = details;
+            address.Address = rawAddress.Address;
+            address.Postcode = rawAddress.Postcode;
+            address.DateFrom = rawAddress.DateFrom;
+            address.DateTo = rawAddress.DateTo;
+            var details = RemoveCharactersNotIn(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, rawAddress.Details);
+            address.Details = details;
             return address;
         }
 

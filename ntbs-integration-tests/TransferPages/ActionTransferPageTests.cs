@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
@@ -127,7 +126,7 @@ namespace ntbs_integration_tests.TransferPage
             var treatmentEventsUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditTreatmentEvents);
             var initialTreatmentEventsPage = await GetDocumentForUrlAsync(treatmentEventsUrl);
             Assert.Null(initialTreatmentEventsPage.QuerySelector("#treatment-events"));
-            
+
             var url = GetCurrentPathForId(id);
             var initialDocument = await GetDocumentForUrlAsync(url);
 
@@ -138,15 +137,15 @@ namespace ntbs_integration_tests.TransferPage
 
             // Act
             await Client.SendPostFormWithData(initialDocument, formData, url);
-            
+
             var reloadedTreatmentEventsPage = await GetDocumentForUrlAsync(treatmentEventsUrl);
-            
+
             // Assert
             var reloadedTreatmentEventsTable = reloadedTreatmentEventsPage.QuerySelector("#treatment-events");
             Assert.Contains("Transfer in", reloadedTreatmentEventsTable.InnerHtml);
             Assert.Contains("Transfer out", reloadedTreatmentEventsTable.InnerHtml);
         }
-        
+
         [Fact]
         public async Task DeclineTransferAlert_CreatesNewTransferRejectionAlert()
         {
@@ -156,7 +155,7 @@ namespace ntbs_integration_tests.TransferPage
             var overviewUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview);
             var overviewPage = await GetDocumentForUrlAsync(overviewUrl);
             Assert.NotNull(overviewPage.QuerySelector("#alert-20004"));
-            
+
             var url = GetCurrentPathForId(id);
             var initialDocument = await GetDocumentForUrlAsync(url);
 

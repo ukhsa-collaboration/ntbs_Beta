@@ -1,13 +1,8 @@
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.Server;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using ntbs_service.DataAccess;
 using ntbs_service.Properties;
 using Serilog;
 
@@ -20,7 +15,7 @@ namespace ntbs_service.Jobs
         {
             var scheduledJobConfig = new ScheduledJobsConfig();
             configuration.GetSection(Constants.ScheduledJobsConfig).Bind(scheduledJobConfig);
-            
+
             this._sqlString = scheduledJobConfig.GenericStoredProcedureNameToRun;
             this._parameters = null;
         }
@@ -31,7 +26,7 @@ namespace ntbs_service.Jobs
             this._context = context;
             Log.Information($"Starting generic stored procedure job: {this._sqlString}");
             _context.WriteLine($"Starting generic stored procedure job: {this._sqlString}");
-            
+
             await base.Run(context, token);
 
             Log.Information($"Finishing generic stored procedure job.");

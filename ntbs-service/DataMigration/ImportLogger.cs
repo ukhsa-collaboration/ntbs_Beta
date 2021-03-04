@@ -1,6 +1,6 @@
 using System;
-using Hangfire.Server;
 using Hangfire.Console;
+using Hangfire.Server;
 using Serilog;
 
 namespace ntbs_service.DataMigration
@@ -35,7 +35,7 @@ namespace ntbs_service.DataMigration
         {
             // Import failure is not an error-level event - since failures
             // can be result of typical issues too (e.g. validation)
-            
+
             // The reason for failure itself can report issues at higher log levels if needed.
             Log.Information(exception, $"NOTIFICATION IMPORT - {requestId} - {message}");
 
@@ -51,7 +51,7 @@ namespace ntbs_service.DataMigration
         public void LogWarning(PerformContext context, string requestId, string message)
         {
             Log.Warning($"NOTIFICATION IMPORT - {requestId} - {message}");
-            
+
             context.SetTextColor(ConsoleTextColor.Yellow);
             context.WriteLine($"NOTIFICATION IMPORT - {requestId} - {message}");
             context.ResetTextColor();
@@ -60,7 +60,7 @@ namespace ntbs_service.DataMigration
         public void LogError(PerformContext context, string requestId, string message, Exception exception = null)
         {
             Log.Error($"NOTIFICATION IMPORT - {requestId} - {message}");
-            
+
             context.SetTextColor(ConsoleTextColor.DarkRed);
             context.WriteLine($"NOTIFICATION IMPORT - {requestId} - {message}");
             context.ResetTextColor();

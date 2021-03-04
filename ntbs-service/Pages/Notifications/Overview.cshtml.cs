@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
@@ -16,7 +14,7 @@ namespace ntbs_service.Pages.Notifications
     {
         private readonly IAlertService _alertService;
         private readonly ICultureAndResistanceService _cultureAndResistanceService;
-        
+
         public CultureAndResistance CultureAndResistance { get; set; }
         public Dictionary<int, List<TreatmentEvent>> GroupedTreatmentEvents { get; set; }
 
@@ -26,7 +24,7 @@ namespace ntbs_service.Pages.Notifications
         public TreatmentOutcome OutcomeAt12Months { get; set; }
         public TreatmentOutcome OutcomeAt24Months { get; set; }
         public TreatmentOutcome OutcomeAt36Months { get; set; }
-        
+
         public OverviewModel(
             INotificationService service,
             IAuthorizationService authorizationService,

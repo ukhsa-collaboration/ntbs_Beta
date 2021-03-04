@@ -27,7 +27,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public string OtherDescription { get; set; }
 
-        
+
         public ImmunosuppressionDetails ImmunosuppressionDetails { get; set; }
 
         public ComorbiditiesModel(
@@ -75,7 +75,8 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             ComorbidityDetails.SetValidationContext(Notification);
 
-            ImmunosuppressionDetails = new ImmunosuppressionDetails {
+            ImmunosuppressionDetails = new ImmunosuppressionDetails
+            {
                 Status = ImmunosuppressionStatus,
                 HasBioTherapy = HasBioTherapy,
                 HasTransplantation = HasTransplantation,

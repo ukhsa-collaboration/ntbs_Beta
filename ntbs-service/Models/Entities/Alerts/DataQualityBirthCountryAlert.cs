@@ -7,12 +7,12 @@ namespace ntbs_service.Models.Entities.Alerts
 {
     public class DataQualityBirthCountryAlert : Alert
     {
-        public static readonly Expression<Func<Notification, bool>> NotificationQualifiesExpression = 
+        public static readonly Expression<Func<Notification, bool>> NotificationQualifiesExpression =
             n => n.PatientDetails.CountryId == Countries.UnknownId;
 
         public static readonly Func<Notification, bool> NotificationQualifies =
             NotificationQualifiesExpression.Compile();
-        
+
         public override string Action => "Please review to see if more accurate information available.";
 
         public override string ActionLink =>

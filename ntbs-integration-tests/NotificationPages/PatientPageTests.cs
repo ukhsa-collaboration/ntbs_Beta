@@ -124,8 +124,8 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             resultDocument.AssertErrorSummaryMessage(
-                "PatientDetails-YearOfUkEntry", 
-                "year-of-entry", 
+                "PatientDetails-YearOfUkEntry",
+                "year-of-entry",
                 "Year of uk entry must be later than date of birth year");
         }
 
@@ -434,7 +434,7 @@ namespace ntbs_integration_tests.NotificationPages
             var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
         }
-        
+
         [Fact]
         public async Task NotifiedPageHasReturnLinkToOverview()
         {

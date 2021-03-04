@@ -22,8 +22,8 @@ namespace ntbs_service.Helpers
 
         public static T? GetEnumValue<T>(string raw) where T : struct
         {
-            return string.IsNullOrEmpty(raw) ? 
-                null : 
+            return string.IsNullOrEmpty(raw) ?
+                null :
                 (T?)Enum.Parse<T>(raw);
         }
     }

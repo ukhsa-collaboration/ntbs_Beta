@@ -24,7 +24,7 @@ namespace ntbs_service.Pages.ServiceDirectory
         {
             _caseManagerSearchService = caseManagerSearchService;
         }
-        
+
         public async Task<IActionResult> OnGetAsync(int? pageIndex = null, int? offset = null)
         {
             if (!ModelState.IsValid || SearchKeyword.IsNullOrEmpty())
@@ -34,7 +34,9 @@ namespace ntbs_service.Pages.ServiceDirectory
 
             _paginationParameters = new PaginationParametersBase
             {
-                PageSize = 20, PageIndex = pageIndex ?? 1, Offset = offset ?? 0
+                PageSize = 20,
+                PageIndex = pageIndex ?? 1,
+                Offset = offset ?? 0
             };
 
             var (caseManagersToDisplay, count) =
@@ -68,7 +70,7 @@ namespace ntbs_service.Pages.ServiceDirectory
 
             return Page();
         }
-        
+
         private void PrepareBreadcrumbs()
         {
             var breadcrumbs = new List<Breadcrumb>

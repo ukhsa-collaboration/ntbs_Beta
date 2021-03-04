@@ -17,7 +17,7 @@ namespace ntbs_service.Services
         string sqlQuery;
         dynamic parameters;
         private readonly IReferenceDataRepository _referenceDataRepository;
-        
+
         public LegacySearchBuilder(IReferenceDataRepository referenceDataRepository)
         {
             parameters = new ExpandoObject();
@@ -73,9 +73,10 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public ISearchBuilder FilterByPartialDob(PartialDate partialDob) 
+        public ISearchBuilder FilterByPartialDob(PartialDate partialDob)
         {
-            if(!(partialDob == null || partialDob.IsEmpty())) {
+            if (!(partialDob == null || partialDob.IsEmpty()))
+            {
                 partialDob.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
                 AppendCondition("dmg.DateOfBirth >= @dobDateRangeStart AND dmg.DateOfBirth < @dobDateRangeEnd");
                 parameters.dobDateRangeStart = dateRangeStart;
@@ -85,19 +86,20 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public ISearchBuilder FilterByPartialNotificationDate(PartialDate partialNotificationDate) 
+        public ISearchBuilder FilterByPartialNotificationDate(PartialDate partialNotificationDate)
         {
-            if(!(partialNotificationDate == null || partialNotificationDate.IsEmpty())) {
+            if (!(partialNotificationDate == null || partialNotificationDate.IsEmpty()))
+            {
                 partialNotificationDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
                 AppendCondition("n.NotificationDate >= @notificationDateRangeStart AND n.NotificationDate < @notificationDateRangeEnd");
                 parameters.notificationDateRangeStart = dateRangeStart;
                 parameters.notificationDateRangeEnd = dateRangeEnd;
             }
-            
+
             return this;
         }
 
-        public ISearchBuilder FilterBySex(int? sexId) 
+        public ISearchBuilder FilterBySex(int? sexId)
         {
             if (sexId != null)
             {
@@ -107,20 +109,21 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public ISearchBuilder FilterByBirthCountry(int? countryId) 
+        public ISearchBuilder FilterByBirthCountry(int? countryId)
         {
-            if(countryId != null) {
+            if (countryId != null)
+            {
                 AppendCondition("dmg.BirthCountryId = @countryId");
                 parameters.countryId = countryId;
             }
             return this;
         }
 
-        public ISearchBuilder FilterByTBService(string TBService) 
+        public ISearchBuilder FilterByTBService(string TBService)
         {
             if (!string.IsNullOrEmpty(TBService))
             {
-                var hospitalGuids = _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(new List<string> {TBService})
+                var hospitalGuids = _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(new List<string> { TBService })
                     .Result
                     .Select(x => x.HospitalId);
                 parameters.hospitals = hospitalGuids;
@@ -134,7 +137,7 @@ namespace ntbs_service.Services
             return (sqlQuery, parameters);
         }
 
-        private void AppendCondition(string condition) 
+        private void AppendCondition(string condition)
         {
             sqlQuery += $@"
                 AND ({condition})";

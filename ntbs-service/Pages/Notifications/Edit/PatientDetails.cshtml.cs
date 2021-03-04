@@ -41,7 +41,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             _postcodeService = postcodeService;
             _referenceDataRepository = referenceDataRepository;
-            
+
             CurrentPage = NotificationSubPaths.EditPatientDetails;
         }
 
@@ -84,7 +84,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             PatientDetails = Notification.PatientDetails;
             await SetNotificationProperties(isBeingSubmitted, PatientDetails);
-            
+
             await GenerateReferenceDataAsync();
             FormattedDob = PatientDetails.Dob.ConvertToFormattedDate();
 
@@ -161,7 +161,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             };
             return ValidationService.GetMultiplePropertiesValidationResult<PatientDetails>(
                 propertyValueTuples,
-                shouldValidateFull, 
+                shouldValidateFull,
                 notification.IsLegacy);
         }
 

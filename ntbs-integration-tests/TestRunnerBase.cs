@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AngleSharp;
 using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using Xunit;
-using AngleSharp;
 
 namespace ntbs_integration_tests
 {
@@ -51,7 +51,7 @@ namespace ntbs_integration_tests
         }
 
         protected async Task<HttpResponseMessage> SendGetFormWithData(
-            IHtmlDocument document, 
+            IHtmlDocument document,
             Dictionary<string, string> formData,
             string pageRoute,
             string postRoute = null)

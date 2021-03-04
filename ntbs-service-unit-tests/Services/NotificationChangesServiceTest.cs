@@ -37,7 +37,7 @@ namespace ntbs_service_unit_tests.Services
             _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(1))
                 .ReturnsAsync(auditLogs);
             _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
-                .ReturnsAsync(new Dictionary<string, string> {{"Developer@ntbs.phe.com", "John Johnson"}});
+                .ReturnsAsync(new Dictionary<string, string> { { "Developer@ntbs.phe.com", "John Johnson" } });
 
             // Act
             var changes = (await _changesService.GetChangesList(1)).ToList();
@@ -91,7 +91,7 @@ namespace ntbs_service_unit_tests.Services
             _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(2))
                 .ReturnsAsync(auditLogs);
             _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
-                .ReturnsAsync(new Dictionary<string, string> {{"Developer@ntbs.phe.com", "John Johnson"}});
+                .ReturnsAsync(new Dictionary<string, string> { { "Developer@ntbs.phe.com", "John Johnson" } });
 
             // Act
             var changes = (await _changesService.GetChangesList(2)).ToList();
@@ -111,7 +111,7 @@ namespace ntbs_service_unit_tests.Services
             _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(3))
                 .ReturnsAsync(auditLogs);
             _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
-                .ReturnsAsync(new Dictionary<string, string> {{"Developer@ntbs.phe.com", "John Johnson"}});
+                .ReturnsAsync(new Dictionary<string, string> { { "Developer@ntbs.phe.com", "John Johnson" } });
 
             // Act
             var changes = (await _changesService.GetChangesList(3)).ToList();
@@ -145,7 +145,7 @@ namespace ntbs_service_unit_tests.Services
             _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(4))
                 .ReturnsAsync(auditLogs);
             _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
-                .ReturnsAsync(new Dictionary<string, string> {{"Developer@ntbs.phe.com", "John Johnson"}});
+                .ReturnsAsync(new Dictionary<string, string> { { "Developer@ntbs.phe.com", "John Johnson" } });
 
             // Act
             var changes = (await _changesService.GetChangesList(4)).ToList();

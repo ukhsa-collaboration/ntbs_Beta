@@ -10,7 +10,7 @@ namespace ntbs_service.Models.Entities
         public string FormattedDotOfferedState => GetFormattedDotOfferedState();
         public string FormattedHealthcareSettingState => GetFormattedHealthcareSettingState();
         public string FormattedHomeVisitState => GetFormattedHomeVisitState();
-        
+
         public string IsPostMortemYesNo => IsPostMortem.FormatYesNo();
         public string IsSymptomaticYesNo => IsSymptomatic.FormatYesNo();
         public string DaysFromOnsetToTreatment => FormatNullableDateDifference(TreatmentStartDate, SymptomStartDate);
@@ -26,14 +26,14 @@ namespace ntbs_service.Models.Entities
             {
                 return "";
             }
-            
+
             switch (TreatmentRegimen)
             {
-                case Enums.TreatmentRegimen.MdrTreatment :
+                case Enums.TreatmentRegimen.MdrTreatment:
                     return MDRTreatmentStartDate == null
                         ? TreatmentRegimen.GetDisplayName()
                         : $"{TreatmentRegimen.GetDisplayName()} - {MDRTreatmentStartDate.ConvertToString()}";
-                case Enums.TreatmentRegimen.Other :
+                case Enums.TreatmentRegimen.Other:
                     return TreatmentRegimenOtherDescription == null
                         ? TreatmentRegimen.GetDisplayName()
                         : $"{TreatmentRegimen.GetDisplayName()} - {TreatmentRegimenOtherDescription}";
@@ -81,7 +81,7 @@ namespace ntbs_service.Models.Entities
                 ? IsDotOffered.GetDisplayName()
                 : $"{IsDotOffered.GetDisplayName()} - {DotStatus.GetDisplayName()}";
         }
-        
+
         private string GetFormattedHomeVisitState()
         {
             if (HomeVisitCarriedOut == null)
@@ -102,7 +102,7 @@ namespace ntbs_service.Models.Entities
                 ? $"{healthcareState} - {HealthcareDescription}"
                 : healthcareState;
         }
-        
+
         private static string FormatStateAndYear(Status? state, int? year)
         {
             return state?.ToString() + (year != null ? " - " + year : string.Empty);

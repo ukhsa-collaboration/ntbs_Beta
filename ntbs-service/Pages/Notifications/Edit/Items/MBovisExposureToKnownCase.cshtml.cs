@@ -13,10 +13,10 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
     {
         private readonly IItemRepository<MBovisExposureToKnownCase> _mBovisExposureToKnownCasesRepository;
 
-        [BindProperty(SupportsGet = true)] 
+        [BindProperty(SupportsGet = true)]
         public int? RowId { get; set; }
 
-        [BindProperty] 
+        [BindProperty]
         public MBovisExposureToKnownCase MBovisExposureToKnownCase { get; set; }
 
         public MBovisExposureToKnownCaseModel(
@@ -38,7 +38,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             {
                 return NotFound();
             }
-            
+
             if (RowId == null)
             {
                 return Page();
@@ -106,7 +106,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
             return RedirectToPage("/Notifications/Edit/MBovisExposureToKnownCases", new { NotificationId });
         }
-        
+
         public ContentResult OnGetValidateMBovisExposureToKnownCaseProperty(string key, string value, bool shouldValidateFull)
         {
             return ValidationService.GetPropertyValidationResult<MBovisExposureToKnownCase>(key, value, shouldValidateFull);
@@ -127,12 +127,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         protected override IActionResult RedirectForNotified()
         {
-            return RedirectToPage("/Notifications/Edit/MBovisExposureToKnownCases", new {NotificationId});
+            return RedirectToPage("/Notifications/Edit/MBovisExposureToKnownCases", new { NotificationId });
         }
 
         protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
-            return RedirectToPage("/Notifications/Edit/MBovisExposureToKnownCases", new {NotificationId});
+            return RedirectToPage("/Notifications/Edit/MBovisExposureToKnownCases", new { NotificationId });
         }
 
         protected override async Task<Notification> GetNotificationAsync(int notificationId)

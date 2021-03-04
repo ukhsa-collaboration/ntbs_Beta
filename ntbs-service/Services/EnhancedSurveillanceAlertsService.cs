@@ -9,7 +9,7 @@ namespace ntbs_service.Services
         Task CreateOrDismissMdrAlert(INotificationForDrugResistanceImport notification);
         Task CreateOrDismissMBovisAlert(INotificationForDrugResistanceImport notification);
     }
-    
+
     public class EnhancedSurveillanceAlertsService : IEnhancedSurveillanceAlertsService
     {
         private readonly IAlertService _alertService;
@@ -30,7 +30,7 @@ namespace ntbs_service.Services
                 await _alertService.DismissMatchingAlertAsync<MdrAlert>(notification.NotificationId);
             }
         }
-        
+
         public async Task CreateOrDismissMBovisAlert(INotificationForDrugResistanceImport notification)
         {
             if (notification.IsMBovis)
@@ -42,16 +42,16 @@ namespace ntbs_service.Services
                 await _alertService.DismissMatchingAlertAsync<MBovisAlert>(notification.NotificationId);
             }
         }
-        
+
         private async Task CreateMdrAlert(INotificationForDrugResistanceImport notification)
         {
-            var mdrAlert = new MdrAlert {NotificationId = notification.NotificationId};
+            var mdrAlert = new MdrAlert { NotificationId = notification.NotificationId };
             await _alertService.AddUniqueAlertAsync(mdrAlert);
         }
 
         private async Task CreateMBovisAlert(INotificationForDrugResistanceImport notification)
         {
-            var mBovisAlert = new MBovisAlert { NotificationId = notification.NotificationId};
+            var mBovisAlert = new MBovisAlert { NotificationId = notification.NotificationId };
             await _alertService.AddUniqueAlertAsync(mBovisAlert);
         }
     }

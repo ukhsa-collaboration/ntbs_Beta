@@ -24,7 +24,7 @@ namespace ntbs_service.Models.Entities
             MDRDetails.ExposureToKnownCaseStatus);
 
         public bool IsMBovis => DrugResistanceHelper.IsMbovis(DrugResistanceProfile);
-        
+
         public override bool? IsLegacy => LTBRID != null || ETSID != null;
 
         private string CreateSitesOfDiseaseString()
@@ -39,12 +39,12 @@ namespace ntbs_service.Models.Entities
                 .Select(s => s.Description);
             return string.Join(", ", siteNames);
         }
-        
+
         private bool GetIsLastLinkedNotificationOverOneYearOld()
         {
-            var latestNotification = Group?.Notifications?.Last() ?? this; 
+            var latestNotification = Group?.Notifications?.Last() ?? this;
             var latestNotificationDate = latestNotification.NotificationDate ?? latestNotification.CreationDate;
-            
+
             return DateTime.Now > latestNotificationDate.AddYears(1);
         }
 

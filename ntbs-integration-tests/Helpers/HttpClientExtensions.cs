@@ -32,7 +32,7 @@ namespace ntbs_integration_tests.Helpers
         {
             return SendAsync(client, form, formValues, path, HttpMethod.Post, submitType);
         }
-        
+
         public static async Task<HttpResponseMessage> SendPostFormWithData(
             this HttpClient client,
             IHtmlDocument document,
@@ -64,11 +64,11 @@ namespace ntbs_integration_tests.Helpers
             VerifyFormElementsExist(form, formValues);
 
             var token = GetAntiForgeryToken(form);
-            if(token != null)
+            if (token != null)
             {
                 formValues.Add(TOKEN, token);
             }
-            if(submitType != null)
+            if (submitType != null)
             {
                 formValues.Add("actionName", submitType);
             }
