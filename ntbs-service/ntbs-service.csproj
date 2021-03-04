@@ -41,7 +41,7 @@
     <PackageReference Include="Sentry.AspNetCore" Version="3.0.6" />
     <PackageReference Include="Sentry.Serilog" Version="3.0.6" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
-    <PackageReference Include="ZNetCS.AspNetCore.Authentication.Basic" Version="4.0.0" />
+    <PackageReference Include="ZNetCS.AspNetCore.Authentication.Basic" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Models/SeedData/*.csv">
