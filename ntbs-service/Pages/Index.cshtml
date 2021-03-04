@@ -69,6 +69,11 @@
                                     @Html.DisplayFor(_ => item.FormattedCreationDate)
                                 </nhs-table-item>
                                 <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.AlertType)">
+                                <a href="@item.ActionLink">
+                                    @Html.DisplayFor(_ => item.AlertType)
+                                    </a>
+                                    <br />
+                                    @Html.DisplayFor(_ => item.Action)
                                 </nhs-table-item>
                                 <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.CaseManagerName)<br />@Html.DisplayNameFor(model => model.Alerts[0].TbServiceName)">
                                     @if (!string.IsNullOrWhiteSpace(item.CaseManagerName))
