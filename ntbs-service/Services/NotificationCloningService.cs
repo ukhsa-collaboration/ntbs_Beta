@@ -26,7 +26,6 @@ namespace ntbs_service.Services
             // 2. wiping the id (setting to 0)
             // 3. being added to the context anew
             
-            _context.Entry(notification).State = EntityState.Detached;
             _context.Entry(notification.ClinicalDetails).State = EntityState.Detached;
             _context.Entry(notification.ComorbidityDetails).State = EntityState.Detached;
             _context.Entry(notification.ContactTracing).State = EntityState.Detached;
@@ -37,13 +36,14 @@ namespace ntbs_service.Services
             _context.Entry(notification.MBovisDetails).State = EntityState.Detached;
             _context.Entry(notification.PatientDetails).State = EntityState.Detached;
             _context.Entry(notification.PreviousTbHistory).State = EntityState.Detached;
-            _context.Entry(notification.SocialRiskFactors).State = EntityState.Detached;
             _context.Entry(notification.SocialRiskFactors.RiskFactorDrugs).State = EntityState.Detached;
             _context.Entry(notification.SocialRiskFactors.RiskFactorHomelessness).State = EntityState.Detached;
             _context.Entry(notification.SocialRiskFactors.RiskFactorImprisonment).State = EntityState.Detached;
             _context.Entry(notification.SocialRiskFactors.RiskFactorSmoking).State = EntityState.Detached;
+            _context.Entry(notification.SocialRiskFactors).State = EntityState.Detached;
             _context.Entry(notification.TravelDetails).State = EntityState.Detached;
             _context.Entry(notification.VisitorDetails).State = EntityState.Detached;
+            _context.Entry(notification).State = EntityState.Detached;
             notification.NotificationId = 0;
             notification.GroupId = null;
             
