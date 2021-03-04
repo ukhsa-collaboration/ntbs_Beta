@@ -421,7 +421,9 @@
         </nhs-form-group>
 
     <nhs-fieldset>
-        <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(m => m.ClinicalDetails.IsPostMortem)</nhs-fieldset-legend>
+        <nhs-fieldset-legend nhs-legend-size="Standard">
+            <h2> @Html.DisplayNameFor(m => m.ClinicalDetails.IsPostMortem) </h2>
+        </nhs-fieldset-legend>
         <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
             <div class="nhsuk-radios__item">
                 <input asp-for="ClinicalDetails.IsPostMortem" id="postmortem-yes" class="nhsuk-radios__input" type="radio" value="true" data-aria-controls="conditional-postmortem-conditional">
