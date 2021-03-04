@@ -395,6 +395,8 @@ namespace ntbs_service.DataMigration
             details.TreatmentStartDate = notification.StartOfTreatmentDate;
             details.MDRTreatmentStartDate = notification.MDRTreatmentStartDate;
             details.IsSymptomatic = Converter.GetNullableBoolValue(notification.IsSymptomatic);
+            details.HomeVisitCarriedOut = Converter.GetStatusFromString(notification.HomeVisitCarriedOut);
+            details.FirstHomeVisitDate = notification.FirstHomeVisitDate;
             details.IsPostMortem = Converter.GetNullableBoolValue(notification.IsPostMortem);
             details.HIVTestState = Converter.GetEnumValue<HIVTestStatus>(notification.HivTestStatus);
             details.IsDotOffered = Converter.GetStatusFromString(notification.IsDotOffered);
