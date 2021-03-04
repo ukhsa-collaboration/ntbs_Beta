@@ -29,7 +29,7 @@
     <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="5.0.1" />
     <PackageReference Include="Microsoft.Graph" Version="3.19.0" />
     <PackageReference Include="Microsoft.Graph.Auth" Version="1.0.0-preview.5" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.26.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.27.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
