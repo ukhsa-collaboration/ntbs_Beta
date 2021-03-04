@@ -31,7 +31,7 @@ namespace ntbs_integration_tests.NotificationPages
                     HospitalDetails = new HospitalDetails()
                     {
                         TBServiceCode = "A code",
-                        TBService = new TBService() { Name = "A name" }
+                        TBService = new TBService() { Name = "A name", Code = "A code"}
                     }
                 }
             };

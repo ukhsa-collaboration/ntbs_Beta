@@ -129,7 +129,7 @@ namespace ntbs_service.DataAccess
                         ActionLink = alert.ActionLink,
                         NotDismissable = alert.NotDismissable,
                     }
-                );
+                ).AsNoTracking();
         }
 
         public async Task AddAlertAsync(Alert alert)

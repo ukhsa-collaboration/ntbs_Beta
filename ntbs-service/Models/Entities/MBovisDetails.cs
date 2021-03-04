@@ -10,7 +10,6 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    [Owned]
     [Display(Name = "M. bovis details")]
     public class MBovisDetails : ModelBase, IOwnedEntityForAuditing
     {

@@ -1,12 +1,12 @@
 ﻿using EFAuditer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Services;
 using ntbs_ui_tests.Helpers;

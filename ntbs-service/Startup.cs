@@ -9,7 +9,6 @@ using Hangfire.Console;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Authorization;
@@ -20,11 +19,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.SpaServices.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Logging;
+using Microsoft.Extensions.Hosting;
 using ntbs_service.Authentication;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
@@ -44,14 +43,14 @@ namespace ntbs_service
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
             Env = env;
         }
 
         private IConfiguration Configuration { get; }
-        private IHostingEnvironment Env { get; }
+        private IWebHostEnvironment Env { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -121,23 +120,20 @@ namespace ntbs_service
             else
                 UseAdfsAuthentication(services, adfsConfig);
 
-
-
-            services.AddMvc(options =>
-                {
-                    var policy = new AuthorizationPolicyBuilder()
-                        .RequireAuthenticatedUser()
-                        .RequireRole(baseUserGroupRole)
-                        .Build();
-                    options.Filters.Add(new AuthorizeFilter(policy));
-                }).AddRazorPagesOptions(options =>
-                {
-                    options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
-                    options.Conventions.AllowAnonymousToPage("/Logout");
-                    options.Conventions.AllowAnonymousToPage("/Health");
-                    options.Conventions.AllowAnonymousToPage("/WhoAmI");
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllersWithViews(options => {
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .RequireRole(baseUserGroupRole)
+                    .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            });
+            services.AddRazorPages(options =>
+            {
+                options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
+                options.Conventions.AllowAnonymousToPage("/Logout");
+                options.Conventions.AllowAnonymousToPage("/Health");
+                options.Conventions.AllowAnonymousToPage("/WhoAmI");
+            });
 
             services.AddAuthorization(options =>
             {
@@ -312,6 +308,7 @@ namespace ntbs_service
                     options.CallbackPath =  azureAdConfig["CallbackPath"];
                     options.CorrelationCookie.SameSite = SameSiteMode.None;
                     options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.NonceCookie.SecurePolicy = CookieSecurePolicy.Always;
 
                     options.Events = new OpenIdConnectEvents();
                     options.Events.OnTokenValidated += async context =>
@@ -509,12 +506,18 @@ namespace ntbs_service
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseForwardedHeaders();
                 app.UseDeveloperExceptionPage();
+                
+                // TODO Find an alternative for using webpack middleware in dotnet 5.0
+                // app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                // {
+                //     HotModuleReplacement = true, ConfigFile = "webpack.dev.js"
+                // });
                 // We only need to turn this on in development, as in production this
                 // This behaviour is by default provided by the nginx ingress
                 // (see https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#server-side-https-enforcement-through-redirect)
@@ -553,10 +556,19 @@ namespace ntbs_service
                         : LogEventLevel.Information;
                 });
             }
+            
+            app.UseRouting();
 
             app.UseAuthentication();
+            app.UseAuthorization();
             app.UseCookiePolicy();
             app.UseSession();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+                endpoints.MapControllers();
+            });
 
             if (!Env.IsEnvironment("CI"))
             {
@@ -567,8 +579,6 @@ namespace ntbs_service
             {
                 app.UseMiddleware<AuditGetRequestMiddleWare>();
             }
-
-            app.UseMvc();
 
             ConfigureHangfire(app);
 

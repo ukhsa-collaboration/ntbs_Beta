@@ -64,9 +64,7 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<MBovisUnpasteurisedMilkConsumption> MBovisUnpasteurisedMilkConsumption { get; set; }
         public virtual DbSet<MBovisOccupationExposure> MBovisOccupationExposures { get; set; }
         public virtual DbSet<MBovisAnimalExposure> MBovisAnimalExposure { get; set; }
-        public virtual DbSet<PreviousTbService> PreviousTbService { get; set; }
-
-        public DbQuery<NotificationAndDuplicateIds> NotificationAndDuplicateIds { get; set; }
+        public DbSet<NotificationAndDuplicateIds> NotificationAndDuplicateIds { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
@@ -121,6 +119,8 @@ namespace ntbs_service.DataAccess
 
             #endregion
 
+            modelBuilder.Entity<NotificationAndDuplicateIds>().ToTable(null).HasNoKey();
+            
             modelBuilder.Entity<Country>(entity =>
             {
                 entity.Property(e => e.Name).HasMaxLength(200);
@@ -163,7 +163,7 @@ namespace ntbs_service.DataAccess
 
             modelBuilder.Entity<TBService>(entity =>
             {
-                entity.Property(e => e.Code).HasMaxLength(16);
+                entity.Property(e => e.Code).HasMaxLength(16).ValueGeneratedOnAdd();
                 entity.HasKey(e => e.Code);
                 entity.Property(e => e.Name).HasMaxLength(200);
                 /*
@@ -195,6 +195,7 @@ namespace ntbs_service.DataAccess
             modelBuilder.Entity<PHEC>(entity =>
             {
                 entity.HasKey(e => e.Code);
+                entity.Property(e => e.Code).ValueGeneratedOnAdd();
 
                 entity.ToTable(nameof(PHEC), ReferenceDataSchemaName);
 
@@ -204,6 +205,8 @@ namespace ntbs_service.DataAccess
             modelBuilder.Entity<LocalAuthority>(entity =>
             {
                 entity.HasKey(e => e.Code);
+
+                entity.Property(e => e.Code).ValueGeneratedOnAdd();
 
                 entity.ToTable(nameof(LocalAuthority), ReferenceDataSchemaName);
 
@@ -216,11 +219,15 @@ namespace ntbs_service.DataAccess
 
                 entity.HasOne(e => e.LocalAuthority)
                     .WithOne(x => x.LocalAuthorityToPHEC)
-                    .HasForeignKey<LocalAuthorityToPHEC>(la => la.LocalAuthorityCode);
+                    .HasForeignKey<LocalAuthorityToPHEC>(la => la.LocalAuthorityCode)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
 
                 entity.HasOne(e => e.PHEC)
                     .WithOne()
-                    .HasForeignKey<LocalAuthorityToPHEC>(la => la.PHECCode);
+                    .HasForeignKey<LocalAuthorityToPHEC>(la => la.PHECCode)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
 
                 entity.ToTable(nameof(LocalAuthorityToPHEC), ReferenceDataSchemaName);
 
@@ -230,6 +237,7 @@ namespace ntbs_service.DataAccess
             modelBuilder.Entity<PostcodeLookup>(entity =>
             {
                 entity.HasKey(e => e.Postcode);
+                entity.Property(e => e.Postcode).ValueGeneratedOnAdd();
                 entity.HasOne(e => e.LocalAuthority)
                     .WithMany(c => c.PostcodeLookups)
                     .HasForeignKey(ns => ns.LocalAuthorityCode);
@@ -463,8 +471,8 @@ namespace ntbs_service.DataAccess
                     .ToTable("DrugResistanceProfile");
 
                 entity.OwnsMany(e => e.PreviousTbServices)
-                    .ToTable("PreviousTbService");
-
+                    .ToTable("PreviousTbService")
+                    .HasKey(e => e.PreviousTbServiceId);
 
                 entity.HasIndex(e => e.NotificationStatus);
 
@@ -473,6 +481,8 @@ namespace ntbs_service.DataAccess
                 entity.HasIndex(e => e.ETSID).IsUnique();
                 entity.HasIndex(e => e.LTBRPatientId);
                 entity.HasIndex(e => e.ClusterId);
+
+                entity.ToTable("Notification");
             });
 
             modelBuilder.Entity<Sex>(entity =>
@@ -534,7 +544,7 @@ namespace ntbs_service.DataAccess
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.Username).HasMaxLength(64);
+                entity.Property(e => e.Username).HasMaxLength(64).ValueGeneratedOnAdd();
                 entity.Property(e => e.FamilyName).HasMaxLength(64);
                 entity.Property(e => e.GivenName).HasMaxLength(64);
                 entity.Property(e => e.DisplayName).HasMaxLength(256);
@@ -557,11 +567,15 @@ namespace ntbs_service.DataAccess
 
                 entity.HasOne(e => e.CaseManager)
                     .WithMany(caseManager => caseManager.CaseManagerTbServices)
-                    .HasForeignKey(e => e.CaseManagerUsername);
+                    .HasForeignKey(e => e.CaseManagerUsername)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
 
                 entity.HasOne(e => e.TbService)
                     .WithMany(tbService => tbService.CaseManagerTbServices)
-                    .HasForeignKey(e => e.TbServiceCode);
+                    .HasForeignKey(e => e.TbServiceCode)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
             });
 
             modelBuilder.Entity<ManualTestType>(entity =>
@@ -589,11 +603,15 @@ namespace ntbs_service.DataAccess
 
                 entity.HasOne(e => e.ManualTestType)
                     .WithMany(manualTestType => manualTestType.ManualTestTypeSampleTypes)
-                    .HasForeignKey(e => e.ManualTestTypeId);
+                    .HasForeignKey(e => e.ManualTestTypeId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
 
                 entity.HasOne(e => e.SampleType)
                     .WithMany(sampleType => sampleType.ManualTestTypeSampleTypes)
-                    .HasForeignKey(e => e.SampleTypeId);
+                    .HasForeignKey(e => e.SampleTypeId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
 
                 entity.ToTable(nameof(ManualTestTypeSampleType), ReferenceDataSchemaName);
 
@@ -614,17 +632,25 @@ namespace ntbs_service.DataAccess
 
                 entity.HasOne(e => e.ManualTestType)
                     .WithMany()
-                    .HasForeignKey(e => e.ManualTestTypeId);
+                    .HasForeignKey(e => e.ManualTestTypeId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
 
                 entity.HasOne(e => e.SampleType)
                     .WithMany()
                     .HasForeignKey(e => e.SampleTypeId);
+                
+                entity.HasOne<TestData>()
+                    .WithMany(e => e.ManualTestResults)
+                    .HasForeignKey(e => e.NotificationId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
             });
 
             modelBuilder.Entity<MBovisDetails>(entity =>
             {
-                entity.HasKey(e => e.NotificationId);
                 entity.HasMany(e => e.MBovisExposureToKnownCases);
+                entity.ToTable("MBovisDetails").HasKey(e => e.NotificationId);
             });
 
             modelBuilder.Entity<MBovisExposureToKnownCase>(entity =>
@@ -635,6 +661,12 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.NotifiedToPheStatus)
                     .HasConversion(statusEnumConverter)
                     .HasMaxLength(EnumMaxLength);
+                entity.ToTable("MBovisExposureToKnownCase");
+                entity.HasOne<MBovisDetails>()
+                    .WithMany(e => e.MBovisExposureToKnownCases)
+                    .HasForeignKey(e => e.NotificationId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);;
             });
 
             modelBuilder.Entity<MBovisUnpasteurisedMilkConsumption>(entity =>
@@ -646,6 +678,12 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.MilkProductType)
                     .HasConversion(milkProductEnumConverter)
                     .HasMaxLength(EnumMaxLength);
+                entity.ToTable("MBovisUnpasteurisedMilkConsumption");
+                entity.HasOne<MBovisDetails>()
+                    .WithMany(e => e.MBovisUnpasteurisedMilkConsumptions)
+                    .HasForeignKey(e => e.NotificationId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
             });
             
             modelBuilder.Entity<MBovisOccupationExposure>(entity =>
@@ -653,6 +691,12 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.OccupationSetting)
                     .HasConversion(occupationSettingEnumConverter)
                     .HasMaxLength(EnumMaxLength);
+                entity.ToTable("MBovisOccupationExposures");
+                entity.HasOne<MBovisDetails>()
+                    .WithMany(e => e.MBovisOccupationExposures)
+                    .HasForeignKey(e => e.NotificationId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
             });
 
             modelBuilder.Entity<MBovisAnimalExposure>(entity =>
@@ -664,6 +708,13 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.AnimalTbStatus)
                     .HasConversion(animalTbStatusEnumConverter)
                     .HasMaxLength(EnumMaxLength);
+                
+                entity.ToTable("MBovisAnimalExposure");
+                entity.HasOne<MBovisDetails>()
+                    .WithMany(e => e.MBovisAnimalExposures)
+                    .HasForeignKey(e => e.NotificationId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
             });
 
             modelBuilder.Entity<Alert>(entity =>
@@ -768,11 +819,6 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.SystemName)
                     .IsRequired()
                     .HasMaxLength(64);
-            });
-
-            modelBuilder.Entity<PreviousTbService>(entity =>
-            {
-                entity.HasKey(e => e.PreviousTbServiceId);
             });
         }
 

@@ -62,9 +62,10 @@ namespace ntbs_service.Services
                 bannerModel.ShowPadlock = !(await CanEditBannerModelAsync(u, bannerModel));
             }
 
-            await Task.WhenAll(
-                notificationBanners
-                    .Select(n => SetPadlockForBannerAsync(user, n)));
+            foreach (var n in notificationBanners)
+            {
+                await SetPadlockForBannerAsync(user, n);
+            }
         }
 
         public async Task<(PermissionLevel permissionLevel, string reason)> GetPermissionLevelAsync(

@@ -66,7 +66,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                     nameof(Notification), 
                     nameof(Notification.NotificationDate), 
                     FormattedNotificationDate);
-                TryValidateModel(HospitalDetails, HospitalDetails.GetType().Name);
+                TryValidateModel(HospitalDetails, nameof(HospitalDetails));
             }
 
             return Page();
