@@ -45,11 +45,11 @@ namespace ntbs_service.DataMigration
 
             var existingCaseManager = await _userRepository.GetUserByUsername(legacyCaseManager.Username);
             var ntbsCaseManager = existingCaseManager ?? 
-                                              new User {IsActive = false, Username = legacyCaseManager.Username};
+                                              new User {IsActive = false, Username = legacyCaseManager.Username, CaseManagerTbServices = new List<CaseManagerTbService>()};
             
             ntbsCaseManager.GivenName = legacyCaseManager.GivenName;
             ntbsCaseManager.FamilyName = legacyCaseManager.FamilyName;
-            ntbsCaseManager.DisplayName = $"${ntbsCaseManager.GivenName} ${ntbsCaseManager.FamilyName}";
+            ntbsCaseManager.DisplayName = $"{ntbsCaseManager.GivenName} {ntbsCaseManager.FamilyName}";
             
             await AddTbServiceToUserBasedOnLegacyPermissions(ntbsCaseManager, notification, legacyCaseManager.Username);
 
@@ -73,7 +73,6 @@ namespace ntbs_service.DataMigration
         {
             var existingCaseManagerTbServices = await _referenceDataRepository.GetCaseManagerTbServicesByUsernameAsync
                 (ntbsCaseManager.Username);
-            var ntbsCaseManagerTbServices = existingCaseManagerTbServices.Select(e => e.TbService).ToList();
             if (!ntbsCaseManager.IsActive &&
                 existingCaseManagerTbServices.All(cmtb => cmtb.TbServiceCode != notification.HospitalDetails.TBServiceCode))
             {
@@ -84,7 +83,7 @@ namespace ntbs_service.DataMigration
                 var legacyMatchingTbService = legacyUserTbServices.SingleOrDefault(tb => tb.Code == notification.HospitalDetails.TBServiceCode);
                 if (legacyMatchingTbService != null) {
                     ntbsCaseManager.IsCaseManager = true;
-                    ntbsCaseManagerTbServices.Add(legacyMatchingTbService);
+                    ntbsCaseManager.CaseManagerTbServices.Add(new CaseManagerTbService{TbService = legacyMatchingTbService});
                 }
             }
         }

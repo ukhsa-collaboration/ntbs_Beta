@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
@@ -11,73 +13,182 @@ using Xunit;
 
 namespace ntbs_service_unit_tests.DataMigration
 {
-    public class CaseManagerImportServiceTests
+    public class CaseManagerImportServiceTests : IClassFixture<CaseManagerImportServiceTests.DatabaseFixture>
     {
         private readonly CaseManagerImportService _caseManagerImportService;
-        private readonly Mock<IReferenceDataRepository> _referenceDataRepositoryMock =
-            new Mock<IReferenceDataRepository>();
         private readonly Mock<IMigrationRepository> _migrationRepositoryMock = new Mock<IMigrationRepository>();
-        private readonly Mock<IUserRepository> _userRepositoryMock = new Mock<IUserRepository>();
-        
-        private Dictionary<string, User> _usernameToUserDict;
-        
-        private Dictionary<List<string>, IEnumerable<MigrationDbNotification>> _idToNotificationDict;
+
+        private Dictionary<string, IEnumerable<MigrationDbNotification>> _idToNotificationDict;
         private Dictionary<string, MigrationLegacyUser> _usernameToLegacyUserDict;
         private Dictionary<string, IEnumerable<MigrationLegacyUserHospital>> _usernameToLegacyUserHospitalDict;
-        
-        private Dictionary<List<Guid>, IList<TBService>> _legacyUserHospitalsToTbServicesDict;
-        private Dictionary<string, IList<CaseManagerTbService>> _usernameToCaseManagerTbServicesDict;
+        private readonly NtbsContext _context;
 
-        public CaseManagerImportServiceTests()
+        public CaseManagerImportServiceTests(DatabaseFixture fixture)
         {
-            SetupMockUserRepo();
+            _context = fixture.Context;
             SetupMockMigrationRepo();
-            SetupMockReferenceRepo();
+            IUserRepository userRepository = new UserRepository(_context);
+            IReferenceDataRepository referenceDataRepository = new ReferenceDataRepository(_context);
             var importLogger = new ImportLogger();
-            _caseManagerImportService = new CaseManagerImportService(_userRepositoryMock.Object, _referenceDataRepositoryMock.Object,
+            _caseManagerImportService = new CaseManagerImportService(userRepository, referenceDataRepository,
                 _migrationRepositoryMock.Object, importLogger);
         }
 
         [Fact]
-        public async Task WhenCaseManagerForLegacyNotificationDoesNotExist_AddsCaseManager()
+        public async Task WhenCaseManagerForLegacyNotificationDoesNotExistInNtbs_AddsCaseManager()
         {
-            var legacyIds = new List<string> {"130331"};
-            SetupNotificationsInGroups(("130331", "1"));
-            const string royalBerkshireCode = "TBS001";
-            const string bristolRoyalCode = "TBS002";
-            const string westonGeneralCode = "TBS003";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
+            // Arrange
+            var notification = new Notification
             {
-                {new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A"), new TBService {Code = royalBerkshireCode}},
-                {new Guid("F026FDCD-7BAF-4C96-994C-20E436CC8C59"), new TBService {Code = bristolRoyalCode}},
-                {new Guid("0AC033AB-9A11-4FA6-AA1A-1FCA71180C2F"), new TBService {Code = westonGeneralCode}}
+                IsLegacy = true,
+                LTBRID = "11111",
+                HospitalDetails = new HospitalDetails {TBServiceCode = "TBS00TEST"}
             };
+            _idToNotificationDict = new Dictionary<string, IEnumerable<MigrationDbNotification>>
+            {
+                {
+                    "11111",
+                    new List<MigrationDbNotification> {new MigrationDbNotification {CaseManager = "TestUser@nhs.net"}}
+                }
+            };
+            _usernameToLegacyUserDict = new Dictionary<string, MigrationLegacyUser>
+            {
+                {
+                    "TestUser@nhs.net",
+                    new MigrationLegacyUser {Username = "TestUser@nhs.net", GivenName = "John", FamilyName = "Johnston"}
+                }
+            };
+            _usernameToLegacyUserHospitalDict = new Dictionary<string, IEnumerable<MigrationLegacyUserHospital>> 
+                {{ "TestUser@nhs.net", new List<MigrationLegacyUserHospital>() }};
+
+            // Act
+            await _caseManagerImportService.ImportOrUpdateCaseManager(notification, null, "test-request-1");
+
+            // Assert
+            var addedUser = _context.User.SingleOrDefault();
+            Assert.NotNull(addedUser);
+            Assert.Equal("John", addedUser.GivenName);
+            Assert.Equal("Johnston", addedUser.FamilyName);
+            Assert.False(addedUser.IsActive);
+            Assert.False(addedUser.IsCaseManager);
+            Assert.DoesNotContain("TBS00TEST", addedUser.CaseManagerTbServices.Select(cmtb => cmtb.TbServiceCode));
         }
 
-        private void SetupMockUserRepo()
+        [Fact]
+        public async Task WhenCaseManagerForLegacyNotificationDoesNotExistAndHasCorrectPermissions_AddsCaseManagerTbServices()
         {
-            _userRepositoryMock.Setup(repo => repo.GetUserByUsername(It.IsAny<string>()))
-                .Returns((string username) => Task.FromResult(_usernameToUserDict[username]));
+            // Arrange
+            var notification = new Notification
+            {
+                IsLegacy = true,
+                LTBRID = "11111",
+                HospitalDetails = new HospitalDetails {TBServiceCode = "TBS00TEST"}
+            };
+            _idToNotificationDict = new Dictionary<string, IEnumerable<MigrationDbNotification>>
+            {
+                {
+                    "11111",
+                    new List<MigrationDbNotification> {new MigrationDbNotification {CaseManager = "TestUser@nhs.net"}}
+                }
+            };
+            _usernameToLegacyUserDict = new Dictionary<string, MigrationLegacyUser>
+            {
+                {
+                    "TestUser@nhs.net",
+                    new MigrationLegacyUser {Username = "TestUser@nhs.net", GivenName = "John", FamilyName = "Johnston"}
+                }
+            };
+            _usernameToLegacyUserHospitalDict = new Dictionary<string, IEnumerable<MigrationLegacyUserHospital>>
+            {
+                {
+                    "TestUser@nhs.net",
+                    new List<MigrationLegacyUserHospital>
+                    {
+                        new MigrationLegacyUserHospital {HospitalId = new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A")}
+                    }
+                }
+            };
+            await _context.Hospital.AddAsync(new Hospital{HospitalId = new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A"), TBService = new TBService{Code = "TBS00TEST"}});
+            await _context.SaveChangesAsync();
+
+            // Act
+            await _caseManagerImportService.ImportOrUpdateCaseManager(notification, null, "test-request-1");
+
+            // Assert
+            var addedUser = _context.User.SingleOrDefault();
+            Assert.NotNull(addedUser);
+            Assert.Equal("John", addedUser.GivenName);
+            Assert.Equal("Johnston", addedUser.FamilyName);
+            Assert.False(addedUser.IsActive);
+            Assert.True(addedUser.IsCaseManager);
+            Assert.Contains("TBS00TEST", addedUser.CaseManagerTbServices.Select(cmtb => cmtb.TbServiceCode));
+        }
+
+        [Fact]
+        public async Task WhenCaseManagerForLegacyNotificationDoesExist_UpdatesName()
+        {
+            // Arrange
+            var notification = new Notification
+            {
+                IsLegacy = true,
+                LTBRID = "11111",
+                HospitalDetails = new HospitalDetails {TBServiceCode = "TBS00TEST"}
+            };
+            _idToNotificationDict = new Dictionary<string, IEnumerable<MigrationDbNotification>>
+            {
+                {
+                    "11111",
+                    new List<MigrationDbNotification> {new MigrationDbNotification {CaseManager = "TestUser@nhs.net"}}
+                }
+            };
+            _usernameToLegacyUserDict = new Dictionary<string, MigrationLegacyUser>
+            {
+                {
+                    "TestUser@nhs.net",
+                    new MigrationLegacyUser {Username = "TestUser@nhs.net", GivenName = "John", FamilyName = "Johnston"}
+                }
+            };
+            _usernameToLegacyUserHospitalDict = new Dictionary<string, IEnumerable<MigrationLegacyUserHospital>> 
+                {{ "TestUser@nhs.net", new List<MigrationLegacyUserHospital>() }};
+            await _context.User.AddAsync(new User {GivenName = "Jon", FamilyName = "Jonston", Username = "TestUser@nhs.net"});
+            await _context.SaveChangesAsync();
+
+            // Act
+            await _caseManagerImportService.ImportOrUpdateCaseManager(notification, null, "test-request-1");
+
+            // Assert
+            var updatedUser = _context.User.SingleOrDefault();
+            Assert.NotNull(updatedUser);
+            Assert.Equal("John", updatedUser.GivenName);
+            Assert.Equal("Johnston", updatedUser.FamilyName);
         }
 
         private void SetupMockMigrationRepo()
         {
-            _migrationRepositoryMock.Setup(repo => repo.GetNotificationsById(It.IsAny<List<string>>()))
-                .Returns((List<string> ids) => Task.FromResult(_idToNotificationDict[ids]));
             _migrationRepositoryMock.Setup(repo => repo.GetLegacyUserByUsername(It.IsAny<string>()))
                 .Returns((string username) => Task.FromResult(_usernameToLegacyUserDict[username]));
             _migrationRepositoryMock.Setup(repo => repo.GetLegacyUserHospitalsByUsername(It.IsAny<string>()))
                 .Returns((string username) => Task.FromResult(_usernameToLegacyUserHospitalDict[username]));
             _migrationRepositoryMock.Setup(repo => repo.GetNotificationsById(It.IsAny<List<string>>()))
-                .Returns((List<string> ids) => Task.FromResult(_idToNotificationDict[ids]));
+                .Returns((List<string> ids) => Task.FromResult(_idToNotificationDict[ids[0]]));
         }
 
-        private void SetupMockReferenceRepo()
+        public class DatabaseFixture : IDisposable
         {
-            _referenceDataRepositoryMock.Setup(repo => repo.GetCaseManagerTbServicesByUsernameAsync(It.IsAny<string>()))
-                .Returns((string username) => Task.FromResult(_usernameToCaseManagerTbServicesDict[username]));
-            _referenceDataRepositoryMock.Setup(repo => repo.GetTbServicesFromHospitalIdsAsync(It.IsAny<List<Guid>>()))
-                .Returns((List<Guid> ids) => Task.FromResult(_legacyUserHospitalsToTbServicesDict[ids]));
+            public DatabaseFixture()
+            {
+                Context = new NtbsContext(new DbContextOptionsBuilder<NtbsContext>()
+                    .UseInMemoryDatabase(nameof(CaseManagerImportService))
+                    .Options
+                );
+            }
+
+            public void Dispose()
+            {
+                Context.Dispose();
+            }
+
+            public NtbsContext Context { get; private set; }
         }
     }
 }
