@@ -66,7 +66,7 @@ namespace ntbs_service_unit_tests.DataMigration
         }
 
         [Fact]
-        public async Task WhenCaseManagerForLegacyNotificationWithNoPermissionsDoesNotExistInNtbs_AddsCaseManagerWithNoTbServices()
+        public async Task WhenCaseManagerForLegacyNotificationWithIncorrectPermissionsDoesNotExistInNtbs_AddsCaseManagerWithNoTbServices()
         {
             // Arrange
             var notification = GivenLegacyNotificationWithTbServiceCode("TBS00TEST");
