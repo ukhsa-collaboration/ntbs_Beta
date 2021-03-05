@@ -59,6 +59,14 @@ spec:
                   key: authority
             - name: AzureAdOptions__Enabled
               value: "true"
+            - name: BaseUserGroup
+              value: App.Auth.NIS.NTBS
+            - name: AdminUserGroup
+              value: App.Auth.NIS.NTBS.Admin
+            - name: NationalTeamAdGroup
+              value: App.Auth.NIS.NTBS.NTS
+            - name: ServiceGroupAdPrefix
+              value: App.Auth.NIS.NTBS.Service
             - name: ConnectionStrings__ntbsContext
               valueFrom:
                 secretKeyRef:
