@@ -145,7 +145,7 @@ namespace ntbs_service.DataMigration
                 return importResult;
             }
 
-            bool isAnyNotificationInvalid = false;
+            var isAnyNotificationInvalid = false;
             foreach (var notification in notifications)
             {
                 var linkedNotificationId = notification.LegacyId;

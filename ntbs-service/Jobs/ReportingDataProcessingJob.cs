@@ -39,7 +39,7 @@ namespace ntbs_service.Jobs
             var stepOneResults = await ExecuteProcessingMIDataStoredProcedure(token);
             var stepTwoResults = await ExecutePopulateForestExtractStoredProcedure(token);
 
-            List<dynamic> allResults = new List<dynamic>();
+            var allResults = new List<dynamic>();
             allResults.AddRange(stepOneResults);
             allResults.AddRange(stepTwoResults);
 
@@ -76,9 +76,9 @@ namespace ntbs_service.Jobs
 
         protected override bool DidExecuteSuccessfully(System.Collections.Generic.IEnumerable<dynamic> resultToTest)
         {
-            bool success = false;
+            var success = false;
 
-            string serialisedResult = JsonConvert.SerializeObject(resultToTest);
+            var serialisedResult = JsonConvert.SerializeObject(resultToTest);
             Log.Information(serialisedResult);
             _context.WriteLine($"Result: {serialisedResult}");
 

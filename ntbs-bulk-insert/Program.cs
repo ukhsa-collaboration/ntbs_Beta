@@ -20,7 +20,7 @@ namespace ConsoleApp2
     {
         static async Task Main(string[] args)
         {
-            bool addTreatmentEvents = true;
+            var addTreatmentEvents = true;
             if (args.Length > 0)
             {
                 addTreatmentEvents = args[0] != "--withDqAlerts";

@@ -250,7 +250,7 @@ namespace ntbs_service.DataMigration
                         new { Ids = intIds }))
                     .Select(tuple =>
                     {
-                        string legacyId = tuple.LegacyId.ToString();
+                        var legacyId = tuple.LegacyId.ToString();
                         return (LegacyId: legacyId, tuple.ReferenceLaboratoryNumber);
                     });
             }

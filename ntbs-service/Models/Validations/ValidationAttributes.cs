@@ -120,7 +120,7 @@ namespace ntbs_service.Models.Validations
                 return new ValidationResult(ValidationMessages.YearAfter1900);
             }
 
-            bool canConvert = partialDate.TryConvertToDateTimeRange(out _, out _);
+            var canConvert = partialDate.TryConvertToDateTimeRange(out _, out _);
             if (!canConvert)
             {
                 return new ValidationResult(ValidationMessages.InvalidDate(validationContext.DisplayName));

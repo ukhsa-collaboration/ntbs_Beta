@@ -46,7 +46,7 @@ namespace ntbs_service.Services
         public async Task<IEnumerable<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)>> LookupUsers(IList<TBService> tbServices)
         {
             IList<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)> userWithTbServiceGroups = new List<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)>();
-            IEnumerable<Microsoft.Graph.User> graphUsers = await GetAllDirectoryEntries();
+            var graphUsers = await GetAllDirectoryEntries();
 
             // ensure that users are unique
             graphUsers = graphUsers.GroupBy(u => u.UserPrincipalName).Select(u => u.FirstOrDefault());
@@ -113,7 +113,8 @@ namespace ntbs_service.Services
 
             var groupName = "";
 
-            try {
+            try
+            {
                 var result = await _graphServiceClient.Groups[id]
                     .Request()
                     .GetAsync();
@@ -136,7 +137,7 @@ namespace ntbs_service.Services
         private async Task<IEnumerable<Microsoft.Graph.User>> GetAllDirectoryEntries()
         {
             var listOfDirectoryEntries = new List<Microsoft.Graph.User>();
-            
+
             var baseGroups = await _graphServiceClient
             .Groups
             .Request()
@@ -146,8 +147,9 @@ namespace ntbs_service.Services
             .GetAsync();
 
             var baseGroup = baseGroups.FirstOrDefault(g => g.DisplayName == _adOptions.BaseUserGroup);
-            
-            if(baseGroup != null){
+
+            if (baseGroup != null)
+            {
 
                 var groupMembers = await _graphServiceClient.Groups[baseGroup.Id]
                     .Members
@@ -189,7 +191,8 @@ namespace ntbs_service.Services
         {
             var listOfUsers = new List<Microsoft.Graph.User>();
 
-            try{
+            try
+            {
                 var groupMembers = await _graphServiceClient
                 .Groups[groupId]
                 .Members
@@ -254,7 +257,8 @@ namespace ntbs_service.Services
                 .Top(999)
                 .GetAsync();
 
-            foreach(var groupInfo in groupIds) {
+            foreach (var groupInfo in groupIds)
+            {
                 var groupName = await ResolveGroupNameFromId(groupInfo.Id);
                 // ensure we do not add any duplicate groups or blank groups
                 if (!String.IsNullOrEmpty(groupName) && IsGroupAnNtbsGroup(groupName) && !groupNames.Any(group => group.Equals(groupName, StringComparison.CurrentCultureIgnoreCase)))
@@ -277,7 +281,8 @@ namespace ntbs_service.Services
                 .ToList();
 
             var userName = graphUser.UserPrincipalName;
-            if(IsUserExternal(graphUser)){
+            if (IsUserExternal(graphUser))
+            {
                 userName = !string.IsNullOrEmpty(graphUser.Mail) ? graphUser.Mail : graphUser.UserPrincipalName;
             }
 

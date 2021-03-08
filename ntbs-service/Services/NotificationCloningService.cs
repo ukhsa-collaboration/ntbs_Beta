@@ -25,7 +25,7 @@ namespace ntbs_service.Services
             // 1. detaching (including owned entities)
             // 2. wiping the id (setting to 0)
             // 3. being added to the context anew
-            
+
             _context.Entry(notification.ClinicalDetails).State = EntityState.Detached;
             _context.Entry(notification.ComorbidityDetails).State = EntityState.Detached;
             _context.Entry(notification.ContactTracing).State = EntityState.Detached;

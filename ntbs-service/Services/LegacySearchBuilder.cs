@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -77,7 +76,7 @@ namespace ntbs_service.Services
         {
             if (!(partialDob == null || partialDob.IsEmpty()))
             {
-                partialDob.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
+                partialDob.TryConvertToDateTimeRange(out var dateRangeStart, out var dateRangeEnd);
                 AppendCondition("dmg.DateOfBirth >= @dobDateRangeStart AND dmg.DateOfBirth < @dobDateRangeEnd");
                 parameters.dobDateRangeStart = dateRangeStart;
                 parameters.dobDateRangeEnd = dateRangeEnd;
@@ -90,7 +89,7 @@ namespace ntbs_service.Services
         {
             if (!(partialNotificationDate == null || partialNotificationDate.IsEmpty()))
             {
-                partialNotificationDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
+                partialNotificationDate.TryConvertToDateTimeRange(out var dateRangeStart, out var dateRangeEnd);
                 AppendCondition("n.NotificationDate >= @notificationDateRangeStart AND n.NotificationDate < @notificationDateRangeEnd");
                 parameters.notificationDateRangeStart = dateRangeStart;
                 parameters.notificationDateRangeEnd = dateRangeEnd;

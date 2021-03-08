@@ -31,9 +31,9 @@ namespace ntbs_service.Jobs
 
         protected override bool DidExecuteSuccessfully(System.Collections.Generic.IEnumerable<dynamic> resultToTest)
         {
-            bool success = false;
+            var success = false;
 
-            string serialisedResult = JsonConvert.SerializeObject(resultToTest);
+            var serialisedResult = JsonConvert.SerializeObject(resultToTest);
             Log.Information(serialisedResult);
             _context.WriteLine($"Result: {serialisedResult}");
 

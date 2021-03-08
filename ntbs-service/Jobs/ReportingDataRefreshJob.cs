@@ -43,7 +43,7 @@ namespace ntbs_service.Jobs
                 var stepThreeResults = await ExecuteReportingGenerateStoredProcedure(token);
                 var stepFourResults = await ExecuteMigrationGenerateStoredProcedure(token);
 
-                List<dynamic> allResults = new List<dynamic>();
+                var allResults = new List<dynamic>();
                 allResults.AddRange(stepOneResults);
                 allResults.AddRange(stepTwoResults);
                 allResults.AddRange(stepThreeResults);
@@ -115,9 +115,9 @@ namespace ntbs_service.Jobs
 
         protected override bool DidExecuteSuccessfully(System.Collections.Generic.IEnumerable<dynamic> resultToTest)
         {
-            bool success = false;
+            var success = false;
 
-            string serialisedResult = JsonConvert.SerializeObject(resultToTest);
+            var serialisedResult = JsonConvert.SerializeObject(resultToTest);
             Log.Information(serialisedResult);
             _context.WriteLine($"Result: {serialisedResult}");
 

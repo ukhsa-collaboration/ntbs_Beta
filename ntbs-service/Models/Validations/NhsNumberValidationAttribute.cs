@@ -50,7 +50,7 @@ namespace ntbs_service.Models.Validations
         // Validation logic can be found at https://www.datadictionary.nhs.uk/data_dictionary/attributes/n/nhs/nhs_number_de.asp?shownav=1
         public bool ValidateNhsNumber(string nhsNumber)
         {
-            int multiplicationTotal = 0;
+            var multiplicationTotal = 0;
             string currentString;
             int currentNumber;
 

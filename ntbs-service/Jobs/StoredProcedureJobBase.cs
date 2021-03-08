@@ -49,7 +49,7 @@ namespace ntbs_service.Jobs
             }
 
             var successfulExecution = false;
-            int resultChanges = 0;
+            var resultChanges = 0;
 
             try
             {
@@ -79,9 +79,9 @@ namespace ntbs_service.Jobs
 
         protected virtual bool DidExecuteSuccessfully(IEnumerable<dynamic> resultToTest)
         {
-            bool success = false;
+            var success = false;
 
-            string serialisedResult = JsonConvert.SerializeObject(resultToTest);
+            var serialisedResult = JsonConvert.SerializeObject(resultToTest);
             Log.Information(serialisedResult);
             _context.WriteLine($"Result: {serialisedResult}");
 

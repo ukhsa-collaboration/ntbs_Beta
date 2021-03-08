@@ -27,7 +27,7 @@ namespace ntbs_service.Services
 
         public IAzureAdDirectoryService Create()
         {
-            IConfidentialClientApplication clientApplication = ConfidentialClientApplicationBuilder
+            var clientApplication = ConfidentialClientApplicationBuilder
             .Create(_azureAdSettings.ClientId)
             .WithAuthority(_azureAdSettings.Authority)
             .WithClientSecret(_azureAdSettings.ClientSecret)

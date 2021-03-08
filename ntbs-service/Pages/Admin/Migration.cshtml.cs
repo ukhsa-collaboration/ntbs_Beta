@@ -102,8 +102,8 @@ namespace ntbs_service.Pages.Admin
 
         private void TriggerImportFromDateRange()
         {
-            NotificationDateRangeStart.TryConvertToDateTimeRange(out DateTime? notificationDateRangeStart, out _);
-            NotificationDateRangeEnd.TryConvertToDateTimeRange(out DateTime? notificationDateRangeEnd, out _);
+            NotificationDateRangeStart.TryConvertToDateTimeRange(out var notificationDateRangeStart, out _);
+            NotificationDateRangeEnd.TryConvertToDateTimeRange(out var notificationDateRangeEnd, out _);
             if (notificationDateRangeStart == null)
             {
                 throw new ArgumentException("Could not parse the start date");
@@ -141,7 +141,7 @@ namespace ntbs_service.Pages.Admin
         private IEnumerable<List<T>> SplitList<T>(List<T> legacyIds)
         {
             var size = _config.ByIdsJobBatchSize;
-            for (int index = 0; index < legacyIds.Count; index += size)
+            for (var index = 0; index < legacyIds.Count; index += size)
             {
                 yield return legacyIds.GetRange(index, Math.Min(size, legacyIds.Count - index));
             }

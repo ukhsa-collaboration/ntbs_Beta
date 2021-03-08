@@ -32,7 +32,7 @@ namespace ntbs_service_unit_tests.Models
             var expectedResult = new DateTime(2000, 2, 28);
 
             // Act
-            var canConvert = formattedDate.TryConvertToDateTime(out DateTime? result);
+            var canConvert = formattedDate.TryConvertToDateTime(out var result);
 
             // Assert
             Assert.True(canConvert);

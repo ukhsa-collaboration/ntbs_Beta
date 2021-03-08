@@ -1,6 +1,4 @@
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 
 namespace ntbs_service.Models.Validations
 {
@@ -15,15 +13,15 @@ namespace ntbs_service.Models.Validations
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            object instance = validationContext.ObjectInstance;
-            Type type = instance.GetType();
-            PropertyInfo property = type.GetProperty(ComparisonValue);
+            var instance = validationContext.ObjectInstance;
+            var type = instance.GetType();
+            var property = type.GetProperty(ComparisonValue);
             if (property != null)
             {
-                object propertyValue = property.GetValue(instance);
+                var propertyValue = property.GetValue(instance);
                 // TryParse will set the value to 0 if it is given null to parse (this is to allow for input field being empty)
-                int.TryParse(propertyValue?.ToString(), out int maxValue);
-                int.TryParse(value?.ToString(), out int valueToValidate);
+                int.TryParse(propertyValue?.ToString(), out var maxValue);
+                int.TryParse(value?.ToString(), out var valueToValidate);
                 if (valueToValidate >= 0 && valueToValidate <= maxValue)
                 {
                     return null;
@@ -45,19 +43,19 @@ namespace ntbs_service.Models.Validations
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            object instance = validationContext.ObjectInstance;
-            Type type = instance.GetType();
-            PropertyInfo propertyMax = type.GetProperty(MaxComparisonValue);
-            PropertyInfo propertyToSum = type.GetProperty(SummedComparisonValue);
+            var instance = validationContext.ObjectInstance;
+            var type = instance.GetType();
+            var propertyMax = type.GetProperty(MaxComparisonValue);
+            var propertyToSum = type.GetProperty(SummedComparisonValue);
             if (propertyMax != null && propertyToSum != null)
             {
-                object propertyValueMax = propertyMax.GetValue(instance);
-                object propertyValueToSum = propertyToSum.GetValue(instance);
+                var propertyValueMax = propertyMax.GetValue(instance);
+                var propertyValueToSum = propertyToSum.GetValue(instance);
 
                 // TryParse will set the value to 0 if it is given null to parse (this is to allow for input field being empty)
-                int.TryParse(propertyValueMax?.ToString(), out int maxValue);
-                int.TryParse(propertyValueToSum?.ToString(), out int valueToSum);
-                int.TryParse(value?.ToString(), out int valueToValidate);
+                int.TryParse(propertyValueMax?.ToString(), out var maxValue);
+                int.TryParse(propertyValueToSum?.ToString(), out var valueToSum);
+                int.TryParse(value?.ToString(), out var valueToValidate);
 
                 if (valueToValidate >= 0 && valueToValidate <= maxValue - valueToSum)
                 {

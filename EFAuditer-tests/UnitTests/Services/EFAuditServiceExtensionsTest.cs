@@ -70,7 +70,7 @@ namespace EFAuditer_tests.UnitTests.Services
                     { "Column2", "Value2" }
                 }
             };
-            AuditLog audit = new AuditLog();
+            var audit = new AuditLog();
 
             // Act
             EFAuditServiceExtensions.AuditAction(ev, entry, audit);
@@ -128,7 +128,7 @@ namespace EFAuditer_tests.UnitTests.Services
                     { "Column2", "Value2" }
                 }
             };
-            AuditLog audit = new AuditLog();
+            var audit = new AuditLog();
 
             // Act
             EFAuditServiceExtensions.AuditAction(ev, entry, audit);
@@ -167,14 +167,14 @@ namespace EFAuditer_tests.UnitTests.Services
                     {CustomFields.AppUser, "User 1"}
                 }
             };
-            EventEntry entry = new EventEntry
+            var entry = new EventEntry
             {
                 PrimaryKey = new Dictionary<string, object> { { "EntityId", "123" } },
                 EntityType = typeof(Entity),
                 Action = "Update",
                 Table = "EntityTable"
             };
-            AuditLog audit = new AuditLog();
+            var audit = new AuditLog();
 
             // Act
             EFAuditServiceExtensions.AuditAction(ev, entry, audit);
@@ -205,7 +205,7 @@ namespace EFAuditer_tests.UnitTests.Services
                 Table = "EntityTable",
                 Entity = entity
             };
-            AuditLog audit = new AuditLog();
+            var audit = new AuditLog();
 
             // Act
             EFAuditServiceExtensions.AuditAction(ev, entry, audit);
@@ -236,7 +236,7 @@ namespace EFAuditer_tests.UnitTests.Services
                 Table = "EntityTable",
                 Entity = entity
             };
-            AuditLog audit = new AuditLog();
+            var audit = new AuditLog();
 
             // Act
             EFAuditServiceExtensions.AuditAction(ev, entry, audit);

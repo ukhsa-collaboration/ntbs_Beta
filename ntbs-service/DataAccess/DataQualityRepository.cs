@@ -233,8 +233,8 @@ namespace ntbs_service.DataAccess
         public async Task<IList<NotificationAndDuplicateIds>>
             GetNotificationIdsEligibleForDqPotentialDuplicateAlertsAsync()
         {
-            IList<NotificationAndDuplicateIds> notificationsWithDuplicateFamilyName = await GetNotificationIdsEligibleForDqPotentialDuplicateAlertsBasedOnMatchingFamilyNameAsync();
-            IList<NotificationAndDuplicateIds> notificationsWithDuplicateNhsNumber = await GetNotificationIdsEligibleForDqPotentialDuplicateAlertsBasedOnMatchingNhsNumberAsync();
+            var notificationsWithDuplicateFamilyName = await GetNotificationIdsEligibleForDqPotentialDuplicateAlertsBasedOnMatchingFamilyNameAsync();
+            var notificationsWithDuplicateNhsNumber = await GetNotificationIdsEligibleForDqPotentialDuplicateAlertsBasedOnMatchingNhsNumberAsync();
 
             var duplicateNotifications = notificationsWithDuplicateFamilyName;
             foreach (var notification in notificationsWithDuplicateNhsNumber)

@@ -27,7 +27,7 @@ namespace ntbs_service.Services
 
         public ContentResult GetPropertyValidationResult<T>(string key, object value, bool shouldValidateFull) where T : ModelBase
         {
-            T model = (T)Activator.CreateInstance(typeof(T));
+            var model = (T)Activator.CreateInstance(typeof(T));
             model.ShouldValidateFull = shouldValidateFull;
             return GetPropertyValidationResult(model, key, value);
         }
@@ -53,7 +53,7 @@ namespace ntbs_service.Services
             bool? isLegacy = false)
             where T : ModelBase
         {
-            T model = (T)Activator.CreateInstance(typeof(T));
+            var model = (T)Activator.CreateInstance(typeof(T));
             model.ShouldValidateFull = shouldValidateFull;
             model.IsLegacy = isLegacy;
 
@@ -103,7 +103,7 @@ namespace ntbs_service.Services
         public ContentResult GetDateValidationResult<T>(string key, string day, string month, string year,
             bool isLegacy) where T : ModelBase
         {
-            T model = (T)Activator.CreateInstance(typeof(T));
+            var model = (T)Activator.CreateInstance(typeof(T));
             model.IsLegacy = isLegacy;
             return GetDateValidationResult(model, key, day, month, year);
         }
@@ -112,7 +112,7 @@ namespace ntbs_service.Services
         {
             var formattedDate = new FormattedDate { Day = day, Month = month, Year = year };
             var modelType = model.GetType();
-            if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
+            if (formattedDate.TryConvertToDateTime(out var convertedDob))
             {
                 modelType.GetProperty(key).SetValue(model, convertedDob);
                 return GetValidationResult(model, key);
@@ -183,7 +183,7 @@ namespace ntbs_service.Services
         public void TrySetFormattedDate(object model, string modelKey, string key, FormattedDate formattedDate)
         {
             var modelType = model.GetType();
-            if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
+            if (formattedDate.TryConvertToDateTime(out var convertedDob))
             {
                 modelType.GetProperty(key)?.SetValue(model, convertedDob);
             }
@@ -202,7 +202,7 @@ namespace ntbs_service.Services
             }
             else
             {
-                Dictionary<string, string> keyErrorDictionary = new Dictionary<string, string>();
+                var keyErrorDictionary = new Dictionary<string, string>();
                 var modelState = _pageModel.ViewData.ModelState;
                 foreach (var modelStateKey in modelState.Keys)
                 {

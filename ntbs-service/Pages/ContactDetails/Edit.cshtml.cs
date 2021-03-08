@@ -77,7 +77,7 @@ namespace ntbs_service.Pages.ContactDetails
 
         public ContentResult OnGetValidateCaseManagerProperty(string key, string value)
         {
-            User user = new User();
+            var user = new User();
             return _validationService.GetPropertyValidationResult(user, key, value);
         }
     }

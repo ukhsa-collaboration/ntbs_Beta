@@ -87,8 +87,8 @@ namespace ntbs_service.Services
             parameters.editPermissionHospitals = (await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(permittedTbServiceCodes))
                 .Select(h => h.HospitalId);
 
-            string fullSelectQuery = SelectQueryStart + queryConditions + SelectQueryEnd;
-            string fullCountQuery = CountQuery + queryConditions;
+            var fullSelectQuery = SelectQueryStart + queryConditions + SelectQueryEnd;
+            var fullCountQuery = CountQuery + queryConditions;
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -104,7 +104,7 @@ namespace ntbs_service.Services
 
         public async Task<NotificationBannerModel> GetByIdAsync(string notificationId)
         {
-            string fullQuery = SelectQueryStart + SelectByIdCondition;
+            var fullQuery = SelectQueryStart + SelectByIdCondition;
             dynamic result;
 
             using (var connection = new SqlConnection(connectionString))
