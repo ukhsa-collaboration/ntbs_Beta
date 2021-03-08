@@ -11,7 +11,7 @@ namespace ntbs_service.Jobs
 
         public MarkImportedNotificationsAsImportedJob(IMigratedNotificationsMarker notificationsMarker)
         {
-            this._notificationsMarker = notificationsMarker;
+            _notificationsMarker = notificationsMarker;
         }
 
         public async Task Run(IJobCancellationToken token)

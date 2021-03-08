@@ -26,24 +26,24 @@ namespace ntbs_service.Jobs
             _specimenMatchingConnectionString = _configuration.GetConnectionString(Constants.DbConnectionStringSpecimenMatching);
             _migrationConnectionString = _configuration.GetConnectionString(Constants.DbConnectionStringMigration);
 
-            this._sqlString = "";
-            this._parameters = null;
+            _sqlString = "";
+            _parameters = null;
         }
 
         /// PerformContext context is passed in via Hangfire Server
         public override async Task Run(PerformContext context, IJobCancellationToken token)
         {
-            this._context = context;
+            _context = context;
             Log.Information($"Starting weekly reporting data processing job.");
 
             var stepOneResults = await ExecuteProcessingMIDataStoredProcedure(token);
             var stepTwoResults = await ExecutePopulateForestExtractStoredProcedure(token);
 
-            List<dynamic> allResults = new List<dynamic>();
+            var allResults = new List<dynamic>();
             allResults.AddRange(stepOneResults);
             allResults.AddRange(stepTwoResults);
 
-            var success = this.DidExecuteSuccessfully(allResults);
+            var success = DidExecuteSuccessfully(allResults);
 
             Log.Information($"Finishing weekly reporting data processing job.");
         }
@@ -76,9 +76,9 @@ namespace ntbs_service.Jobs
 
         protected override bool DidExecuteSuccessfully(System.Collections.Generic.IEnumerable<dynamic> resultToTest)
         {
-            bool success = false;
+            var success = false;
 
-            string serialisedResult = JsonConvert.SerializeObject(resultToTest);
+            var serialisedResult = JsonConvert.SerializeObject(resultToTest);
             Log.Information(serialisedResult);
             _context.WriteLine($"Result: {serialisedResult}");
 

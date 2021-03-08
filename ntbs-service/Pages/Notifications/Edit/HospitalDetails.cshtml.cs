@@ -140,7 +140,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public async Task<ContentResult> OnGetValidateNotificationDateAsync(string key, string day, string month, string year, int notificationId)
         {
             // Query notification by Id when date validation depends on other properties of model
-            Notification notification = await NotificationRepository.GetNotificationAsync(notificationId);
+            var notification = await NotificationRepository.GetNotificationAsync(notificationId);
             return ValidationService.GetDateValidationResult(notification, key, day, month, year);
         }
 

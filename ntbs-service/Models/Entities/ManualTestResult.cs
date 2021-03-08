@@ -53,7 +53,7 @@ namespace ntbs_service.Models.Entities
         public bool TestDateAfterDob => Dob == null || TestDate >= Dob;
 
         [NotMapped]
-        public bool? ResultMatchesTestType => this.Result?.IsValidForTestType(ManualTestTypeId.GetValueOrDefault());
+        public bool? ResultMatchesTestType => Result?.IsValidForTestType(ManualTestTypeId.GetValueOrDefault());
 
         [NotMapped]
         public bool TestAndSampleTypesMatch =>

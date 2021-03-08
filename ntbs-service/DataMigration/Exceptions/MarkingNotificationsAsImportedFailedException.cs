@@ -14,7 +14,7 @@ namespace ntbs_service.DataMigration.Exceptions
 
         private static string ErrorMessage(ICollection<Notification> notifications)
         {
-            var ids = String.Join(", ", notifications.Select(n => n.NotificationId));
+            var ids = string.Join(", ", notifications.Select(n => n.NotificationId));
             return $"Failed to mark notifications {ids} as imported in the migration db. " +
                    "This might cause the notifications to keep showing up as legacy in search results until corrected";
         }

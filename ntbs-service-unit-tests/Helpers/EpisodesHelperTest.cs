@@ -11,7 +11,7 @@ namespace ntbs_service_unit_tests.Helpers
     public class EpisodeHelperTest
     {
         // Arrange
-        readonly List<TreatmentEvent> _testTreatmentEvents = new List<TreatmentEvent>
+        private readonly List<TreatmentEvent> _testTreatmentEvents = new List<TreatmentEvent>
         {
             // Episode 1
             new TreatmentEvent

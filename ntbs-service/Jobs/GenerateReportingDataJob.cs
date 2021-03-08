@@ -15,8 +15,8 @@ namespace ntbs_service.Jobs
         public GenerateReportingDataJob(IConfiguration configuration)
         : base(configuration)
         {
-            this._sqlString = "[dbo].[uspGenerate]";
-            this._parameters = null;
+            _sqlString = "[dbo].[uspGenerate]";
+            _parameters = null;
         }
 
         /// PerformContext context is passed in via Hangfire Server
@@ -31,9 +31,9 @@ namespace ntbs_service.Jobs
 
         protected override bool DidExecuteSuccessfully(System.Collections.Generic.IEnumerable<dynamic> resultToTest)
         {
-            bool success = false;
+            var success = false;
 
-            string serialisedResult = JsonConvert.SerializeObject(resultToTest);
+            var serialisedResult = JsonConvert.SerializeObject(resultToTest);
             Log.Information(serialisedResult);
             _context.WriteLine($"Result: {serialisedResult}");
 

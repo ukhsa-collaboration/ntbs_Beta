@@ -77,7 +77,7 @@ namespace ntbs_service.Models.Validations
 
         public AtLeastOnePropertyAttribute(params string[] propertyList)
         {
-            this.PropertyList = propertyList;
+            PropertyList = propertyList;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -115,12 +115,12 @@ namespace ntbs_service.Models.Validations
                 }
             }
 
-            if (Int32.Parse(partialDate.Year) < 1900)
+            if (int.Parse(partialDate.Year) < 1900)
             {
                 return new ValidationResult(ValidationMessages.YearAfter1900);
             }
 
-            bool canConvert = partialDate.TryConvertToDateTimeRange(out _, out _);
+            var canConvert = partialDate.TryConvertToDateTimeRange(out _, out _);
             if (!canConvert)
             {
                 return new ValidationResult(ValidationMessages.InvalidDate(validationContext.DisplayName));

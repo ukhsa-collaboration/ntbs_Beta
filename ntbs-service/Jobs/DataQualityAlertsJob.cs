@@ -81,10 +81,10 @@ namespace ntbs_service.Jobs
                 var notificationsForAlerts = await getNotifications(CountPerBatch, offset);
 
                 var now = DateTime.Now;
-                List<Alert> dqAlerts = notificationsForAlerts
+                var dqAlerts = notificationsForAlerts
                     .Select(n =>
                     {
-                        T alert = (T)Activator.CreateInstance(typeof(T));
+                        var alert = (T)Activator.CreateInstance(typeof(T));
                         alert.NotificationId = n.NotificationId;
                         alert.CreationDate = now;
 

@@ -9,7 +9,10 @@ namespace ntbs_service.Models.Entities
             get
             {
                 if (DateFrom == null && DateTo == null)
+                {
                     return "Unspecified time range";
+                }
+
                 return $"{FormattedDateFrom} to {FormattedDateTo}";
             }
         }

@@ -168,7 +168,10 @@ namespace ntbs_service.Services
 
             await _notificationRepository.SaveChangesAsync();
             if (startingEventAffected)
+            {
                 await _treatmentEventRepository.UpdateStartingEvent(notification, clinicalDetails);
+            }
+
             await _alertService.AutoDismissAlertAsync<DataQualityClinicalDatesAlert>(notification);
             await _alertService.AutoDismissAlertAsync<DataQualityDotVotAlert>(notification);
         }

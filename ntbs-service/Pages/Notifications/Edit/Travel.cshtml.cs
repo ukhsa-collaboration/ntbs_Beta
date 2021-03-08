@@ -43,9 +43,14 @@ namespace ntbs_service.Pages.Notifications.Edit
             await SetNotificationProperties(isBeingSubmitted, VisitorDetails);
 
             if (TravelDetails.ShouldValidateFull)
+            {
                 TryValidateModel(TravelDetails, TravelDetails.GetType().Name);
+            }
+
             if (VisitorDetails.ShouldValidateFull)
+            {
                 TryValidateModel(VisitorDetails, VisitorDetails.GetType().Name);
+            }
 
             return Page();
         }

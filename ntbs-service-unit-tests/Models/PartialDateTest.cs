@@ -42,7 +42,7 @@ namespace ntbs_service_unit_tests.Models
         {
             // Arrange
             // Act
-            var canConvert = partialDate.TryConvertToDateTimeRange(out DateTime? resultRangeStart, out DateTime? resultRangeEnd);
+            var canConvert = partialDate.TryConvertToDateTimeRange(out var resultRangeStart, out var resultRangeEnd);
 
             // Assert
             Assert.True(canConvert);

@@ -31,11 +31,11 @@ namespace ntbs_service.Authentication
             id.AddClaim(new Claim(ClaimTypes.Role, adOptions.BaseUserGroup, ClaimValueTypes.String));
 
             // Add role claim for user role - as specified in appsettings.Development.json
-            string groupDev = adOptions.DevGroup ?? adOptions.NationalTeamAdGroup;
+            var groupDev = adOptions.DevGroup ?? adOptions.NationalTeamAdGroup;
             id.AddClaim(new Claim(ClaimTypes.Role, groupDev, ClaimValueTypes.String));
 
             // Add role claim for user role - Admin
-            string groupAdmin = adOptions.AdminUserGroup;
+            var groupAdmin = adOptions.AdminUserGroup;
             id.AddClaim(new Claim(ClaimTypes.Role, groupAdmin, ClaimValueTypes.String));
 
             id.AddClaim(new Claim(ClaimTypes.Upn, "Developer@ntbs.phe.com", ClaimValueTypes.String));

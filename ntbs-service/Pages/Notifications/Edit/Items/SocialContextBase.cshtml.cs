@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -112,7 +111,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             foreach (var keyValuePair in keyValuePairs)
             {
                 var formattedDate = new FormattedDate() { Day = keyValuePair["day"], Month = keyValuePair["month"], Year = keyValuePair["year"] };
-                if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
+                if (formattedDate.TryConvertToDateTime(out var convertedDob))
                 {
                     propertyValueTuples.Add((keyValuePair["key"], convertedDob));
                 }

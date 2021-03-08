@@ -22,7 +22,7 @@ namespace ntbs_service.Models
             dateTimeStart = null;
             dateTimeEnd = null;
 
-            if (!ParseDateStrings(out int parsedYear, out int parsedMonth, out int parsedDay))
+            if (!ParseDateStrings(out var parsedYear, out var parsedMonth, out var parsedDay))
             {
                 return false;
             }
@@ -54,15 +54,15 @@ namespace ntbs_service.Models
         public bool ParseDateStrings(out int year, out int month, out int day)
         {
             var canParseYear = true;
-            if (!int.TryParse(Year, out int parsedYear))
+            if (!int.TryParse(Year, out var parsedYear))
             {
                 canParseYear = false;
             }
-            if (!int.TryParse(Month, out int parsedMonth))
+            if (!int.TryParse(Month, out var parsedMonth))
             {
                 parsedMonth = 1;
             };
-            if (!int.TryParse(Day, out int parsedDay))
+            if (!int.TryParse(Day, out var parsedDay))
             {
                 parsedDay = 1;
             };

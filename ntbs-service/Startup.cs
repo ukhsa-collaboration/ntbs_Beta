@@ -122,7 +122,7 @@ namespace ntbs_service
             {
                 UseHttpBasicAuth(services, httpBasicAuthConfig, adOptions);
             }
-            else if(azureAdAuthEnabled)
+            else if (azureAdAuthEnabled)
             {
                 UseAzureAdAuthentication(services, adOptions, azureAdOptions);
             }
@@ -397,8 +397,8 @@ namespace ntbs_service
                                 if ((context.UserName.ToLower() == httpBasicAuthConfig["Username"].ToLower())
                                     && (context.Password == httpBasicAuthConfig["Password"]))
                                 {
-                                    string groupAdmin = adOptions.AdminUserGroup;
-                                    string groupDev = adOptions.DevGroup ?? adOptions.NationalTeamAdGroup;
+                                    var groupAdmin = adOptions.AdminUserGroup;
+                                    var groupDev = adOptions.DevGroup ?? adOptions.NationalTeamAdGroup;
                                     var claims = new List<Claim>
                                     {
                                         new Claim(ClaimTypes.Name,

@@ -15,8 +15,8 @@ namespace ntbs_service.Helpers
 
             var records = new List<T>();
 
-            using (StreamReader reader = new StreamReader(filePath))
-            using (CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
+            using (var reader = new StreamReader(filePath))
+            using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
                 csvReader.Read();
                 csvReader.ReadHeader();
@@ -33,8 +33,8 @@ namespace ntbs_service.Helpers
         {
             var filePath = GetFullFilePath(relativePathToFile);
 
-            using (StreamReader reader = new StreamReader(filePath))
-            using (CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
+            using (var reader = new StreamReader(filePath))
+            using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
                 return csvReader.GetRecords<T>().ToList();
             }

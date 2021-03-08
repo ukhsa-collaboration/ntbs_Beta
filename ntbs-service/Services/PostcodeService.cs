@@ -16,7 +16,7 @@ namespace ntbs_service.Services
 
         public PostcodeService(NtbsContext context)
         {
-            this._context = context;
+            _context = context;
         }
 
         public async Task<PostcodeLookup> FindPostcodeAsync(string postcode)

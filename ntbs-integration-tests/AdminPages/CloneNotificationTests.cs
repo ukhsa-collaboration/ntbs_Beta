@@ -19,7 +19,7 @@ namespace ntbs_integration_tests.AdminPages
             var pageContent = await GetDocumentForUrlAsync(PageRoute);
 
             // Act
-            Dictionary<string, string> form = new Dictionary<string, string>
+            var form = new Dictionary<string, string>
             {
                 ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
             };

@@ -18,8 +18,8 @@ namespace ntbs_integration_tests.NotificationPages
 {
     public class ManualTestResultEditPagesTests : TestRunnerNotificationBase
     {
-        const int TEST_ID = 10;
-        const int TEST_TO_DELETE_ID = 11;
+        private const int TEST_ID = 10;
+        private const int TEST_TO_DELETE_ID = 11;
         protected override string NotificationSubPath => NotificationSubPaths.EditManualTestResult(0);
 
         public ManualTestResultEditPagesTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)

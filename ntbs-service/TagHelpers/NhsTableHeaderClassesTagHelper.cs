@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace ntbs_service.TagHelpers
@@ -19,7 +18,7 @@ namespace ntbs_service.TagHelpers
                 _ = await output.GetChildContentAsync();
             }
 
-            if (!String.IsNullOrEmpty(Classes))
+            if (!string.IsNullOrEmpty(Classes))
             {
                 var classList = Classes;
                 if (output.Attributes.TryGetAttribute("class", out var classAttributeValue))

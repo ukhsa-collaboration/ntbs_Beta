@@ -10,7 +10,7 @@ namespace ntbs_service.DataAccess
     {
         public NtbsContext CreateDbContext(string[] args)
         {
-            string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -24,7 +24,7 @@ namespace ntbs_service.DataAccess
 
             builder.AddEnvironmentVariables();
 
-            IConfigurationRoot configuration = builder.Build();
+            var configuration = builder.Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<NtbsContext>();
             var connectionString = configuration.GetConnectionString("ntbsMigratorContext");

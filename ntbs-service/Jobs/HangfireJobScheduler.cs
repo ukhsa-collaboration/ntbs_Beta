@@ -4,7 +4,7 @@ using ntbs_service.Properties;
 
 namespace ntbs_service.Jobs
 {
-    static class HangfireJobScheduler
+    internal static class HangfireJobScheduler
     {
         private const string UserSyncJobId = "user-sync";
         private const string CloseInactiveNotificationsJobId = "close-inactive-notifications";

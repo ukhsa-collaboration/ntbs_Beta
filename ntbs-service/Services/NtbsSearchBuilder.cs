@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -13,7 +12,7 @@ namespace ntbs_service.Services
 
     public class NtbsSearchBuilder : INtbsSearchBuilder
     {
-        IQueryable<Notification> notificationIQ;
+        private IQueryable<Notification> notificationIQ;
 
         public NtbsSearchBuilder(IQueryable<Notification> notificationIQ)
         {
@@ -25,7 +24,7 @@ namespace ntbs_service.Services
             if (!string.IsNullOrEmpty(id))
             {
                 var idNoWhitespace = id.Replace(" ", "");
-                int.TryParse(idNoWhitespace, out int parsedId);
+                int.TryParse(idNoWhitespace, out var parsedId);
                 notificationIQ = notificationIQ.Where(s => s.NotificationId.Equals(parsedId)
                     || (s.ETSID != null && s.ETSID.Equals(idNoWhitespace))
                     || (s.LTBRID != null && s.LTBRID.Equals(idNoWhitespace))
@@ -67,7 +66,7 @@ namespace ntbs_service.Services
         {
             if (!(partialDob == null || partialDob.IsEmpty()))
             {
-                partialDob.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
+                partialDob.TryConvertToDateTimeRange(out var dateRangeStart, out var dateRangeEnd);
                 notificationIQ = notificationIQ.Where(s => s.PatientDetails.Dob >= dateRangeStart && s.PatientDetails.Dob < dateRangeEnd);
             }
 
@@ -78,7 +77,7 @@ namespace ntbs_service.Services
         {
             if (!(partialNotificationDate == null || partialNotificationDate.IsEmpty()))
             {
-                partialNotificationDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
+                partialNotificationDate.TryConvertToDateTimeRange(out var dateRangeStart, out var dateRangeEnd);
                 notificationIQ = notificationIQ.Where(s => s.NotificationDate >= dateRangeStart && s.NotificationDate < dateRangeEnd);
             }
 

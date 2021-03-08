@@ -73,7 +73,7 @@ namespace ntbs_service.Services
         }
     }
 
-    class MockDrugResistanceProfilesService : IDrugResistanceProfilesService
+    internal class MockDrugResistanceProfilesService : IDrugResistanceProfilesService
     {
         public Task<int> UpdateDrugResistanceProfiles(int maxNumberOfUpdates)
         {

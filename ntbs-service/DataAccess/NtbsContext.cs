@@ -68,12 +68,12 @@ namespace ntbs_service.DataAccess
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
-            this.Entry(entity).CurrentValues.SetValues(values);
+            Entry(entity).CurrentValues.SetValues(values);
         }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, object values)
         {
-            this.Entry(entity).CurrentValues.SetValues(values);
+            Entry(entity).CurrentValues.SetValues(values);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
