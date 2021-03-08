@@ -47,16 +47,32 @@ namespace ntbs_service_unit_tests.Services
         };
 
         private readonly NotificationForDrugResistanceImport mockNotificationWithMdr =
-            new NotificationForDrugResistanceImport { NotificationId = 1, DrugResistanceProfile = drpWithMdr };
+            new NotificationForDrugResistanceImport
+            {
+                Notification = new Notification { NotificationId = 1 },
+                DrugResistanceProfile = drpWithMdr
+            };
 
         private readonly NotificationForDrugResistanceImport mockNotificationWithoutMdr =
-            new NotificationForDrugResistanceImport { NotificationId = 2, DrugResistanceProfile = drpWithoutMdr };
+            new NotificationForDrugResistanceImport
+            {
+                Notification = new Notification { NotificationId = 2 },
+                DrugResistanceProfile = drpWithoutMdr
+            };
 
         private readonly NotificationForDrugResistanceImport mockNotificationWithMbovis =
-            new NotificationForDrugResistanceImport { NotificationId = 3, DrugResistanceProfile = drpWithMbovis };
+            new NotificationForDrugResistanceImport
+            {
+                Notification = new Notification { NotificationId = 3 },
+                DrugResistanceProfile = drpWithMbovis
+            };
 
         private readonly NotificationForDrugResistanceImport mockNotificationWithoutMbovis =
-            new NotificationForDrugResistanceImport { NotificationId = 4, DrugResistanceProfile = drpWithoutMbovis };
+            new NotificationForDrugResistanceImport
+            {
+                Notification = new Notification { NotificationId = 4 },
+                DrugResistanceProfile = drpWithoutMbovis
+            };
 
         public DrugResistanceProfileServiceTest()
         {
@@ -253,7 +269,7 @@ namespace ntbs_service_unit_tests.Services
         {
             return Task.FromResult(new NotificationForDrugResistanceImport
             {
-                NotificationId = notificationId,
+                Notification = new Notification { NotificationId = notificationId },
                 DrugResistanceProfile = new DrugResistanceProfile()
             });
         }
