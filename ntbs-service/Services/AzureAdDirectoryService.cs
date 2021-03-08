@@ -95,7 +95,7 @@ namespace ntbs_service.Services
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
@@ -261,7 +261,7 @@ namespace ntbs_service.Services
             {
                 var groupName = await ResolveGroupNameFromId(groupInfo.Id);
                 // ensure we do not add any duplicate groups or blank groups
-                if (!String.IsNullOrEmpty(groupName) && IsGroupAnNtbsGroup(groupName) && !groupNames.Any(group => group.Equals(groupName, StringComparison.CurrentCultureIgnoreCase)))
+                if (!string.IsNullOrEmpty(groupName) && IsGroupAnNtbsGroup(groupName) && !groupNames.Any(group => group.Equals(groupName, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     groupNames.Add(groupName);
                 }

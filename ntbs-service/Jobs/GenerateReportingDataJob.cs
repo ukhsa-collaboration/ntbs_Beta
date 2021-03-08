@@ -15,8 +15,8 @@ namespace ntbs_service.Jobs
         public GenerateReportingDataJob(IConfiguration configuration)
         : base(configuration)
         {
-            this._sqlString = "[dbo].[uspGenerate]";
-            this._parameters = null;
+            _sqlString = "[dbo].[uspGenerate]";
+            _parameters = null;
         }
 
         /// PerformContext context is passed in via Hangfire Server

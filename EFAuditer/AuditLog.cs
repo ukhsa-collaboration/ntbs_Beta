@@ -17,7 +17,7 @@ namespace EFAuditer
 
         public AuditLog Clone()
         {
-            return this.MemberwiseClone() as AuditLog;
+            return MemberwiseClone() as AuditLog;
         }
 
         public override string ToString()

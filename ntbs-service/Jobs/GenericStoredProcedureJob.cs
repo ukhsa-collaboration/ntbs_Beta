@@ -16,16 +16,16 @@ namespace ntbs_service.Jobs
             var scheduledJobConfig = new ScheduledJobsConfig();
             configuration.GetSection(Constants.ScheduledJobsConfig).Bind(scheduledJobConfig);
 
-            this._sqlString = scheduledJobConfig.GenericStoredProcedureNameToRun;
-            this._parameters = null;
+            _sqlString = scheduledJobConfig.GenericStoredProcedureNameToRun;
+            _parameters = null;
         }
 
         /// PerformContext context is passed in via Hangfire Server
         public override async Task Run(PerformContext context, IJobCancellationToken token)
         {
-            this._context = context;
-            Log.Information($"Starting generic stored procedure job: {this._sqlString}");
-            _context.WriteLine($"Starting generic stored procedure job: {this._sqlString}");
+            _context = context;
+            Log.Information($"Starting generic stored procedure job: {_sqlString}");
+            _context.WriteLine($"Starting generic stored procedure job: {_sqlString}");
 
             await base.Run(context, token);
 

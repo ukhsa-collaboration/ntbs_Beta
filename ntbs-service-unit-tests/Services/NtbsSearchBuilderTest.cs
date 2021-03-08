@@ -16,7 +16,7 @@ namespace ntbs_service_unit_tests.Services
 
         public NtbsSearchBuilderTest(DatabaseFixture fixture)
         {
-            this._builder = new NtbsSearchBuilder(fixture.Context.Notification); ;
+            _builder = new NtbsSearchBuilder(fixture.Context.Notification); ;
         }
 
         [Fact]

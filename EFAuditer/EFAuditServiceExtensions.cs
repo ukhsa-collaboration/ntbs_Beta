@@ -30,7 +30,11 @@ namespace EFAuditer
                 {
                     var userName = user.FindFirstValue(ClaimTypes.Upn);
                     // Fallbacks if user doesn't have an email associated with them - as is the case with our test users
-                    if (string.IsNullOrEmpty(userName)) userName = user.Identity.Name;
+                    if (string.IsNullOrEmpty(userName))
+                    {
+                        userName = user.Identity.Name;
+                    }
+
                     scope.SetCustomField(CustomFields.AppUser, userName);
                 }
             });

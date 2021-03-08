@@ -139,7 +139,7 @@ namespace ntbs_service.DataMigration
             var ids = notifications.Select(n => n.LegacyId).ToList();
             if (ids.Distinct().Count() != ids.Count)
             {
-                var errorMessage = $"Duplicate records found ({String.Join(',', ids)}) - aborting import for {patientName}";
+                var errorMessage = $"Duplicate records found ({string.Join(',', ids)}) - aborting import for {patientName}";
                 importResult.AddGroupError(errorMessage);
                 _logger.LogImportFailure(context, requestId, errorMessage);
                 return importResult;

@@ -15,7 +15,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class MDRDetailsModel : NotificationEditModelBase
     {
-        private IReferenceDataRepository _referenceDataRepository;
+        private readonly IReferenceDataRepository _referenceDataRepository;
         public List<string> RenderConditionalCountryFieldIds;
 
         public MDRDetailsModel(

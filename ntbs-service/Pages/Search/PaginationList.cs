@@ -16,7 +16,7 @@ namespace ntbs_service.Pages.Search
             TotalPages = (int)Math.Ceiling(count / (double)paginationParameters.PageSize);
             NumberOfResults = count;
 
-            this.AddRange(items);
+            AddRange(items);
         }
 
         public bool HasPreviousPage

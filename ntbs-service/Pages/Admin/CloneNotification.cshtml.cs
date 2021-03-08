@@ -107,7 +107,10 @@ namespace ntbs_service.Pages.Admin
                 return Page();
             }
 
-            if (!ModelState.IsValid) return Page();
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
 
             var clone = _cloningService.Clone(notificationToClone);
             OverrideValues(clone);

@@ -12,14 +12,20 @@ namespace ntbs_service.Models.Entities
             if (HasTransplantation == true)
             {
                 if (sb.Length != 0)
+                {
                     sb.Append(", ");
+                }
+
                 sb.Append("Transplantation");
             }
 
             if (HasOther == true)
             {
                 if (sb.Length != 0)
+                {
                     sb.Append(", ");
+                }
+
                 sb.Append("Other");
             }
 

@@ -34,7 +34,7 @@ namespace ntbs_service_unit_tests.Services
 
         public NotificationServiceTest()
         {
-            _mockContext.Setup(context => context.SetValues(It.IsAny<Object>(), It.IsAny<Object>()));
+            _mockContext.Setup(context => context.SetValues(It.IsAny<object>(), It.IsAny<object>()));
 
             _notificationService = new NotificationService(
                 _mockNotificationRepository.Object,
@@ -426,7 +426,7 @@ namespace ntbs_service_unit_tests.Services
         private void VerifyUpdateDatabaseCalled()
         {
             _mockNotificationRepository.Verify(mock =>
-                mock.SaveChangesAsync(It.IsAny<NotificationAuditType>(), It.IsAny<String>()));
+                mock.SaveChangesAsync(It.IsAny<NotificationAuditType>(), It.IsAny<string>()));
         }
 
         [Fact]

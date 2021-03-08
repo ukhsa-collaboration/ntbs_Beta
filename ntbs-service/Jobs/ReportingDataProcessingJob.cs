@@ -26,14 +26,14 @@ namespace ntbs_service.Jobs
             _specimenMatchingConnectionString = _configuration.GetConnectionString(Constants.DbConnectionStringSpecimenMatching);
             _migrationConnectionString = _configuration.GetConnectionString(Constants.DbConnectionStringMigration);
 
-            this._sqlString = "";
-            this._parameters = null;
+            _sqlString = "";
+            _parameters = null;
         }
 
         /// PerformContext context is passed in via Hangfire Server
         public override async Task Run(PerformContext context, IJobCancellationToken token)
         {
-            this._context = context;
+            _context = context;
             Log.Information($"Starting weekly reporting data processing job.");
 
             var stepOneResults = await ExecuteProcessingMIDataStoredProcedure(token);
@@ -43,7 +43,7 @@ namespace ntbs_service.Jobs
             allResults.AddRange(stepOneResults);
             allResults.AddRange(stepTwoResults);
 
-            var success = this.DidExecuteSuccessfully(allResults);
+            var success = DidExecuteSuccessfully(allResults);
 
             Log.Information($"Finishing weekly reporting data processing job.");
         }

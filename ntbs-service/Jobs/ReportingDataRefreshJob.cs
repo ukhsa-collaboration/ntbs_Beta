@@ -26,14 +26,14 @@ namespace ntbs_service.Jobs
             _specimenMatchingConnectionString = _configuration.GetConnectionString(Constants.DbConnectionStringSpecimenMatching);
             _migrationConnectionString = _configuration.GetConnectionString(Constants.DbConnectionStringMigration);
 
-            this._sqlString = "";
-            this._parameters = null;
+            _sqlString = "";
+            _parameters = null;
         }
 
         /// PerformContext context is passed in via Hangfire Server
         public override async Task Run(PerformContext context, IJobCancellationToken token)
         {
-            this._context = context;
+            _context = context;
             Log.Information($"Starting reporting data refresh job.");
 
             try
@@ -49,11 +49,11 @@ namespace ntbs_service.Jobs
                 allResults.AddRange(stepThreeResults);
                 allResults.AddRange(stepFourResults);
 
-                var success = this.DidExecuteSuccessfully(allResults);
+                var success = DidExecuteSuccessfully(allResults);
             }
             catch (Exception ex)
             {
-                this._context.WriteLine(ex.Message);
+                _context.WriteLine(ex.Message);
                 Log.Error(ex, "Error occured during reporting data refresh job.");
                 throw;
             }

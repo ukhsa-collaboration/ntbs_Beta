@@ -19,7 +19,7 @@ namespace ntbs_service.Helpers
         public static string GetDisplayName(this Type model)
         {
             return model.GetCustomAttribute<DisplayAttribute>()
-                ?.GetName() ?? String.Empty;
+                ?.GetName() ?? string.Empty;
         }
 
         public static string GetMemberDisplayName(this Type baseType, string propertyName)

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using ntbs_service.Models.Entities;
@@ -21,7 +20,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
 
             // Assert
-            var expectedErrorMessage = String.Format(ValidationMessages.InvalidCharacter, "Job Title");
+            var expectedErrorMessage = string.Format(ValidationMessages.InvalidCharacter, "Job Title");
             Assert.False(isValid, "Expected details to be invalid");
             Assert.Equal(expectedErrorMessage, validationResults.First().ErrorMessage);
         }
@@ -37,7 +36,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
 
             // Assert
-            var expectedErrorMessage = String.Format(ValidationMessages.InvalidCharacter, "Phone number #1");
+            var expectedErrorMessage = string.Format(ValidationMessages.InvalidCharacter, "Phone number #1");
             Assert.False(isValid, "Expected details to be invalid");
             Assert.Equal(expectedErrorMessage, validationResults.First().ErrorMessage);
         }
@@ -53,7 +52,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
 
             // Assert
-            var expectedErrorMessage = String.Format(ValidationMessages.InvalidCharacter, "Phone number #2");
+            var expectedErrorMessage = string.Format(ValidationMessages.InvalidCharacter, "Phone number #2");
             Assert.False(isValid, "Expected details to be invalid");
             Assert.Equal(expectedErrorMessage, validationResults.First().ErrorMessage);
         }
@@ -69,7 +68,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
 
             // Assert
-            var expectedErrorMessage = String.Format(ValidationMessages.InvalidCharacter, "Email #1");
+            var expectedErrorMessage = string.Format(ValidationMessages.InvalidCharacter, "Email #1");
             Assert.False(isValid, "Expected details to be invalid");
             Assert.Equal(expectedErrorMessage, validationResults.First().ErrorMessage);
         }
@@ -85,7 +84,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
 
             // Assert
-            var expectedErrorMessage = String.Format(ValidationMessages.InvalidCharacter, "Email #2");
+            var expectedErrorMessage = string.Format(ValidationMessages.InvalidCharacter, "Email #2");
             Assert.False(isValid, "Expected details to be invalid");
             Assert.Equal(expectedErrorMessage, validationResults.First().ErrorMessage);
         }
@@ -101,7 +100,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
 
             // Assert
-            var expectedErrorMessage = String.Format(ValidationMessages.InvalidCharacter, "Notes");
+            var expectedErrorMessage = string.Format(ValidationMessages.InvalidCharacter, "Notes");
             Assert.False(isValid, "Expected details to be invalid");
             Assert.Equal(expectedErrorMessage, validationResults.First().ErrorMessage);
         }

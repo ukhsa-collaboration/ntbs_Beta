@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using ntbs_service.Models.Validations;
 
@@ -53,8 +52,8 @@ namespace ntbs_service.Models.Entities
 
         public virtual ICollection<CaseManagerTbService> CaseManagerTbServices { get; set; }
 
-        public bool ArePrimaryContactDetailsMissing => String.IsNullOrEmpty(JobTitle)
-                                                       && String.IsNullOrEmpty(PhoneNumberPrimary)
-                                                       && String.IsNullOrEmpty(EmailPrimary);
+        public bool ArePrimaryContactDetailsMissing => string.IsNullOrEmpty(JobTitle)
+                                                       && string.IsNullOrEmpty(PhoneNumberPrimary)
+                                                       && string.IsNullOrEmpty(EmailPrimary);
     }
 }

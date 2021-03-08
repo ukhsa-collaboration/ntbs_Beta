@@ -14,7 +14,7 @@ namespace ntbs_service.Services
     public class LegacySearchBuilder : ILegacySearchBuilder
     {
         private string sqlQuery;
-        private dynamic parameters;
+        private readonly dynamic parameters;
         private readonly IReferenceDataRepository _referenceDataRepository;
 
         public LegacySearchBuilder(IReferenceDataRepository referenceDataRepository)

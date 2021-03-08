@@ -59,7 +59,7 @@ namespace ntbs_service.DataAccess
 
         public ReferenceDataRepository(NtbsContext context)
         {
-            this._context = context;
+            _context = context;
         }
 
         public async Task<IList<Country>> GetAllCountriesAsync()

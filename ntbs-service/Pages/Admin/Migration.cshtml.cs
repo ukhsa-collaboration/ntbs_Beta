@@ -133,7 +133,9 @@ namespace ntbs_service.Pages.Admin
             using (var reader = new StreamReader(file.OpenReadStream()))
             {
                 while (reader.Peek() >= 0)
+                {
                     legacyIds.Add((await reader.ReadLineAsync()).Trim());
+                }
             }
             return legacyIds;
         }

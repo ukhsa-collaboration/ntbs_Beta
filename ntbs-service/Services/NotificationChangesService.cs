@@ -83,7 +83,9 @@ namespace ntbs_service.Services
                 // This could be done as part of other updates to the clinical details page..
                 var clinicalDetailsUpdate = group.Find(log => log.EntityType == nameof(ClinicalDetails));
                 if (clinicalDetailsUpdate != null)
+                {
                     yield return clinicalDetailsUpdate;
+                }
                 // .. or, if sites are the only edited items, we want to "fake" a clinical details log entry
                 else
                 {
@@ -159,7 +161,9 @@ namespace ntbs_service.Services
                     var rejectionAlertLog = group.Find(log => log.EntityType == nameof(TransferRejectedAlert));
                     // but we need to filter out the subsequent closure of the rejection alert!
                     if (rejectionAlertLog.EventType == "Insert")
+                    {
                         yield return rejectionAlertLog;
+                    }
                 }
 
                 yield break;
@@ -184,7 +188,9 @@ namespace ntbs_service.Services
                 foreach (var log in group)
                 {
                     if (log.EntityType != nameof(TreatmentEvent))
+                    {
                         yield return log;
+                    }
                 }
 
                 yield break;
@@ -210,7 +216,9 @@ namespace ntbs_service.Services
         {
             // Imported notifications don't have the draft stage, so don't skip anything
             if (auditLogs.Any(log => GetNotificationAuditType(log) == NotificationAuditType.Imported))
+            {
                 return auditLogs;
+            }
 
             var createAuditLog = auditLogs.Take(1);
             var auditLogsFromSubmissionOnwards = auditLogs
@@ -222,9 +230,14 @@ namespace ntbs_service.Services
         private static string MapAction(AuditLog log)
         {
             if (log.EntityType == nameof(TransferAlert))
+            {
                 return log.EventType == "Insert" ? "requested" : "accepted";
+            }
+
             if (log.EntityType == nameof(TransferRejectedAlert))
+            {
                 return "rejected";
+            }
 
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (GetNotificationAuditType(log))
@@ -285,7 +298,9 @@ namespace ntbs_service.Services
         {
             var displayName = Type.GetType($"ntbs_service.Models.Entities.{logEntityType}", true).GetDisplayName();
             if (string.IsNullOrWhiteSpace(displayName))
+            {
                 throw new ApplicationException($"No display name found for model {logEntityType}");
+            }
 
             return displayName;
         }

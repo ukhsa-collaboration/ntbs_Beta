@@ -43,7 +43,7 @@ namespace ntbs_service.Jobs
             Log.Information($"Starting stored procedure job");
             _context.WriteLine($"Starting stored procedure job");
 
-            if (String.IsNullOrEmpty(_sqlString))
+            if (string.IsNullOrEmpty(_sqlString))
             {
                 throw new ArgumentNullException(nameof(_sqlString));
             }

@@ -10,7 +10,7 @@ namespace ntbs_service.Models.Entities
     {
         [Display(Name = "Name")]
         public string FullName =>
-            string.Join(", ", new[] { FamilyName?.ToUpper(), GivenName }.Where(s => !String.IsNullOrEmpty(s)));
+            string.Join(", ", new[] { FamilyName?.ToUpper(), GivenName }.Where(s => !string.IsNullOrEmpty(s)));
 
         public string FormattedNhsNumber => NhsNumberNotKnown
             ? "Not known"

@@ -508,7 +508,7 @@ namespace ntbs_service_unit_tests.Services
         // unused as "_" and "__"
         [Theory, MemberData(nameof(NotificationsAndExpectedOutcome))]
         public void GetTreatmentOutcomeAtXYears_ReturnsCorrectOutcomeAt1Year(
-            String exampleName,
+            string exampleName,
             Notification notification,
             TreatmentOutcomeType? expectedOutcomeAt1Year,
             TreatmentOutcomeType? _,
@@ -520,7 +520,7 @@ namespace ntbs_service_unit_tests.Services
 
         [Theory, MemberData(nameof(NotificationsAndExpectedOutcome))]
         public void GetTreatmentOutcomeAtXYears_ReturnsCorrectOutcomeAt2Years(
-            String exampleName,
+            string exampleName,
             Notification notification,
             TreatmentOutcomeType? _,
             TreatmentOutcomeType? expectedOutcomeAt2Years,
@@ -532,7 +532,7 @@ namespace ntbs_service_unit_tests.Services
 
         [Theory, MemberData(nameof(NotificationsAndExpectedOutcome))]
         public void GetTreatmentOutcomeAtXYears_ReturnsCorrectOutcomeAt3Years(
-            String exampleName,
+            string exampleName,
             Notification notification,
             TreatmentOutcomeType? _,
             TreatmentOutcomeType? __,

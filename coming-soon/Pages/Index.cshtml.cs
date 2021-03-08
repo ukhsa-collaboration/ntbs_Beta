@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 
 namespace coming_soon.Pages
@@ -10,7 +9,7 @@ namespace coming_soon.Pages
 
         public IndexModel(IConfiguration Configuration)
         {
-            ReportsUrl = Configuration.GetSection("App").GetValue<String>("ReportsUrl");
+            ReportsUrl = Configuration.GetSection("App").GetValue<string>("ReportsUrl");
         }
 
         public void OnGet()

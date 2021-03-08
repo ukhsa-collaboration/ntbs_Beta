@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -78,17 +77,17 @@ namespace ntbs_integration_tests.ContactDetailsPages
                 result.EnsureSuccessStatusCode();
 
                 resultDocument.AssertErrorMessage("job-title",
-                    String.Format(ValidationMessages.InvalidCharacter, "Job Title"));
+                    string.Format(ValidationMessages.InvalidCharacter, "Job Title"));
                 resultDocument.AssertErrorMessage("phone-primary",
-                    String.Format(ValidationMessages.InvalidCharacter, "Phone number #1"));
+                    string.Format(ValidationMessages.InvalidCharacter, "Phone number #1"));
                 resultDocument.AssertErrorMessage("phone-secondary",
-                    String.Format(ValidationMessages.InvalidCharacter, "Phone number #2"));
+                    string.Format(ValidationMessages.InvalidCharacter, "Phone number #2"));
                 resultDocument.AssertErrorMessage("email-primary",
-                    String.Format(ValidationMessages.InvalidCharacter, "Email #1"));
+                    string.Format(ValidationMessages.InvalidCharacter, "Email #1"));
                 resultDocument.AssertErrorMessage("email-secondary",
-                    String.Format(ValidationMessages.InvalidCharacter, "Email #2"));
+                    string.Format(ValidationMessages.InvalidCharacter, "Email #2"));
                 resultDocument.AssertErrorMessage("notes",
-                    String.Format(ValidationMessages.InvalidCharacter, "Notes"));
+                    string.Format(ValidationMessages.InvalidCharacter, "Notes"));
             }
         }
 
