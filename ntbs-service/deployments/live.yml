@@ -61,13 +61,13 @@ spec:
               value: "true"
             - name: AppConfig__AuditingEnabled
               value: "true"
-            - name: BaseUserGroup
+            - name: AdOptions__BaseUserGroup
               value: "App.Auth.NIS.NTBS"
-            - name: AdminUserGroup
+            - name: AdOptions__AdminUserGroup
               value: "App.Auth.NIS.NTBS.Admin"
-            - name: NationalTeamAdGroup
+            - name: AdOptions__NationalTeamAdGroup
               value: "App.Auth.NIS.NTBS.NTS"
-            - name: ServiceGroupAdPrefix
+            - name: AdOptions__ServiceGroupAdPrefix
               value: "App.Auth.NIS.NTBS.Service"
             - name: ConnectionStrings__ntbsContext
               valueFrom:
