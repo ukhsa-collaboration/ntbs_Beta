@@ -20,7 +20,7 @@ namespace ntbs_service_unit_tests.Services
     // from the audit page.
     public class NotificationChangesServiceTest
     {
-        readonly NotificationChangesService _changesService;
+        private readonly NotificationChangesService _changesService;
         private readonly Mock<IAuditService> _auditServiceMock = new Mock<IAuditService>();
         private readonly Mock<IUserRepository> _userRepositoryMock = new Mock<IUserRepository>();
 

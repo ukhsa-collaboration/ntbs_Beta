@@ -54,84 +54,72 @@ namespace ntbs_service.DataMigration
             WHERE notificationInRange.NotificationDate >= @StartDate AND notificationInRange.NotificationDate < @EndDate
             AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("notificationInGroup.OldNotificationId")})";
 
-        const string NotificationsByIdQuery = @"
+        private const string NotificationsByIdQuery = @"
             SELECT *
             FROM MigrationNotificationsView n
             WITH (NOLOCK)
             WHERE n.OldNotificationId IN @Ids";
-
-        const string NotificationSitesQuery = @"
+        private const string NotificationSitesQuery = @"
             SELECT *
             FROM NotificationSite
             WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
-
-        const string ManualTestResultsQuery = @"
+        private const string ManualTestResultsQuery = @"
             SELECT *
             FROM ManualTestResults
             WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
-
-        const string SocialContextVenuesQuery = @"
+        private const string SocialContextVenuesQuery = @"
             SELECT *
             FROM MigrationSocialContextVenueView
             WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
-
-        const string SocialContextAddressesQuery = @"
+        private const string SocialContextAddressesQuery = @"
             SELECT *
             FROM MigrationSocialContextAddressView
             WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
-
-        const string TransferEventsQuery = @"
+        private const string TransferEventsQuery = @"
             SELECT *
             FROM MigrationTransferEventsView
             WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
-
-        const string OutcomeEventsQuery = @"
+        private const string OutcomeEventsQuery = @"
             SELECT *
             FROM MigrationTreatmentOutcomeEventsView
             WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
-
-        const string MigrationMBovisAnimalExposureQuery = @"
+        private const string MigrationMBovisAnimalExposureQuery = @"
             SELECT *
             FROM MigrationMBovisAnimalExposureView
             WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
-
-        const string MigrationMBovisExposureToKnownCaseQuery = @"
+        private const string MigrationMBovisExposureToKnownCaseQuery = @"
             SELECT *
             FROM MigrationMBovisExposureToKnownCaseView
             WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
-
-        const string MigrationMBovisOccupationExposuresQuery = @"
+        private const string MigrationMBovisOccupationExposuresQuery = @"
             SELECT *
             FROM MigrationMBovisOccupationExposuresView
             WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
-
-        const string MigrationMBovisUnpasteurisedMilkConsumptionQuery = @"
+        private const string MigrationMBovisUnpasteurisedMilkConsumptionQuery = @"
             SELECT *
             FROM MigrationMBovisUnpasteurisedMilkConsumptionView
             WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
-
-
-        const string ReferenceLaboratoryMatchesQuery = @"
+        private const string ReferenceLaboratoryMatchesQuery = @"
             SELECT LegacyId, ReferenceLaboratoryNumber
             FROM EtsLaboratoryResultsView
             WITH (NOLOCK)

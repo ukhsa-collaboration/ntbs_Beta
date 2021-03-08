@@ -12,7 +12,7 @@ namespace ntbs_service_unit_tests.Services
 {
     public class NtbsSearchBuilderTest : IClassFixture<DatabaseFixture>
     {
-        readonly INtbsSearchBuilder _builder;
+        private readonly INtbsSearchBuilder _builder;
 
         public NtbsSearchBuilderTest(DatabaseFixture fixture)
         {

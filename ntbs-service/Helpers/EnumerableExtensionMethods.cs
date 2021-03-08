@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ntbs_service.Helpers
 {
-    static class EnumerableExtensionMethods
+    internal static class EnumerableExtensionMethods
     {
         // Based on https://stackoverflow.com/a/8983717/2363767
         public static IEnumerable<List<T>> GroupByConsecutive<T>(this IEnumerable<T> source,

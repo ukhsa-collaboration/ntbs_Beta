@@ -27,7 +27,7 @@ namespace ntbs_ui_tests
 
     public class SeleniumServerFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
-        IWebHost host;
+        private IWebHost host;
         public string RootUri { get; set; }
 
         public SeleniumServerFactory()

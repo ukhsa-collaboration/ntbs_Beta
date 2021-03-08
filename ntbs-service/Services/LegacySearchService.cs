@@ -34,7 +34,7 @@ namespace ntbs_service.Services
             WHERE NOT EXISTS ({_notificationImportHelper.SelectImportedNotificationWhereIdEquals("n.PrimaryNotificationId")})
             ";
 
-        const string SelectQueryEnd = @"
+        private const string SelectQueryEnd = @"
             ORDER BY CASE
                     WHEN n.NtbsHospitalId IN @editPermissionHospitals THEN 1
                     WHEN n.NtbsHospitalId NOT IN @editPermissionHospitals THEN 0

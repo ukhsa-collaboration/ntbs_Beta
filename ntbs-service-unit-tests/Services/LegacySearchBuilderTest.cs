@@ -12,7 +12,7 @@ namespace ntbs_service_unit_tests.Services
 {
     public class LegacySearchBuilderTest
     {
-        readonly LegacySearchBuilder builder;
+        private readonly LegacySearchBuilder builder;
         private readonly Mock<IReferenceDataRepository> mockReferenceDataRepository;
 
         public LegacySearchBuilderTest()

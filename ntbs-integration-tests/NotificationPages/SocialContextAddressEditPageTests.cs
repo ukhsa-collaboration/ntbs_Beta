@@ -13,8 +13,8 @@ namespace ntbs_integration_tests.NotificationPages
 {
     public class SocialContextAddressEditPageTests : TestRunnerNotificationBase
     {
-        const int ADDRESS_ID = 10;
-        const int ADDRESS_TO_DELETE_ID = 11;
+        private const int ADDRESS_ID = 10;
+        private const int ADDRESS_TO_DELETE_ID = 11;
         protected override string NotificationSubPath => NotificationSubPaths.EditSocialContextAddressSubPath;
 
         public SocialContextAddressEditPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)

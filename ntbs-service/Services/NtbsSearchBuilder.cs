@@ -12,7 +12,7 @@ namespace ntbs_service.Services
 
     public class NtbsSearchBuilder : INtbsSearchBuilder
     {
-        IQueryable<Notification> notificationIQ;
+        private IQueryable<Notification> notificationIQ;
 
         public NtbsSearchBuilder(IQueryable<Notification> notificationIQ)
         {

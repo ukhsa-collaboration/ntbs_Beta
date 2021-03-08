@@ -16,9 +16,9 @@ using ntbs_service.Models.ReferenceEntities;
 
 namespace ConsoleApp2
 {
-    class Program
+    internal class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             var addTreatmentEvents = true;
             if (args.Length > 0)
@@ -53,8 +53,7 @@ namespace ConsoleApp2
             }
         }
 
-
-        static async Task GenerateNotifications(NtbsContext context, bool addTreatmentEvents = false)
+        private static async Task GenerateNotifications(NtbsContext context, bool addTreatmentEvents = false)
         {
             var numberOfNotifications = 3000;
             var rand = new Random();

@@ -8,7 +8,7 @@ namespace ntbs_service.Helpers
 {
     public static class EpisodesExtensionMethods
     {
-        static readonly List<TreatmentOutcomeType> EpisodeEndingOutcomeTypes = new List<TreatmentOutcomeType>
+        private static readonly List<TreatmentOutcomeType> EpisodeEndingOutcomeTypes = new List<TreatmentOutcomeType>
         {
             TreatmentOutcomeType.Completed,
             TreatmentOutcomeType.Cured,
