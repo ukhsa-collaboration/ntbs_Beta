@@ -61,14 +61,6 @@ spec:
               value: "true"
             - name: AppConfig__AuditingEnabled
               value: "true"
-            - name: AdOptions__BaseUserGroup
-              value: "App.Auth.NIS.NTBS"
-            - name: AdOptions__AdminUserGroup
-              value: "App.Auth.NIS.NTBS.Admin"
-            - name: AdOptions__NationalTeamAdGroup
-              value: "App.Auth.NIS.NTBS.NTS"
-            - name: AdOptions__ServiceGroupAdPrefix
-              value: "App.Auth.NIS.NTBS.Service"
             - name: ConnectionStrings__ntbsContext
               valueFrom:
                 secretKeyRef:
