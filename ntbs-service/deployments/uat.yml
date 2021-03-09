@@ -54,6 +54,14 @@ spec:
               secretKeyRef:
                 name: migration-connection-string
                 key: connectionString
+          - name: AdOptions__BaseUserGroup
+            value: "Global.NIS.NTBS"
+          - name: AdOptions__AdminUserGroup
+            value: "Global.NIS.NTBS.Admin"
+          - name: AdOptions__NationalTeamAdGroup
+            value: "Global.NIS.NTBS.NTS"
+          - name: AdOptions__ServiceGroupAdPrefix
+            value: "Global.NIS.NTBS.Service"
           - name: AdfsOptions__Wtrealm
             value: "https://ntbs-uat.61b431d7ea3041e89733.uksouth.aksapp.io/"
           - name: AzureAdOptions__ClientId
