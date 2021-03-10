@@ -362,6 +362,7 @@ namespace ntbs_service.DataAccess
                                 .ThenInclude(pl => pl.PHEC)
                 .Include(n => n.HospitalDetails.TBService.PHEC)
                 .Include(n => n.HospitalDetails.CaseManager)
+                .OrderBy(n => n.NotificationId)
                 .AsSplitQuery();
         }
 

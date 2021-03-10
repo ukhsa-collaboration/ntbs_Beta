@@ -353,6 +353,7 @@ AND (N1.[GroupId] <> N2.[GroupId] OR N1.[GroupId] is NULL or N2.[GroupId] is NUL
                             && n.NotificationStatus != NotificationStatus.Denotified)
                 // And make sure it doesn't have this type of alert already
                 .Where(n => !n.Alerts.Any(a => a is T))
+                .OrderBy(n => n.NotificationId)
                 .AsSplitQuery();
         }
     }
