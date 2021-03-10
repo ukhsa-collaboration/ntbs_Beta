@@ -19,12 +19,25 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Theory]
-        [InlineData("RR/MDR/XDR", false, true, false)]
-        [InlineData("RR/MDR/XDR", true, true, false)]
-        [InlineData("NonMDR", false, false, true)]
-        [InlineData("NonMDR", true, true, false)]
+        [InlineData("RR/MDR/XDR", false, null, true, false)]
+        [InlineData("RR/MDR/XDR", false, Status.Unknown, false, true)]
+        [InlineData("RR/MDR/XDR", false, Status.No, false, true)]
+        [InlineData("RR/MDR/XDR", false, Status.Yes, false, true)]
+        [InlineData("RR/MDR/XDR", true, null, true, false)]
+        [InlineData("RR/MDR/XDR", true, Status.Unknown, false, true)]
+        [InlineData("RR/MDR/XDR", true, Status.No, false, true)]
+        [InlineData("RR/MDR/XDR", true, Status.Yes, false, true)]
+        [InlineData("NonMDR", false, null, false, true)]
+        [InlineData("NonMDR", false, Status.Unknown, false, true)]
+        [InlineData("NonMDR", false, Status.No, false, true)]
+        [InlineData("NonMDR", false, Status.Yes, false, true)]
+        [InlineData("NonMDR", true, null, true, false)]
+        [InlineData("NonMDR", true, Status.Unknown, false, true)]
+        [InlineData("NonMDR", true, Status.No, false, true)]
+        [InlineData("NonMDR", true, Status.Yes, false, true)]
         public void CreateOrDismissMdrAlert(string drugResistance,
             bool isMdrPlanned,
+            Status? mdrExposureStatus,
             bool shouldCreateAlert,
             bool shouldDismissAlert)
         {
@@ -40,6 +53,10 @@ namespace ntbs_service_unit_tests.Services
                 ClinicalDetails = new ClinicalDetails
                 {
                     TreatmentRegimen = isMdrPlanned ? TreatmentRegimen.MdrTreatment : TreatmentRegimen.StandardTherapy
+                },
+                MDRDetails = new MDRDetails
+                {
+                    ExposureToKnownCaseStatus = mdrExposureStatus
                 }
             };
 

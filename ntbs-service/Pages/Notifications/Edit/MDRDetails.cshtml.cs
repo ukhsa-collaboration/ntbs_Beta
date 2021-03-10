@@ -16,6 +16,7 @@ namespace ntbs_service.Pages.Notifications.Edit
     public class MDRDetailsModel : NotificationEditModelBase
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IEnhancedSurveillanceAlertsService _enhancedSurveillanceAlertsService;
         public List<string> RenderConditionalCountryFieldIds;
 
         public MDRDetailsModel(
@@ -23,6 +24,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
+            IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService,
             IAlertRepository alertRepository) : base(service,
             authorizationService,
             notificationRepository,
@@ -30,6 +32,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             CurrentPage = NotificationSubPaths.EditMDRDetails;
             _referenceDataRepository = referenceDataRepository;
+            _enhancedSurveillanceAlertsService = enhancedSurveillanceAlertsService;
         }
 
         [BindProperty]
@@ -89,6 +92,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (TryValidateModel(MDRDetails, nameof(MDRDetails)))
             {
                 await Service.UpdateMDRDetailsAsync(Notification, MDRDetails);
+
+                await _enhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(Notification);
             }
         }
 

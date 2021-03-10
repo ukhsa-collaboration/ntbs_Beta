@@ -21,7 +21,7 @@ namespace ntbs_service.Services
 
         public async Task CreateOrDismissMdrAlert(INotificationForDrugResistanceImport notification)
         {
-            if (notification.IsMdr)
+            if (notification.IsMdr && !notification.MDRDetails.MDRDetailsEntered)
             {
                 await CreateMdrAlert(notification);
             }
