@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
+using MoreLinq;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -329,6 +330,7 @@ namespace ntbs_service.DataAccess
                 .Include(g => g.Notifications)
                     .ThenInclude(n => n.HospitalDetails)
                         .ThenInclude(e => e.CaseManager)
+                .OrderBy(n => n.NotificationGroupId)
                 .AsSplitQuery()
                 .SingleOrDefaultAsync();
         }
@@ -344,6 +346,7 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.SocialContextVenues)
                 .Include(n => n.TreatmentEvents)
                     .ThenInclude(t => t.TreatmentOutcome)
+                .OrderBy(n => n.NotificationId)
                 .AsSplitQuery();
         }
 
