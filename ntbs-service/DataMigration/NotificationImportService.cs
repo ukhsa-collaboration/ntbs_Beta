@@ -13,7 +13,6 @@ using Serilog;
 
 namespace ntbs_service.DataMigration
 {
-
     public interface INotificationImportService
     {
         [ExpirationTimeTwoWeeks]
@@ -32,7 +31,6 @@ namespace ntbs_service.DataMigration
 
     public class NotificationImportService : INotificationImportService
     {
-
         private readonly INotificationMapper _notificationMapper;
         private readonly INotificationRepository _notificationRepository;
         private readonly INotificationImportRepository _notificationImportRepository;
@@ -42,6 +40,7 @@ namespace ntbs_service.DataMigration
         private readonly ISpecimenService _specimenService;
         private readonly IImportValidator _importValidator;
         private readonly IClusterImportService _clusterImportService;
+        private readonly ICaseManagerImportService _caseManagerImportService;
 
         public NotificationImportService(INotificationMapper notificationMapper,
                              INotificationRepository notificationRepository,
@@ -52,7 +51,8 @@ namespace ntbs_service.DataMigration
                              IMigratedNotificationsMarker migratedNotificationsMarker,
                              ISpecimenService specimenService,
                              IImportValidator importValidator,
-                             IClusterImportService clusterImportService)
+                             IClusterImportService clusterImportService,
+                             ICaseManagerImportService caseManagerImportService)
         {
             sentryHub.ConfigureScope(s =>
             {
@@ -68,6 +68,7 @@ namespace ntbs_service.DataMigration
             _specimenService = specimenService;
             _importValidator = importValidator;
             _clusterImportService = clusterImportService;
+            _caseManagerImportService = caseManagerImportService;
         }
 
         public async Task<IList<ImportResult>> ImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate)
@@ -148,6 +149,7 @@ namespace ntbs_service.DataMigration
             var isAnyNotificationInvalid = false;
             foreach (var notification in notifications)
             {
+                await _caseManagerImportService.ImportOrUpdateCaseManager(notification, context, requestId);
                 var linkedNotificationId = notification.LegacyId;
                 _logger.LogInformation(context, requestId, $"Validating notification with Id={linkedNotificationId}");
 

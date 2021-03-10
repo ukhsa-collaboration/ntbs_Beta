@@ -34,7 +34,7 @@ namespace ntbs_service.DataMigration
             Notification notification)
         {
             CleanData(notification, context, requestId);
-            return (await GetValidationErrors(notification)).ToList();
+            return (await GetValidationErrors(context, requestId, notification)).ToList();
         }
 
         /// <summary>
@@ -95,7 +95,8 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        private async Task<IEnumerable<ValidationResult>> GetValidationErrors(Notification notification)
+        private async Task<IEnumerable<ValidationResult>> GetValidationErrors(PerformContext context,
+            string requestId, Notification notification)
         {
             var singletonModels = new List<ModelBase>
             {
@@ -137,7 +138,7 @@ namespace ntbs_service.DataMigration
             validationsResults.AddRange(ValidateObject(notification));
             singletonModels.Select(ValidateObject)
                 .ForEach(results => validationsResults.AddRange(results));
-            validationsResults.AddRange(await ValidateAndSetCaseManager(notification.HospitalDetails));
+            validationsResults.AddRange(await ValidateAndSetCaseManager(context, requestId, notification.HospitalDetails));
             validationsResults.AddRange(
                 modelCollections.SelectMany(collection => collection.SelectMany(ValidateObject)));
 
@@ -154,7 +155,8 @@ namespace ntbs_service.DataMigration
             return validationsResults;
         }
 
-        private async Task<IEnumerable<ValidationResult>> ValidateAndSetCaseManager(HospitalDetails details)
+        private async Task<IEnumerable<ValidationResult>> ValidateAndSetCaseManager(PerformContext context,
+            string requestId,HospitalDetails details)
         {
             var validationsResults = new List<ValidationResult>();
 
@@ -163,10 +165,14 @@ namespace ntbs_service.DataMigration
                 return validationsResults;
             }
 
-            var caseManager =
-                await _referenceDataRepository.GetCaseManagerByUsernameAsync(details.CaseManagerUsername);
-            if (caseManager != null)
+            var possibleCaseManager =
+                await _referenceDataRepository.GetUserByUsernameAsync(details.CaseManagerUsername);
+            if (possibleCaseManager != null)
             {
+                if (!possibleCaseManager.IsCaseManager)
+                {
+                    _logger.LogWarning(context, requestId, "User set as case manager for notification is not a case manager.");
+                }
                 return validationsResults;
             }
 
