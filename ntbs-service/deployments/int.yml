@@ -52,8 +52,8 @@ spec:
           - name: ConnectionStrings__migration
             valueFrom:
               secretKeyRef:
-                name: migration-connection-string
-                key: connectionString
+                name: int-connection-strings
+                key: migrationDb
           - name: AdOptions__BaseUserGroup
             value: "Global.NIS.NTBS"
           - name: AdOptions__AdminUserGroup
