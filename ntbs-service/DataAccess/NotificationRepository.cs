@@ -117,6 +117,7 @@ namespace ntbs_service.DataAccess
                     {
                         Notification = n,
                         DrugResistanceProfile = n.DrugResistanceProfile,
+                        MDRDetails = n.MDRDetails,
                         TreatmentRegimen = n.ClinicalDetails.TreatmentRegimen,
                         ExposureToKnownCaseStatus = n.MDRDetails.ExposureToKnownCaseStatus
                     })

@@ -8,6 +8,7 @@ namespace ntbs_service.Models.Projections
     {
         int NotificationId { get; }
         DrugResistanceProfile DrugResistanceProfile { get; }
+        MDRDetails MDRDetails { get; }
         bool IsMdr { get; }
         bool IsMBovis { get; }
     }
@@ -19,6 +20,7 @@ namespace ntbs_service.Models.Projections
         public DrugResistanceProfile DrugResistanceProfile { get; set; }
         public TreatmentRegimen? TreatmentRegimen { get; set; }
         public Status? ExposureToKnownCaseStatus { get; set; }
+        public MDRDetails MDRDetails { get; set; }
 
         public int NotificationId => Notification.NotificationId;
         public bool IsMdr => DrugResistanceHelper.IsMdr(DrugResistanceProfile, TreatmentRegimen, ExposureToKnownCaseStatus);
