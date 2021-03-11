@@ -103,13 +103,13 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        public IActionResult OnGetValidateTravel(TravelDetails travelDetails)
+        public IActionResult OnPostValidateTravel([FromBody]TravelDetails travelDetails)
         {
             Service.ClearTravelOrVisitorFields(travelDetails);
             return ValidationService.GetFullModelValidationResult(travelDetails);
         }
 
-        public IActionResult OnGetValidateVisitor(VisitorDetails visitorDetails)
+        public IActionResult OnPostValidateVisitor([FromBody]VisitorDetails visitorDetails)
         {
             Service.ClearTravelOrVisitorFields(visitorDetails);
             return ValidationService.GetFullModelValidationResult(visitorDetails);

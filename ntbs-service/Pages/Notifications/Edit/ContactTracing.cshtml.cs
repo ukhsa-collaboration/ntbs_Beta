@@ -43,7 +43,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        public ContentResult OnGetValidateContactTracing(ContactTracing model, string key)
+        public ContentResult OnPostValidateContactTracing([FromBody]ContactTracing model)
         {
             return ValidationService.GetFullModelValidationResult(model);
         }

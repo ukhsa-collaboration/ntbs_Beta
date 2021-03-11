@@ -299,19 +299,19 @@ namespace ntbs_service.Pages.Notifications.Edit
             return ValidationService.GetPropertyValidationResult<Notification>(key, notificationSites, shouldValidateFull);
         }
 
-        public ContentResult OnGetValidateNotificationSiteProperty(string key, string value, bool shouldValidateFull)
+        public ContentResult OnPostValidateNotificationSiteProperty([FromBody]InputValidationModel validationData)
         {
             var notificationSite = new NotificationSite
             {
-                ShouldValidateFull = shouldValidateFull,
+                ShouldValidateFull = validationData.ShouldValidateFull,
                 SiteId = (int)SiteId.OTHER
             };
-            return ValidationService.GetPropertyValidationResult(notificationSite, key, value);
+            return ValidationService.GetPropertyValidationResult(notificationSite, validationData.Key, validationData.Value);
         }
 
-        public ContentResult OnGetValidateClinicalDetailsYearComparison(int newYear, int existingYear, string propertyName)
+        public ContentResult OnPostValidateClinicalDetailsYearComparison([FromBody]YearComparisonValidationModel validationData)
         {
-            return ValidationService.GetYearComparisonValidationResult(newYear, existingYear, propertyName);
+            return ValidationService.GetYearComparisonValidationResult(validationData.NewYear, validationData.ExistingYear, validationData.PropertyName);
         }
 
         public ContentResult OnGetValidateClinicalDetailsProperties(IEnumerable<Dictionary<string, string>> keyValuePairs)

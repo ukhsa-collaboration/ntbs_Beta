@@ -151,18 +151,18 @@ namespace ntbs_service.Pages.Notifications.Edit
             await FindAndSetPostcodeAsync(_postcodeService, PatientDetails);
         }
 
-        public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
+        public async Task<ContentResult> OnPostValidatePostcode([FromBody]PostcodeValidationModel validationData)
         {
             var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            var foundPostcode = await _postcodeService.FindPostcodeAsync(postcode);
+            var foundPostcode = await _postcodeService.FindPostcodeAsync(validationData.Postcode);
             var propertyValueTuples = new List<(string, object)>
             {
                 ("PostcodeToLookup", foundPostcode?.Postcode),
-                ("Postcode", postcode)
+                ("Postcode", validationData.Postcode)
             };
             return ValidationService.GetMultiplePropertiesValidationResult<PatientDetails>(
                 propertyValueTuples,
-                shouldValidateFull,
+                validationData.ShouldValidateFull,
                 notification.IsLegacy);
         }
 

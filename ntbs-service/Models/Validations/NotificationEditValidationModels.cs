@@ -30,4 +30,17 @@
         public bool HasOther { get; set; }
         public string OtherDescription { get; set; }
     }
+
+    public class YearComparisonValidationModel
+    {
+        public int NewYear { get; set; }
+        public int ExistingYear { get; set; }
+        public string PropertyName { get; set; }
+    }
+
+    public class PostcodeValidationModel
+    {
+        public string Postcode { get; set; }
+        public bool ShouldValidateFull { get; set; }
+    }
 }

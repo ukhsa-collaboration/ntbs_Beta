@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { getHeaders } from '../helpers';
+import {getHeaders, Method} from '../helpers';
 import axios from 'axios';
 
 type TravelOrVisitVariables = {
@@ -25,9 +25,10 @@ const ValidateTravelOrVisit = Vue.extend({
 
             const travelOrVisitVariables = this.getTravelOrVisitVariables();
             const requestConfig = {
+                method: Method.POST,
                 url: `Travel/Validate${this.$props.modelType}`,
                 headers: getHeaders(),
-                params: travelOrVisitVariables
+                data: travelOrVisitVariables
             }
 
             axios.request(requestConfig)

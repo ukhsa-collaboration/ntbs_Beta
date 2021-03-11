@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { getHeaders, getValidationPath } from "../helpers";
+import {getHeaders, getValidationPath, Method} from "../helpers";
 import axios from "axios";
 
 const YearComparison = Vue.extend({
@@ -11,9 +11,10 @@ const YearComparison = Vue.extend({
             const newValue = inputField.value;
 
             const requestConfig = {
+                method: Method.POST,
                 url: `${getValidationPath(this.$props.model)}YearComparison`,
                 headers: getHeaders(),
-                params: {
+                data: {
                     "newYear": newValue,
                     "shouldValidateFull": this.$props.shouldvalidatefull,
                     "existingYear": this.$props.yeartocompare,
