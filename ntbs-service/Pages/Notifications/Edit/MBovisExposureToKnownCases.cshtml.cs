@@ -4,6 +4,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -68,10 +69,10 @@ namespace ntbs_service.Pages.Notifications.Edit
                 await Service.UpdateMBovisDetailsExposureToKnownCasesAsync(Notification, MBovisDetails);
             }
         }
-
-        public ContentResult OnGetValidateMBovisDetailsProperty(string key, string value, bool shouldValidateFull)
+        
+        public ContentResult OnPostValidateMBovisDetailsProperty([FromBody]InputValidationModel validationData)
         {
-            return ValidationService.GetPropertyValidationResult<MBovisDetails>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<MBovisDetails>(validationData.Key, validationData.Value, validationData.ShouldValidateFull);
         }
 
         protected override async Task<Notification> GetNotificationAsync(int notificationId)

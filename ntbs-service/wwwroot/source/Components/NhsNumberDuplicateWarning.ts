@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { getHeaders, buildPath } from "../helpers";
+import {getHeaders, buildPath, Method} from "../helpers";
 import axios from "axios";
 
 const NhsNumberDuplicateWarning = Vue.extend({
@@ -7,9 +7,10 @@ const NhsNumberDuplicateWarning = Vue.extend({
         handleValid: function (value: String) {
             const notificationId = (document.querySelector("#NotificationId") as HTMLInputElement).value;
             const requestConfig = {
+                method: Method.POST,
                 url: buildPath("NhsNumberDuplicates"),
                 headers: getHeaders(),
-                params: {
+                data: {
                     "notificationId": notificationId,
                     "nhsNumber": value
                 }

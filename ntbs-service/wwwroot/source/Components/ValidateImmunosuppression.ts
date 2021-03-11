@@ -1,6 +1,6 @@
 ﻿import Vue from "vue";
 import axios from "axios";
-import { getHeaders } from "../helpers";
+import {getHeaders, Method} from "../helpers";
 
 const ValidateImmunosuppression = Vue.extend({
     methods: {
@@ -13,9 +13,10 @@ const ValidateImmunosuppression = Vue.extend({
             const inputValues = this.getInputValues();
 
             const requestConfig = {
+                method: Method.POST,
                 url: "Comorbidities/ValidateImmunosuppression",
                 headers: getHeaders(),
-                params: inputValues
+                data: inputValues
             };
 
             axios.request(requestConfig)

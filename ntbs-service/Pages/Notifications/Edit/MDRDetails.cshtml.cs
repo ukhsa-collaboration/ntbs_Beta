@@ -134,9 +134,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        public ContentResult OnGetValidateMDRDetailsProperty(string key, string value, bool shouldValidateFull)
+        public ContentResult OnPostValidateMDRDetailsProperty([FromBody]InputValidationModel validationData)
         {
-            return ValidationService.GetPropertyValidationResult<MDRDetails>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<MDRDetails>(validationData.Key, validationData.Value, validationData.ShouldValidateFull);
         }
     }
 }

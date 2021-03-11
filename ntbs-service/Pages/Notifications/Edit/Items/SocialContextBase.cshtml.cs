@@ -7,6 +7,7 @@ using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit.Items
@@ -94,15 +95,15 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             ValidationService.TrySetFormattedDate(model, modelName, nameof(model.DateTo), FormattedDateTo);
         }
 
-        public ContentResult OnGetValidateSocialContextProperty(string key, string value, bool shouldValidateFull)
+        public ContentResult OnPostValidateSocialContextProperty([FromBody]InputValidationModel validationData)
         {
-            return ValidationService.GetPropertyValidationResult<SocialContextVenue>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<SocialContextVenue>(validationData.Key, validationData.Value, validationData.ShouldValidateFull);
         }
 
-        public async Task<ContentResult> OnGetValidateSocialContextDate(string key, string day, string month, string year)
+        public async Task<ContentResult> OnPostValidateSocialContextDate([FromBody]DateValidationModel validationData)
         {
             var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
-            return ValidationService.GetDateValidationResult<T>(key, day, month, year, isLegacy);
+            return ValidationService.GetDateValidationResult<T>(validationData.Key, validationData.Day, validationData.Month, validationData.Year, isLegacy);
         }
 
         public ContentResult OnGetValidateSocialContextDates(IEnumerable<Dictionary<string, string>> keyValuePairs)

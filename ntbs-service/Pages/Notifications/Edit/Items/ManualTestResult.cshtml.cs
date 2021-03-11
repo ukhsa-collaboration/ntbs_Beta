@@ -10,6 +10,7 @@ using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit.Items
@@ -155,10 +156,10 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 FormattedTestDate);
         }
 
-        public async Task<ContentResult> OnGetValidateTestResultForEditDateAsync(string key, string day, string month, string year)
+        public async Task<ContentResult> OnPostValidateTestResultForEditDateAsync([FromBody]DateValidationModel validationData)
         {
             var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
-            return ValidationService.GetDateValidationResult<ManualTestResult>(key, day, month, year, isLegacy);
+            return ValidationService.GetDateValidationResult<ManualTestResult>(validationData.Key, validationData.Day, validationData.Month, validationData.Year, isLegacy);
         }
 
         public async Task<JsonResult> OnGetFilteredSampleTypesForManualTestType(int value)

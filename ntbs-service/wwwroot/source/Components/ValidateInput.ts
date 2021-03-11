@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { getHeaders, getValidationPath } from "../helpers";
+import {getHeaders, getValidationPath, Method} from "../helpers";
 import axios from "axios";
 
 const ValidateInput = Vue.extend({
@@ -21,11 +21,12 @@ const ValidateInput = Vue.extend({
             this.$emit("validate", event);
 
             const requestConfig = {
+                method: Method.POST,
                 url: `${getValidationPath(this.$props.model)}Property`,
                 headers: getHeaders(),
-                params: {
+                data: {
                     "value": newValue,
-                    "shouldValidateFull": this.$props.shouldvalidatefull || false,
+                    "shouldValidateFull": this.$props.shouldvalidatefull.toLowerCase() == "true",
                     "key": this.$props.property,
                     [this.$props.property]: newValue
                 }

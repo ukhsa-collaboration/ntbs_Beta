@@ -107,9 +107,9 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             return RedirectToPage("/Notifications/Edit/MBovisExposureToKnownCases", new { NotificationId });
         }
 
-        public ContentResult OnGetValidateMBovisExposureToKnownCaseProperty(string key, string value, bool shouldValidateFull)
+        public ContentResult OnPostValidateMBovisExposureToKnownCaseProperty([FromBody]InputValidationModel validationData)
         {
-            return ValidationService.GetPropertyValidationResult<MBovisExposureToKnownCase>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<MBovisExposureToKnownCase>(validationData.Key, validationData.Value, validationData.ShouldValidateFull);
         }
 
         private void ValidateExposureNotification()

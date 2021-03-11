@@ -6,6 +6,7 @@ using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -83,9 +84,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        public ContentResult OnGetValidateProperty(string key, string value, bool shouldValidateFull)
+        public ContentResult OnPostValidateProperty([FromBody]InputValidationModel validationData)
         {
-            return ValidationService.GetPropertyValidationResult<PreviousTbHistory>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<PreviousTbHistory>(validationData.Key, validationData.Value, validationData.ShouldValidateFull);
         }
     }
 }
