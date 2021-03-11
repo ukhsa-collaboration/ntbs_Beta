@@ -88,6 +88,8 @@ namespace ntbs_service.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AnchorLink");
+
                     b.Property<string>("Answer");
 
                     b.Property<int>("OrderIndex")

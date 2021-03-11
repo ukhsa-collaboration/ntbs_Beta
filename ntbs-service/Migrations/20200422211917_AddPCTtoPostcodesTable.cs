@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using CsvHelper;
@@ -10,8 +10,8 @@ namespace ntbs_service.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("ALTER TABLE [ReferenceData].PostcodeLookup ADD PCT varchar(10)");
-            
+            migrationBuilder.AddColumn<string>("PCT", table: "PostcodeLookup", type: "varchar(10)", schema: "ReferenceData", nullable: true);
+
             var pathToFile = Path.Combine(Environment.CurrentDirectory, "Models/SeedData/Postcodes.csv");
             const int itemsPerUpdate = 1000;
 
@@ -56,13 +56,13 @@ namespace ntbs_service.Migrations
                     keyValues: postcodeArray,
                     column: "PCT",
                     values: pctArray
-                );             
+                );
             }
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"ALTER TABLE ReferenceData.PostcodeLookup DROP PCT");
+            migrationBuilder.DropColumn("PCT", "PostcodeLookup", schema: "ReferenceData");
         }
     }
 }

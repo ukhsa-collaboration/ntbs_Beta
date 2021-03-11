@@ -15677,6 +15677,8 @@ namespace ntbs_service.Migrations
 
                     b.Property<string>("LocalAuthorityCode");
 
+                    b.Property<string>("PCT");
+
                     b.HasKey("Postcode");
 
                     b.HasIndex("LocalAuthorityCode");
