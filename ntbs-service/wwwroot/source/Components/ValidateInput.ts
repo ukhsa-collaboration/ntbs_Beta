@@ -1,6 +1,6 @@
 import Vue from "vue";
-import {getHeaders, getValidationPath, Method} from "../helpers";
-import axios from "axios";
+import {getHeaders, getValidationPath} from "../helpers";
+import axios, {Method} from "axios";
 
 const ValidateInput = Vue.extend({
     props: ["model", "property", "shouldvalidatefull"],
@@ -21,7 +21,7 @@ const ValidateInput = Vue.extend({
             this.$emit("validate", event);
 
             const requestConfig = {
-                method: Method.POST,
+                method: "post" as Method,
                 url: `${getValidationPath(this.$props.model)}Property`,
                 headers: getHeaders(),
                 data: {

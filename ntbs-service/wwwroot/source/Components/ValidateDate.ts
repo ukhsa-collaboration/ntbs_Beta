@@ -3,10 +3,10 @@ import {
     getHeaders,
     getValidationPath as getValidationPath,
     FormattedDate,
-    convertFormattedDateToDate,
-    Method
+    convertFormattedDateToDate
 } from "../helpers";
 import DateInput from "./DateInput";
+import {Method} from "axios";
 const axios = require("axios");
 
 // This component mixes in `DateInput` to apply its focus-shifting behaviour whilst sharing the `ref` references
@@ -35,7 +35,7 @@ export default Vue.extend({
             }
 
             let requestConfig = {
-                method: Method.POST,
+                method: "post" as Method,
                 url: `${getValidationPath(this.$props.model)}Date`,
                 headers: getHeaders(),
                 data: {

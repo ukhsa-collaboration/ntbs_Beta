@@ -1,6 +1,6 @@
 import Vue from "vue";
-import {getHeaders, Method} from "../helpers";
-import axios from "axios";
+import {getHeaders} from "../helpers";
+import axios, {Method} from "axios";
 
 type ContactTracingVariables = {
     adultsIdentified: string,
@@ -58,7 +58,7 @@ const ValidateContactTracing = Vue.extend({
 
         ValidateModel: function (contactTracingVariables: ContactTracingVariables) {
             let requestConfig = {
-                method: Method.POST,
+                method: "post" as Method,
                 url: `${this.$props.model}/Validate${this.$props.model}`,
                 headers: getHeaders(),
                 data: contactTracingVariables
