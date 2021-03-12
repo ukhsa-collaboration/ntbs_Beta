@@ -611,9 +611,6 @@ namespace ntbs_service
             {
                 Authorization = new[] { new HangfireAuthorisationFilter(GetAdminRoleName()) },
                 DisplayStorageConnectionString = false,
-                // Added to squash intermittent 'The required antiforgery cookie token must be provided' exceptions
-                // Does not pose a significant attack vector as all jobs are essentially idempotent.
-                IgnoreAntiforgeryToken = true
             };
             app.UseHangfireDashboard("/hangfire", dashboardOptions);
             app.UseHangfireServer(new BackgroundJobServerOptions
