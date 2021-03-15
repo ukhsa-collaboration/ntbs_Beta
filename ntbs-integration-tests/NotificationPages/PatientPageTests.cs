@@ -1,11 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
+using AngleSharp.Html.Dom;
+using MoreLinq;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -370,14 +376,29 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task WhenNhsNumberInvalid_ValidatePatientProperty_ReturnsExpectedResult(string nhsNumber, string validationResult)
         {
             // Arrange
-            var formData = new Dictionary<string, string>
+            var request = new InputValidationModel
             {
-                ["key"] = "NhsNumber",
-                ["value"] = nhsNumber
+                Key = "NhsNumber",
+                Value = nhsNumber,
+                ShouldValidateFull = true
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidatePatientDetailsProperty"));
+            var getResponse = await Client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
+            var cookies = getResponse.Headers.SingleOrDefault(header => header.Key == "Set-Cookie").Value;
+            var antiforgery = cookies.First().Split(" ").First(c => c.Contains("Antiforgery"));
+            var document = await GetDocumentAsync(getResponse);
+            var hiddenInput = (IHtmlInputElement)document.QuerySelector("input[name='__RequestVerificationToken']");
+            var token = hiddenInput.Value;
+            var postPath = GetHandlerPath(null, "ValidatePatientDetailsProperty", id: Utilities.NOTIFIED_ID);
+            var message = new HttpRequestMessage(HttpMethod.Post, postPath)
+            {
+                Content = JsonContent.Create(request)
+            };
+
+            message.Headers.Add("Cookie", antiforgery);
+            message.Headers.Add("requestverificationtoken", token);
+            var response = await Client.SendAsync(message);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
