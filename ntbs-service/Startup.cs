@@ -580,16 +580,16 @@ namespace ntbs_service
                 app.UseMiddleware<ActivityDetectionMiddleware>();
             }
 
+            if (Configuration.GetValue<bool>(Constants.AuditEnabledConfigValue))
+            {
+                app.UseMiddleware<AuditGetRequestMiddleWare>();
+            }
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
             });
-
-            if (Configuration.GetValue<bool>(Constants.AuditEnabledConfigValue))
-            {
-                app.UseMiddleware<AuditGetRequestMiddleWare>();
-            }
 
             ConfigureHangfire(app);
 
