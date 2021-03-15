@@ -24,11 +24,6 @@ var convertFormattedDateToDate = function(date: FormattedDate) {
     return new Date(date.year, date.month - 1, date.day)
 }
 
-enum Method {
-    POST = "post",
-    GET = "get"
-}
-
 export { 
-    getHeaders, getValidationPath, FormattedDate, convertFormattedDateToDate, buildPath, buildPathRelativeToOrigin, Method
+    getHeaders, getValidationPath, FormattedDate, convertFormattedDateToDate, buildPath, buildPathRelativeToOrigin
 };
