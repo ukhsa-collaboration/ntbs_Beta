@@ -575,16 +575,16 @@ namespace ntbs_service
             app.UseCookiePolicy();
             app.UseSession();
 
+            if (!Env.IsEnvironment("CI"))
+            {
+                app.UseMiddleware<ActivityDetectionMiddleware>();
+            }
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
             });
-
-            if (!Env.IsEnvironment("CI"))
-            {
-                app.UseMiddleware<ActivityDetectionMiddleware>();
-            }
 
             if (Configuration.GetValue<bool>(Constants.AuditEnabledConfigValue))
             {

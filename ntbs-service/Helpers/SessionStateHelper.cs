@@ -13,7 +13,7 @@ namespace ntbs_service.Helpers
         public static bool IsUpdatedRecently(ISession session)
         {
             var activityTimestamp = session.GetString("LastActivityTimestamp");
-            return activityTimestamp == null || DateTime.Parse(activityTimestamp).AddMinutes(30) > DateTime.Now;
+            return activityTimestamp != null && DateTime.Parse(activityTimestamp).AddMinutes(30) > DateTime.Now;
         }
     }
 }
