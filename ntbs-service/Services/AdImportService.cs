@@ -30,19 +30,19 @@ namespace ntbs_service.Services
             var tbServices = await _referenceDataRepository.GetAllTbServicesAsync();
             using (var adDirectoryService = _adDirectoryServiceFactory.Create())
             {
-                var users = adDirectoryService.LookupUsers(tbServices);
+                var users = adDirectoryService.LookupUsers(tbServices).ToList();
                 foreach (var (user, tbServicesMatchingGroups) in users)
                 {
                     Log.Information($"Updating user {user.Username}");
                     await _userRepository.AddOrUpdateUser(user, tbServicesMatchingGroups);
                 }
                 
-                var ntbsUsersNotInAd = (await this._userRepository.GetUsernameDictionary()).Keys
-                    .Where(username => !users.Select(u => u.user.Username).Contains(username));
-                foreach (var username in ntbsUsersNotInAd)
+                var ntbsUsersNotInAd = this._userRepository.GetUserIQueryable()
+                    .Where(user => !users.Select(u => u.user.Username)
+                        .Contains(user.Username)).ToList();
+                foreach (var user in ntbsUsersNotInAd)
                 {
-                    Log.Information($"Removing AD groups from user {username}");
-                    var user = await _userRepository.GetUserByUsername(username);
+                    Log.Information($"Updating user {user.Username}");
                     user.IsActive = false;
                     user.AdGroups = null;
                     await _userRepository.AddOrUpdateUser(user, user.CaseManagerTbServices.Select(cmtb => cmtb.TbService));
