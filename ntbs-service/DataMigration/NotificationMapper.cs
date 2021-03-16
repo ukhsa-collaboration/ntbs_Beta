@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -123,7 +123,9 @@ namespace ntbs_service.DataMigration
             List<MigrationDbMBovisOccupation> mbovisOccupationExposures,
             List<MigrationDbMBovisMilkConsumption> mbovisUnpasteurisedMilkConsumption)
         {
-            return await Task.WhenAll(legacyIds.Select(async id =>
+            var notificationsToReturn = new List<Notification>();
+
+            foreach (var id in legacyIds)
             {
                 var rawNotification = notifications.Single(n => n.OldNotificationId == id);
                 var notificationSites = AsSites(sitesOfDisease
@@ -191,8 +193,10 @@ namespace ntbs_service.DataMigration
                     notificationMBovisUnpasteurisedMilkConsumption.Any();
                 notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions =
                     notificationMBovisUnpasteurisedMilkConsumption;
-                return notification;
-            }));
+                notificationsToReturn.Add(notification);
+            }
+
+            return notificationsToReturn;
         }
 
         private List<TreatmentEvent> CombineTreatmentEvents(Notification notification,

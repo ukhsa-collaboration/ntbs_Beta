@@ -212,10 +212,15 @@ namespace ntbs_service.Services
         public async Task<bool> UnmatchAllSpecimensForNotification(int notificationId, string auditUsername)
         {
             var existingMatches = await GetMatchedSpecimenDetailsForNotificationAsync(notificationId);
-            var resultsTasks = existingMatches.Select(match => match.ReferenceLaboratoryNumber)
-                .Select(labNumber => UnmatchSpecimenAsync(notificationId, labNumber, auditUsername));
-            var results = await Task.WhenAll(resultsTasks);
-            return results.All(result => result); // Check if all were successes
+            var labNumbers = existingMatches.Select(match => match.ReferenceLaboratoryNumber);
+
+            var overallResult = true;
+            foreach (var labNumber in labNumbers)
+            {
+                var resultForLabNumber = await UnmatchSpecimenAsync(notificationId, labNumber, auditUsername);
+                overallResult &= resultForLabNumber;
+            }
+            return overallResult; // Only true if all were successful
         }
 
         private class UnmatchedQueryResultRow
