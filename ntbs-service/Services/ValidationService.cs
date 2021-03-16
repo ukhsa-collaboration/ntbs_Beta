@@ -126,6 +126,7 @@ namespace ntbs_service.Services
 
         public ContentResult GetValidationResult(object model, string key)
         {
+            ModelState.Clear();
             _pageModel.TryValidateModel(model);
 
             var modelStateByKey = ModelState[key];

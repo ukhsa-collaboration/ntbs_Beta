@@ -4,6 +4,7 @@ using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
+using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -164,14 +165,21 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task ValidateMDRDetailsProperty_ReturnsErrorIfDescriptionContainsNumbers()
         {
             // Arrange
-            var formData = new Dictionary<string, string>
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new InputValidationModel()
             {
-                ["key"] = "RelationshipToCase",
-                ["value"] = "hello 123"
+                Key = "RelationshipToCase",
+                Value = "hello 123"
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateMDRDetailsProperty"));
+            
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetHandlerPath(null, "ValidateMDRDetailsProperty", Utilities.NOTIFIED_ID),
+                request);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

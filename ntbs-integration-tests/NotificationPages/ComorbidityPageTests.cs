@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
+using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -137,23 +138,29 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Theory]
-        [InlineData("Unknown", "false", "", "")]
-        [InlineData("No", "false", "", "")]
-        [InlineData("Yes", "false", "", "At least one immunosuppression type must be selected")]
-        [InlineData("Yes", "true", "", "Please supply other immunosuppression details")]
-        [InlineData("Yes", "true", "Other", "")]
-        public async Task ValidateImmunosuppression_ReturnsExpectedResult(string status, string isOther, string description, string validationResult)
+        [InlineData("Unknown", false, "", "")]
+        [InlineData("No", false, "", "")]
+        [InlineData("Yes", false, "", "At least one immunosuppression type must be selected")]
+        [InlineData("Yes", true, "", "Please supply other immunosuppression details")]
+        [InlineData("Yes", true, "Other", "")]
+        public async Task ValidateImmunosuppression_ReturnsExpectedResult(string status, bool isOther, string description, string validationResult)
         {
             // Arrange
-            var formData = new Dictionary<string, string>
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new ImmunosuppressionValidationModel
             {
-                ["immunosuppressionStatus"] = status,
-                ["hasOther"] = isOther,
-                ["otherDescription"] = description
+                ImmunosuppressionStatus = status,
+                HasOther = isOther,
+                OtherDescription = description
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateImmunosuppression"));
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetHandlerPath(null, "ValidateImmunosuppression", Utilities.NOTIFIED_ID),
+                request);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

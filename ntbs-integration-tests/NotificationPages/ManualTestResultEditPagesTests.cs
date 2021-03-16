@@ -312,20 +312,27 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task IfDateTooEarly_ValidateTestResultForEditDate_ReturnsEarliestDateErrorMessage(bool isEdit)
         {
             // Arrange
-            var formData = new Dictionary<string, string>
+            const int notificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
+            var notificationSubPath = isEdit ? NotificationSubPaths.EditManualTestResult(10) : NotificationSubPaths.AddManualTestResult;
+            var url = GetPathForId($"{notificationSubPath}", notificationId, null);
+            var initialPage = await Client.GetAsync(url);
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new DateValidationModel
             {
-                ["key"] = "TestDate",
-                ["day"] = "1",
-                ["month"] = "1",
-                ["year"] = "1899"
+                Key = "TestDate",
+                Day = "1",
+                Month = "1",
+                Year = "1899"
             };
             const string handlerPath = "ValidateTestResultForEditDate";
-            var notificationSubPath = isEdit ? NotificationSubPath : NotificationSubPaths.AddManualTestResult;
-            var endpointPath = $"{notificationSubPath}/{handlerPath}";
-            var endpointUrl = GetPathForId($"{endpointPath}", Utilities.NOTIFIED_ID, formData);
+            var endpointUrl = $"{url}/{handlerPath}";
 
             // Act
-            var response = await Client.GetAsync(endpointUrl);
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                endpointUrl,
+                request);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
