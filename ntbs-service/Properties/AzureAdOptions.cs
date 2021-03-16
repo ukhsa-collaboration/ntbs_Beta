@@ -12,9 +12,6 @@
         /** The URL to send the id/access token back to. */
         public string CallbackPath { get; set; }
 
-        /** The amount of time an authentication cookie is valid for */
-        public string CookieExpireTimeSpan { get; set; }
-
         /** This will override the use of Adfs with Azure Active Directory **/
         public bool Enabled { get; set; }
     }

@@ -294,7 +294,7 @@ namespace ntbs_service
                 .AddCookie(options =>
                 {
                     options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
-                    options.ExpireTimeSpan = TimeSpan.Parse(adfsOptions.CookieExpireTimeSpan);
+                    options.ExpireTimeSpan = TimeSpan.FromHours(adOptions.MaxSessionCookieLifetimeInHours);
                 });
 
 
@@ -317,7 +317,7 @@ namespace ntbs_service
                 .AddCookie(options =>
                 {
                     options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
-                    options.ExpireTimeSpan = TimeSpan.Parse(azureAdOptions.CookieExpireTimeSpan);
+                    options.ExpireTimeSpan = TimeSpan.FromHours(adOptions.MaxSessionCookieLifetimeInHours);
                 })
                 .AddOpenIdConnect(options =>
                 {
