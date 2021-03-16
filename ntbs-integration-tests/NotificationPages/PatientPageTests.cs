@@ -443,7 +443,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
         {
             // Arrange
-            const int id = Utilities.NOTIFIED_ID;
+            const int id = Utilities.NOTIFIED_ID_2;
             var url = GetCurrentPathForId(id);
             var document = await GetDocumentForUrlAsync(url);
 
