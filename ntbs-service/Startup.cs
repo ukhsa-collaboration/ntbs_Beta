@@ -291,7 +291,11 @@ namespace ntbs_service
                         }
                     };
                 })
-                .AddCookie(options => { options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null; });
+                .AddCookie(options =>
+                {
+                    options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
+                    options.ExpireTimeSpan = TimeSpan.Parse(adfsOptions.CookieExpireTimeSpan);
+                });
 
 
             if (setupDummyAuth)
@@ -313,7 +317,7 @@ namespace ntbs_service
                 .AddCookie(options =>
                 {
                     options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
-                    options.ExpireTimeSpan = TimeSpan.FromDays(1);
+                    options.ExpireTimeSpan = TimeSpan.Parse(azureAdOptions.CookieExpireTimeSpan);
                 })
                 .AddOpenIdConnect(options =>
                 {
