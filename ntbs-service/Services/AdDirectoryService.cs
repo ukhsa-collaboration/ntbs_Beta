@@ -63,7 +63,7 @@ namespace ntbs_service.Services
 
         public void Dispose()
         {
-            _connection.Dispose();
+            _connection?.Dispose();
         }
 
         public IEnumerable<(User user, List<TBService> tbServicesMatchingGroups)> LookupUsers(

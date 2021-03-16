@@ -31,21 +31,21 @@ namespace ntbs_service.Services
             using (var adDirectoryService = _adDirectoryServiceFactory.Create())
             {
                 var users = adDirectoryService.LookupUsers(tbServices).ToList();
+                var ntbsUsersNotInAd = this._userRepository.GetUserQueryable()
+                    .Where(user => !users.Select(u => u.user.Username).Contains(user.Username)).ToList();
+                var ntbsUsersNotInAdWithTbServices = ntbsUsersNotInAd.Select(u =>
+                    (u, u.CaseManagerTbServices.Select(cmtb => cmtb.TbService).ToList()));
+                users.AddRange(ntbsUsersNotInAdWithTbServices);
                 foreach (var (user, tbServicesMatchingGroups) in users)
                 {
                     Log.Information($"Updating user {user.Username}");
+                    if (ntbsUsersNotInAd.Select(u => u.Username).Contains(user.Username))
+                    {
+                        user.IsActive = false;
+                        user.AdGroups = null;
+                    }
+
                     await _userRepository.AddOrUpdateUser(user, tbServicesMatchingGroups);
-                }
-                
-                var ntbsUsersNotInAd = this._userRepository.GetUserIQueryable()
-                    .Where(user => !users.Select(u => u.user.Username)
-                        .Contains(user.Username)).ToList();
-                foreach (var user in ntbsUsersNotInAd)
-                {
-                    Log.Information($"Updating user {user.Username}");
-                    user.IsActive = false;
-                    user.AdGroups = null;
-                    await _userRepository.AddOrUpdateUser(user, user.CaseManagerTbServices.Select(cmtb => cmtb.TbService));
                 }
             }
         }

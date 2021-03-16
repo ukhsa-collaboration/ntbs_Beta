@@ -209,7 +209,7 @@ namespace ntbs_service
             services.AddScoped<IPostcodeService, PostcodeService>();
             services.AddScoped<Services.IAuthorizationService, AuthorizationService>();
             services.AddScoped<ILegacySearchService, LegacySearchService>();
-            services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
+            services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceFactory>();
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
             services.AddScoped<INotificationCloningService, NotificationCloningService>();
             services.AddScoped<ICaseManagerSearchService, CaseManagerSearchService>();
