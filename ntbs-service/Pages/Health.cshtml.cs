@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using ntbs_service.Properties;
 
 namespace ntbs_service.Pages
 {
+    [Authorize(Policy = "AdminOnly")]
     public class Health : PageModel
     {
         public Health(IConfiguration configuration)
