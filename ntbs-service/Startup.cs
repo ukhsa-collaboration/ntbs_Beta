@@ -575,12 +575,6 @@ namespace ntbs_service
             app.UseCookiePolicy();
             app.UseSession();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapRazorPages();
-                endpoints.MapControllers();
-            });
-
             if (!Env.IsEnvironment("CI"))
             {
                 app.UseMiddleware<ActivityDetectionMiddleware>();
@@ -590,6 +584,12 @@ namespace ntbs_service
             {
                 app.UseMiddleware<AuditGetRequestMiddleWare>();
             }
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+                endpoints.MapControllers();
+            });
 
             ConfigureHangfire(app);
 

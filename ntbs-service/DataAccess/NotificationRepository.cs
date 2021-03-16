@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
+using MoreLinq;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -295,6 +296,8 @@ namespace ntbs_service.DataAccess
                     .ThenInclude(t => t.TreatmentOutcome)
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified)
                 .Where(n => n.TreatmentEvents.Any(t => t.TreatmentOutcome != null))
+                .OrderBy(n => n.NotificationId)
+                .AsSplitQuery()
                 .ToListAsync())
                 .Where(n =>
                 {
@@ -329,6 +332,7 @@ namespace ntbs_service.DataAccess
                 .Include(g => g.Notifications)
                     .ThenInclude(n => n.HospitalDetails)
                         .ThenInclude(e => e.CaseManager)
+                .OrderBy(n => n.NotificationGroupId)
                 .AsSplitQuery()
                 .SingleOrDefaultAsync();
         }
@@ -344,7 +348,7 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.SocialContextVenues)
                 .Include(n => n.TreatmentEvents)
                     .ThenInclude(t => t.TreatmentOutcome)
-                .AsSplitQuery();
+                .OrderBy(n => n.NotificationId);
         }
 
         // Gets Notification model with basic information for use in notifications homepage lists.
@@ -358,7 +362,9 @@ namespace ntbs_service.DataAccess
                             .ThenInclude(la => la.LocalAuthorityToPHEC)
                                 .ThenInclude(pl => pl.PHEC)
                 .Include(n => n.HospitalDetails.TBService.PHEC)
-                .Include(n => n.HospitalDetails.CaseManager);
+                .Include(n => n.HospitalDetails.CaseManager)
+                .OrderBy(n => n.NotificationId)
+                .AsSplitQuery();
         }
 
         public IQueryable<Notification> GetBaseNotificationsIQueryable()
