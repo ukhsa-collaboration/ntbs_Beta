@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: ntbs-int
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
