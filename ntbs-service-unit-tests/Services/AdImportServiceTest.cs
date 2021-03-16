@@ -30,11 +30,12 @@ namespace ntbs_service_unit_tests.Services
 
             var referenceRepo = new ReferenceDataRepository(_context);
             var userRepo = new UserRepository(_context);
+            var adUserService = new AdUserService(userRepo);
             
             _adImportService = new AdImportService(
                 _adDirectoryServiceFactoryMock.Object,
                 referenceRepo,
-                userRepo);
+                adUserService);
         }
 
         public void Dispose()
