@@ -296,6 +296,7 @@ namespace ntbs_service.DataAccess
                     .ThenInclude(t => t.TreatmentOutcome)
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified)
                 .Where(n => n.TreatmentEvents.Any(t => t.TreatmentOutcome != null))
+                .OrderBy(n => n.NotificationId)
                 .AsSplitQuery()
                 .ToListAsync())
                 .Where(n =>
