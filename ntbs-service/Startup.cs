@@ -310,7 +310,11 @@ namespace ntbs_service
                     sharedOptions.DefaultAuthenticateScheme = OpenIdConnectDefaults.AuthenticationScheme;
                     sharedOptions.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
                 })
-                .AddCookie(options => { options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null; })
+                .AddCookie(options =>
+                {
+                    options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
+                    options.ExpireTimeSpan = TimeSpan.FromDays(1);
+                })
                 .AddOpenIdConnect(options =>
                 {
                     options.ClientId = azureAdOptions.ClientId;
