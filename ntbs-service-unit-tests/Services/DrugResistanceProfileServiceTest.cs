@@ -51,28 +51,28 @@ namespace ntbs_service_unit_tests.Services
         private readonly NotificationForDrugResistanceImport mockNotificationWithMdr =
             new NotificationForDrugResistanceImport
             {
-                Notification = new Notification { NotificationId = 1 },
+                NotificationId = 1,
                 DrugResistanceProfile = drpWithMdr
             };
 
         private readonly NotificationForDrugResistanceImport mockNotificationWithoutMdr =
             new NotificationForDrugResistanceImport
             {
-                Notification = new Notification { NotificationId = 2 },
+                NotificationId = 2,
                 DrugResistanceProfile = drpWithoutMdr
             };
 
         private readonly NotificationForDrugResistanceImport mockNotificationWithMbovis =
             new NotificationForDrugResistanceImport
             {
-                Notification = new Notification { NotificationId = 3 },
+                NotificationId = 3,
                 DrugResistanceProfile = drpWithMbovis
             };
 
         private readonly NotificationForDrugResistanceImport mockNotificationWithoutMbovis =
             new NotificationForDrugResistanceImport
             {
-                Notification = new Notification { NotificationId = 4 },
+                NotificationId = 4,
                 DrugResistanceProfile = drpWithoutMbovis
             };
 
@@ -81,7 +81,7 @@ namespace ntbs_service_unit_tests.Services
             mockNotificationRepository = new Mock<INotificationRepository>();
             mockNotificationService = new Mock<INotificationService>();
             mockNotificationService
-                .Setup(x => x.UpdateDrugResistanceProfileAsync(
+                .Setup(x => x.UpdateDrugResistanceProfilesAsync(
                     It.IsAny<IEnumerable<(DrugResistanceProfile, DrugResistanceProfile)>>()))
                 .Callback<IEnumerable<(DrugResistanceProfile, DrugResistanceProfile)>>(x =>
                 {
@@ -302,7 +302,7 @@ namespace ntbs_service_unit_tests.Services
         {
             return Task.FromResult(notificationIds.Select(id => new NotificationForDrugResistanceImport
             {
-                Notification = new Notification { NotificationId = id },
+                NotificationId = id,
                 DrugResistanceProfile = new DrugResistanceProfile()
             }));
         }
@@ -312,7 +312,7 @@ namespace ntbs_service_unit_tests.Services
         {
             return Task.FromResult(notificationIds.Select(id => new NotificationForDrugResistanceImport
             {
-                Notification = new Notification { NotificationId = id },
+                NotificationId = id,
                 DrugResistanceProfile = drpWithMdr
             }));
         }

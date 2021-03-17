@@ -2,6 +2,7 @@
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using MoreLinq.Extensions;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Projections;
@@ -19,6 +20,8 @@ namespace ntbs_service.Services
         private readonly INotificationRepository _notificationRepository;
         private readonly IEnhancedSurveillanceAlertsService _enhancedSurveillanceAlertsService;
         private readonly IDrugResistanceProfileRepository _drugResistanceProfileRepository;
+
+        private const int UpdateBatchSize = 500;
 
         public DrugResistanceProfileService(
             INotificationService notificationService,
@@ -49,6 +52,14 @@ namespace ntbs_service.Services
         }
 
         private async Task UpdateDrugResistanceProfiles(Dictionary<int, DrugResistanceProfile> updatedDrugResistanceProfiles)
+        {
+            foreach (var batch in updatedDrugResistanceProfiles.Batch(UpdateBatchSize))
+            {
+                await UpdateBatchOfDrugResistanceProfiles(batch.ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
+            }
+        }
+
+        private async Task UpdateBatchOfDrugResistanceProfiles(Dictionary<int, DrugResistanceProfile> updatedDrugResistanceProfiles)
         {
             var drugResistanceProfilesToUpdate =
                 (await GetDrugResistanceProfilesWhichDifferInNtbs(updatedDrugResistanceProfiles)).ToList();
@@ -91,7 +102,7 @@ namespace ntbs_service.Services
         private async Task UpdateDrugResistanceProfiles(List<DrugResistanceProfileUpdate> updates)
         {
             var profileUpdates = updates.Select(u => (u.Notification.DrugResistanceProfile, u.UpdatedProfile));
-            await _notificationService.UpdateDrugResistanceProfileAsync(profileUpdates);
+            await _notificationService.UpdateDrugResistanceProfilesAsync(profileUpdates);
         }
 
         private async Task CreateOrDismissMdrAlerts(List<NotificationForDrugResistanceImport> notifications)
