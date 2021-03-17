@@ -74,9 +74,27 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Theory]
-        [InlineData("M. bovis", true, false)]
-        [InlineData("Non M. bovis", false, true)]
+        [InlineData("M. bovis", null, null, null, null, true, false)]
+        [InlineData("M. bovis", null, null, null, true, true, false)]
+        [InlineData("M. bovis", null, null, true, null, true, false)]
+        [InlineData("M. bovis", null, true, null, null, true, false)]
+        [InlineData("M. bovis", true, null, null, null, true, false)]
+        [InlineData("M. bovis", false, false, false, null, true, false)]
+        [InlineData("M. bovis", false, false, null, false, true, false)]
+        [InlineData("M. bovis", false, null, false, false, true, false)]
+        [InlineData("M. bovis", null, false, false, false, true, false)]
+        [InlineData("M. bovis", false, false, false, false, false, true)]
+        [InlineData("M. bovis", true, false, true, false, false, true)]
+        [InlineData("M. bovis", true, true, true, true, false, true)]
+        [InlineData("Non M. bovis", null, null, null, null, false, true)]
+        [InlineData("Non M. bovis", null, false, null, true, false, true)]
+        [InlineData("Non M. bovis", true, true, true, true, false, true)]
+        [InlineData("Non M. bovis", false, false, false, false, false, true)]
         public void CreateOrDismissMBovisAlert(string drugSpecies,
+            bool? hasExposureToKnownCases,
+            bool? hasUnpasteurisedMilkConsumption,
+            bool? hasOccupationExposure,
+            bool? hasAnimalExposure,
             bool shouldCreateAlert,
             bool shouldDismissAlert)
         {
@@ -87,7 +105,14 @@ namespace ntbs_service_unit_tests.Services
                 DrugResistanceProfile = new DrugResistanceProfile
                 {
                     Species = drugSpecies,
-                    DrugResistanceProfileString = "Random string"
+                    DrugResistanceProfileString = "Random string",
+                },
+                MBovisDetails = new MBovisDetails
+                {
+                    HasExposureToKnownCases = hasExposureToKnownCases,
+                    HasUnpasteurisedMilkConsumption = hasUnpasteurisedMilkConsumption,
+                    HasOccupationExposure = hasOccupationExposure,
+                    HasAnimalExposure = hasAnimalExposure,
                 }
             };
 

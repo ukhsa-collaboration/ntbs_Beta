@@ -33,7 +33,7 @@ namespace ntbs_service.Services
 
         public async Task CreateOrDismissMBovisAlert(INotificationForDrugResistanceImport notification)
         {
-            if (notification.IsMBovis)
+            if (notification.IsMBovis && !notification.IsMBovisQuestionnaireComplete)
             {
                 await CreateMBovisAlert(notification);
             }

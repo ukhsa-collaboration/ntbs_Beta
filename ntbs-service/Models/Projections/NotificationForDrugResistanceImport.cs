@@ -11,6 +11,7 @@ namespace ntbs_service.Models.Projections
         MDRDetails MDRDetails { get; }
         bool IsMdr { get; }
         bool IsMBovis { get; }
+        bool IsMBovisQuestionnaireComplete { get; }
     }
 
     public class NotificationForDrugResistanceImport : INotificationForDrugResistanceImport
@@ -19,12 +20,14 @@ namespace ntbs_service.Models.Projections
 
         public DrugResistanceProfile DrugResistanceProfile { get; set; }
         public TreatmentRegimen? TreatmentRegimen { get; set; }
-        public Status? ExposureToKnownCaseStatus { get; set; }
+        public Status? ExposureToKnownMdrCaseStatus { get; set; }
         public MDRDetails MDRDetails { get; set; }
+        public MBovisDetails MBovisDetails { get; set; }
 
         public int NotificationId => Notification.NotificationId;
-        public bool IsMdr => DrugResistanceHelper.IsMdr(DrugResistanceProfile, TreatmentRegimen, ExposureToKnownCaseStatus);
-
+        public bool IsMdr => DrugResistanceHelper.IsMdr(DrugResistanceProfile, TreatmentRegimen, ExposureToKnownMdrCaseStatus);
         public bool IsMBovis => DrugResistanceHelper.IsMbovis(DrugResistanceProfile);
+        public bool IsMBovisQuestionnaireComplete =>
+            DrugResistanceHelper.IsMBovisQuestionnaireComplete(MBovisDetails);
     }
 }

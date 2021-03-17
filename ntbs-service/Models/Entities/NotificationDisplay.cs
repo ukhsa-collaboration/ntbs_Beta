@@ -25,6 +25,9 @@ namespace ntbs_service.Models.Entities
 
         public bool IsMBovis => DrugResistanceHelper.IsMbovis(DrugResistanceProfile);
 
+        public bool IsMBovisQuestionnaireComplete =>
+            DrugResistanceHelper.IsMBovisQuestionnaireComplete(MBovisDetails);
+
         public override bool? IsLegacy => LTBRID != null || ETSID != null;
 
         private string CreateSitesOfDiseaseString()

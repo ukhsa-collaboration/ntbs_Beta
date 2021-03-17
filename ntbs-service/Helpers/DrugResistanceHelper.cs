@@ -8,7 +8,7 @@ namespace ntbs_service.Helpers
     {
         public static bool IsMdr(DrugResistanceProfile profile, TreatmentRegimen? treatmentRegimen, Status? exposureToKnownCaseStatus)
         {
-            // If user-set treatment ... 
+            // If user-set treatment ...
             return treatmentRegimen == TreatmentRegimen.MdrTreatment
                 // ... or lab results indicate MDR, ...
                 || profile.DrugResistanceProfileString == "RR/MDR/XDR"
@@ -20,6 +20,14 @@ namespace ntbs_service.Helpers
         {
             // If the lab results point to M. bovis species ...
             return string.Equals("M. bovis", profile.Species, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public static bool IsMBovisQuestionnaireComplete(MBovisDetails mBovisDetails)
+        {
+            return mBovisDetails.HasExposureToKnownCases.HasValue
+                   && mBovisDetails.HasUnpasteurisedMilkConsumption.HasValue
+                   && mBovisDetails.HasOccupationExposure.HasValue
+                   && mBovisDetails.HasAnimalExposure.HasValue;
         }
     }
 }
