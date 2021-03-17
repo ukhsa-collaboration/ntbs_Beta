@@ -556,11 +556,11 @@ namespace ntbs_service.DataMigration
 
         private async Task<PatientDetails> ExtractPatientDetails(MigrationDbNotification notification)
         {
-            var addressRaw = string.Join(" \n",
-                notification.Line1,
-                notification.Line2,
-                notification.City,
-                notification.County);
+            var addressLines = new List<string>
+            {
+                notification.Line1, notification.Line2, notification.City, notification.County
+            };
+            var addressRaw = string.Join(" \n", addressLines.Where(line => !string.IsNullOrEmpty(line)));
             var address = RemoveCharactersNotIn(
                 ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
                 addressRaw);
