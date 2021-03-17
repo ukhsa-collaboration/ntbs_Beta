@@ -15,7 +15,7 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Has the patient been exposed to a known RR/MDR/XDR case?")]
         public Status? ExposureToKnownCaseStatus { get; set; }
 
-        [MaxLength(40)]
+        [MaxLength(90)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         [RequiredIf(@"ExposureToKnownCaseStatus == Enums.Status.Yes", ErrorMessage = ValidationMessages.RelationshipToCaseIsRequired)]
         [Display(Name = "Relationship of the current case to the contact")]

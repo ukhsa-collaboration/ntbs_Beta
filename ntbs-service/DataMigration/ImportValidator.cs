@@ -111,7 +111,8 @@ namespace ntbs_service.DataMigration
                 notification.ContactTracing,
                 notification.PreviousTbHistory,
                 notification.TestData,
-                notification.MBovisDetails
+                notification.MBovisDetails,
+                notification.MDRDetails
             };
             var modelCollections = new List<IEnumerable<ModelBase>>
             {

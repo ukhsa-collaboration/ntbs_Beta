@@ -468,6 +468,8 @@ namespace ntbs_service.DataAccess
                         i.Property(e => e.NotifiedToPheStatus)
                             .HasConversion(statusEnumConverter)
                             .HasMaxLength(EnumMaxLength);
+                        i.Property(e => e.RelationshipToCase)
+                            .HasMaxLength(90);
                         i.ToTable("MDRDetails");
                     });
                 entity.OwnsOne(e => e.DrugResistanceProfile)
