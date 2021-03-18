@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
 using Serilog;
@@ -13,15 +14,15 @@ namespace ntbs_service.Services
     {
         private readonly IAdDirectoryServiceFactory _adDirectoryServiceFactory;
         private readonly IReferenceDataRepository _referenceDataRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IAdUserService _adUserService;
 
         public AdImportService(IAdDirectoryServiceFactory adDirectoryServiceFactory,
             IReferenceDataRepository referenceDataRepository,
-            IUserRepository userRepository)
+            IAdUserService adUserService)
         {
             _adDirectoryServiceFactory = adDirectoryServiceFactory;
             _referenceDataRepository = referenceDataRepository;
-            _userRepository = userRepository;
+            _adUserService = adUserService;
         }
 
         public async Task RunCaseManagerImportAsync()
@@ -29,11 +30,8 @@ namespace ntbs_service.Services
             var tbServices = await _referenceDataRepository.GetAllTbServicesAsync();
             using (var adDirectoryService = _adDirectoryServiceFactory.Create())
             {
-                foreach (var (user, tbServicesMatchingGroups) in adDirectoryService.LookupUsers(tbServices))
-                {
-                    Log.Information($"Updating user {user.Username}");
-                    await _userRepository.AddOrUpdateUser(user, tbServicesMatchingGroups);
-                }
+                var usersInAd = adDirectoryService.LookupUsers(tbServices).ToList();
+                await _adUserService.AddAndUpdateUsers(usersInAd);
             }
         }
     }

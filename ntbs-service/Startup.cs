@@ -207,12 +207,13 @@ namespace ntbs_service
             services.AddScoped<IPostcodeService, PostcodeService>();
             services.AddScoped<Services.IAuthorizationService, AuthorizationService>();
             services.AddScoped<ILegacySearchService, LegacySearchService>();
-            services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
+            services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceFactory>();
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
             services.AddScoped<INotificationCloningService, NotificationCloningService>();
             services.AddScoped<ICaseManagerSearchService, CaseManagerSearchService>();
             services.AddScoped<IClusterImportService, ClusterImportService>();
             services.AddScoped<ICaseManagerImportService, CaseManagerImportService>();
+            services.AddScoped<IAdUserService, AdUserService>();
 
             AddAuditService(services, auditDbConnectionString);
             AddReferenceLabResultServices(services);

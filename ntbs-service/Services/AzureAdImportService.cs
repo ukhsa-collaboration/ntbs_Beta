@@ -1,6 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using ntbs_service.DataAccess;
+using ntbs_service.Models.ReferenceEntities;
 using Serilog;
+using User = Sentry.User;
 
 namespace ntbs_service.Services
 {
@@ -8,15 +12,15 @@ namespace ntbs_service.Services
     {
         private readonly IAzureAdDirectoryServiceFactory _azureAdDirectoryServiceFactory;
         private readonly IReferenceDataRepository _referenceDataRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IAdUserService _adUserService;
 
         public AzureAdImportService(IAzureAdDirectoryServiceFactory azureAdDirectoryServiceFactory,
             IReferenceDataRepository referenceDataRepository,
-            IUserRepository userRepository)
+            IAdUserService adUserService)
         {
             _azureAdDirectoryServiceFactory = azureAdDirectoryServiceFactory;
             _referenceDataRepository = referenceDataRepository;
-            _userRepository = userRepository;
+            _adUserService = adUserService;
         }
 
         public async Task RunCaseManagerImportAsync()
@@ -24,12 +28,8 @@ namespace ntbs_service.Services
             var tbServices = await _referenceDataRepository.GetAllTbServicesAsync();
             using (var azureAdDirectoryService = _azureAdDirectoryServiceFactory.Create())
             {
-                var users = await azureAdDirectoryService.LookupUsers(tbServices);
-                foreach (var (user, tbServicesMatchingGroups) in users)
-                {
-                    Log.Information($"Updating user {user.Username}");
-                    await _userRepository.AddOrUpdateUser(user, tbServicesMatchingGroups);
-                }
+                var usersInAd = (await azureAdDirectoryService.LookupUsers(tbServices)).ToList();
+                await _adUserService.AddAndUpdateUsers(usersInAd);
             }
         }
     }

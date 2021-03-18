@@ -12,6 +12,7 @@ namespace ntbs_service.DataAccess
         Task AddOrUpdateUser(User user, IEnumerable<TBService> tbServices);
         Task AddUserLoginEvent(UserLoginEvent userLoginEvent);
         Task<User> GetUserByUsername(string username);
+        IQueryable<User> GetUserQueryable();
         Task UpdateUserContactDetails(User user);
         Task<Dictionary<string, string>> GetUsernameDictionary();
     }
@@ -25,9 +26,17 @@ namespace ntbs_service.DataAccess
             _context = context;
         }
 
+        public IQueryable<User> GetUserQueryable()
+        {
+            return this._context.User
+                .Include(u => u.CaseManagerTbServices)
+                .ThenInclude(c => c.TbService)
+                .ThenInclude(tb => tb.PHEC);
+        }
+
         public async Task AddOrUpdateUser(User user, IEnumerable<TBService> tbServices)
         {
-            var existingUser = await _context.User.Include(u => u.CaseManagerTbServices)
+            var existingUser = await GetUserQueryable()
                 .SingleOrDefaultAsync(u => u.Username == user.Username);
 
             if (existingUser != null)
@@ -48,10 +57,7 @@ namespace ntbs_service.DataAccess
 
         public async Task<User> GetUserByUsername(string username)
         {
-            var user = await _context.User
-                .Include(u => u.CaseManagerTbServices)
-                .ThenInclude(c => c.TbService)
-                .ThenInclude(tb => tb.PHEC)
+            var user = await GetUserQueryable()
                 .FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
             return user;
         }
