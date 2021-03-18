@@ -291,7 +291,11 @@ namespace ntbs_service
                         }
                     };
                 })
-                .AddCookie(options => { options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null; });
+                .AddCookie(options =>
+                {
+                    options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
+                    options.ExpireTimeSpan = TimeSpan.FromHours(adOptions.MaxSessionCookieLifetimeInHours);
+                });
 
 
             if (setupDummyAuth)
@@ -310,7 +314,11 @@ namespace ntbs_service
                     sharedOptions.DefaultAuthenticateScheme = OpenIdConnectDefaults.AuthenticationScheme;
                     sharedOptions.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
                 })
-                .AddCookie(options => { options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null; })
+                .AddCookie(options =>
+                {
+                    options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
+                    options.ExpireTimeSpan = TimeSpan.FromHours(adOptions.MaxSessionCookieLifetimeInHours);
+                })
                 .AddOpenIdConnect(options =>
                 {
                     options.ClientId = azureAdOptions.ClientId;

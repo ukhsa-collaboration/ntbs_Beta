@@ -18,5 +18,8 @@
 
         /** Only used in the CI environment to bypass authentication when running UI tests */
         public bool UseDummyAuth { get; set; }
+
+        /** The amount of time an authentication cookie is valid for */
+        public int MaxSessionCookieLifetimeInHours { get; set; }
     }
 }
