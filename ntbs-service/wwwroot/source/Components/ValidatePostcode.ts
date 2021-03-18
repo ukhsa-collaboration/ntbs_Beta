@@ -1,6 +1,6 @@
 import Vue from "vue";
-import { getHeaders, buildPath } from "../helpers";
-import axios from "axios";
+import {getHeaders, buildPath} from "../helpers";
+import axios, {Method} from "axios";
 
 const ValidatePostcode = Vue.extend({
     props: ["shouldvalidatefull"],
@@ -11,11 +11,12 @@ const ValidatePostcode = Vue.extend({
             const newValue = inputField.value;
 
             let requestConfig = {
+                method: "post" as Method,
                 url: buildPath("ValidatePostcode"),
                 headers: getHeaders(),
-                params: {
-                    "shouldValidateFull": this.$props.shouldvalidatefull || false,
-                    "postcode": newValue
+                data: {
+                    "shouldValidateFull": this.$props.shouldvalidatefull.toLowerCase() == "true",
+                    "postcode": newValue || null
                 }
             }
 

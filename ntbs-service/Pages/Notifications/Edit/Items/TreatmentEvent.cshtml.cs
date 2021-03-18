@@ -201,15 +201,15 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             return await NotificationRepository.GetNotificationWithTreatmentEventsAsync(notificationId);
         }
 
-        public ContentResult OnGetValidateTreatmentEventProperty(string key, string value)
+        public ContentResult OnPostValidateTreatmentEventProperty([FromBody]InputValidationModel validationData)
         {
-            return ValidationService.GetPropertyValidationResult<TreatmentEvent>(key, value, true);
+            return ValidationService.GetPropertyValidationResult<TreatmentEvent>(validationData.Key, validationData.Value, true);
         }
 
-        public async Task<ContentResult> OnGetValidateTreatmentEventDate(string key, string day, string month, string year)
+        public async Task<ContentResult> OnPostValidateTreatmentEventDate([FromBody]DateValidationModel validationData)
         {
             var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
-            return ValidationService.GetDateValidationResult<TreatmentEvent>(key, day, month, year, isLegacy);
+            return ValidationService.GetDateValidationResult<TreatmentEvent>(validationData.Key, validationData.Day, validationData.Month, validationData.Year, isLegacy);
         }
 
         public ContentResult OnGetValidateSelectedTreatmentOutcomeTypeProperty(string key, TreatmentOutcomeType? value)

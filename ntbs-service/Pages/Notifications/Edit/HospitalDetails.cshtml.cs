@@ -132,16 +132,16 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        public ContentResult OnGetValidateHospitalDetailsProperty(string key, string value, bool shouldValidateFull)
+        public ContentResult OnPostValidateHospitalDetailsProperty([FromBody]InputValidationModel validationData)
         {
-            return ValidationService.GetPropertyValidationResult<HospitalDetails>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<HospitalDetails>(validationData.Key, validationData.Value, validationData.ShouldValidateFull);
         }
 
-        public async Task<ContentResult> OnGetValidateNotificationDateAsync(string key, string day, string month, string year, int notificationId)
+        public async Task<ContentResult> OnPostValidateNotificationDateAsync([FromBody]DateValidationModel validationData)
         {
             // Query notification by Id when date validation depends on other properties of model
-            var notification = await NotificationRepository.GetNotificationAsync(notificationId);
-            return ValidationService.GetDateValidationResult(notification, key, day, month, year);
+            var notification = await NotificationRepository.GetNotificationAsync(validationData.NotificationId);
+            return ValidationService.GetDateValidationResult(notification, validationData.Key, validationData.Day, validationData.Month, validationData.Year);
         }
 
         private async Task SetValuesForValidation()

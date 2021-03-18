@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using ntbs_service.Models;
+using ntbs_service.Models.Validations;
 
 namespace ntbs_integration_tests.Helpers
 {
@@ -53,6 +56,25 @@ namespace ntbs_integration_tests.Helpers
             return await client.SendPostAsync(form, data, submissionRoute, submitType);
         }
 
+        public static async Task<HttpResponseMessage> SendVerificationPostAsync(this HttpClient client,
+            HttpResponseMessage getResponse,
+            IHtmlDocument document,
+            string postPath,
+            object payload)
+        {
+            var antiforgeryToken = GetAntiForgeryTokenFromHttpResponse(getResponse);
+            var requestVerificationToken = GetRequestVerificationTokenFromDocument(document);
+            var message = new HttpRequestMessage(HttpMethod.Post, postPath)
+            {
+                Content = JsonContent.Create(payload)
+            };
+
+            message.Headers.Add("Cookie", antiforgeryToken);
+            message.Headers.Add("requestverificationtoken", requestVerificationToken);
+            
+            return await client.SendAsync(message);
+        }
+
         private static Task<HttpResponseMessage> SendAsync(
             this HttpClient client,
             IHtmlFormElement form,
@@ -63,7 +85,7 @@ namespace ntbs_integration_tests.Helpers
         {
             VerifyFormElementsExist(form, formValues);
 
-            var token = GetAntiForgeryToken(form);
+            var token = GetAntiForgeryTokenFromForm(form);
             if (token != null)
             {
                 formValues.Add(TOKEN, token);
@@ -92,7 +114,7 @@ namespace ntbs_integration_tests.Helpers
             }
         }
 
-        private static string GetAntiForgeryToken(IHtmlFormElement form)
+        private static string GetAntiForgeryTokenFromForm(IHtmlFormElement form)
         {
             using (var reader = new StreamReader(form.GetSubmission().Body))
             {
@@ -101,6 +123,18 @@ namespace ntbs_integration_tests.Helpers
                 var token = tokenMatch.Success ? tokenMatch.Groups[1].Captures[0].Value : null;
                 return token;
             }
+        }
+
+        private static string GetAntiForgeryTokenFromHttpResponse(HttpResponseMessage response)
+        {
+            var cookies = response.Headers.SingleOrDefault(header => header.Key == "Set-Cookie").Value;
+            return cookies.First().Split(" ").First(c => c.Contains("Antiforgery"));
+        }
+
+        private static string GetRequestVerificationTokenFromDocument(IHtmlDocument document)
+        {
+            var hiddenInput = (IHtmlInputElement)document.QuerySelector($"input[name='{TOKEN}']");
+            return hiddenInput.Value;
         }
     }
 }

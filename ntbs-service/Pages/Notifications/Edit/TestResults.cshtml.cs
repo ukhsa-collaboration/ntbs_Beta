@@ -5,6 +5,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -82,9 +83,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("/Notifications/Edit/TestResults", new { NotificationId });
         }
 
-        public ContentResult OnGetValidateTestDataProperty(string key, string value, bool shouldValidateFull)
+        public ContentResult OnPostValidateTestDataProperty([FromBody]InputValidationModel validationData)
         {
-            return ValidationService.GetPropertyValidationResult<TestData>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<TestData>(validationData.Key, validationData.Value, validationData.ShouldValidateFull);
         }
 
         protected override async Task<Notification> GetNotificationAsync(int notificationId)

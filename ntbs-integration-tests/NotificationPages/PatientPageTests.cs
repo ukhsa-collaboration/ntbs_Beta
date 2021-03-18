@@ -1,11 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
+using AngleSharp.Html.Dom;
+using MoreLinq;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -301,19 +307,25 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task OnGetNhsNumberDuplicates_ReturnsExpectedEmptyResponseForNonDuplicate()
+        public async Task OnPostNhsNumberDuplicates_ReturnsExpectedEmptyResponseForNonDuplicate()
         {
             // Arrange
             const int id = Utilities.DRAFT_ID;
             const string nonDuplicateNhsNumber = "9876543219";
-            var formData = new Dictionary<string, string>
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(id));
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new NhsNumberValidationModel
             {
-                ["notificationId"] = id.ToString(),
-                ["nhsNumber"] = nonDuplicateNhsNumber
+                NotificationId = id,
+                NhsNumber = nonDuplicateNhsNumber
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "NhsNumberDuplicates", id));
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetHandlerPath(null, "NhsNumberDuplicates", Utilities.NOTIFIED_ID),
+                request);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -321,21 +333,27 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task OnGetNhsNumberDuplicates_ReturnsExpectedResponseForGroupedDuplicateNhsNumber()
+        public async Task OnPostNhsNumberDuplicates_ReturnsExpectedResponseForGroupedDuplicateNhsNumber()
         {
             // Arrange
             const int id = Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER;
             const string nhsNumber = Utilities.NHS_NUMBER_SHARED;
-            var formData = new Dictionary<string, string>
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(id));
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new NhsNumberValidationModel
             {
-                ["notificationId"] = id.ToString(),
-                ["nhsNumber"] = nhsNumber
+                NotificationId = id,
+                NhsNumber = nhsNumber
             };
             const int expectedWarningNotificationId = Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER;
             var expectedWarningUrl = RouteHelper.GetNotificationPath(expectedWarningNotificationId, NotificationSubPaths.Overview);
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "NhsNumberDuplicates", id));
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetHandlerPath(null, "NhsNumberDuplicates", Utilities.NOTIFIED_ID),
+                request);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -346,17 +364,22 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task IfDateTooEarly_ValidatePatientDate_ReturnsEarliestBirthDateErrorMessage()
         {
             // Arrange
-            var formData = new Dictionary<string, string>
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new DateValidationModel
             {
-                ["key"] = "Dob",
-                ["day"] = "1",
-                ["month"] = "1",
-                ["year"] = "1899"
+                Key = "Dob",
+                Day = "1",
+                Month = "1",
+                Year = "1899"
             };
 
             // Act
-            var path = GetHandlerPath(formData, "ValidatePatientDetailsDate", Utilities.NOTIFIED_ID);
-            var response = await Client.GetAsync(path);
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetHandlerPath(null, "ValidatePatientDetailsDate", Utilities.NOTIFIED_ID),
+                request);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -370,14 +393,20 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task WhenNhsNumberInvalid_ValidatePatientProperty_ReturnsExpectedResult(string nhsNumber, string validationResult)
         {
             // Arrange
-            var formData = new Dictionary<string, string>
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new InputValidationModel
             {
-                ["key"] = "NhsNumber",
-                ["value"] = nhsNumber
+                Key = "NhsNumber",
+                Value = nhsNumber
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidatePatientDetailsProperty"));
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetHandlerPath(null, "ValidatePatientDetailsProperty", Utilities.NOTIFIED_ID),
+                request);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -385,19 +414,25 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Theory]
-        [InlineData("true", "NHS number is a mandatory field")]
-        [InlineData("false", "")]
-        public async Task DependentOnShouldValidateFull_ValidatePatientProperty_ReturnsRequiredOrNoError(string shouldValidateFull, string validationResult)
+        [InlineData(true, "NHS number is a mandatory field")]
+        [InlineData(false, "")]
+        public async Task DependentOnShouldValidateFull_ValidatePatientProperty_ReturnsRequiredOrNoError(bool shouldValidateFull, string validationResult)
         {
             // Arrange
-            var formData = new Dictionary<string, string>
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new InputValidationModel
             {
-                ["shouldValidateFull"] = shouldValidateFull,
-                ["key"] = "NhsNumber"
+                ShouldValidateFull = shouldValidateFull,
+                Key = "NhsNumber"
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidatePatientDetailsProperty"));
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetHandlerPath(null, "ValidatePatientDetailsProperty", Utilities.NOTIFIED_ID),
+                request);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -408,7 +443,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
         {
             // Arrange
-            const int id = Utilities.NOTIFIED_ID;
+            const int id = Utilities.NOTIFIED_ID_2;
             var url = GetCurrentPathForId(id);
             var document = await GetDocumentForUrlAsync(url);
 

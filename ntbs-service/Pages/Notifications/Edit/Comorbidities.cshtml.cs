@@ -5,6 +5,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -94,21 +95,16 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        public IActionResult OnGetValidateImmunosuppression(
-            string immunosuppressionStatus,
-            bool hasBioTherapy,
-            bool hasTransplantation,
-            bool hasOther,
-            string otherDescription)
+        public IActionResult OnPostValidateImmunosuppression([FromBody]ImmunosuppressionValidationModel validationData)
         {
-            var parsedStatus = string.IsNullOrEmpty(immunosuppressionStatus) ? null : (Status?)Enum.Parse(typeof(Status), immunosuppressionStatus);
+            var parsedStatus = string.IsNullOrEmpty(validationData.ImmunosuppressionStatus) ? null : (Status?)Enum.Parse(typeof(Status), validationData.ImmunosuppressionStatus);
             var model = new ImmunosuppressionDetails
             {
                 Status = parsedStatus,
-                HasBioTherapy = hasBioTherapy,
-                HasTransplantation = hasTransplantation,
-                HasOther = hasOther,
-                OtherDescription = string.IsNullOrEmpty(otherDescription) ? null : otherDescription
+                HasBioTherapy = validationData.HasBioTherapy,
+                HasTransplantation = validationData.HasTransplantation,
+                HasOther = validationData.HasOther,
+                OtherDescription = string.IsNullOrEmpty(validationData.OtherDescription) ? null : validationData.OtherDescription
             };
 
             return ValidationService.GetFullModelValidationResult(model);

@@ -10,6 +10,7 @@ using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -388,17 +389,22 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task IfInvalidDate_ValidateClinicalDetailsDate_ReturnsValidDateErrorMessage()
         {
             // Arrange
-            var formData = new Dictionary<string, string>
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new DateValidationModel
             {
-                ["key"] = "DiagnosisDate",
-                ["day"] = "1",
-                ["month"] = "0",
-                ["year"] = "2009"
+                Key = "DiagnosisDate",
+                Day = "1",
+                Month = "0",
+                Year = "2009"
             };
 
             // Act
-            var path = GetHandlerPath(formData, "ValidateClinicalDetailsDate", Utilities.NOTIFIED_ID);
-            var response = await Client.GetAsync(path);
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetHandlerPath(null, "ValidateClinicalDetailsDate", Utilities.NOTIFIED_ID),
+                request);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -409,17 +415,22 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task IfDateTooEarly_ValidateClinicalDetailsDate_ReturnsEarliestClinicalDateErrorMessage()
         {
             // Arrange
-            var formData = new Dictionary<string, string>
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new DateValidationModel
             {
-                ["key"] = "DiagnosisDate",
-                ["day"] = "1",
-                ["month"] = "1",
-                ["year"] = "2009"
+                Key = "DiagnosisDate",
+                Day = "1",
+                Month = "1",
+                Year = "2009"
             };
 
             // Act
-            var path = GetHandlerPath(formData, "ValidateClinicalDetailsDate", Utilities.NOTIFIED_ID);
-            var response = await Client.GetAsync(path);
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetHandlerPath(null, "ValidateClinicalDetailsDate", Utilities.NOTIFIED_ID),
+                request);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -446,21 +457,27 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Theory]
-        [InlineData("false", "<123>", "Invalid character found in Site name")]
-        [InlineData("true", "", "Site name is a mandatory field")]
-        [InlineData("false", "", "")]
-        public async Task ValidateNotificationSiteProperty_ReturnsExpectedResult(string shouldValidateFull, string value, string validationResult)
+        [InlineData(false, "<123>", "Invalid character found in Site name")]
+        [InlineData(true, "", "Site name is a mandatory field")]
+        [InlineData(false, "", "")]
+        public async Task ValidateNotificationSiteProperty_ReturnsExpectedResult(bool shouldValidateFull, string value, string validationResult)
         {
             // Arrange
-            var formData = new Dictionary<string, string>
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new InputValidationModel
             {
-                ["key"] = "SiteDescription",
-                ["value"] = value,
-                ["shouldValidateFull"] = shouldValidateFull
+                Key = "SiteDescription",
+                Value = value,
+                ShouldValidateFull = shouldValidateFull
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateNotificationSiteProperty"));
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetHandlerPath(null, "ValidateNotificationSiteProperty", Utilities.NOTIFIED_ID),
+                request);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -471,16 +488,22 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task ValidateClinicalDetailsYearComparison_ReturnsErrorIfNewYearEarlierThanExisting()
         {
             // Arrange
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
+            var initialDocument = await GetDocumentAsync(initialPage);
             var existingYear = 1990;
-            var formData = new Dictionary<string, string>
+            var request = new YearComparisonValidationModel
             {
-                ["newYear"] = "1960",
-                ["existingYear"] = existingYear.ToString(),
-                ["propertyName"] = "BCG vaccination year"
+                NewYear = 1960,
+                ExistingYear = existingYear,
+                PropertyName = "BCG vaccination year"
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateClinicalDetailsYearComparison"));
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetHandlerPath(null, "ValidateClinicalDetailsYearComparison", Utilities.NOTIFIED_ID),
+                request);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

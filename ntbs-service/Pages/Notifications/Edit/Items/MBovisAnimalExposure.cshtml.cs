@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit.Items
@@ -105,9 +106,9 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             return RedirectToPage("/Notifications/Edit/MBovisAnimalExposures", new { NotificationId });
         }
 
-        public ContentResult OnGetValidateMBovisAnimalExposureProperty(string key, string value, bool shouldValidateFull)
+        public ContentResult OnPostValidateMBovisAnimalExposureProperty([FromBody]InputValidationModel validationData)
         {
-            return ValidationService.GetPropertyValidationResult<MBovisAnimalExposure>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<MBovisAnimalExposure>(validationData.Key, validationData.Value, validationData.ShouldValidateFull);
         }
 
         protected override IActionResult RedirectForNotified()

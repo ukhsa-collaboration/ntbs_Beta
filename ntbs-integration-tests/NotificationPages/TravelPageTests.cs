@@ -142,7 +142,9 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DRAFT_ID;
-            var formData = new Dictionary<string, string>
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(id));
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
                 [$"TravelDetails.{travelOrVisitorKey}"] = "Yes",
@@ -150,7 +152,11 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateTravel"));
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetHandlerPath(null, "ValidateTravel", Utilities.NOTIFIED_ID),
+                request);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

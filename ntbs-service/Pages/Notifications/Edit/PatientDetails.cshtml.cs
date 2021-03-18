@@ -8,6 +8,7 @@ using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -150,18 +151,18 @@ namespace ntbs_service.Pages.Notifications.Edit
             await FindAndSetPostcodeAsync(_postcodeService, PatientDetails);
         }
 
-        public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
+        public async Task<ContentResult> OnPostValidatePostcode([FromBody]PostcodeValidationModel validationData)
         {
             var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            var foundPostcode = await _postcodeService.FindPostcodeAsync(postcode);
+            var foundPostcode = await _postcodeService.FindPostcodeAsync(validationData.Postcode);
             var propertyValueTuples = new List<(string, object)>
             {
                 ("PostcodeToLookup", foundPostcode?.Postcode),
-                ("Postcode", postcode)
+                ("Postcode", validationData.Postcode)
             };
             return ValidationService.GetMultiplePropertiesValidationResult<PatientDetails>(
                 propertyValueTuples,
-                shouldValidateFull,
+                validationData.ShouldValidateFull,
                 notification.IsLegacy);
         }
 
@@ -170,21 +171,21 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./HospitalDetails", new { NotificationId, isBeingSubmitted });
         }
 
-        public ContentResult OnGetValidatePatientDetailsProperty(string key, string value, bool shouldValidateFull)
+        public ContentResult OnPostValidatePatientDetailsProperty([FromBody]InputValidationModel validationData)
         {
-            return ValidationService.GetPropertyValidationResult<PatientDetails>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<PatientDetails>(validationData.Key, validationData.Value, validationData.ShouldValidateFull);
         }
 
-        public async Task<ContentResult> OnGetValidatePatientDetailsDate(string key, string day, string month, string year)
+        public async Task<ContentResult> OnPostValidatePatientDetailsDate([FromBody]DateValidationModel validationData)
         {
             var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
-            return ValidationService.GetDateValidationResult<PatientDetails>(key, day, month, year, isLegacy);
+            return ValidationService.GetDateValidationResult<PatientDetails>(validationData.Key, validationData.Day, validationData.Month, validationData.Year, isLegacy);
         }
 
-        public async Task<JsonResult> OnGetNhsNumberDuplicates(int notificationId, string nhsNumber)
+        public async Task<JsonResult> OnPostNhsNumberDuplicates([FromBody]NhsNumberValidationModel validationData)
         {
-            var group = await NotificationRepository.GetNotificationGroupAsync(notificationId);
-            return new JsonResult(await GenerateDuplicateNhsNumberNotificationUrlsAsync(nhsNumber, group));
+            var group = await NotificationRepository.GetNotificationGroupAsync(validationData.NotificationId);
+            return new JsonResult(await GenerateDuplicateNhsNumberNotificationUrlsAsync(validationData.NhsNumber, group));
         }
     }
 }
