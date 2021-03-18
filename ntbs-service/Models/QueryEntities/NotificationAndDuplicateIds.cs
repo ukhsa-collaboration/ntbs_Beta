@@ -1,5 +1,8 @@
-﻿namespace ntbs_service.Models.QueryEntities
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ntbs_service.Models.QueryEntities
 {
+    [Keyless]
     public class NotificationAndDuplicateIds
     {
         public int NotificationId { get; set; }

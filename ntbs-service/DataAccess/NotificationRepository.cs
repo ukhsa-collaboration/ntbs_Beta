@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
-using MoreLinq;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -364,6 +363,10 @@ namespace ntbs_service.DataAccess
                                 .ThenInclude(pl => pl.PHEC)
                 .Include(n => n.HospitalDetails.TBService.PHEC)
                 .Include(n => n.HospitalDetails.CaseManager)
+                // The DrugResistanceProfile used to be an owned entity (meaning that it was auto-included in every
+                // Notification) and now it is not. The safest thing that we can do to avoid regressions is to include
+                // it here, despite the fact that it is not very widely used.
+                .Include(n => n.DrugResistanceProfile)
                 .OrderBy(n => n.NotificationId)
                 .AsSplitQuery();
         }

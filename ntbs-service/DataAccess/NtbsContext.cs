@@ -119,8 +119,6 @@ namespace ntbs_service.DataAccess
 
             #endregion
 
-            modelBuilder.Entity<NotificationAndDuplicateIds>().ToTable(null).HasNoKey();
-
             modelBuilder.Entity<Country>(entity =>
             {
                 entity.Property(e => e.Name).HasMaxLength(200);
@@ -470,8 +468,6 @@ namespace ntbs_service.DataAccess
                             .HasMaxLength(EnumMaxLength);
                         i.ToTable("MDRDetails");
                     });
-                entity.OwnsOne(e => e.DrugResistanceProfile)
-                    .ToTable("DrugResistanceProfile");
 
                 entity.OwnsMany(e => e.PreviousTbServices)
                     .ToTable("PreviousTbService")
@@ -648,6 +644,11 @@ namespace ntbs_service.DataAccess
                     .HasForeignKey(e => e.NotificationId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired(false);
+            });
+
+            modelBuilder.Entity<DrugResistanceProfile>(entity =>
+            {
+                entity.ToTable("DrugResistanceProfile").HasKey(e => e.NotificationId);
             });
 
             modelBuilder.Entity<MBovisDetails>(entity =>
