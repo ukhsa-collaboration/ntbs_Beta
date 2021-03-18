@@ -560,7 +560,8 @@ namespace ntbs_service.DataMigration
             {
                 notification.Line1, notification.Line2, notification.City, notification.County
             };
-            var addressRaw = string.Join(" \n", addressLines.Where(line => !string.IsNullOrEmpty(line)));
+            var addressRaw = string.Join("\n", 
+                addressLines.Where(line => !string.IsNullOrEmpty(line)).Select(line => line.Trim()));
             var address = RemoveCharactersNotIn(
                 ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
                 addressRaw);

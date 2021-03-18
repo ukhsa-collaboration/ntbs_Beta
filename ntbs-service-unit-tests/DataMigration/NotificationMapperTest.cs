@@ -109,7 +109,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal("9815779000", notification.PatientDetails.NhsNumber);
             Assert.Equal(new DateTime(1981, 3, 24), notification.PatientDetails.Dob);
             Assert.Equal(2010, notification.PatientDetails.YearOfUkEntry);
-            Assert.Equal(string.Join(" \n", "3 Winglass Place", "Wongaton"), notification.PatientDetails.Address);
+            Assert.Equal("3 Winglass Place\nWongaton", notification.PatientDetails.Address);
 
             Assert.Equal(new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A"), notification.HospitalDetails.HospitalId);
             Assert.Equal(royalBerkshireCode, notification.HospitalDetails.TBServiceCode);
