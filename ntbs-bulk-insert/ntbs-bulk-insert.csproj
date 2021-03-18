@@ -13,7 +13,7 @@
 
     <ItemGroup>
       <PackageReference Include="EFCore.BulkExtensions" Version="3.4.2" />
-      <PackageReference Include="Faker.Net" Version="1.4.108" />
+      <PackageReference Include="Faker.Net" Version="1.5.126" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
       <PackageReference Include="NBuilder" Version="6.1.0" />
       <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
