@@ -32,7 +32,7 @@
             var notesError = !Model.IsValid("ClinicalDetails.Notes");
             var notesGroupState = notesError ? Error : Standard;
         }
-         <validate-input model="ClinicalDetails" property="Notes" inline-template>
+         <validate-input model="ClinicalDetails" property="Notes" shouldvalidatefull="@fullValidation" inline-template>
             <nhs-form-group nhs-form-group-type="@notesGroupState">
                 <label nhs-label-type="Standard" asp-for="ClinicalDetails.Notes" classes="govuk-visually-hidden"> Please enter any additional clinical details not captured above. </label>
                 <span ref="errorField" id="notes-error" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.Notes" has-error="@notesError"></span>

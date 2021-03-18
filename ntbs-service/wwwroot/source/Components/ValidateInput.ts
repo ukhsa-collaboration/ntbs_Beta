@@ -25,8 +25,8 @@ const ValidateInput = Vue.extend({
                 url: `${getValidationPath(this.$props.model)}Property`,
                 headers: getHeaders(),
                 data: {
-                    "value": newValue,
-                    "shouldValidateFull": this.$props.shouldvalidatefull.toLowerCase() == "true",
+                    "value": newValue || null,
+                    "shouldValidateFull": this.$props.shouldvalidatefull?.toLowerCase() == "true",
                     "key": this.$props.property,
                     [this.$props.property]: newValue
                 }

@@ -16,7 +16,7 @@ const ValidatePostcode = Vue.extend({
                 headers: getHeaders(),
                 data: {
                     "shouldValidateFull": this.$props.shouldvalidatefull.toLowerCase() == "true",
-                    "postcode": newValue
+                    "postcode": newValue || null
                 }
             }
 
