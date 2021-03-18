@@ -1,13 +1,13 @@
 import Vue from "vue";
-import {getHeaders, buildPath, Method} from "../helpers";
-import axios from "axios";
+import {getHeaders, buildPath} from "../helpers";
+import axios, {Method} from "axios";
 
 const NhsNumberDuplicateWarning = Vue.extend({
     methods: {
         handleValid: function (value: String) {
             const notificationId = (document.querySelector("#NotificationId") as HTMLInputElement).value;
             const requestConfig = {
-                method: Method.POST,
+                method: "post" as Method,
                 url: buildPath("NhsNumberDuplicates"),
                 headers: getHeaders(),
                 data: {
