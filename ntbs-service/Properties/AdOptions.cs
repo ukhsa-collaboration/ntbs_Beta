@@ -20,6 +20,6 @@
         public bool UseDummyAuth { get; set; }
 
         /** The amount of time an authentication cookie is valid for */
-        public int MaxSessionCookieLifetimeInHours { get; set; }
+        public double MaxSessionCookieLifetimeInMinutes { get; set; }
     }
 }
