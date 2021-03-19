@@ -79,14 +79,7 @@ You can also make the tests log to a file by un-commenting the appropriate lines
 
 ## Database migrations
 
-To minimize friction in development and deployments, the app uses Entity Framework migrations.
-The simplest way to make a schema change is to make the appropriate changes in the model (e.g. [Notification](Models/Entities/Notification.cs) and the [database context](DataAccess/NtbsContext.cs) and run
-`dotnet ef migrations add <NameOfMigration> --context=NtbsContext`
-This will create a migration file, that can be edited further to match needs. It will be run at application startup,
-or can be evoked by hand using
-`dotnet ef database update`
-
-[See more information on migration](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/)
+See [the dedicated migrations readme.](Migrations/README.md) for information on migrations.
 
 # Jobs
 The project includes Hangfire for managing jobs, with a console available to admin users at `/Hangfire`. It's
