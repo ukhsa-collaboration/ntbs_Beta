@@ -11,14 +11,18 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class MBovisUnpasteurisedMilkConsumptionsModel : NotificationEditModelBase
     {
+        private readonly IEnhancedSurveillanceAlertsService _enhancedSurveillanceAlertsService;
+
         public MBovisUnpasteurisedMilkConsumptionsModel(
             INotificationService notificationService,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
+            IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService,
             IAlertRepository alertRepository) : base(notificationService, authorizationService,
                 notificationRepository, alertRepository)
         {
             CurrentPage = NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions;
+            _enhancedSurveillanceAlertsService = enhancedSurveillanceAlertsService;
         }
 
         [BindProperty]
@@ -67,6 +71,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (TryValidateModel(MBovisDetails, nameof(MBovisDetails)))
             {
                 await Service.UpdateMBovisDetailsUnpasteurisedMilkConsumptionAsync(Notification, MBovisDetails);
+
+                await _enhancedSurveillanceAlertsService.CreateOrDismissMBovisAlert(Notification);
             }
         }
         

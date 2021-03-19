@@ -120,7 +120,8 @@ namespace ntbs_service.DataAccess
                         DrugResistanceProfile = n.DrugResistanceProfile,
                         MDRDetails = n.MDRDetails,
                         TreatmentRegimen = n.ClinicalDetails.TreatmentRegimen,
-                        ExposureToKnownCaseStatus = n.MDRDetails.ExposureToKnownCaseStatus
+                        ExposureToKnownMdrCaseStatus = n.MDRDetails.ExposureToKnownCaseStatus,
+                        MBovisDetails = n.MBovisDetails
                     })
                 .SingleOrDefaultAsync(n => n.Notification.NotificationId == notificationId);
         }

@@ -11,14 +11,18 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class MBovisExposureToKnownCasesModel : NotificationEditModelBase
     {
+        private readonly IEnhancedSurveillanceAlertsService _enhancedSurveillanceAlertsService;
+
         public MBovisExposureToKnownCasesModel(
             INotificationService notificationService,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
+            IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService,
             IAlertRepository alertRepository) : base(notificationService, authorizationService,
                 notificationRepository, alertRepository)
         {
             CurrentPage = NotificationSubPaths.EditMBovisExposureToKnownCases;
+            _enhancedSurveillanceAlertsService = enhancedSurveillanceAlertsService;
         }
 
         [BindProperty]
@@ -67,6 +71,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (TryValidateModel(MBovisDetails, nameof(MBovisDetails)))
             {
                 await Service.UpdateMBovisDetailsExposureToKnownCasesAsync(Notification, MBovisDetails);
+
+                await _enhancedSurveillanceAlertsService.CreateOrDismissMBovisAlert(Notification);
             }
         }
         
