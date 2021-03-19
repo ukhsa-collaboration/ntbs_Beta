@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Projections;
 
 namespace ntbs_service.Services
 {
@@ -47,29 +48,72 @@ namespace ntbs_service.Services
                 : 0;
         }
 
-        private async Task UpdateDrugResistanceProfiles(Dictionary<int, DrugResistanceProfile> drugResistanceProfiles)
+        private async Task UpdateDrugResistanceProfiles(Dictionary<int, DrugResistanceProfile> updatedDrugResistanceProfiles)
         {
-            foreach (var (notificationId, drugResistanceProfile) in drugResistanceProfiles)
+            var drugResistanceProfilesToUpdate =
+                (await GetDrugResistanceProfilesWhichDifferInNtbs(updatedDrugResistanceProfiles)).ToList();
+            await UpdateDrugResistanceProfiles(drugResistanceProfilesToUpdate);
+            var notifications = drugResistanceProfilesToUpdate.Select(t => t.Notification).ToList();
+            await CreateOrDismissMdrAlerts(notifications);
+            await CreateOrDismissMBovisAlerts(notifications);
+        }
+
+        private async Task<IEnumerable<DrugResistanceProfileUpdate>> GetDrugResistanceProfilesWhichDifferInNtbs(
+            Dictionary<int, DrugResistanceProfile> drugResistanceProfileUpdates)
+        {
+            var updatedNotificationIds = drugResistanceProfileUpdates.Keys;
+            var notificationsToUpdate =
+                (await _notificationRepository.GetNotificationsForDrugResistanceImportAsync(updatedNotificationIds)
+                ).ToList();
+
+            var missingNotificationIds = updatedNotificationIds
+                .Where(id => !notificationsToUpdate.Select(n => n.NotificationId).Contains(id))
+                .ToList();
+            if (missingNotificationIds.Any())
             {
-                var notification = await _notificationRepository.GetNotificationForDrugResistanceImportAsync(notificationId);
-                if (notification == null)
-                {
-                    throw new DataException(
-                        $"Reporting database sourced NotificationId {notificationId} was not found in NTBS database.");
-                }
+                throw new DataException(
+                    $"Reporting database sourced NotificationIds {string.Join(", ", missingNotificationIds)} were not found in NTBS database.");
+            }
 
-                if (notification.DrugResistanceProfile.Species == drugResistanceProfile.Species &&
-                    notification.DrugResistanceProfile.DrugResistanceProfileString ==
-                    drugResistanceProfile.DrugResistanceProfileString)
+            return notificationsToUpdate
+                .Select(n => new DrugResistanceProfileUpdate
                 {
-                    continue;
-                }
+                    Notification = n,
+                    UpdatedProfile = drugResistanceProfileUpdates[n.NotificationId]
+                })
+                .Where(update => update.SpeciesHasChanged || update.ProfileStringHasChanged);
+        }
 
-                await _notificationService.UpdateDrugResistanceProfileAsync(notification.DrugResistanceProfile,
-                    drugResistanceProfile);
+        private async Task UpdateDrugResistanceProfiles(List<DrugResistanceProfileUpdate> updates)
+        {
+            var profileUpdates = updates.Select(u => (u.Notification.DrugResistanceProfile, u.UpdatedProfile));
+            await _notificationService.UpdateDrugResistanceProfileAsync(profileUpdates);
+        }
+
+        private async Task CreateOrDismissMdrAlerts(List<NotificationForDrugResistanceImport> notifications)
+        {
+            foreach (var notification in notifications)
+            {
                 await _enhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(notification);
+            }
+        }
+
+        private async Task CreateOrDismissMBovisAlerts(List<NotificationForDrugResistanceImport> notifications)
+        {
+            foreach (var notification in notifications)
+            {
                 await _enhancedSurveillanceAlertsService.CreateOrDismissMBovisAlert(notification);
             }
+        }
+
+        private class DrugResistanceProfileUpdate
+        {
+            public NotificationForDrugResistanceImport Notification { get; set; }
+            public DrugResistanceProfile UpdatedProfile { get; set; }
+
+            public bool SpeciesHasChanged => Notification.DrugResistanceProfile.Species != UpdatedProfile.Species;
+            public bool ProfileStringHasChanged =>
+                Notification.DrugResistanceProfile.DrugResistanceProfileString != UpdatedProfile.DrugResistanceProfileString;
         }
     }
 

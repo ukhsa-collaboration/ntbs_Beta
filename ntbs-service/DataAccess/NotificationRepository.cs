@@ -35,7 +35,7 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotificationAsync(int notificationId);
         Task<Notification> GetNotifiedNotificationAsync(int notificationId);
         Task<Notification> GetNotificationForAlertCreationAsync(int notificationId);
-        Task<NotificationForDrugResistanceImport> GetNotificationForDrugResistanceImportAsync(int notificationId);
+        Task<IEnumerable<NotificationForDrugResistanceImport>> GetNotificationsForDrugResistanceImportAsync(IEnumerable<int> notificationIds);
         Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids);
         Task<IEnumerable<Notification>> GetInactiveNotificationsToCloseAsync();
         Task<IList<int>> GetNotificationIdsByNhsNumberAsync(string nhsNumber);
@@ -109,9 +109,11 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
-        public async Task<NotificationForDrugResistanceImport> GetNotificationForDrugResistanceImportAsync(int notificationId)
+        public async Task<IEnumerable<NotificationForDrugResistanceImport>> GetNotificationsForDrugResistanceImportAsync(
+            IEnumerable<int> notificationIds)
         {
             return await _context.Notification
+                .Where(n => notificationIds.Contains(n.NotificationId))
                 .Select(
                     n => new NotificationForDrugResistanceImport
                     {
@@ -122,7 +124,7 @@ namespace ntbs_service.DataAccess
                         ExposureToKnownMdrCaseStatus = n.MDRDetails.ExposureToKnownCaseStatus,
                         MBovisDetails = n.MBovisDetails
                     })
-                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
+                .ToListAsync();
         }
 
         public async Task<bool> NotificationWithLegacyIdExistsAsync(string id)
