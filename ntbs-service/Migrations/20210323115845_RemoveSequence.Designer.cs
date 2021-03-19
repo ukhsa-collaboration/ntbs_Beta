@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20210319123545_RemoveSequence")]
+    partial class RemoveSequence
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24503,8 +24505,8 @@ namespace ntbs_service.Migrations
                                 .HasColumnType("int");
 
                             b1.Property<string>("RelationshipToCase")
-                                .HasMaxLength(90)
-                                .HasColumnType("nvarchar(90)");
+                                .HasMaxLength(40)
+                                .HasColumnType("nvarchar(40)");
 
                             b1.HasKey("NotificationId");
 

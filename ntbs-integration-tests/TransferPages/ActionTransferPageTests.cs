@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
@@ -132,7 +133,9 @@ namespace ntbs_integration_tests.TransferPage
 
             var formData = new Dictionary<string, string>
             {
-                ["AcceptTransfer"] = "true"
+                ["AcceptTransfer"] = "true",
+                ["TargetCaseManagerUsername"] = Utilities.CASEMANAGER_ABINGDON_EMAIL,
+                ["TargetHospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID
             };
 
             // Act
