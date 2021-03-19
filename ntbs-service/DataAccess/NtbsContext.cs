@@ -225,8 +225,8 @@ namespace ntbs_service.DataAccess
                     .IsRequired(false);
 
                 entity.HasOne(e => e.PHEC)
-                    .WithMany()
-                    .HasForeignKey(la => la.PHECCode)
+                    .WithOne()
+                    .HasForeignKey<LocalAuthorityToPHEC>(la => la.PHECCode)
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired(false);
 
@@ -806,8 +806,11 @@ namespace ntbs_service.DataAccess
                 entity.HasData(Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes());
             });
 
+            modelBuilder.HasSequence<int>("OrderIndex", schema: "shared");
             modelBuilder.Entity<FrequentlyAskedQuestion>(entity =>
             {
+                entity.Property(e => e.OrderIndex)
+                    .HasDefaultValueSql("NEXT VALUE FOR shared.OrderIndex");
             });
 
             modelBuilder.Entity<UserLoginEvent>(entity =>

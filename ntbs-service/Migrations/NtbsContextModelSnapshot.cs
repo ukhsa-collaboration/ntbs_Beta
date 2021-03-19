@@ -19,6 +19,8 @@ namespace ntbs_service.Migrations
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.HasSequence<int>("OrderIndex", "shared");
+
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.Alert", b =>
                 {
                     b.Property<int>("AlertId")
@@ -106,7 +108,9 @@ namespace ntbs_service.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("OrderIndex")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValueSql("NEXT VALUE FOR shared.OrderIndex");
 
                     b.Property<string>("Question")
                         .HasColumnType("nvarchar(max)");
@@ -14038,6 +14042,9 @@ namespace ntbs_service.Migrations
                     b.HasIndex("LocalAuthorityCode")
                         .IsUnique();
 
+                    b.HasIndex("PHECCode")
+                        .IsUnique();
+
                     b.ToTable("LocalAuthorityToPHEC", "ReferenceData");
 
                     b.HasData(
@@ -25115,8 +25122,8 @@ namespace ntbs_service.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ntbs_service.Models.ReferenceEntities.PHEC", "PHEC")
-                        .WithMany()
-                        .HasForeignKey("PHECCode")
+                        .WithOne()
+                        .HasForeignKey("ntbs_service.Models.ReferenceEntities.LocalAuthorityToPHEC", "PHECCode")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("LocalAuthority");
