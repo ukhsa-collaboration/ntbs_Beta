@@ -115,14 +115,14 @@ namespace ntbs_service.DataAccess
                 .Select(
                     n => new NotificationForDrugResistanceImport
                     {
-                        Notification = n,
+                        NotificationId = n.NotificationId,
                         DrugResistanceProfile = n.DrugResistanceProfile,
                         MDRDetails = n.MDRDetails,
                         TreatmentRegimen = n.ClinicalDetails.TreatmentRegimen,
                         ExposureToKnownMdrCaseStatus = n.MDRDetails.ExposureToKnownCaseStatus,
                         MBovisDetails = n.MBovisDetails
                     })
-                .SingleOrDefaultAsync(n => n.Notification.NotificationId == notificationId);
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
         public async Task<bool> NotificationWithLegacyIdExistsAsync(string id)
