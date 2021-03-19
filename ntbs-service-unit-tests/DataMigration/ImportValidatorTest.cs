@@ -12,8 +12,10 @@ using Xunit;
 
 namespace ntbs_service_unit_tests.DataMigration
 {
-    // This test suite is not designed to test that the validation is correct, only that the validation is happening on
-    // all parts of a notification that we expect it to happen on - which is why it isn't testing many validation cases.
+    // This test suite is not designed to test that all validation is correct, only that the validation is
+    // happening on all parts of a notification that we expect it to happen on.
+    // We aim to write much more in depth tests for services that are missing them, including validation,
+    // with this test suite being the start of that process.
     public class ImportValidatorTest
     {
         private readonly IImportValidator _importValidator;
