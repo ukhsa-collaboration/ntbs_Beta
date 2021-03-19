@@ -52,10 +52,14 @@ namespace ntbs_service.Services
         {
             var drugResistanceProfilesToUpdate =
                 (await GetDrugResistanceProfilesWhichDifferInNtbs(updatedDrugResistanceProfiles)).ToList();
-            await UpdateDrugResistanceProfiles(drugResistanceProfilesToUpdate);
-            var notifications = drugResistanceProfilesToUpdate.Select(t => t.Notification).ToList();
-            await CreateOrDismissMdrAlerts(notifications);
-            await CreateOrDismissMBovisAlerts(notifications);
+
+            if (drugResistanceProfilesToUpdate.Any())
+            {
+                await UpdateDrugResistanceProfiles(drugResistanceProfilesToUpdate);
+                var notifications = drugResistanceProfilesToUpdate.Select(t => t.Notification).ToList();
+                await CreateOrDismissMdrAlerts(notifications);
+                await CreateOrDismissMBovisAlerts(notifications);
+            }
         }
 
         private async Task<IEnumerable<DrugResistanceProfileUpdate>> GetDrugResistanceProfilesWhichDifferInNtbs(
