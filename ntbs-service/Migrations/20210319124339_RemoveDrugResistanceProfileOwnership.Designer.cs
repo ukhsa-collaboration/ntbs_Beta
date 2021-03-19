@@ -10,8 +10,8 @@ using ntbs_service.DataAccess;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    [Migration("20210318181513_TestMigration")]
-    partial class TestMigration
+    [Migration("20210319124339_RemoveDrugResistanceProfileOwnership")]
+    partial class RemoveDrugResistanceProfileOwnership
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
