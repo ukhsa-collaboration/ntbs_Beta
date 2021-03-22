@@ -44,6 +44,7 @@ namespace ntbs_service.DataMigration
             }
 
             await ImportOrUpdateLegacyUser(legacyNotificationCaseManager, notification.HospitalDetails.TBServiceCode, context, requestId);
+            _logger.LogInformation(context, requestId, "Added/Updated the case manager assigned to the notification.");
             
             foreach (var treatmentEvent in notification.TreatmentEvents)
             {
@@ -55,6 +56,7 @@ namespace ntbs_service.DataMigration
                 var legacyTreatmentCaseManager = await _migrationRepository.GetLegacyUserByUsername(treatmentEvent.CaseManagerUsername);
                 await ImportOrUpdateLegacyUser(legacyTreatmentCaseManager, treatmentEvent.TbServiceCode, context, requestId);
             }
+            _logger.LogInformation(context, requestId, "Added/Updated the case managers assigned to the notification's transfer events.");
         }
 
         private async Task ImportOrUpdateLegacyUser(MigrationLegacyUser legacyCaseManager,
@@ -73,7 +75,6 @@ namespace ntbs_service.DataMigration
             await AddTbServiceToUserBasedOnLegacyPermissions(ntbsCaseManager, legacyTbServiceCode, legacyCaseManager.Username);
 
             await _userRepository.AddOrUpdateUser(ntbsCaseManager, ntbsCaseManager.CaseManagerTbServices.Select(cmtb => cmtb.TbService));
-            _logger.LogInformation(context, requestId, "Added/Updated the case manager assigned to the notification.");
         }
 
         private async Task<MigrationLegacyUser> GetLegacyNotificationCaseManager(string legacyId)
