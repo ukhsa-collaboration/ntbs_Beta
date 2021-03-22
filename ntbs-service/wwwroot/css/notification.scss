@@ -97,6 +97,10 @@
 
   border-top-width: 10px;
   border-top-style: solid;
+  
+  @media(max-width: 35em) {
+    flex-direction: column;
+  }
 
   &.notification-banner-links--draft {
     border-top-color: $banner-header--draft;
