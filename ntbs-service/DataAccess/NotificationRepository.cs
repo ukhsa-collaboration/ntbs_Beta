@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
-using MoreLinq;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -36,7 +35,7 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotificationAsync(int notificationId);
         Task<Notification> GetNotifiedNotificationAsync(int notificationId);
         Task<Notification> GetNotificationForAlertCreationAsync(int notificationId);
-        Task<NotificationForDrugResistanceImport> GetNotificationForDrugResistanceImportAsync(int notificationId);
+        Task<IEnumerable<NotificationForDrugResistanceImport>> GetNotificationsForDrugResistanceImportAsync(IEnumerable<int> notificationIds);
         Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids);
         Task<IEnumerable<Notification>> GetInactiveNotificationsToCloseAsync();
         Task<IList<int>> GetNotificationIdsByNhsNumberAsync(string nhsNumber);
@@ -110,20 +109,21 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
-        public async Task<NotificationForDrugResistanceImport> GetNotificationForDrugResistanceImportAsync(int notificationId)
+        public async Task<IEnumerable<NotificationForDrugResistanceImport>> GetNotificationsForDrugResistanceImportAsync(
+            IEnumerable<int> notificationIds)
         {
             return await _context.Notification
+                .Where(n => notificationIds.Contains(n.NotificationId))
                 .Select(
                     n => new NotificationForDrugResistanceImport
                     {
-                        Notification = n,
+                        NotificationId = n.NotificationId,
                         DrugResistanceProfile = n.DrugResistanceProfile,
-                        MDRDetails = n.MDRDetails,
                         TreatmentRegimen = n.ClinicalDetails.TreatmentRegimen,
                         ExposureToKnownMdrCaseStatus = n.MDRDetails.ExposureToKnownCaseStatus,
                         MBovisDetails = n.MBovisDetails
                     })
-                .SingleOrDefaultAsync(n => n.Notification.NotificationId == notificationId);
+                .ToListAsync();
         }
 
         public async Task<bool> NotificationWithLegacyIdExistsAsync(string id)
@@ -364,6 +364,10 @@ namespace ntbs_service.DataAccess
                                 .ThenInclude(pl => pl.PHEC)
                 .Include(n => n.HospitalDetails.TBService.PHEC)
                 .Include(n => n.HospitalDetails.CaseManager)
+                // The DrugResistanceProfile used to be an owned entity (meaning that it was auto-included in every
+                // Notification) and now it is not. The safest thing that we can do to avoid regressions is to include
+                // it here, despite the fact that it is not very widely used.
+                .Include(n => n.DrugResistanceProfile)
                 .OrderBy(n => n.NotificationId)
                 .AsSplitQuery();
         }

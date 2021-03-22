@@ -8,24 +8,23 @@ namespace ntbs_service.Models.Projections
     {
         int NotificationId { get; }
         DrugResistanceProfile DrugResistanceProfile { get; }
-        MDRDetails MDRDetails { get; }
         bool IsMdr { get; }
         bool IsMBovis { get; }
+        bool MdrDetailsEntered { get; }
         bool IsMBovisQuestionnaireComplete { get; }
     }
 
     public class NotificationForDrugResistanceImport : INotificationForDrugResistanceImport
     {
-        public Notification Notification { get; set; }
-
+        public int NotificationId { get; set; }
         public DrugResistanceProfile DrugResistanceProfile { get; set; }
         public TreatmentRegimen? TreatmentRegimen { get; set; }
         public Status? ExposureToKnownMdrCaseStatus { get; set; }
-        public MDRDetails MDRDetails { get; set; }
         public MBovisDetails MBovisDetails { get; set; }
 
-        public int NotificationId => Notification.NotificationId;
         public bool IsMdr => DrugResistanceHelper.IsMdr(DrugResistanceProfile, TreatmentRegimen, ExposureToKnownMdrCaseStatus);
+        public bool MdrDetailsEntered => DrugResistanceHelper.MdrDetailsEntered(ExposureToKnownMdrCaseStatus);
+
         public bool IsMBovis => DrugResistanceHelper.IsMbovis(DrugResistanceProfile);
         public bool IsMBovisQuestionnaireComplete =>
             DrugResistanceHelper.IsMBovisQuestionnaireComplete(MBovisDetails);

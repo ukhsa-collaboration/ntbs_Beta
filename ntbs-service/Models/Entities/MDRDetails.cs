@@ -2,6 +2,7 @@
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
@@ -36,7 +37,6 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Country of exposure")]
         public int? CountryId { get; set; }
         public virtual Country Country { get; set; }
-        public bool MDRDetailsEntered => ExposureToKnownCaseStatus != null;
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
