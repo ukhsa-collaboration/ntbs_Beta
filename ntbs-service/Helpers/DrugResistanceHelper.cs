@@ -16,6 +16,8 @@ namespace ntbs_service.Helpers
                 || exposureToKnownCaseStatus != null;
         }
 
+        public static bool MdrDetailsEntered(Status? exposureToKnownCaseStatus) => exposureToKnownCaseStatus.HasValue;
+
         public static bool IsMbovis(DrugResistanceProfile profile)
         {
             // If the lab results point to M. bovis species ...

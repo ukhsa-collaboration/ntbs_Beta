@@ -37,6 +37,7 @@ namespace ntbs_service.DataAccess
                     t => (int)t.NotificationId,
                     t => new DrugResistanceProfile
                     {
+                        NotificationId = t.NotificationId,
                         DrugResistanceProfileString = t.DrugResistanceProfile,
                         Species = t.Species
                     });

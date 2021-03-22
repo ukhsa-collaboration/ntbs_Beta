@@ -178,7 +178,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
 
             var mdrChanged = Notification.ClinicalDetails.TreatmentRegimen != ClinicalDetails.TreatmentRegimen;
-            var nonMdrNotAllowed = !ClinicalDetails.IsMDRTreatment && Notification.MDRDetails.MDRDetailsEntered;
+            var nonMdrNotAllowed = !ClinicalDetails.IsMDRTreatment && Notification.MdrDetailsEntered;
 
             if (mdrChanged && nonMdrNotAllowed)
             {

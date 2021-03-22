@@ -23,6 +23,8 @@ namespace ntbs_service.Models.Entities
             ClinicalDetails.TreatmentRegimen,
             MDRDetails.ExposureToKnownCaseStatus);
 
+        public bool MdrDetailsEntered => DrugResistanceHelper.MdrDetailsEntered(MDRDetails.ExposureToKnownCaseStatus);
+
         public bool IsMBovis => DrugResistanceHelper.IsMbovis(DrugResistanceProfile);
 
         public bool IsMBovisQuestionnaireComplete =>
