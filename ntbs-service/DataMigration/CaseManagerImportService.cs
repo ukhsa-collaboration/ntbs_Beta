@@ -38,14 +38,12 @@ namespace ntbs_service.DataMigration
             string requestId)
         {
             var legacyNotificationCaseManager = await GetLegacyNotificationCaseManager(notification.LegacyId);
-            if (legacyNotificationCaseManager == null)
+            if (legacyNotificationCaseManager != null)
             {
-                return;
+                await ImportOrUpdateLegacyUser(legacyNotificationCaseManager, notification.HospitalDetails.TBServiceCode, context, requestId);
+                _logger.LogInformation(context, requestId, "Added/Updated the case manager assigned to the notification.");
             }
 
-            await ImportOrUpdateLegacyUser(legacyNotificationCaseManager, notification.HospitalDetails.TBServiceCode, context, requestId);
-            _logger.LogInformation(context, requestId, "Added/Updated the case manager assigned to the notification.");
-            
             foreach (var treatmentEvent in notification.TreatmentEvents)
             {
                 if (treatmentEvent.CaseManagerUsername == null)
