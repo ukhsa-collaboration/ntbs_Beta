@@ -16,16 +16,18 @@ namespace ntbs_service_unit_tests.DataMigration
     public class CaseManagerImportServiceTests : IDisposable
     {
         private const string NOTIFICATION_ID = "11111";
-        private const string CASE_MANAGER_USERNAME = "TestUser@nhs.net";
-        private static readonly Guid HOSPITAL_GUID = new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A");
+        private const string CASE_MANAGER_USERNAME_1 = "TestUser@nhs.net";
+        private const string CASE_MANAGER_USERNAME_2 = "MartinUser@nhs.net";
+        private static readonly Guid HOSPITAL_GUID_1 = new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A");
+        private static readonly Guid HOSPITAL_GUID_2 = new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7B");
 
         private readonly NtbsContext _context;
         private readonly CaseManagerImportService _caseManagerImportService;
         private readonly Mock<IMigrationRepository> _migrationRepositoryMock = new Mock<IMigrationRepository>();
 
         private Dictionary<string, IEnumerable<MigrationDbNotification>> _idToNotificationDict;
-        private Dictionary<string, MigrationLegacyUser> _usernameToLegacyUserDict;
-        private Dictionary<string, IEnumerable<MigrationLegacyUserHospital>> _usernameToLegacyUserHospitalDict;
+        private Dictionary<string, MigrationLegacyUser> _usernameToLegacyUserDict = new Dictionary<string, MigrationLegacyUser>();
+        private Dictionary<string, IEnumerable<MigrationLegacyUserHospital>> _usernameToLegacyUserHospitalDict = new Dictionary<string, IEnumerable<MigrationLegacyUserHospital>>();
 
         public CaseManagerImportServiceTests()
         {
@@ -47,13 +49,12 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task WhenCaseManagerForLegacyNotificationWithCorrectPermissionsDoesNotExistInNtbs_AddsCaseManagerWithTbServices()
         {
             // Arrange
-            
-            var notification = GivenLegacyNotificationWithTbServiceCode("TBS00TEST");
-            GivenLegacyUserWithName("John", "Johnston");
-            await GivenLegacyUserHasPermissionsForTbService("TBS00TEST");
+            var notification = GivenLegacyNotificationWithCaseManagerAndTbServiceCode(CASE_MANAGER_USERNAME_1, "TBS00TEST");
+            GivenLegacyUserWithName(CASE_MANAGER_USERNAME_1, "John", "Johnston");
+            await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS00TEST", HOSPITAL_GUID_1);
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateCaseManager(notification, null, "test-request-1");
+            await _caseManagerImportService.ImportOrUpdateCaseManagersFromNotificationAndTreatmentEvents(notification, null, "test-request-1");
 
             // Assert
             var addedUser = _context.User.SingleOrDefault();
@@ -69,12 +70,12 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task WhenCaseManagerForLegacyNotificationWithIncorrectPermissionsDoesNotExistInNtbs_AddsCaseManagerWithNoTbServices()
         {
             // Arrange
-            var notification = GivenLegacyNotificationWithTbServiceCode("TBS00TEST");
-            GivenLegacyUserWithName("John", "Johnston");
-            await GivenLegacyUserHasPermissionsForTbService("TBS11FAKE");
+            var notification = GivenLegacyNotificationWithCaseManagerAndTbServiceCode(CASE_MANAGER_USERNAME_1, "TBS00TEST");
+            GivenLegacyUserWithName(CASE_MANAGER_USERNAME_1, "John", "Johnston");
+            await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS11FAKE", HOSPITAL_GUID_1);
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateCaseManager(notification, null, "test-request-1");
+            await _caseManagerImportService.ImportOrUpdateCaseManagersFromNotificationAndTreatmentEvents(notification, null, "test-request-1");
 
             // Assert
             var addedUser = _context.User.SingleOrDefault();
@@ -90,19 +91,77 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task WhenCaseManagerForLegacyNotificationExistsInNtbs_UserNotImportedButNameUpdated()
         {
             // Arrange
-            var notification = GivenLegacyNotificationWithTbServiceCode("TBS00TEST");
-            GivenLegacyUserWithName("John", "Johnston");
-            await GivenLegacyUserHasPermissionsForTbService("TBS99HULL");
+            var notification = GivenLegacyNotificationWithCaseManagerAndTbServiceCode(CASE_MANAGER_USERNAME_1, "TBS00TEST");
+            GivenLegacyUserWithName(CASE_MANAGER_USERNAME_1, "John", "Johnston");
+            await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS99HULL", HOSPITAL_GUID_1);
             await GivenUserExistsInNtbsWithName("Jon", "Jonston");
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateCaseManager(notification, null, "test-request-1");
+            await _caseManagerImportService.ImportOrUpdateCaseManagersFromNotificationAndTreatmentEvents(notification, null, "test-request-1");
 
             // Assert
             var updatedUser = _context.User.Single();
             Assert.NotNull(updatedUser);
             Assert.Equal("John", updatedUser.GivenName);
             Assert.Equal("Johnston", updatedUser.FamilyName);
+        }
+
+        [Fact]
+        public async Task WhenCaseManagerForLegacyTreatmentEventWithCorrectPermissionsDoesNotExistInNtbs_UserImportedWithTbServices()
+        {
+            // Arrange
+            var notification = GivenLegacyNotificationWithCaseManagerAndTbServiceCode(CASE_MANAGER_USERNAME_1, "TBS00TEST");
+            GivenLegacyUserWithName(CASE_MANAGER_USERNAME_1, "Frank", "Ignored");
+            GivenLegacyUserWithName(CASE_MANAGER_USERNAME_2, "Martin", "Francis");
+            await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS00FAKE", HOSPITAL_GUID_1);
+            await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_2, "TBS00TEST", HOSPITAL_GUID_2);
+            notification.TreatmentEvents =
+                new List<TreatmentEvent> {new TreatmentEvent {CaseManagerUsername = CASE_MANAGER_USERNAME_2, TbServiceCode = "TBS00TEST"}};
+
+            // Act
+            await _caseManagerImportService.ImportOrUpdateCaseManagersFromNotificationAndTreatmentEvents(notification, null, "test-request-1");
+
+            // Assert
+            var addedUsers = _context.User.ToList();
+            var addedUserFromTreatmentEvent = addedUsers.SingleOrDefault(u => u.Username == CASE_MANAGER_USERNAME_2);
+            Assert.NotEmpty(addedUsers);
+            Assert.Equal(2, addedUsers.Count);
+            Assert.NotNull(addedUserFromTreatmentEvent);
+            Assert.Equal("Martin", addedUserFromTreatmentEvent.GivenName);
+            Assert.Equal("Francis", addedUserFromTreatmentEvent.FamilyName);
+            Assert.False(addedUserFromTreatmentEvent.IsActive);
+            Assert.True(addedUserFromTreatmentEvent.IsCaseManager);
+            Assert.Contains("TBS00TEST",
+                addedUserFromTreatmentEvent.CaseManagerTbServices.Select(cmtb => cmtb.TbServiceCode));
+        }
+
+        [Fact]
+        public async Task WhenCaseManagerForLegacyTreatmentEventWithIncorrectPermissionsDoesNotExistInNtbs_UserImportedWithNoTbServices()
+        {
+            // Arrange
+            var notification = GivenLegacyNotificationWithCaseManagerAndTbServiceCode(CASE_MANAGER_USERNAME_1, "TBS00TEST");
+            GivenLegacyUserWithName(CASE_MANAGER_USERNAME_1, "Frank", "Ignored");
+            GivenLegacyUserWithName(CASE_MANAGER_USERNAME_2, "Martin", "Francis");
+            await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS00FAKE", HOSPITAL_GUID_1);
+            await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_2, "TBS00WRONG", HOSPITAL_GUID_2);
+            notification.TreatmentEvents =
+                new List<TreatmentEvent> {new TreatmentEvent {CaseManagerUsername = CASE_MANAGER_USERNAME_2, TbServiceCode = "TBS00TEST"}};
+
+            // Act
+            await _caseManagerImportService.ImportOrUpdateCaseManagersFromNotificationAndTreatmentEvents(notification, null, "test-request-1");
+
+            // Assert
+            var addedUsers = _context.User.ToList();
+            var addedUserFromTreatmentEvent = addedUsers.SingleOrDefault(u => u.Username == CASE_MANAGER_USERNAME_2);
+            Assert.NotEmpty(addedUsers);
+            Assert.Equal(2, addedUsers.Count);
+            Assert.NotNull(addedUserFromTreatmentEvent);
+            Assert.Equal("Martin", addedUserFromTreatmentEvent.GivenName);
+            Assert.Equal("Francis", addedUserFromTreatmentEvent.FamilyName);
+            Assert.False(addedUserFromTreatmentEvent.IsActive);
+            Assert.False(addedUserFromTreatmentEvent.IsCaseManager);
+            Assert.DoesNotContain("TBS00TEST",
+                addedUserFromTreatmentEvent.CaseManagerTbServices.Select(cmtb => cmtb.TbServiceCode));
         }
 
         private void SetupMockMigrationRepo()
@@ -115,54 +174,49 @@ namespace ntbs_service_unit_tests.DataMigration
                 .Returns((List<string> ids) => Task.FromResult(_idToNotificationDict[ids[0]]));
         }
 
-        private Notification GivenLegacyNotificationWithTbServiceCode(string TbServiceCode)
+        private Notification GivenLegacyNotificationWithCaseManagerAndTbServiceCode(string caseManager, string TbServiceCode)
         {
             _idToNotificationDict = new Dictionary<string, IEnumerable<MigrationDbNotification>>
             {
                 {
                     NOTIFICATION_ID,
-                    new List<MigrationDbNotification> {new MigrationDbNotification {CaseManager = CASE_MANAGER_USERNAME}}
+                    new List<MigrationDbNotification> {new MigrationDbNotification {CaseManager = caseManager}}
                 }
             };
             return new Notification
             {
                 IsLegacy = true,
                 LTBRID = NOTIFICATION_ID,
-                HospitalDetails = new HospitalDetails {TBServiceCode = TbServiceCode}
+                HospitalDetails = new HospitalDetails {TBServiceCode = TbServiceCode},
+                TreatmentEvents = new List<TreatmentEvent>()
             };
         }
 
-        private void GivenLegacyUserWithName(string givenName, string familyName)
+        private void GivenLegacyUserWithName(string username, string givenName, string familyName)
         {
-            _usernameToLegacyUserDict = new Dictionary<string, MigrationLegacyUser>
-            {
+            _usernameToLegacyUserDict.Add(
+                username,
+                new MigrationLegacyUser
                 {
-                    CASE_MANAGER_USERNAME,
-                    new MigrationLegacyUser {Username = CASE_MANAGER_USERNAME, GivenName = givenName, FamilyName = familyName}
+                    Username = username, GivenName = givenName, FamilyName = familyName
                 }
-            };
+            );
         }
 
-        private async Task GivenLegacyUserHasPermissionsForTbService(string tbServiceCode)
+        private async Task GivenLegacyUserHasPermissionsForTbServiceInHospital(string username, string tbServiceCode, Guid hospitalGuid)
         {
-            _usernameToLegacyUserHospitalDict = new Dictionary<string, IEnumerable<MigrationLegacyUserHospital>>
-            {
-                {
-                    CASE_MANAGER_USERNAME,
-                    new List<MigrationLegacyUserHospital>
-                    {
-                        new MigrationLegacyUserHospital {HospitalId = HOSPITAL_GUID}
-                    }
-                }
-            };
-            await _context.Hospital.AddAsync(new Hospital{HospitalId = HOSPITAL_GUID, TBService = new TBService{Code = tbServiceCode}});
+            _usernameToLegacyUserHospitalDict.Add(
+                username,
+                new List<MigrationLegacyUserHospital> {new MigrationLegacyUserHospital {HospitalId = hospitalGuid}}
+            );
+            await _context.Hospital.AddAsync(new Hospital{HospitalId = hospitalGuid, TBService = new TBService{Code = tbServiceCode}});
             await _context.SaveChangesAsync();
         }
 
         private async Task GivenUserExistsInNtbsWithName(string givenName, string familyName)
         {
             await _context.User.AddAsync(
-                new User {GivenName = givenName, FamilyName = familyName, Username = CASE_MANAGER_USERNAME, IsActive = true});
+                new User {GivenName = givenName, FamilyName = familyName, Username = CASE_MANAGER_USERNAME_1, IsActive = true});
             await _context.SaveChangesAsync();
         }
 

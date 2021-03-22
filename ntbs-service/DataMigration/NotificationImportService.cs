@@ -149,7 +149,7 @@ namespace ntbs_service.DataMigration
             var isAnyNotificationInvalid = false;
             foreach (var notification in notifications)
             {
-                await _caseManagerImportService.ImportOrUpdateCaseManager(notification, context, requestId);
+                await _caseManagerImportService.ImportOrUpdateCaseManagersFromNotificationAndTreatmentEvents(notification, context, requestId);
                 var linkedNotificationId = notification.LegacyId;
                 _logger.LogInformation(context, requestId, $"Validating notification with Id={linkedNotificationId}");
 
