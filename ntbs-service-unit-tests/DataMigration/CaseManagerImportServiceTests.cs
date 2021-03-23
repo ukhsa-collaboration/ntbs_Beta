@@ -164,6 +164,34 @@ namespace ntbs_service_unit_tests.DataMigration
                 addedUserFromTreatmentEvent.CaseManagerTbServices.Select(cmtb => cmtb.TbServiceCode));
         }
 
+        [Fact]
+        public async Task WhenNotificationHasNoCaseManager_AddsCaseManagersFromTreatmentEvents()
+        {
+            // Arrange
+            var notification = GivenLegacyNotificationWithNoCaseManager();
+            GivenLegacyUserWithName(CASE_MANAGER_USERNAME_1, "Pietro", "Peters");
+            await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS00FAKE", HOSPITAL_GUID_1);
+            GivenLegacyUserWithName(CASE_MANAGER_USERNAME_2, "Scarlett", "Violet");
+            await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_2, "TBS00RONG", HOSPITAL_GUID_2);
+            notification.TreatmentEvents =
+                new List<TreatmentEvent>
+                {
+                    new TreatmentEvent {CaseManagerUsername = CASE_MANAGER_USERNAME_1, TbServiceCode = "TBS00FAKE"},
+                    new TreatmentEvent {CaseManagerUsername = CASE_MANAGER_USERNAME_2, TbServiceCode = "TBS00RONG"},
+                };
+
+            // Act
+            await _caseManagerImportService.ImportOrUpdateCaseManagersFromNotificationAndTreatmentEvents(notification, null, "test-request-1");
+
+            // Assert
+            var addedUsers = _context.User.ToList();
+            Assert.Equal(2, addedUsers.Count);
+            Assert.Equal("Pietro", addedUsers.Single(u => u.Username == CASE_MANAGER_USERNAME_1).GivenName);
+            Assert.Equal("Peters", addedUsers.Single(u => u.Username == CASE_MANAGER_USERNAME_1).FamilyName);
+            Assert.Equal("Scarlett", addedUsers.Single(u => u.Username == CASE_MANAGER_USERNAME_2).GivenName);
+            Assert.Equal("Violet", addedUsers.Single(u => u.Username == CASE_MANAGER_USERNAME_2).FamilyName);
+        }
+
         private void SetupMockMigrationRepo()
         {
             _migrationRepositoryMock.Setup(repo => repo.GetLegacyUserByUsername(It.IsAny<string>()))
@@ -188,6 +216,24 @@ namespace ntbs_service_unit_tests.DataMigration
                 IsLegacy = true,
                 LTBRID = NOTIFICATION_ID,
                 HospitalDetails = new HospitalDetails {TBServiceCode = TbServiceCode},
+                TreatmentEvents = new List<TreatmentEvent>()
+            };
+        }
+
+        private Notification GivenLegacyNotificationWithNoCaseManager()
+        {
+            _idToNotificationDict = new Dictionary<string, IEnumerable<MigrationDbNotification>>
+            {
+                {
+                    NOTIFICATION_ID,
+                    new List<MigrationDbNotification> {new MigrationDbNotification()}
+                }
+            };
+            return new Notification
+            {
+                IsLegacy = true,
+                LTBRID = NOTIFICATION_ID,
+                HospitalDetails = new HospitalDetails(),
                 TreatmentEvents = new List<TreatmentEvent>()
             };
         }
