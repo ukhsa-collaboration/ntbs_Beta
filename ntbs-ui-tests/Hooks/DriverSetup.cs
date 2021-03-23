@@ -33,6 +33,7 @@ namespace ntbs_ui_tests.Hooks
             }
 
             Browser = new RemoteWebDriver(opts);
+            Browser.Manage().Timeouts().ImplicitWait = settings.ImplicitWait;
             objectContainer.RegisterInstanceAs(Browser);
         }
 
