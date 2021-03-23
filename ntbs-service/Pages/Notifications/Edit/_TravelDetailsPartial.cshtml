@@ -54,9 +54,6 @@
                                   id="travel-country1Id-error" ref="country1IdErrorRef" has-error="@hasCountry1IdError"></span>
                             <div ref="country1Id" aria-describedby="travel-country1Id-error">
                                 <autocomplete-select placeholder="@selectDropdownPlaceholder" inline-template>
-                                    <label asp-for="TravelDetails.Country1Id" nhs-label-type="Standard">
-                                        Most recent country travelled to
-                                    </label>
                                     <select asp-for="TravelDetails.Country1Id" asp-items="Model.HighTbIncidenceCountries" ref="selectElement">
                                         <option value=""></option>
                                     </select>
