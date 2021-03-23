@@ -1,4 +1,5 @@
-﻿using EFAuditer;
+﻿using System;
+using EFAuditer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -14,8 +15,15 @@ namespace ntbs_integration_tests
 {
     public class NtbsWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
+        private string _testClassName;
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            if (string.IsNullOrWhiteSpace(_testClassName))
+            {
+                throw new InvalidOperationException("Cannot build the web host before the test class name has been set.");
+            }
+
             builder.UseSerilog();
             builder.UseEnvironment("CI");
 
@@ -27,8 +35,7 @@ namespace ntbs_integration_tests
 
                 services.AddDbContext<NtbsContext>(options =>
                 {
-                    options.UseInMemoryDatabase("Ntbs_Test_Db");
-                    options.UseInternalServiceProvider(serviceProvider);
+                    options.UseSqlite($"Filename={_testClassName}.db");
                 });
 
                 services.AddDbContext<KeysContext>(options =>
@@ -50,6 +57,7 @@ namespace ntbs_integration_tests
                     var scopedServices = scope.ServiceProvider;
                     var db = scopedServices.GetRequiredService<NtbsContext>();
 
+                    db.Database.EnsureDeleted();
                     db.Database.EnsureCreated();
                     Utilities.SeedDatabase(db);
                 }
@@ -68,7 +76,12 @@ namespace ntbs_integration_tests
             });
         }
 
-        public void ConfigureLogger(string testName)
+        public void ConfigureTestClassName(string testClassName)
+        {
+            _testClassName = testClassName;
+        }
+
+        public void ConfigureLogger()
         {
             var logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
