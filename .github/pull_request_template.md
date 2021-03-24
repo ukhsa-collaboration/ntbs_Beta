@@ -12,6 +12,7 @@ If the NTBS schema changes, that might affect the related components!
 - [ ] EF migrations created and committed. Snapshot committed
 - [ ] On-demand migration impact considered
 - [ ] Reporting database DACPAC updated
+- [ ] Specimen matching database DACPAC updated
 - [ ] Reporting database ingestion considered (uspGenerateReusableNotification)
 ### Accessibility testing
 Features with UI components should consider items on this list
