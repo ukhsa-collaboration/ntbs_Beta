@@ -26,10 +26,10 @@ namespace ntbs_service.Helpers
 
         public static bool IsMBovisQuestionnaireComplete(MBovisDetails mBovisDetails)
         {
-            return mBovisDetails.HasExposureToKnownCases.HasValue
-                   && mBovisDetails.HasUnpasteurisedMilkConsumption.HasValue
-                   && mBovisDetails.HasOccupationExposure.HasValue
-                   && mBovisDetails.HasAnimalExposure.HasValue;
+            return mBovisDetails.ExposureToKnownCasesStatus.HasValue
+                   && mBovisDetails.UnpasteurisedMilkConsumptionStatus.HasValue
+                   && mBovisDetails.OccupationExposureStatus.HasValue
+                   && mBovisDetails.AnimalExposureStatus.HasValue;
         }
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
@@ -26,10 +26,10 @@ namespace ntbs_integration_tests.NotificationPages
                 {
                     NotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_ENTITIES,
                     NotificationStatus = NotificationStatus.Notified,
-                    DrugResistanceProfile = new DrugResistanceProfile {Species = "M. bovis"},
+                    DrugResistanceProfile = new DrugResistanceProfile { Species = "M. bovis" },
                     MBovisDetails = new MBovisDetails
                     {
-                        HasOccupationExposure = true,
+                        OccupationExposureStatus = Status.Yes,
                         MBovisOccupationExposures = new List<MBovisOccupationExposure>
                         {
                             new MBovisOccupationExposure
@@ -44,9 +44,24 @@ namespace ntbs_integration_tests.NotificationPages
                 },
                 new Notification
                 {
-                    NotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_NO_ENTITIES,
+                    NotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_NULL_OCCUPATION_NO_ENTITIES,
                     NotificationStatus = NotificationStatus.Notified,
-                    DrugResistanceProfile = new DrugResistanceProfile {Species = "M. bovis"}
+                    DrugResistanceProfile = new DrugResistanceProfile { Species = "M. bovis" },
+                    MBovisDetails = new MBovisDetails { OccupationExposureStatus = null }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_NO_OCCUPATION_NO_ENTITIES,
+                    NotificationStatus = NotificationStatus.Notified,
+                    DrugResistanceProfile = new DrugResistanceProfile { Species = "M. bovis" },
+                    MBovisDetails = new MBovisDetails { OccupationExposureStatus = Status.No }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_UNKNOWN_OCCUPATION_NO_ENTITIES,
+                    NotificationStatus = NotificationStatus.Notified,
+                    DrugResistanceProfile = new DrugResistanceProfile { Species = "M. bovis" },
+                    MBovisDetails = new MBovisDetails { OccupationExposureStatus = Status.Unknown }
                 }
             };
         }
@@ -66,12 +81,12 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.NotNull(document.QuerySelector("#mbovis-occupation-exposure-table"));
         }
 
-        [Fact]
-        public async Task IfNotificationDoesNotHaveKnownCases_DoesNotDisplayTable()
+        [Theory]
+        [InlineData(Utilities.NOTIFICATION_ID_WITH_MBOVIS_NULL_OCCUPATION_NO_ENTITIES)]
+        [InlineData(Utilities.NOTIFICATION_ID_WITH_MBOVIS_NO_OCCUPATION_NO_ENTITIES)]
+        [InlineData(Utilities.NOTIFICATION_ID_WITH_MBOVIS_UNKNOWN_OCCUPATION_NO_ENTITIES)]
+        public async Task IfNotificationDoesNotHaveKnownCases_DoesNotDisplayTable(int notificationId)
         {
-            // Arrange
-            const int notificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_NO_ENTITIES;
-
             // Act
             var response = await Client.GetAsync(GetCurrentPathForId(notificationId));
 
@@ -92,7 +107,7 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["MBovisDetails.HasOccupationExposure"] = "false"
+                ["MBovisDetails.OccupationExposureStatus"] = Status.No.ToString()
             };
 
             // Act
