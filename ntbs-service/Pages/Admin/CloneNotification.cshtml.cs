@@ -153,9 +153,9 @@ namespace ntbs_service.Pages.Admin
         }
 
         // ReSharper disable once UnusedMember.Global
-        public ContentResult OnGetValidateProperty(string key)
+        public ContentResult OnPostValidateProperty([FromBody]InputValidationModel validationData)
         {
-            return _validationService.GetValidationResult(this, key);
+            return _validationService.GetPropertyValidationResult<PatientDetails>(validationData.Key, validationData.Value, validationData.ShouldValidateFull);
         }
 
         // ReSharper disable once UnusedMember.Global

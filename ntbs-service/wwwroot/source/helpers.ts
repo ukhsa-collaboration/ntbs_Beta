@@ -24,6 +24,13 @@ var convertFormattedDateToDate = function(date: FormattedDate) {
     return new Date(date.year, date.month - 1, date.day)
 }
 
+var convertStringToNullableInt = function(stringInt: string) {
+    if (stringInt === "") {
+        return null;
+    }
+    return parseInt(stringInt);
+}
+
 export { 
-    getHeaders, getValidationPath, FormattedDate, convertFormattedDateToDate, buildPath, buildPathRelativeToOrigin
+    getHeaders, getValidationPath, FormattedDate, convertFormattedDateToDate, buildPath, buildPathRelativeToOrigin, convertStringToNullableInt
 };

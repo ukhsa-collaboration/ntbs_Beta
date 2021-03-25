@@ -212,9 +212,9 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             return ValidationService.GetDateValidationResult<TreatmentEvent>(validationData.Key, validationData.Day, validationData.Month, validationData.Year, isLegacy);
         }
 
-        public ContentResult OnGetValidateSelectedTreatmentOutcomeTypeProperty(string key, TreatmentOutcomeType? value)
+        public ContentResult OnPostValidateSelectedTreatmentOutcomeTypeProperty([FromBody]InputValidationModel validationData)
         {
-            if (value == null)
+            if (validationData.Value == null)
             {
                 var errorMessage = string.Format(ValidationMessages.RequiredSelect,
                     this.GetMemberDisplayName(nameof(SelectedTreatmentOutcomeType)));
