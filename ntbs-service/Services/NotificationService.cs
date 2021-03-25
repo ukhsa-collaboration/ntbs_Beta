@@ -432,25 +432,34 @@ namespace ntbs_service.Services
 
         public async Task UpdateMBovisDetailsExposureToKnownCasesAsync(Notification notification, MBovisDetails mBovisDetails)
         {
-            _context.SetValues(notification.MBovisDetails, new { mBovisDetails.HasExposureToKnownCases });
+            _context.SetValues(notification.MBovisDetails, new
+            {
+                HasExposureToKnownCases = mBovisDetails.ExposureToKnownCasesStatus
+            });
             await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateMBovisDetailsUnpasteurisedMilkConsumptionAsync(Notification notification, MBovisDetails mBovisDetails)
         {
-            _context.SetValues(notification.MBovisDetails, new { mBovisDetails.HasUnpasteurisedMilkConsumption });
+            _context.SetValues(notification.MBovisDetails, new
+            {
+                HasUnpasteurisedMilkConsumption = mBovisDetails.UnpasteurisedMilkConsumptionStatus
+            });
             await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateMBovisDetailsOccupationExposureAsync(Notification notification, MBovisDetails mBovisDetails)
         {
-            _context.SetValues(notification.MBovisDetails, new { mBovisDetails.HasOccupationExposure });
+            _context.SetValues(notification.MBovisDetails, new
+            {
+                HasOccupationExposure = mBovisDetails.OccupationExposureStatus
+            });
             await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateMBovisDetailsAnimalExposureAsync(Notification notification, MBovisDetails mBovisDetails)
         {
-            _context.SetValues(notification.MBovisDetails, new { mBovisDetails.HasAnimalExposure });
+            _context.SetValues(notification.MBovisDetails, new {HasAnimalExposure = mBovisDetails.AnimalExposureStatus});
             await _notificationRepository.SaveChangesAsync();
         }
 

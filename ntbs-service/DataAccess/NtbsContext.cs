@@ -245,7 +245,7 @@ namespace ntbs_service.DataAccess
 
                 entity.ToTable(nameof(PostcodeLookup), ReferenceDataSchemaName);
 
-                // We don't use HasData to populate postcode lookup due to the size of this dataset - 
+                // We don't use HasData to populate postcode lookup due to the size of this dataset -
                 // it would completely clog up any EF actions. We've used manually created migrations instead.
             });
 
@@ -653,7 +653,18 @@ namespace ntbs_service.DataAccess
 
             modelBuilder.Entity<MBovisDetails>(entity =>
             {
-                entity.HasMany(e => e.MBovisExposureToKnownCases);
+                entity.Property(e => e.ExposureToKnownCasesStatus)
+                    .HasConversion(statusEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+                entity.Property(e => e.UnpasteurisedMilkConsumptionStatus)
+                    .HasConversion(statusEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+                entity.Property(e => e.OccupationExposureStatus)
+                    .HasConversion(statusEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+                entity.Property(e => e.AnimalExposureStatus)
+                    .HasConversion(statusEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
                 entity.ToTable("MBovisDetails").HasKey(e => e.NotificationId);
             });
 

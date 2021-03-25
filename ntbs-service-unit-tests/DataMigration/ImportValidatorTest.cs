@@ -48,27 +48,27 @@ namespace ntbs_service_unit_tests.DataMigration
                 VisitorDetails = new VisitorDetails{HasVisitor = Status.Yes, StayLengthInMonths1 = 3},
                 ContactTracing = new ContactTracing{AdultsIdentified = -1},
                 PreviousTbHistory = new PreviousTbHistory{PreviousTbDiagnosisYear = 1899},
-                MBovisDetails = new MBovisDetails{MBovisExposureToKnownCases = 
-                    new List<MBovisExposureToKnownCase>{new MBovisExposureToKnownCase()}, HasExposureToKnownCases = false},
+                MBovisDetails = new MBovisDetails{MBovisExposureToKnownCases =
+                    new List<MBovisExposureToKnownCase>{new MBovisExposureToKnownCase()}, ExposureToKnownCasesStatus = Status.No},
                 DrugResistanceProfile = new DrugResistanceProfile{Species = "M. bovis"}
             };
 
             // Act
             var validationResults = await _importValidator.CleanAndValidateNotification(null, "test-request-V", notification);
-            
+
             // Assert
             var errorMessages = validationResults.Select(r => r.ErrorMessage).ToList();
-            Assert.Contains("The field Relationship of the current case to the contact must be a string or array type with a maximum length of '90'.", 
+            Assert.Contains("The field Relationship of the current case to the contact must be a string or array type with a maximum length of '90'.",
                 errorMessages);
-            Assert.Contains(String.Format(ValidationMessages.StandardStringFormat, "Family name"), 
+            Assert.Contains(String.Format(ValidationMessages.StandardStringFormat, "Family name"),
                 errorMessages);
-            Assert.Contains(ValidationMessages.DateValidityRangeStart("Diagnosis date", "01/01/2010"), 
+            Assert.Contains(ValidationMessages.DateValidityRangeStart("Diagnosis date", "01/01/2010"),
                 errorMessages);
-            Assert.Contains("The field total number of countries must be between 1 and 50.", 
+            Assert.Contains("The field total number of countries must be between 1 and 50.",
                 errorMessages);
-            Assert.Contains(String.Format(ValidationMessages.InvalidCharacter, "Immunosuppression type description"), 
+            Assert.Contains(String.Format(ValidationMessages.InvalidCharacter, "Immunosuppression type description"),
                 errorMessages);
-            Assert.Contains(String.Format(ValidationMessages.InvalidCharacter, "Consultant"), 
+            Assert.Contains(String.Format(ValidationMessages.InvalidCharacter, "Consultant"),
                 errorMessages);
             Assert.Contains(ValidationMessages.TravelOrVisitDurationHasCountry,
                 errorMessages);
@@ -91,20 +91,20 @@ namespace ntbs_service_unit_tests.DataMigration
                 TreatmentEvents = new List<TreatmentEvent>{new TreatmentEvent{EventDate = new DateTime(1899, 3, 3)}},
                 MBovisDetails = new MBovisDetails
                 {
-                    HasOccupationExposure = true, MBovisOccupationExposures = new List<MBovisOccupationExposure>(),
-                    HasExposureToKnownCases = true, MBovisExposureToKnownCases = new List<MBovisExposureToKnownCase>(),
-                    HasAnimalExposure = true, MBovisAnimalExposures = new List<MBovisAnimalExposure>(),
-                    HasUnpasteurisedMilkConsumption = true, MBovisUnpasteurisedMilkConsumptions = new List<MBovisUnpasteurisedMilkConsumption>()
+                    OccupationExposureStatus = Status.Yes, MBovisOccupationExposures = new List<MBovisOccupationExposure>(),
+                    ExposureToKnownCasesStatus = Status.Yes, MBovisExposureToKnownCases = new List<MBovisExposureToKnownCase>(),
+                    AnimalExposureStatus = Status.Yes, MBovisAnimalExposures = new List<MBovisAnimalExposure>(),
+                    UnpasteurisedMilkConsumptionStatus = Status.Yes, MBovisUnpasteurisedMilkConsumptions = new List<MBovisUnpasteurisedMilkConsumption>()
                 }
             };
 
             // Act
             var validationResults = await _importValidator.CleanAndValidateNotification(null, "test-request-V", notification);
-            
+
             // Assert
             var errorMessages = validationResults.Select(r => r.ErrorMessage).ToList();
-            
-            Assert.Contains("Event Date must not be before 01/01/2010", 
+
+            Assert.Contains("Event Date must not be before 01/01/2010",
                 errorMessages);
             Assert.Contains(ValidationMessages.SupplyOneOfTheAddressFields,
                 errorMessages);
@@ -133,10 +133,10 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Act
             var validationResults = await _importValidator.CleanAndValidateNotification(null, "test-request-V", notification);
-            
+
             // Assert
             var errorMessages = validationResults.Select(r => r.ErrorMessage).ToList();
-            
+
             Assert.Empty(errorMessages);
         }
 
@@ -147,9 +147,9 @@ namespace ntbs_service_unit_tests.DataMigration
             var notification = new Notification
             {
                 NotificationDate = new DateTime(2020,1,1),
-                TestData = new TestData 
-                { 
-                    ManualTestResults = new List<ManualTestResult> 
+                TestData = new TestData
+                {
+                    ManualTestResults = new List<ManualTestResult>
                     {
                         new ManualTestResult { Result = Result.Positive, TestDate = null } // these values would fail validation
                     }
@@ -158,10 +158,10 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Act
             var validationResults = await _importValidator.CleanAndValidateNotification(null, "test-request-V", notification);
-            
+
             // Assert
             var errorMessages = validationResults.Select(r => r.ErrorMessage).ToList();
-            
+
             Assert.Empty(errorMessages);
         }
     }

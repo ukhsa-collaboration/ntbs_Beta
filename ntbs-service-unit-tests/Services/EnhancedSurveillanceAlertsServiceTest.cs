@@ -75,26 +75,28 @@ namespace ntbs_service_unit_tests.Services
 
         [Theory]
         [InlineData("M. bovis", null, null, null, null, true, false)]
-        [InlineData("M. bovis", null, null, null, true, true, false)]
-        [InlineData("M. bovis", null, null, true, null, true, false)]
-        [InlineData("M. bovis", null, true, null, null, true, false)]
-        [InlineData("M. bovis", true, null, null, null, true, false)]
-        [InlineData("M. bovis", false, false, false, null, true, false)]
-        [InlineData("M. bovis", false, false, null, false, true, false)]
-        [InlineData("M. bovis", false, null, false, false, true, false)]
-        [InlineData("M. bovis", null, false, false, false, true, false)]
-        [InlineData("M. bovis", false, false, false, false, false, true)]
-        [InlineData("M. bovis", true, false, true, false, false, true)]
-        [InlineData("M. bovis", true, true, true, true, false, true)]
+        [InlineData("M. bovis", null, null, null, Status.Yes, true, false)]
+        [InlineData("M. bovis", null, null, Status.Yes, null, true, false)]
+        [InlineData("M. bovis", null, Status.Yes, null, null, true, false)]
+        [InlineData("M. bovis", Status.Yes, null, null, null, true, false)]
+        [InlineData("M. bovis", Status.No, Status.No, Status.No, null, true, false)]
+        [InlineData("M. bovis", Status.No, Status.No, null, Status.No, true, false)]
+        [InlineData("M. bovis", Status.No, null, Status.No, Status.No, true, false)]
+        [InlineData("M. bovis", null, Status.No, Status.No, Status.No, true, false)]
+        [InlineData("M. bovis", Status.No, Status.No, Status.No, Status.No, false, true)]
+        [InlineData("M. bovis", Status.Yes, Status.No, Status.Unknown, Status.No, false, true)]
+        [InlineData("M. bovis", Status.Yes, Status.Yes, Status.Yes, Status.Yes, false, true)]
+        [InlineData("M. bovis", Status.Unknown, Status.Unknown, Status.Unknown, Status.Unknown, false, true)]
         [InlineData("Non M. bovis", null, null, null, null, false, true)]
-        [InlineData("Non M. bovis", null, false, null, true, false, true)]
-        [InlineData("Non M. bovis", true, true, true, true, false, true)]
-        [InlineData("Non M. bovis", false, false, false, false, false, true)]
+        [InlineData("Non M. bovis", null, Status.No, Status.Unknown, Status.Yes, false, true)]
+        [InlineData("Non M. bovis", Status.Yes, Status.Yes, Status.Yes, Status.Yes, false, true)]
+        [InlineData("Non M. bovis", Status.No, Status.No, Status.No, Status.No, false, true)]
+        [InlineData("Non M. bovis", Status.Unknown, Status.Unknown, Status.Unknown, Status.Unknown, false, true)]
         public void CreateOrDismissMBovisAlert(string drugSpecies,
-            bool? hasExposureToKnownCases,
-            bool? hasUnpasteurisedMilkConsumption,
-            bool? hasOccupationExposure,
-            bool? hasAnimalExposure,
+            Status? hasExposureToKnownCases,
+            Status? hasUnpasteurisedMilkConsumption,
+            Status? hasOccupationExposure,
+            Status? hasAnimalExposure,
             bool shouldCreateAlert,
             bool shouldDismissAlert)
         {
@@ -109,10 +111,10 @@ namespace ntbs_service_unit_tests.Services
                 },
                 MBovisDetails = new MBovisDetails
                 {
-                    HasExposureToKnownCases = hasExposureToKnownCases,
-                    HasUnpasteurisedMilkConsumption = hasUnpasteurisedMilkConsumption,
-                    HasOccupationExposure = hasOccupationExposure,
-                    HasAnimalExposure = hasAnimalExposure,
+                    ExposureToKnownCasesStatus = hasExposureToKnownCases,
+                    UnpasteurisedMilkConsumptionStatus = hasUnpasteurisedMilkConsumption,
+                    OccupationExposureStatus = hasOccupationExposure,
+                    AnimalExposureStatus = hasAnimalExposure,
                 }
             };
 

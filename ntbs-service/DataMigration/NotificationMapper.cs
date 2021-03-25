@@ -183,14 +183,17 @@ namespace ntbs_service.DataMigration
                     rawNotification,
                     notificationTransferEvents,
                     notificationOutcomeEvents);
-                notification.MBovisDetails.HasAnimalExposure = notificationMBovisAnimalExposures.Any();
+                notification.MBovisDetails.AnimalExposureStatus =
+                    notificationMBovisAnimalExposures.Any() ? Status.Yes : Status.No;
                 notification.MBovisDetails.MBovisAnimalExposures = notificationMBovisAnimalExposures;
-                notification.MBovisDetails.HasExposureToKnownCases = notificationMBovisExposureToKnownCase.Any();
+                notification.MBovisDetails.ExposureToKnownCasesStatus =
+                    notificationMBovisExposureToKnownCase.Any() ? Status.Yes : Status.No;
                 notification.MBovisDetails.MBovisExposureToKnownCases = notificationMBovisExposureToKnownCase;
-                notification.MBovisDetails.HasOccupationExposure = notificationMBovisOccupationExposures.Any();
+                notification.MBovisDetails.OccupationExposureStatus =
+                    notificationMBovisOccupationExposures.Any() ? Status.Yes : Status.No;
                 notification.MBovisDetails.MBovisOccupationExposures = notificationMBovisOccupationExposures;
-                notification.MBovisDetails.HasUnpasteurisedMilkConsumption =
-                    notificationMBovisUnpasteurisedMilkConsumption.Any();
+                notification.MBovisDetails.UnpasteurisedMilkConsumptionStatus =
+                    notificationMBovisUnpasteurisedMilkConsumption.Any() ? Status.Yes : Status.No;
                 notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions =
                     notificationMBovisUnpasteurisedMilkConsumption;
                 notificationsToReturn.Add(notification);
@@ -205,7 +208,7 @@ namespace ntbs_service.DataMigration
             IEnumerable<TreatmentEvent> notificationOutcomeEvents)
         {
 
-            // For post mortem cases the death event is the ONLY event we want to import so the final outcome is 
+            // For post mortem cases the death event is the ONLY event we want to import so the final outcome is
             // correctly reported.
             if (notification.ClinicalDetails.IsPostMortem == true)
             {
@@ -294,7 +297,7 @@ namespace ntbs_service.DataMigration
                 else
                 {
                     // It's OK to only set this where it exists
-                    // - the service missing will come up in notification validation  
+                    // - the service missing will come up in notification validation
                     details.TBServiceCode = tbService.Code;
                 }
             }
@@ -560,7 +563,7 @@ namespace ntbs_service.DataMigration
             {
                 notification.Line1, notification.Line2, notification.City, notification.County
             };
-            var addressRaw = string.Join("\n", 
+            var addressRaw = string.Join("\n",
                 addressLines.Where(line => !string.IsNullOrEmpty(line)).Select(line => line.Trim()));
             var address = RemoveCharactersNotIn(
                 ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,

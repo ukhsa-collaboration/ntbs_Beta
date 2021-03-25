@@ -1,6 +1,7 @@
 ﻿@page "/Notifications/{NotificationId:int}/Edit/MBovis/AnimalExposures/{handler?}"
 @using ntbs_service.Models
 @using ntbs_service.Models.Entities
+@using ntbs_service.Models.Enums
 @model ntbs_service.Pages.Notifications.Edit.MBovisAnimalExposuresModel
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
@@ -21,38 +22,42 @@
         <div>
             <validate-input
                 model="@nameof(MBovisDetails)"
-                property="@nameof(MBovisDetails.HasAnimalExposure)"
+                property="@nameof(MBovisDetails.AnimalExposureStatus)"
                 shouldvalidatefull="@fullValidation"
-                v-on:valid="hideOrShowSection" 
-                v-on:mounted="hideOrShowSection" 
-                ref="inner-validate" 
+                v-on:valid="hideOrShowSection"
+                v-on:mounted="hideOrShowSection"
+                ref="inner-validate"
                 inline-template>
                 @{
-                    var hasAnimalExposureError = !Model.IsValid($"{nameof(MBovisDetails)}.{nameof(MBovisDetails.HasAnimalExposure)}");
+                    var hasAnimalExposureError = !Model.IsValid($"{nameof(MBovisDetails)}.{nameof(MBovisDetails.AnimalExposureStatus)}");
                     var hasAnimalExposureGroupState = hasAnimalExposureError ? Error : Standard;
-                    var hasAnimalExposureValues = Model.MBovisDetails.HasAnimalExposure == true && Model.MBovisDetails.MBovisAnimalExposures.Any();
+                    var hasAnimalExposureValues = Model.MBovisDetails.AnimalExposureStatus == Status.Yes && Model.MBovisDetails.MBovisAnimalExposures.Any();
                     var hasAnimalExposureDisabledText = hasAnimalExposureValues ? "Cannot modify value when records are logged against notification" : string.Empty;
                 }
 
                 <nhs-form-group nhs-form-group-type="@hasAnimalExposureGroupState" id="MBovisDetails-HasAnimalExposure">
                     <nhs-fieldset aria-describedby="has-exposure-error@(hasAnimalExposureValues ? " has-exposure-disabled" : string.Empty)" title="@hasAnimalExposureDisabledText">
                         <nhs-fieldset-legend nhs-legend-size="Standard">
-                            @Html.DisplayNameFor(m => m.MBovisDetails.HasAnimalExposure)
+                            @Html.DisplayNameFor(m => m.MBovisDetails.AnimalExposureStatus)
                         </nhs-fieldset-legend>
                         @if (hasAnimalExposureValues)
                         {
                             <span id="has-exposure-disabled" class="govuk-visually-hidden">@hasAnimalExposureDisabledText</span>
-                            <input type="hidden" asp-for="MBovisDetails.HasAnimalExposure"/>
+                            <input type="hidden" asp-for="MBovisDetails.AnimalExposureStatus"/>
                         }
-                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="MBovisDetails.HasAnimalExposure" has-error="@hasAnimalExposureError" id="has-exposure-error"></span>
+                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="MBovisDetails.AnimalExposureStatus" has-error="@hasAnimalExposureError" id="has-exposure-error"></span>
                         <nhs-radios nhs-radios-type="Standard" v-on:change="validate">
                             <nhs-radios-item>
-                                <input nhs-input-type="Radios" asp-for="MBovisDetails.HasAnimalExposure" id="has-exposure-yes" ref="conditional-true" type="radio" value="true" disabled="@hasAnimalExposureValues"/>
+                                <input nhs-input-type="Radios" asp-for="MBovisDetails.AnimalExposureStatus" id="has-exposure-yes" ref="conditional-true" type="radio" value="@Status.Yes" disabled="@hasAnimalExposureValues"/>
                                 <label nhs-label-type="Radios" for="has-exposure-yes">Yes</label>
                             </nhs-radios-item>
                             <nhs-radios-item>
-                                <input nhs-input-type="Radios" asp-for="MBovisDetails.HasAnimalExposure" id="has-exposure-no" type="radio" value="false" disabled="@hasAnimalExposureValues"/>
+                                <input nhs-input-type="Radios" asp-for="MBovisDetails.AnimalExposureStatus" id="has-exposure-no" type="radio" value="@Status.No" disabled="@hasAnimalExposureValues"/>
                                 <label nhs-label-type="Radios" for="has-exposure-no">No</label>
+                            </nhs-radios-item>
+                            <nhs-radios-item>
+                                <input nhs-input-type="Radios" asp-for="MBovisDetails.AnimalExposureStatus" id="has-exposure-unknown" type="radio" value="@Status.Unknown" disabled="@hasAnimalExposureValues"/>
+                                <label nhs-label-type="Radios" for="has-exposure-unknown">Unknown</label>
                             </nhs-radios-item>
                         </nhs-radios>
                     </nhs-fieldset>

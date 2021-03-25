@@ -4,6 +4,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
@@ -61,7 +62,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             if (ActionName == ActionNameString.Create)
             {
-                MBovisDetails.HasExposureToKnownCases = true;
+                MBovisDetails.ExposureToKnownCasesStatus = Status.Yes;
             }
             // Set the collection so it can be included in the validation
             MBovisDetails.MBovisExposureToKnownCases = Notification.MBovisDetails.MBovisExposureToKnownCases;
@@ -75,7 +76,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 await _enhancedSurveillanceAlertsService.CreateOrDismissMBovisAlert(Notification);
             }
         }
-        
+
         public ContentResult OnPostValidateMBovisDetailsProperty([FromBody]InputValidationModel validationData)
         {
             return ValidationService.GetPropertyValidationResult<MBovisDetails>(validationData.Key, validationData.Value, validationData.ShouldValidateFull);
