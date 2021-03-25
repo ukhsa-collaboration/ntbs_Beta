@@ -183,19 +183,12 @@ namespace ntbs_service.DataMigration
                     rawNotification,
                     notificationTransferEvents,
                     notificationOutcomeEvents);
-                notification.MBovisDetails.AnimalExposureStatus =
-                    notificationMBovisAnimalExposures.Any() ? Status.Yes : Status.No;
-                notification.MBovisDetails.MBovisAnimalExposures = notificationMBovisAnimalExposures;
-                notification.MBovisDetails.ExposureToKnownCasesStatus =
-                    notificationMBovisExposureToKnownCase.Any() ? Status.Yes : Status.No;
-                notification.MBovisDetails.MBovisExposureToKnownCases = notificationMBovisExposureToKnownCase;
-                notification.MBovisDetails.OccupationExposureStatus =
-                    notificationMBovisOccupationExposures.Any() ? Status.Yes : Status.No;
-                notification.MBovisDetails.MBovisOccupationExposures = notificationMBovisOccupationExposures;
-                notification.MBovisDetails.UnpasteurisedMilkConsumptionStatus =
-                    notificationMBovisUnpasteurisedMilkConsumption.Any() ? Status.Yes : Status.No;
-                notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions =
-                    notificationMBovisUnpasteurisedMilkConsumption;
+
+                notification.MBovisDetails = ExtractMBovisDetails(notificationMBovisAnimalExposures,
+                    notificationMBovisExposureToKnownCase,
+                    notificationMBovisOccupationExposures,
+                    notificationMBovisUnpasteurisedMilkConsumption);
+
                 notificationsToReturn.Add(notification);
             }
 
@@ -233,6 +226,45 @@ namespace ntbs_service.DataMigration
             treatmentEvents.AddRange(notificationTransferEvents);
             treatmentEvents.AddRange(notificationOutcomeEvents);
             return treatmentEvents;
+        }
+
+        private MBovisDetails ExtractMBovisDetails(ICollection<MBovisAnimalExposure> animalExposures,
+            ICollection<MBovisExposureToKnownCase> exposureToKnownCase,
+            ICollection<MBovisOccupationExposure> occupationExposures,
+            ICollection<MBovisUnpasteurisedMilkConsumption> unpasteurisedMilkConsumption)
+        {
+            var mbovisDetails = new MBovisDetails
+            {
+                MBovisAnimalExposures = animalExposures,
+                MBovisExposureToKnownCases = exposureToKnownCase,
+                MBovisOccupationExposures = occupationExposures,
+                MBovisUnpasteurisedMilkConsumptions = unpasteurisedMilkConsumption,
+
+                AnimalExposureStatus = null,
+                ExposureToKnownCasesStatus = null,
+                OccupationExposureStatus = null,
+                UnpasteurisedMilkConsumptionStatus = null,
+            };
+
+            var anyMBovisExposure = animalExposures.Any()
+                                    || exposureToKnownCase.Any()
+                                    || occupationExposures.Any()
+                                    || unpasteurisedMilkConsumption.Any();
+            // If there are no M. bovis exposure events then leave all the statuses as null
+            if (!anyMBovisExposure)
+            {
+                return mbovisDetails;
+            }
+
+            // If there are events, then set all statuses to either Yes or Unknown (for we don't know if an absence of
+            // data in the old DB was due to a lack of information, or because there was definitely no exposure)
+            mbovisDetails.AnimalExposureStatus = animalExposures.Any() ? Status.Yes : Status.Unknown;
+            mbovisDetails.ExposureToKnownCasesStatus = exposureToKnownCase.Any() ? Status.Yes : Status.Unknown;
+            mbovisDetails.OccupationExposureStatus = occupationExposures.Any() ? Status.Yes : Status.Unknown;
+            mbovisDetails.UnpasteurisedMilkConsumptionStatus =
+                unpasteurisedMilkConsumption.Any() ? Status.Yes : Status.Unknown;
+
+            return mbovisDetails;
         }
 
         private async Task<Notification> AsNotificationAsync(MigrationDbNotification rawNotification)
