@@ -13,6 +13,6 @@ or can be evoked by hand using
 
 ## DACPAC files
 
-Other NTBS repositories such as [ntbs-reporting](https://github.com/publichealthengland/ntbs-reporting) include DACPAC files of the databases they are reliant on.
+Other NTBS repositories such as [ntbs-specimen-matching](https://github.com/publichealthengland/ntbs-specimen-matching) and [ntbs-reporting](https://github.com/publichealthengland/ntbs-reporting) include DACPAC files of the databases they are reliant on.
 If you have made changes to the NTBS database then these files need to be updated in the corresponding repository.
 The easiest way to create the DACPAC file is through SSMS, instructions can be found [here.](https://sqlplayer.net/2018/10/how-to-create-dacpac-file/)
