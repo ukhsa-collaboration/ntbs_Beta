@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
@@ -97,10 +98,10 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task RedirectsToOverviewWithCorrectAnchorFragment()
+        public async Task EditPage_RedirectsToOverviewWithCorrectAnchorFragmentAndSavesContent_IfModelValid()
         {
             // Arrange
-            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_ENTITIES;
+            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_NULL_OCCUPATION_NO_ENTITIES;
             var url = GetCurrentPathForId(id);
             var document = await GetDocumentForUrlAsync(url);
 
@@ -116,6 +117,10 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
+
+            var reloadedPage = await Client.GetAsync(url);
+            var reloadedDocument = await GetDocumentAsync(reloadedPage);
+            reloadedDocument.AssertInputRadioValue("has-exposure-no", true);
         }
 
         [Fact]
@@ -171,7 +176,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task AddPage_WhenModelValid_RedirectsToCollectionView()
+        public async Task AddPage_WhenModelValid_RedirectsToCollectionViewAndSavesChanges()
         {
             // Arrange
             const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_ENTITIES;
@@ -181,16 +186,35 @@ namespace ntbs_integration_tests.NotificationPages
             // Act
             var formData = new Dictionary<string, string>
             {
-                ["MBovisOccupationExposure.YearOfExposure"] = "2000",
-                ["MBovisOccupationExposure.CountryId"] = "1",
-                ["MBovisOccupationExposure.OccupationSetting"] = ((int)OccupationSetting.Farm).ToString(),
-                ["MBovisOccupationExposure.OccupationDuration"] = "1"
+                ["MBovisOccupationExposure.YearOfExposure"] = "2010",
+                ["MBovisOccupationExposure.CountryId"] = "3",
+                ["MBovisOccupationExposure.OccupationSetting"] = ((int)OccupationSetting.Vet).ToString(),
+                ["MBovisOccupationExposure.OccupationDuration"] = "5",
+                ["MBovisOccupationExposure.OtherDetails"] = "Some other testing details"
             };
             var result = await Client.SendPostFormWithData(document, formData, url);
 
             // Assert
             result.AssertRedirectTo(
                 RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditMBovisOccupationExposures));
+
+            // Find the edit page for the newly added occupation exposure event. We don't know what ID the database
+            // will give this event, so we can't generate the URL. Instead, we take it from the event's edit link
+            var occupationExposuresDocument = await GetDocumentForUrlAsync(GetRedirectLocation(result));
+            var occupationExposureUrl = occupationExposuresDocument.QuerySelectorAll(".notification-edit-link")
+                .First()
+                .Attributes
+                .GetNamedItem("href")
+                .Value;
+            var newOccupationExposureDocument = await GetDocumentForUrlAsync(occupationExposureUrl);
+
+            newOccupationExposureDocument.AssertInputTextValue("MBovisOccupationExposure_YearOfExposure", "2010");
+            newOccupationExposureDocument.AssertInputSelectValue("MBovisOccupationExposure_CountryId", "3");
+            newOccupationExposureDocument.AssertInputSelectValue("MBovisOccupationExposure_OccupationSetting",
+                ((int)OccupationSetting.Vet).ToString());
+            newOccupationExposureDocument.AssertInputTextValue("MBovisOccupationExposure_OccupationDuration", "5");
+            newOccupationExposureDocument.AssertTextAreaValue("MBovisOccupationExposure_OtherDetails",
+                "Some other testing details");
         }
     }
 }

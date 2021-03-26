@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
@@ -35,7 +36,7 @@ namespace ntbs_integration_tests.NotificationPages
                             new MBovisExposureToKnownCase
                             {
                                 ExposureSetting = ExposureSetting.Household,
-                                YearOfExposure = 2010,
+                                YearOfExposure = 2000,
                                 ExposureNotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_NO_OTHER_CASE_NO_ENTITIES
                             }
                         }
@@ -96,10 +97,10 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task RedirectsToOverviewWithCorrectAnchorFragment()
+        public async Task EditPage_RedirectsToOverviewWithCorrectAnchorFragmentAndSavesContent_IfModelValid()
         {
             // Arrange
-            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OTHER_CASE_ENTITIES;
+            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_NULL_OTHER_CASE_NO_ENTITIES;
             var url = GetCurrentPathForId(id);
             var document = await GetDocumentForUrlAsync(url);
 
@@ -115,6 +116,10 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
+
+            var reloadedPage = await Client.GetAsync(url);
+            var reloadedDocument = await GetDocumentAsync(reloadedPage);
+            reloadedDocument.AssertInputRadioValue("has-exposure-no", true);
         }
 
         [Fact]
@@ -169,7 +174,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task AddPage_WhenModelValid_RedirectsToCollectionView()
+        public async Task AddPage_WhenModelValid_RedirectsToCollectionViewAndSavesChanges()
         {
             // Arrange
             const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OTHER_CASE_ENTITIES;
@@ -179,15 +184,36 @@ namespace ntbs_integration_tests.NotificationPages
             // Act
             var formData = new Dictionary<string, string>
             {
-                ["MBovisExposureToKnownCase.YearOfExposure"] = "2000",
-                ["MBovisExposureToKnownCase.ExposureSetting"] = ((int)ExposureSetting.Household).ToString(),
-                ["MBovisExposureToKnownCase.ExposureNotificationId"] = $"{Utilities.NOTIFIED_ID}"
+                ["MBovisExposureToKnownCase.YearOfExposure"] = "2010",
+                ["MBovisExposureToKnownCase.ExposureSetting"] = ((int)ExposureSetting.Pub).ToString(),
+                ["MBovisExposureToKnownCase.NotifiedToPheStatus"] = ((int)Status.Yes).ToString(),
+                ["MBovisExposureToKnownCase.ExposureNotificationId"] = $"{Utilities.NOTIFIED_ID}",
+                ["MBovisExposureToKnownCase.OtherDetails"] = "Some other testing details"
             };
             var result = await Client.SendPostFormWithData(document, formData, url);
 
             // Assert
             result.AssertRedirectTo(
                 RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditMBovisExposureToKnownCases));
+
+            // Find the edit page for the newly added known case exposure event. We don't know what ID the database
+            // will give this event, so we can't generate the URL. Instead, we take it from the event's edit link
+            var knownCasesExposureDocument = await GetDocumentForUrlAsync(GetRedirectLocation(result));
+            var knownCasesExposureUrl = knownCasesExposureDocument.QuerySelectorAll(".notification-edit-link")
+                .First()
+                .Attributes
+                .GetNamedItem("href")
+                .Value;
+            var newKnownCaseExposureDocument = await GetDocumentForUrlAsync(knownCasesExposureUrl);
+
+            newKnownCaseExposureDocument.AssertInputTextValue("MBovisExposureToKnownCase_YearOfExposure", "2010");
+            newKnownCaseExposureDocument.AssertInputSelectValue("MBovisExposureToKnownCase_ExposureSetting",
+                ((int)ExposureSetting.Pub).ToString());
+            newKnownCaseExposureDocument.AssertInputRadioValue("notified-yes", true);
+            newKnownCaseExposureDocument.AssertInputTextValue("MBovisExposureToKnownCase_ExposureNotificationId",
+                $"{Utilities.NOTIFIED_ID}");
+            newKnownCaseExposureDocument.AssertTextAreaValue("MBovisExposureToKnownCase_OtherDetails",
+                "Some other testing details");
         }
     }
 }

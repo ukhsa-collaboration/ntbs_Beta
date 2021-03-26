@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
@@ -99,10 +100,10 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task RedirectsToOverviewWithCorrectAnchorFragment()
+        public async Task EditPage_RedirectsToOverviewWithCorrectAnchorFragmentAndSavesContent_IfModelValid()
         {
             // Arrange
-            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_ANIMAL_ENTITIES;
+            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_NULL_OTHER_CASE_NO_ENTITIES;
             var url = GetCurrentPathForId(id);
             var document = await GetDocumentForUrlAsync(url);
 
@@ -118,6 +119,10 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
+
+            var reloadedPage = await Client.GetAsync(url);
+            var reloadedDocument = await GetDocumentAsync(reloadedPage);
+            reloadedDocument.AssertInputRadioValue("has-exposure-no", true);
         }
 
         [Fact]
@@ -175,7 +180,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task AddPage_WhenModelValid_RedirectsToCollectionView()
+        public async Task AddPage_WhenModelValid_RedirectsToCollectionViewAndSavesChanges()
         {
             // Arrange
             const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_ANIMAL_ENTITIES;
@@ -186,17 +191,39 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["MBovisAnimalExposure.YearOfExposure"] = "2010",
-                ["MBovisAnimalExposure.CountryId"] = "1",
-                ["MBovisAnimalExposure.AnimalType"] = ((int)AnimalType.WildAnimal).ToString(),
+                ["MBovisAnimalExposure.CountryId"] = "3",
+                ["MBovisAnimalExposure.AnimalType"] = ((int)AnimalType.Pet).ToString(),
                 ["MBovisAnimalExposure.Animal"] = "Badger",
-                ["MBovisAnimalExposure.AnimalTbStatus"] = ((int)AnimalTbStatus.ConfirmedTb).ToString(),
-                ["MBovisAnimalExposure.ExposureDuration"] = "1",
+                ["MBovisAnimalExposure.AnimalTbStatus"] = ((int)AnimalTbStatus.SuspectedTb).ToString(),
+                ["MBovisAnimalExposure.ExposureDuration"] = "12",
+                ["MBovisAnimalExposure.OtherDetails"] = "Some other testing details"
             };
             var result = await Client.SendPostFormWithData(document, formData, url);
 
             // Assert
             result.AssertRedirectTo(
                 RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditMBovisAnimalExposures));
+
+            // Find the edit page for the newly added animal exposure event. We don't know what ID the database
+            // will give this event, so we can't generate the URL. Instead, we take it from the event's edit link
+            var animalExposuresDocument = await GetDocumentForUrlAsync(GetRedirectLocation(result));
+            var newAnimalExposureUrl = animalExposuresDocument.QuerySelectorAll(".notification-edit-link")
+                .First()
+                .Attributes
+                .GetNamedItem("href")
+                .Value;
+            var newAnimalExposureDocument = await GetDocumentForUrlAsync(newAnimalExposureUrl);
+
+            newAnimalExposureDocument.AssertInputTextValue("MBovisAnimalExposure_YearOfExposure", "2010");
+            newAnimalExposureDocument.AssertInputSelectValue("MBovisAnimalExposure_AnimalType",
+                ((int)AnimalType.Pet).ToString());
+            newAnimalExposureDocument.AssertInputSelectValue("MBovisAnimalExposure_CountryId", "3");
+            newAnimalExposureDocument.AssertInputTextValue("MBovisAnimalExposure_Animal", "Badger");
+            newAnimalExposureDocument.AssertInputSelectValue("MBovisAnimalExposure_AnimalTbStatus",
+                ((int)AnimalTbStatus.SuspectedTb).ToString());
+            newAnimalExposureDocument.AssertInputTextValue("MBovisAnimalExposure_ExposureDuration", "12");
+            newAnimalExposureDocument.AssertTextAreaValue("MBovisAnimalExposure_OtherDetails",
+                "Some other testing details");
         }
     }
 }

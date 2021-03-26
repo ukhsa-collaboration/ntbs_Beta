@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
@@ -97,10 +98,10 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task RedirectsToOverviewWithCorrectAnchorFragment()
+        public async Task EditPage_RedirectsToOverviewWithCorrectAnchorFragmentAndSavesContent_IfModelValid()
         {
             // Arrange
-            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_MILK_ENTITIES;
+            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_NULL_MILK_NO_ENTITIES;
             var url = GetCurrentPathForId(id);
             var document = await GetDocumentForUrlAsync(url);
 
@@ -116,6 +117,10 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
+
+            var reloadedPage = await Client.GetAsync(url);
+            var reloadedDocument = await GetDocumentAsync(reloadedPage);
+            reloadedDocument.AssertInputRadioValue("has-milk-consumption-no", true);
         }
 
         [Fact]
@@ -167,7 +172,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task AddPage_WhenModelValid_RedirectsToCollectionView()
+        public async Task AddPage_WhenModelValid_RedirectsToCollectionViewAndSavesChanges()
         {
             // Arrange
             const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_MILK_ENTITIES;
@@ -177,17 +182,38 @@ namespace ntbs_integration_tests.NotificationPages
             // Act
             var formData = new Dictionary<string, string>
             {
-                ["MBovisUnpasteurisedMilkConsumption.YearOfConsumption"] = "2000",
-                ["MBovisUnpasteurisedMilkConsumption.CountryId"] = "1",
-                ["MBovisUnpasteurisedMilkConsumption.MilkProductType"] = ((int)MilkProductType.Cheese).ToString(),
+                ["MBovisUnpasteurisedMilkConsumption.YearOfConsumption"] = "2010",
+                ["MBovisUnpasteurisedMilkConsumption.CountryId"] = "3",
+                ["MBovisUnpasteurisedMilkConsumption.MilkProductType"] = ((int)MilkProductType.Milk).ToString(),
                 ["MBovisUnpasteurisedMilkConsumption.ConsumptionFrequency"] =
-                    ((int)ConsumptionFrequency.Occasionally).ToString()
+                    ((int)ConsumptionFrequency.Occasionally).ToString(),
+                ["MBovisUnpasteurisedMilkConsumption.OtherDetails"] = "Some other testing details"
             };
             var result = await Client.SendPostFormWithData(document, formData, url);
 
             // Assert
             result.AssertRedirectTo(
                 RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions));
+
+            // Find the edit page for the newly added milk exposure event. We don't know what ID the database
+            // will give this event, so we can't generate the URL. Instead, we take it from the event's edit link
+            var milkExposureDocument = await GetDocumentForUrlAsync(GetRedirectLocation(result));
+            var milkExposureUrl = milkExposureDocument.QuerySelectorAll(".notification-edit-link")
+                .First()
+                .Attributes
+                .GetNamedItem("href")
+                .Value;
+            var newMilkExposureDocument = await GetDocumentForUrlAsync(milkExposureUrl);
+
+            newMilkExposureDocument.AssertInputTextValue("MBovisUnpasteurisedMilkConsumption_YearOfConsumption",
+                "2010");
+            newMilkExposureDocument.AssertInputSelectValue("MBovisUnpasteurisedMilkConsumption_CountryId", "3");
+            newMilkExposureDocument.AssertInputSelectValue("MBovisUnpasteurisedMilkConsumption_MilkProductType",
+                ((int)MilkProductType.Milk).ToString());
+            newMilkExposureDocument.AssertInputSelectValue("MBovisUnpasteurisedMilkConsumption_ConsumptionFrequency",
+                ((int)ConsumptionFrequency.Occasionally).ToString());
+            newMilkExposureDocument.AssertTextAreaValue("MBovisUnpasteurisedMilkConsumption_OtherDetails",
+                "Some other testing details");
         }
     }
 }
