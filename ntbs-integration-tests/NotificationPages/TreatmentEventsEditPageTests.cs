@@ -331,8 +331,11 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
 
-        [Fact]
-        public async Task WhenEmptyOrInvalid_ValidateSelectedTreatmentOutcomeTypeProperty_ReturnsExpectedInvalidResponse()
+        [Theory]
+        [InlineData("hello")]
+        [InlineData("27")]
+        [InlineData(null)]
+        public async Task WhenEmptyOrInvalid_ValidateSelectedTreatmentOutcomeTypeProperty_ReturnsExpectedInvalidResponse(string value)
         {
             // Arrange
             const int id = Utilities.NOTIFICATION_FOR_ADD_TREATMENT_OUTCOME;
@@ -341,7 +344,7 @@ namespace ntbs_integration_tests.NotificationPages
             var request = new InputValidationModel
             {
                 Key = "SelectedTreatmentOutcomeType",
-                Value = null
+                Value = value
             };
             const string handlerPath = "ValidateSelectedTreatmentOutcomeTypeProperty";
             var notificationSubPath = NotificationSubPaths.AddTreatmentEvent;

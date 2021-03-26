@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
@@ -214,7 +216,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         public ContentResult OnPostValidateSelectedTreatmentOutcomeTypeProperty([FromBody]InputValidationModel validationData)
         {
-            if (validationData.Value == null)
+            if (!int.TryParse(validationData.Value, out var outcomeType) || !Enum.IsDefined(typeof(TreatmentOutcomeType), outcomeType))
             {
                 var errorMessage = string.Format(ValidationMessages.RequiredSelect,
                     this.GetMemberDisplayName(nameof(SelectedTreatmentOutcomeType)));

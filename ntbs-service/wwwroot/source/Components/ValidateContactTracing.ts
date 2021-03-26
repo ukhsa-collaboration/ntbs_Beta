@@ -1,20 +1,20 @@
 import Vue from "vue";
-import {getHeaders} from "../helpers";
+import {convertStringToNullableInt, getHeaders} from "../helpers";
 import axios, {Method} from "axios";
 
 type ContactTracingVariables = {
-    adultsIdentified: string,
-    childrenIdentified: string,
-    adultsScreened: string,
-    childrenScreened: string,
-    adultsLatentTb: string,
-    childrenLatentTb: string,
-    adultsActiveTb: string,
-    childrenActiveTb: string,
-    adultsStartedTreatment: string,
-    childrenStartedTreatment: string,
-    adultsFinishedTreatment: string,
-    childrenFinishedTreatment: string
+    adultsIdentified: number,
+    childrenIdentified: number,
+    adultsScreened: number,
+    childrenScreened: number,
+    adultsLatentTb: number,
+    childrenLatentTb: number,
+    adultsActiveTb: number,
+    childrenActiveTb: number,
+    adultsStartedTreatment: number,
+    childrenStartedTreatment: number,
+    adultsFinishedTreatment: number,
+    childrenFinishedTreatment: number
 };
 
 const ValidateContactTracing = Vue.extend({
@@ -34,12 +34,12 @@ const ValidateContactTracing = Vue.extend({
 
         },
         CalculateTotals: function (contactTracingVariables: ContactTracingVariables) {
-            this.$refs["totalContactsIdentified"].textContent = parseInt(contactTracingVariables.adultsIdentified) + parseInt(contactTracingVariables.childrenIdentified);
-            this.$refs["totalContactsScreened"].textContent = parseInt(contactTracingVariables.adultsScreened) + parseInt(contactTracingVariables.childrenScreened);
-            this.$refs["totalContactsActiveTB"].textContent = parseInt(contactTracingVariables.adultsActiveTb) + parseInt(contactTracingVariables.childrenActiveTb);
-            this.$refs["totalContactsLatentTB"].textContent = parseInt(contactTracingVariables.adultsLatentTb) + parseInt(contactTracingVariables.childrenLatentTb);
-            this.$refs["totalContactsStartedTreatment"].textContent = parseInt(contactTracingVariables.adultsStartedTreatment) + parseInt(contactTracingVariables.childrenStartedTreatment);
-            this.$refs["totalContactsFinishedTreatment"].textContent = parseInt(contactTracingVariables.adultsFinishedTreatment) + parseInt(contactTracingVariables.childrenFinishedTreatment);
+            this.$refs["totalContactsIdentified"].textContent = contactTracingVariables.adultsIdentified + contactTracingVariables.childrenIdentified;
+            this.$refs["totalContactsScreened"].textContent = contactTracingVariables.adultsScreened + contactTracingVariables.childrenScreened;
+            this.$refs["totalContactsActiveTB"].textContent = contactTracingVariables.adultsActiveTb + contactTracingVariables.childrenActiveTb;
+            this.$refs["totalContactsLatentTB"].textContent = contactTracingVariables.adultsLatentTb + contactTracingVariables.childrenLatentTb;
+            this.$refs["totalContactsStartedTreatment"].textContent = contactTracingVariables.adultsStartedTreatment + contactTracingVariables.childrenStartedTreatment;
+            this.$refs["totalContactsFinishedTreatment"].textContent = contactTracingVariables.adultsFinishedTreatment + contactTracingVariables.childrenFinishedTreatment;
         },
         ResetErrors: function () {
             const listOfRefs: string[] = ["AdultsIdentified", "ChildrenIdentified", "AdultsScreened", "ChildrenScreened",
@@ -91,18 +91,18 @@ const ValidateContactTracing = Vue.extend({
 
         getContactTracingVariables: function () {
             const contactTracingVariables: ContactTracingVariables = {
-                adultsIdentified: this.$refs["adultsIdentified"].value || 0,
-                childrenIdentified: this.$refs["childrenIdentified"].value || 0,
-                adultsScreened: this.$refs["adultsScreened"].value || 0,
-                childrenScreened: this.$refs["childrenScreened"].value || 0,
-                adultsLatentTb: this.$refs["adultsLatentTB"].value || 0,
-                childrenLatentTb: this.$refs["childrenLatentTB"].value || 0,
-                adultsActiveTb: this.$refs["adultsActiveTB"].value || 0,
-                childrenActiveTb: this.$refs["childrenActiveTB"].value || 0,
-                adultsStartedTreatment: this.$refs["adultsStartedTreatment"].value || 0,
-                childrenStartedTreatment: this.$refs["childrenStartedTreatment"].value || 0,
-                adultsFinishedTreatment: this.$refs["adultsFinishedTreatment"].value || 0,
-                childrenFinishedTreatment: this.$refs["childrenFinishedTreatment"].value || 0
+                adultsIdentified: convertStringToNullableInt(this.$refs["adultsIdentified"].value),
+                childrenIdentified: convertStringToNullableInt(this.$refs["childrenIdentified"].value),
+                adultsScreened: convertStringToNullableInt(this.$refs["adultsScreened"].value),
+                childrenScreened: convertStringToNullableInt(this.$refs["childrenScreened"].value),
+                adultsLatentTb: convertStringToNullableInt(this.$refs["adultsLatentTB"].value),
+                childrenLatentTb: convertStringToNullableInt(this.$refs["childrenLatentTB"].value),
+                adultsActiveTb: convertStringToNullableInt(this.$refs["adultsActiveTB"].value),
+                childrenActiveTb: convertStringToNullableInt(this.$refs["childrenActiveTB"].value),
+                adultsStartedTreatment: convertStringToNullableInt(this.$refs["adultsStartedTreatment"].value),
+                childrenStartedTreatment: convertStringToNullableInt(this.$refs["childrenStartedTreatment"].value),
+                adultsFinishedTreatment: convertStringToNullableInt(this.$refs["adultsFinishedTreatment"].value),
+                childrenFinishedTreatment: convertStringToNullableInt(this.$refs["childrenFinishedTreatment"].value)
             };
 
             return contactTracingVariables;
