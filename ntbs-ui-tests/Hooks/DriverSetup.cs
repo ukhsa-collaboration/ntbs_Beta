@@ -1,4 +1,7 @@
+﻿using System.Data.SqlClient;
+using System.Threading.Tasks;
 using BoDi;
+using Dapper;
 using ntbs_service;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -11,15 +14,18 @@ namespace ntbs_ui_tests.Hooks
     public class DriverSetup
     {
         private readonly IObjectContainer objectContainer;
+        public readonly TestContext testContext;
         public IWebDriver Browser;
-        public TestSettings settings;
+        public TestConfig settings;
 
-        public DriverSetup(IObjectContainer objectContainer, SeleniumServerFactory<Startup> server, TestSettings settings)
+        public DriverSetup(
+            IObjectContainer objectContainer,
+            TestConfig settings,
+            TestContext testContext)
         {
             this.objectContainer = objectContainer;
             this.settings = settings;
-            server.ConfigureLogger(GetType().Name);
-            server.CreateClient(); // Not sure why needed, see hanselman link referenced in SeleniumServerFactory
+            this.testContext = testContext;
         }
 
         [BeforeScenario]
@@ -38,8 +44,16 @@ namespace ntbs_ui_tests.Hooks
         }
 
         [AfterScenario]
-        public void AfterScenario()
+        public async Task AfterScenario()
         {
+            using (var connection = new SqlConnection(settings.EnvironmentConfig.ConnectionString))
+            {
+                connection.Open();
+                var deleteAlerts = "DELETE FROM Alert WHERE NotificationId IN @ids";
+                var deleteNotifications = "DELETE FROM Notification WHERE NotificationId IN @ids";
+                await connection.ExecuteAsync(deleteAlerts, new { ids = testContext.AddedNotificationIds.ToArray() });
+                await connection.ExecuteAsync(deleteNotifications, new { ids = testContext.AddedNotificationIds.ToArray() });
+            }
             Browser.Quit();
         }
     }
