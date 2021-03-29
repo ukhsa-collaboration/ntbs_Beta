@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +24,7 @@ namespace ntbs_service_unit_tests.DataMigration
     //        - providing fallback values
     //
     // This test was added quite late into the migration development process. Rather than trying to recreate every
-    // single edge case, it aims to provide an example of how to add more regression cases as bugs are dealt with. 
+    // single edge case, it aims to provide an example of how to add more regression cases as bugs are dealt with.
     public class NotificationMapperTest
     {
         // SUTs - we're breaking the convention a little here by testing two classes in one suit, but
@@ -245,6 +245,147 @@ namespace ntbs_service_unit_tests.DataMigration
                 te => Assert.Equal(TreatmentOutcomeType.Died, te.TreatmentOutcome.TreatmentOutcomeType));
         }
 
+        // Data for this was based on the test notification 130331, used in correctlyCreates_basicNotification
+        // Additional fictional M. bovis data was added for this test.
+        [Fact]
+        public async Task correctlyMaps_MBovisAnimalAndKnownCaseExposures()
+        {
+            // Arrange
+            var legacyIds = new List<string> { "131686" };
+            SetupNotificationsInGroups(("131686", "7"));
+
+            const string royalBerkshireCode = "TBS001";
+            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
+            {
+                {new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A"), new TBService {Code = royalBerkshireCode}},
+            };
+
+            // Act
+            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
+                    "test-request-1",
+                    legacyIds))
+                .SelectMany(group => group)
+                .Single();
+
+            // Assert
+            // Notification 131686 has animal and known cases forms filled out, so their statuses should be yes.
+            // There are no milk and occupation records, so their statuses should be no (for we do not know
+            // whether there were definitely no exposures, or if the exposures status was not known, given the
+            // absence of exposure records.
+            Assert.Equal(Status.Yes, notification.MBovisDetails.AnimalExposureStatus);
+            Assert.Equal(1, notification.MBovisDetails.MBovisAnimalExposures.Count);
+            Assert.Collection(notification.MBovisDetails.MBovisAnimalExposures, exposure =>
+            {
+                Assert.Equal(2000, exposure.YearOfExposure);
+                Assert.Equal(AnimalType.WildAnimal, exposure.AnimalType);
+                Assert.Equal("Badger", exposure.Animal);
+                Assert.Equal(AnimalTbStatus.Unknown, exposure.AnimalTbStatus);
+                Assert.Equal(1, exposure.ExposureDuration);
+                Assert.Equal(235, exposure.CountryId);
+                Assert.Equal("Neighbourhood badger", exposure.OtherDetails);
+            });
+            Assert.Equal(Status.Yes, notification.MBovisDetails.ExposureToKnownCasesStatus);
+            Assert.Equal(1, notification.MBovisDetails.MBovisExposureToKnownCases.Count);
+            Assert.Collection(notification.MBovisDetails.MBovisExposureToKnownCases, exposure =>
+            {
+                Assert.Equal(2001, exposure.YearOfExposure);
+                Assert.Equal(ExposureSetting.HealthcareHospital, exposure.ExposureSetting);
+                Assert.Equal(Status.No, exposure.NotifiedToPheStatus);
+                Assert.Equal("During annual checkup", exposure.OtherDetails);
+            });
+            Assert.Equal(Status.Unknown, notification.MBovisDetails.UnpasteurisedMilkConsumptionStatus);
+            Assert.Empty(notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions);
+            Assert.Equal(Status.Unknown, notification.MBovisDetails.OccupationExposureStatus);
+            Assert.Empty(notification.MBovisDetails.MBovisOccupationExposures);
+        }
+
+        // Data for this was based on the test notification 130331, used in correctlyMaps_ContactTracingNumbers
+        // Additional fictional M. bovis data was added for this test.
+        [Fact]
+        public async Task correctlyMaps_MBovisMilkAndOccupationExposures()
+        {
+            // Arrange
+            var legacyIds = new List<string> { "131687" };
+            SetupNotificationsInGroups(("131687", "8"));
+
+            const string royalBerkshireCode = "TBS001";
+            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
+            {
+                {new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A"), new TBService {Code = royalBerkshireCode}},
+            };
+
+            // Act
+            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
+                    "test-request-1",
+                    legacyIds))
+                .SelectMany(group => group)
+                .Single();
+
+            // Assert
+            // Notification 131687 has milk and occupation forms filled out, so their statuses should be yes.
+            // There are no animal and known cases records, so their statuses should be no (for we do not know
+            // whether there were definitely no exposures, or if the exposures status was not known, given the
+            // absence of exposure records.
+            Assert.Equal(Status.Unknown, notification.MBovisDetails.AnimalExposureStatus);
+            Assert.Empty(notification.MBovisDetails.MBovisAnimalExposures);
+            Assert.Equal(Status.Unknown, notification.MBovisDetails.ExposureToKnownCasesStatus);
+            Assert.Empty(notification.MBovisDetails.MBovisExposureToKnownCases);
+            Assert.Equal(Status.Yes, notification.MBovisDetails.UnpasteurisedMilkConsumptionStatus);
+            Assert.Equal(1, notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions.Count);
+            Assert.Collection(notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions, exposure =>
+            {
+                Assert.Equal(1999, exposure.YearOfConsumption);
+                Assert.Equal(MilkProductType.Cheese, exposure.MilkProductType);
+                Assert.Equal(ConsumptionFrequency.Occasionally, exposure.ConsumptionFrequency);
+                Assert.Equal(235, exposure.CountryId);
+                Assert.Equal("From the local farm shop", exposure.OtherDetails);
+            });
+            Assert.Equal(Status.Yes, notification.MBovisDetails.OccupationExposureStatus);
+            Assert.Equal(1, notification.MBovisDetails.MBovisOccupationExposures.Count);
+            Assert.Collection(notification.MBovisDetails.MBovisOccupationExposures, exposure =>
+            {
+                Assert.Equal(1998, exposure.YearOfExposure);
+                Assert.Equal(OccupationSetting.Vet, exposure.OccupationSetting);
+                Assert.Equal(3, exposure.OccupationDuration);
+                Assert.Equal(235, exposure.CountryId);
+                Assert.Equal("Worked at local veterinary surgery", exposure.OtherDetails);
+            });
+        }
+
+        // This test uses test notification 237137, used in correctlyMaps_ContactTracingNumbers
+        [Fact]
+        public async Task correctlyMaps_NotStartedMBovisQuestionnaire()
+        {
+            // Arrange
+            var legacyIds = new List<string> { "237137" };
+            SetupNotificationsInGroups(("237137", "9"));
+
+            const string leedsGeneralCode = "TBS0106";
+            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
+            {
+                {new Guid("7E9C715D-0248-4D97-8F67-1134FC133588"), new TBService {Code = leedsGeneralCode}},
+            };
+
+            // Act
+            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
+                    "test-request-1",
+                    legacyIds))
+                .SelectMany(group => group)
+                .Single();
+
+            // Assert
+            // Notification 237137 has no M. bovis forms filled out, so the statuses should be null
+            Assert.Null(notification.MBovisDetails.AnimalExposureStatus);
+            Assert.Empty(notification.MBovisDetails.MBovisAnimalExposures);
+            Assert.Null(notification.MBovisDetails.ExposureToKnownCasesStatus);
+            Assert.Empty(notification.MBovisDetails.MBovisExposureToKnownCases);
+            Assert.Null(notification.MBovisDetails.UnpasteurisedMilkConsumptionStatus);
+            Assert.Empty(notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions);
+            Assert.Null(notification.MBovisDetails.OccupationExposureStatus);
+            Assert.Empty(notification.MBovisDetails.MBovisOccupationExposures);
+        }
+
+
         private void SetupNotificationsInGroups(params (string, string)[] legacyIdAndLegacyGroup)
         {
             var grouped = new List<(string notificationId, string groupId)>(legacyIdAndLegacyGroup)
@@ -338,7 +479,7 @@ namespace ntbs_service_unit_tests.DataMigration
             {
                 throw new NotImplementedException();
             }
-            
+
             public IEnumerable<IGrouping<string, string>> GroupedNotificationsStub { get; set; }
 
             private static IEnumerable<T> CvsRecords<T>(string file, IEnumerable<string> legacyIds)
