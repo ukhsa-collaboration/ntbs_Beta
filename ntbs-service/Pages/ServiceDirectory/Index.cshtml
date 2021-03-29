@@ -9,7 +9,7 @@
 <nhs-width-container container-width="Standard">
     <h1 class="nhsuk-heading-xl">Service directory</h1>
     <p>Search for a service or case manager</p>
-    
+
     <form method="get" autocomplete="off">
         @{
             var hasSearchKeywordError = !Model.IsValid("SearchKeyword");
@@ -19,7 +19,8 @@
             <span ref="errorField" nhs-span-type="ErrorMessage" id="search-keyword-error"
                   asp-validation-for="SearchKeyword" has-error="@hasSearchKeywordError">
             </span>
-            <input is-error-input=@hasSearchKeywordError
+            <label class="nhsuk-u-visually-hidden" for="search-field">Search for a service or case manager</label>
+            <input is-error-input=@hasSearchKeywordError id="search-field"
                    nhs-input-type="Standard" asp-for="SearchKeyword" fixed-width="Twenty">
             
             <button class="nhsuk-search__submit case-manager-search-button" type="submit">
@@ -30,9 +31,9 @@
             </button>
         </nhs-form-group>
     </form>
-    
+
     <h2 class="nhsuk-heading-l">Regions</h2>
-    
+
     <div>
         @foreach (var region in Model.AllRegions)
         {
