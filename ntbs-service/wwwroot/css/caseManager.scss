@@ -27,12 +27,12 @@
     width: 70%;
     margin-bottom: 18px;
     border-bottom: 1px solid #cccccc;
-  
+
     a {
         text-decoration: none;
         color: #005eb8;
     }
-  
+
     .case-manager-search-result-name {
         font-size: 19px;
     }
@@ -49,7 +49,7 @@
 
     .nhsuk-summary-list__row {
         font-size: 16px;
-      
+
         .nhsuk-summary-list__key {
             width: 10%;
             min-width: 100px;
@@ -72,9 +72,58 @@
     display: flex;
 }
 
+// This is based on the nhsuk-search__submit class for wide viewports
+// However the narrow-viewport version is not a style that we want, so we have our own class that just uses the styles
+// for wide viewports. The original can be found at:
+// https://github.com/nhsuk/nhsuk-frontend/blob/master/packages/components/header/_header.scss
 .case-manager-search-button {
-  padding-top: 4px;
-  border-bottom: 2px solid #4c6272;
-  border-top: 2px solid #4c6272;
-  border-right: 2px solid #4c6272;
+    padding-top: 4px;
+    border-bottom: 2px solid #4c6272;
+    border-top: 2px solid #4c6272;
+    border-right: 2px solid #4c6272;
+    border-left: 0;
+    background-color: $color_nhsuk-grey-5;
+    border-radius: 0 $nhsuk-border-radius $nhsuk-border-radius 0;
+
+    display: block;
+    float: right;
+    font-size: inherit;
+    height: 40px;
+    line-height: inherit;
+    outline: none;
+    width: 44px;
+
+    .nhsuk-icon__search {
+        fill: $color_nhsuk-blue;
+        height: 27px;
+        width: 27px;
+    }
+
+    &::-moz-focus-inner {
+        border: 0;
+    }
+
+    &:hover {
+        background-color: $color_shade_nhsuk-blue-35;
+        border: 1px solid $color_nhsuk-white;
+        cursor: pointer;
+
+      .nhsuk-icon__search {
+          fill: $color_nhsuk-white;
+      }
+    }
+
+    &:focus {
+        @include nhsuk-focused-button();
+        box-shadow: 0 -2px $nhsuk-focus-color, 0 $nhsuk-focus-width $nhsuk-focus-text-color;
+    }
+
+    &:active {
+        background-color: $color_shade_nhsuk-blue-50;
+        border: 0;
+
+        .nhsuk-icon__search {
+            fill: $color_nhsuk-white;
+        }
+    }
 }
