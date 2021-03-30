@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Claims;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using EFAuditer;
 using Hangfire;
@@ -138,6 +139,9 @@ namespace ntbs_service
                     .RequireRole(baseUserGroupRole)
                     .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
+            }).AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
             services.AddRazorPages(options =>
             {

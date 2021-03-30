@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
@@ -212,9 +214,9 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             return ValidationService.GetDateValidationResult<TreatmentEvent>(validationData.Key, validationData.Day, validationData.Month, validationData.Year, isLegacy);
         }
 
-        public ContentResult OnGetValidateSelectedTreatmentOutcomeTypeProperty(string key, TreatmentOutcomeType? value)
+        public ContentResult OnPostValidateSelectedTreatmentOutcomeTypeProperty([FromBody]InputValidationModel validationData)
         {
-            if (value == null)
+            if (!int.TryParse(validationData.Value, out var outcomeType) || !Enum.IsDefined(typeof(TreatmentOutcomeType), outcomeType))
             {
                 var errorMessage = string.Format(ValidationMessages.RequiredSelect,
                     this.GetMemberDisplayName(nameof(SelectedTreatmentOutcomeType)));

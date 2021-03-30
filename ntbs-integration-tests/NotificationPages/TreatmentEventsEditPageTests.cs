@@ -334,22 +334,28 @@ namespace ntbs_integration_tests.NotificationPages
         [Theory]
         [InlineData("hello")]
         [InlineData("27")]
-        [InlineData("")]
+        [InlineData(null)]
         public async Task WhenEmptyOrInvalid_ValidateSelectedTreatmentOutcomeTypeProperty_ReturnsExpectedInvalidResponse(string value)
         {
             // Arrange
-            var formData = new Dictionary<string, string>
+            const int id = Utilities.NOTIFICATION_FOR_ADD_TREATMENT_OUTCOME;
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(id));
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new InputValidationModel
             {
-                ["key"] = "SelectedTreatmentOutcomeType",
-                ["value"] = value
+                Key = "SelectedTreatmentOutcomeType",
+                Value = value
             };
             const string handlerPath = "ValidateSelectedTreatmentOutcomeTypeProperty";
             var notificationSubPath = NotificationSubPaths.AddTreatmentEvent;
             var endpointPath = $"{notificationSubPath}/{handlerPath}";
-            var endpointUrl = GetPathForId($"{endpointPath}", 0, formData);
 
             // Act
-            var response = await Client.GetAsync(endpointUrl);
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetPathForId($"{endpointPath}", id),
+                request);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -360,18 +366,24 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task WhenValid_ValidateSelectedTreatmentOutcomeTypeProperty_ReturnsExpectedResponse()
         {
             // Arrange
-            var formData = new Dictionary<string, string>
+            const int id = Utilities.NOTIFICATION_FOR_ADD_TREATMENT_OUTCOME;
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(id));
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new InputValidationModel
             {
-                ["key"] = "SelectedTreatmentOutcomeType",
-                ["value"] = ((int)TreatmentOutcomeType.Completed).ToString()
+                Key = "SelectedTreatmentOutcomeType",
+                Value = ((int)TreatmentOutcomeType.Completed).ToString()
             };
             const string handlerPath = "ValidateSelectedTreatmentOutcomeTypeProperty";
             var notificationSubPath = NotificationSubPaths.AddTreatmentEvent;
             var endpointPath = $"{notificationSubPath}/{handlerPath}";
-            var endpointUrl = GetPathForId($"{endpointPath}", 0, formData);
 
             // Act
-            var response = await Client.GetAsync(endpointUrl);
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetPathForId($"{endpointPath}", id),
+                request);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

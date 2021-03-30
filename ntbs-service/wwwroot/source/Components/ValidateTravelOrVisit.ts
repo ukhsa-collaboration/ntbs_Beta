@@ -1,18 +1,18 @@
 import Vue from 'vue';
-import {getHeaders} from '../helpers';
+import {convertStringToNullableInt, getHeaders} from '../helpers';
 import axios, {Method} from 'axios';
 
 type TravelOrVisitVariables = {
     hasVisitor?: string,
     hasTravel?: string,
-    totalNumberOfCountries: string,
-    country1Id: string,
-    country2Id: string,
-    country3Id: string,
-    stayLengthInMonths1: string,
-    stayLengthInMonths2: string,
-    stayLengthInMonths3: string,
-    shouldValidateFull: string
+    totalNumberOfCountries: number,
+    country1Id: number,
+    country2Id: number,
+    country3Id: number,
+    stayLengthInMonths1: number,
+    stayLengthInMonths2: number,
+    stayLengthInMonths3: number,
+    shouldValidateFull: boolean
 };
 
 const ValidateTravelOrVisit = Vue.extend({
@@ -97,15 +97,15 @@ const ValidateTravelOrVisit = Vue.extend({
 
         getTravelOrVisitVariables: function () {
             const variables: TravelOrVisitVariables = {
-                totalNumberOfCountries: this.$refs["totalNumberOfCountries"].value,
+                totalNumberOfCountries: convertStringToNullableInt(this.$refs["totalNumberOfCountries"].value),
                 // Because of autocomplete, select inputs are hidden and we wrap them in a div that we can reference
-                country1Id: this.$refs["country1Id"].getElementsByTagName("select")[0].value,
-                country2Id: this.$refs["country2Id"].getElementsByTagName("select")[0].value,
-                country3Id: this.$refs["country3Id"].getElementsByTagName("select")[0].value,
-                stayLengthInMonths1: this.$refs["stayLengthInMonths1"].value,
-                stayLengthInMonths2: this.$refs["stayLengthInMonths2"].value,
-                stayLengthInMonths3: this.$refs["stayLengthInMonths3"].value,
-                shouldValidateFull: this.$props.shouldvalidatefull
+                country1Id: convertStringToNullableInt(this.$refs["country1Id"].getElementsByTagName("select")[0].value),
+                country2Id: convertStringToNullableInt(this.$refs["country2Id"].getElementsByTagName("select")[0].value),
+                country3Id: convertStringToNullableInt(this.$refs["country3Id"].getElementsByTagName("select")[0].value),
+                stayLengthInMonths1: convertStringToNullableInt(this.$refs["stayLengthInMonths1"].value),
+                stayLengthInMonths2: convertStringToNullableInt(this.$refs["stayLengthInMonths2"].value),
+                stayLengthInMonths3: convertStringToNullableInt(this.$refs["stayLengthInMonths3"].value),
+                shouldValidateFull: this.$props.shouldvalidatefull.toLowerCase() == "true"
             };
 
             const lowerModelType = this.$props.modelType.toLowerCase();
