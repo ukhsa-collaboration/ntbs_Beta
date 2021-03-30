@@ -18,6 +18,8 @@ namespace ntbs_service.Services
             string labReferenceNumber,
             string userName,
             NotificationAuditType auditType);
+        Task AuditPrint(int notificationId,
+            string userName);
         Task<IList<AuditLog>> GetWriteAuditsForNotification(int notificationId);
     }
 
@@ -30,6 +32,7 @@ namespace ntbs_service.Services
         private const string UNMATCH_EVENT = "Unmatch";
         private const string MATCH_EVENT = "Match";
         private const string SPECIMEN_ENTITY_TYPE = "Specimen";
+        private const string PRINT_EVENT = "Print";
 
         public AuditService(AuditDatabaseContext auditContext)
         {
@@ -87,6 +90,18 @@ namespace ntbs_service.Services
                 .Where(log => log.RootEntity == RootEntities.Notification)
                 .Where(log => log.RootId == notificationId.ToString())
                 .ToListAsync();
+        }
+
+        public async Task AuditPrint(int notificationId, string userName)
+        {
+            await _auditContext.AuditOperationAsync(
+                notificationId.ToString(),
+                RootEntities.Notification,
+                null,
+                PRINT_EVENT,
+                userName,
+                RootEntities.Notification,
+                notificationId.ToString());
         }
     }
 }
