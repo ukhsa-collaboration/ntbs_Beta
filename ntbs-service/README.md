@@ -29,6 +29,11 @@ Hot module reloading was supported until the .NET 5 upgrade (NTBS-2074, #1022) b
 This was because in .NET 5 `UseWebpackDevMiddleware` was removed, see [here](https://github.com/dotnet/AspNetCore/issues/12890)
 for a discussion of this change.
 
+To setup local copies of all of the dependent databases, follow the instructions in the [ntbs-reporting repository](https://github.com/publichealthengland/ntbs-reporting/blob/master/README.md).
+If you are unable (or don't want) to do this, then you can run the application against an existing environment,
+but you need to override the connection strings for the `migration`, `specimen matching` and `reporting`
+databases by following the instructions in the "Dev-mode secrets" section below.
+
 ### Debugging
 
 VS Code should pick up the debugging configuration automatically. Open the debugging panel and launch the debug configuration available. Note that this launches the web app itself, so there's no need to run `dotnet` commands directly - but it is _not_ compatible with hot reloading!
@@ -47,8 +52,6 @@ For example, to override the main connection database string:
 `dotnet user-secrets set "ConnectionStrings:ntbsContext" "my-alternative-connection-string"`
 
 A master copy of local secrets is stored in Azure Key Vault. These can be set up in bulk using the Azure CLI.
-
-*Running this will be necessary to connect the local app to the azure data migration db.*
 
 ```PowerShell
 # Use `az login` to authenticate first if necessary
