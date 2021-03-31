@@ -434,7 +434,7 @@ namespace ntbs_service.Services
         {
             _context.SetValues(notification.MBovisDetails, new
             {
-                HasExposureToKnownCases = mBovisDetails.ExposureToKnownCasesStatus
+                mBovisDetails.ExposureToKnownCasesStatus
             });
             await _notificationRepository.SaveChangesAsync();
         }
@@ -443,7 +443,7 @@ namespace ntbs_service.Services
         {
             _context.SetValues(notification.MBovisDetails, new
             {
-                HasUnpasteurisedMilkConsumption = mBovisDetails.UnpasteurisedMilkConsumptionStatus
+                mBovisDetails.UnpasteurisedMilkConsumptionStatus
             });
             await _notificationRepository.SaveChangesAsync();
         }
@@ -452,14 +452,17 @@ namespace ntbs_service.Services
         {
             _context.SetValues(notification.MBovisDetails, new
             {
-                HasOccupationExposure = mBovisDetails.OccupationExposureStatus
+                mBovisDetails.OccupationExposureStatus
             });
             await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateMBovisDetailsAnimalExposureAsync(Notification notification, MBovisDetails mBovisDetails)
         {
-            _context.SetValues(notification.MBovisDetails, new {HasAnimalExposure = mBovisDetails.AnimalExposureStatus});
+            _context.SetValues(notification.MBovisDetails, new
+            {
+                mBovisDetails.AnimalExposureStatus
+            });
             await _notificationRepository.SaveChangesAsync();
         }
 
