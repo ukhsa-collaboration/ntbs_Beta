@@ -32,7 +32,7 @@
     <PackageReference Include="Microsoft.Identity.Client" Version="4.27.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="morelinq" Version="3.3.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NHSUK.FrontEndLibrary.TagHelpers-fork" Version="1.1.4-alpha" />
     <PackageReference Include="ExpressiveAnnotations" Version="2.9.6">
       <NoWarn>NU1701</NoWarn>
