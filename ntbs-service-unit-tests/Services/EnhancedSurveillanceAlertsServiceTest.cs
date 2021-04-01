@@ -88,7 +88,7 @@ namespace ntbs_service_unit_tests.Services
         [InlineData("M. bovis", Status.Yes, Status.Yes, Status.Yes, Status.Yes, false, true)]
         [InlineData("M. bovis", Status.Unknown, Status.Unknown, Status.Unknown, Status.Unknown, false, true)]
         [InlineData("Non M. bovis", null, null, null, null, false, true)]
-        [InlineData("Non M. bovis", null, Status.No, Status.Unknown, Status.Yes, false, true)]
+        [InlineData("Non M. bovis", null, Status.No, Status.Unknown, Status.Yes, true, false)]
         [InlineData("Non M. bovis", Status.Yes, Status.Yes, Status.Yes, Status.Yes, false, true)]
         [InlineData("Non M. bovis", Status.No, Status.No, Status.No, Status.No, false, true)]
         [InlineData("Non M. bovis", Status.Unknown, Status.Unknown, Status.Unknown, Status.Unknown, false, true)]

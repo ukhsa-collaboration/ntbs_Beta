@@ -25,7 +25,7 @@ namespace ntbs_service.Models.Projections
         public bool IsMdr => DrugResistanceHelper.IsMdr(DrugResistanceProfile, TreatmentRegimen, ExposureToKnownMdrCaseStatus);
         public bool MdrDetailsEntered => DrugResistanceHelper.MdrDetailsEntered(ExposureToKnownMdrCaseStatus);
 
-        public bool IsMBovis => DrugResistanceHelper.IsMbovis(DrugResistanceProfile);
+        public bool IsMBovis => DrugResistanceHelper.IsMbovis(DrugResistanceProfile, MBovisDetails);
         public bool IsMBovisQuestionnaireComplete =>
             DrugResistanceHelper.IsMBovisQuestionnaireComplete(MBovisDetails);
     }
