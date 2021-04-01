@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 
@@ -18,30 +19,41 @@ namespace ntbs_service.Helpers
             TreatmentOutcomeType.TreatmentStopped
         };
 
-        public static Dictionary<int, List<TreatmentEvent>> GroupByEpisode(
-            this IEnumerable<TreatmentEvent> treatmentEvents)
+        public static List<TreatmentPeriod> GroupEpisodesIntoPeriods(this IEnumerable<TreatmentEvent> treatmentEvents)
         {
-            var groupedEpisodes = new Dictionary<int, List<TreatmentEvent>>();
-            var episodeCount = 1;
+            var treatmentPeriods = new List<TreatmentPeriod>();
+            var periodNumber = 1;
+
+            // The treatment period to append to; if it is null then a new period should be created
+            TreatmentPeriod currentTreatmentPeriod = null;
 
             foreach (var treatmentEvent in treatmentEvents.OrderForEpisodes())
             {
-                if (!groupedEpisodes.ContainsKey(episodeCount))
+                // If a transfer out event, make a new period just for this event
+                if (treatmentEvent.TreatmentEventType == TreatmentEventType.TransferOut)
                 {
-                    groupedEpisodes.Add(episodeCount, new List<TreatmentEvent> { treatmentEvent });
+                    treatmentPeriods.Add(TreatmentPeriod.CreateTransferPeriod(treatmentEvent));
                 }
+                // If at the start of a new treatment period, make it and add the event
+                else if (currentTreatmentPeriod == null)
+                {
+                    currentTreatmentPeriod = TreatmentPeriod.CreateTreatmentPeriod(periodNumber, treatmentEvent);
+                    periodNumber++;
+                    treatmentPeriods.Add(currentTreatmentPeriod);
+                }
+                // Otherwise append this event to the existing period
                 else
                 {
-                    groupedEpisodes[episodeCount].Add(treatmentEvent);
+                    currentTreatmentPeriod.TreatmentEvents.Add(treatmentEvent);
                 }
 
                 if (treatmentEvent.IsEpisodeEndingTreatmentEvent())
                 {
-                    episodeCount++;
+                    currentTreatmentPeriod = null;
                 }
             }
 
-            return groupedEpisodes;
+            return treatmentPeriods;
         }
 
         public static TreatmentEvent GetMostRecentTreatmentEvent(this IEnumerable<TreatmentEvent> treatmentEvents)
