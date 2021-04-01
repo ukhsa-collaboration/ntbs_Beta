@@ -66,11 +66,13 @@
 
                 @if (Model.Notification.NotificationStatus != NotificationStatus.Draft)
                 {
-                    <print-button inline-template>
-                        <button nhs-button-type="Standard" classes="ntbsuk-button--secondary hidden" v-on:click="print" id="print-notification-overview-button">
-                            Print notification overview
-                        </button>
-                    </print-button>
+                    <form method="post">
+                        <print-button inline-template>
+                            <a role="button" draggable="false" class="nhsuk-button ntbsuk-button--secondary hidden" v-on:click="print" id="print-notification-overview-button">
+                                Print notification overview
+                            </a>
+                        </print-button>
+                    </form>
                 }
 
                 @if (Model.Notification.NotificationStatus == NotificationStatus.Notified && Model.PermissionLevel == PermissionLevel.Edit)
