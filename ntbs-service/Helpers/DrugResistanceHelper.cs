@@ -18,10 +18,12 @@ namespace ntbs_service.Helpers
 
         public static bool MdrDetailsEntered(Status? exposureToKnownCaseStatus) => exposureToKnownCaseStatus.HasValue;
 
-        public static bool IsMbovis(DrugResistanceProfile profile)
+        public static bool IsMbovis(DrugResistanceProfile profile, MBovisDetails mBovisDetails)
         {
-            // If the lab results point to M. bovis species ...
-            return string.Equals("M. bovis", profile.Species, StringComparison.InvariantCultureIgnoreCase);
+            // If the lab results point to M. bovis species, or if some of the M. bovis questionnaire has already been filled in
+            // This might occur with non-M. bovis lab results if the questionnaire was done in a legacy system and migrated in.
+            return string.Equals("M. bovis", profile.Species, StringComparison.InvariantCultureIgnoreCase)
+                   || mBovisDetails.DataEntered;
         }
 
         public static bool IsMBovisQuestionnaireComplete(MBovisDetails mBovisDetails)

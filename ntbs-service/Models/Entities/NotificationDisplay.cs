@@ -25,7 +25,7 @@ namespace ntbs_service.Models.Entities
 
         public bool MdrDetailsEntered => DrugResistanceHelper.MdrDetailsEntered(MDRDetails.ExposureToKnownCaseStatus);
 
-        public bool IsMBovis => DrugResistanceHelper.IsMbovis(DrugResistanceProfile);
+        public bool IsMBovis => DrugResistanceHelper.IsMbovis(DrugResistanceProfile, MBovisDetails);
 
         public bool IsMBovisQuestionnaireComplete =>
             DrugResistanceHelper.IsMBovisQuestionnaireComplete(MBovisDetails);
