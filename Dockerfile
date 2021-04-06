@@ -25,12 +25,6 @@ COPY ntbs-service/package.json .
 COPY ntbs-service/package-lock.json .
 RUN npm install
 
-# Finish the install of @sentry/cli
-# This downloads a binary needed by this package at webpack build
-# time. This should be run during the install, but it is not for some
-# unknown reason so we run it here.
-RUN node node_modules/@sentry/cli/scripts/install.js
-
 # copy everything else and build frontend app
 COPY ./ntbs-service/wwwroot ./wwwroot
 COPY ./ntbs-service/tsconfig.json ./
