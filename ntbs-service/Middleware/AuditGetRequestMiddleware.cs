@@ -43,12 +43,7 @@ namespace ntbs_service.Middleware
 
                 if (shouldAudit && int.TryParse(pathArray[notificationIndex + 1], out var id))
                 {
-                    var userName = context.User.Username();
-                    // Fallback if user doesn't have an email associated with them - as is the case with our test users
-                    if (string.IsNullOrEmpty(userName))
-                    {
-                        userName = context.User.Identity.Name;
-                    }
+                    var userName = UsernameHelper.GetUsername(context);
 
                     // TODO: Differentiate between Cluster and Full view.
                     await auditService.AuditNotificationReadAsync(id, NotificationAuditType.Full, userName);
