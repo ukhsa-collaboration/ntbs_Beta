@@ -28,18 +28,18 @@ jobs:
           BACKUP_DOCKER_PASSWORD: ${{ secrets.BACKUP_DOCKER_PASSWORD }}
           BACKUP_IMAGE_TAG: ${{ steps.get_tag.outputs.BRANCH_TAG }}
         run: |
-            image_tag=$(az acr repository show-tags -n $DOCKER_REGISTRY_AZURE_NAME --repository $DOCKER_REPOSITORY -u $DOCKER_USERNAME -p $DOCKER_PASSWORD | grep $COMMIT_SHA | cut -d \" -f 2)
-            [ -z "$image_tag" ] && { echo "An image could not be found for the commit $COMMIT_SHA"; exit 1; }
-            echo "Discovered image $image_tag"
-            echo "Logging in to $DOCKER_REGISTRY_URL"
-            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD $DOCKER_REGISTRY_URL
-            full_image="$DOCKER_REGISTRY_URL/$DOCKER_REPOSITORY:$image_tag"
-            echo "Pulling image $full_image"
-            docker pull $full_image
-            full_backup_image="$BACKUP_DOCKER_REGISTRY_URL/$BACKUP_DOCKER_REPOSITORY:$BACKUP_IMAGE_TAG"
-            echo "Setting image tag to $full_backup_image"
-            docker tag $full_image $full_backup_image
-            echo "Logging in to $BACKUP_DOCKER_REGISTRY_URL"
-            docker login -u $BACKUP_DOCKER_USERNAME -p $BACKUP_DOCKER_PASSWORD $BACKUP_DOCKER_REGISTRY_URL
-            echo "Pushing image $full_backup_image"
-            docker image push $full_backup_image
+          image_tag=$(az acr repository show-tags -n $DOCKER_REGISTRY_AZURE_NAME --repository $DOCKER_REPOSITORY -u $DOCKER_USERNAME -p $DOCKER_PASSWORD | grep $COMMIT_SHA | cut -d \" -f 2)
+          [ -z "$image_tag" ] && { echo "An image could not be found for the commit $COMMIT_SHA"; exit 1; }
+          echo "Discovered image $image_tag"
+          echo "Logging in to $DOCKER_REGISTRY_URL"
+          echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USERNAME --password-stdin $DOCKER_REGISTRY_URL
+          full_image="$DOCKER_REGISTRY_URL/$DOCKER_REPOSITORY:$image_tag"
+          echo "Pulling image $full_image"
+          docker pull $full_image
+          full_backup_image="$BACKUP_DOCKER_REGISTRY_URL/$BACKUP_DOCKER_REPOSITORY:$BACKUP_IMAGE_TAG"
+          echo "Setting image tag to $full_backup_image"
+          docker tag $full_image $full_backup_image
+          echo "Logging in to $BACKUP_DOCKER_REGISTRY_URL"
+          echo "$BACKUP_DOCKER_PASSWORD" | docker login -u $BACKUP_DOCKER_USERNAME --password-stdin $BACKUP_DOCKER_REGISTRY_URL
+          echo "Pushing image $full_backup_image"
+          docker image push $full_backup_image
