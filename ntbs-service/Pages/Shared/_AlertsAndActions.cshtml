@@ -1,6 +1,7 @@
 @using ntbs_service.Helpers
 @using ntbs_service.Models.Enums
 @model ntbs_service.Pages.Notifications.NotificationModelBase
+@Html.AntiForgeryToken()
 
 <nhs-grid-row classes="no-print">
     @{
@@ -66,13 +67,11 @@
 
                 @if (Model.Notification.NotificationStatus != NotificationStatus.Draft)
                 {
-                    <form method="post">
-                        <print-button inline-template>
-                            <a role="button" draggable="false" class="nhsuk-button ntbsuk-button--secondary hidden" v-on:click="print" id="print-notification-overview-button">
-                                Print notification overview
-                            </a>
-                        </print-button>
-                    </form>
+                    <print-button inline-template>
+                        <button nhs-button-type="Standard" classes="ntbsuk-button--secondary hidden" v-on:click="print" id="print-notification-overview-button">
+                            Print notification overview
+                        </button>
+                    </print-button>
                 }
 
                 @if (Model.Notification.NotificationStatus == NotificationStatus.Notified && Model.PermissionLevel == PermissionLevel.Edit)
