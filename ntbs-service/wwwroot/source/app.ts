@@ -12,6 +12,7 @@ import * as Sentry from '@sentry/browser';
 import * as SentryIntegrations from '@sentry/integrations';
 // @ts-ignore
 import Details from '../../node_modules/nhsuk-frontend/packages/components/details/details';
+import '../../node_modules/nhsuk-frontend/packages/polyfills';
 import VueAccessibleModal from 'vue-accessible-modal'
 import cssVars from 'css-vars-ponyfill';
 // Components
