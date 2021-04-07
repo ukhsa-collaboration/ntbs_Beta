@@ -1,0 +1,45 @@
+name: Backup live container
+
+on:
+  push:
+    tags:
+      - live-*
+
+jobs:
+  backup-live-container-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get the live release tag
+        id: get_tag
+        run: echo ::set-output name=BRANCH_TAG::$(echo $GITHUB_REF | cut -d / -f 3)
+
+      - name: Backup live release
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          DOCKER_REGISTRY_URL: ntbscontainerregistry.azurecr.io
+          DOCKER_REGISTRY_AZURE_NAME: ntbsContainerRegistry
+          DOCKER_REPOSITORY: ntbs-service
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          BACKUP_DOCKER_REGISTRY_URL: ntbsbackups.azurecr.io
+          BACKUP_DOCKER_REPOSITORY: ntbs-backups
+          BACKUP_DOCKER_USERNAME: ${{ secrets.BACKUP_DOCKER_USERNAME }}
+          BACKUP_DOCKER_PASSWORD: ${{ secrets.BACKUP_DOCKER_PASSWORD }}
+          BACKUP_IMAGE_TAG: ${{ steps.get_tag.outputs.BRANCH_TAG }}
+        run: |
+            image_tag=$(az acr repository show-tags -n $DOCKER_REGISTRY_AZURE_NAME --repository $DOCKER_REPOSITORY -u $DOCKER_USERNAME -p $DOCKER_PASSWORD | grep $COMMIT_SHA | cut -d \" -f 2)
+            [ -z "$image_tag" ] && { echo "An image could not be found for the commit $COMMIT_SHA"; exit 1; }
+            echo "Discovered image $image_tag"
+            echo "Logging in to $DOCKER_REGISTRY_URL"
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD $DOCKER_REGISTRY_URL
+            full_image="$DOCKER_REGISTRY_URL/$DOCKER_REPOSITORY:$image_tag"
+            echo "Pulling image $full_image"
+            docker pull $full_image
+            full_backup_image="$BACKUP_DOCKER_REGISTRY_URL/$BACKUP_DOCKER_REPOSITORY:$BACKUP_IMAGE_TAG"
+            echo "Setting image tag to $full_backup_image"
+            docker tag $full_image $full_backup_image
+            echo "Logging in to $BACKUP_DOCKER_REGISTRY_URL"
+            docker login -u $BACKUP_DOCKER_USERNAME -p $BACKUP_DOCKER_PASSWORD $BACKUP_DOCKER_REGISTRY_URL
+            echo "Pushing image $full_backup_image"
+            docker image push $full_backup_image
