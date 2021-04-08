@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
@@ -15,6 +16,7 @@ namespace ntbs_service.Pages.Notifications
     {
         private readonly IAlertService _alertService;
         private readonly ICultureAndResistanceService _cultureAndResistanceService;
+        private readonly IAuditService _auditService;
 
         public CultureAndResistance CultureAndResistance { get; set; }
         public List<TreatmentPeriod> TreatmentPeriods { get; set; }
@@ -31,10 +33,12 @@ namespace ntbs_service.Pages.Notifications
             IAuthorizationService authorizationService,
             IAlertService alertService,
             INotificationRepository notificationRepository,
-            ICultureAndResistanceService cultureAndResistanceService) : base(service, authorizationService, notificationRepository)
+            ICultureAndResistanceService cultureAndResistanceService,
+            IAuditService auditService) : base(service, authorizationService, notificationRepository)
         {
             _alertService = alertService;
             _cultureAndResistanceService = cultureAndResistanceService;
+            _auditService = auditService;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -99,6 +103,12 @@ namespace ntbs_service.Pages.Notifications
         public async Task GetAlertsAsync()
         {
             Alerts = await _alertService.GetAlertsForNotificationAsync(NotificationId, User);
+        }
+        
+        public async Task<ContentResult> OnPostAuditPrintAsync()
+        {
+            await _auditService.AuditPrint(NotificationId, UsernameHelper.GetUsername(HttpContext));
+            return new ContentResult();
         }
     }
 }
