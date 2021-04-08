@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ntbs-uat
+  namespace: default
+spec:
+  dnsNames:
+    - ntbs-uat.61b431d7ea3041e89733.uksouth.aksapp.io
+  secretName: phe-ntbs-uat-tls
+  issuerRef:
+    name: uat-cluster-issuer
+    kind: ClusterIssuer
