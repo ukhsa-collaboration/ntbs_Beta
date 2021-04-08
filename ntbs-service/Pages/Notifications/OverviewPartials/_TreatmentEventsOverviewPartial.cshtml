@@ -17,7 +17,7 @@
     }
 </div>
 
-@if (Model.GroupedTreatmentEvents.Count > 0)
+@if (Model.TreatmentPeriods.Count > 0)
 {
      <div class="notification-overview-details-container">
         <div class="event-outcome-at-dates">
@@ -43,19 +43,20 @@
             }
         </div>
 
-        @for (var episodeNumber = 1; episodeNumber <= Model.GroupedTreatmentEvents.Count; episodeNumber++)
+        @foreach (var period in Model.TreatmentPeriods)
         {
-            var treatmentEvents = Model.GroupedTreatmentEvents[episodeNumber];
-
             <div>
-                <h4 class="episode-grouping-overview-heading">Treatment period @episodeNumber</h4>
-                @if (treatmentEvents.Last().IsEpisodeEndingTreatmentEvent())
+                <h4 class="episode-grouping-overview-heading">
+                    @(period.IsTransfer ? "Transfer" :  $"Treatment period {period.PeriodNumber}")
+                </h4>
+
+                @if (period.TreatmentEvents.Last().IsEpisodeEndingTreatmentEvent())
                 {
-                    <span>@treatmentEvents.First().FormattedEventDate to @treatmentEvents.Last().FormattedEventDate</span>
+                    <span>@period.TreatmentEvents.First().FormattedEventDate to @period.TreatmentEvents.Last().FormattedEventDate</span>
                 }
                 else
                 {
-                    <span>@treatmentEvents.First().FormattedEventDate to Present</span>
+                    <span>@period.TreatmentEvents.First().FormattedEventDate to Present</span>
                 }
             </div>
             <nhs-table classes="nhsuk-table--reduced-font" responsive>
@@ -66,7 +67,7 @@
                     <nhs-table-item classes="one-sixth-column">Case Manager</nhs-table-item>
                 </nhs-table-head>
                 <nhs-table-body>
-                    @foreach (var treatmentEvent in treatmentEvents)
+                    @foreach (var treatmentEvent in period.TreatmentEvents)
                     {
                         <nhs-table-body-row>
                             <nhs-table-item heading-text="Date">

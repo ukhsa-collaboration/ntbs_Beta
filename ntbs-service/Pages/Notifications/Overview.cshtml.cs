@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
@@ -16,7 +17,7 @@ namespace ntbs_service.Pages.Notifications
         private readonly ICultureAndResistanceService _cultureAndResistanceService;
 
         public CultureAndResistance CultureAndResistance { get; set; }
-        public Dictionary<int, List<TreatmentEvent>> GroupedTreatmentEvents { get; set; }
+        public List<TreatmentPeriod> TreatmentPeriods { get; set; }
 
         public bool Should12MonthOutcomeBeDisplayed { get; set; }
         public bool Should24MonthOutcomeBeDisplayed { get; set; }
@@ -62,7 +63,7 @@ namespace ntbs_service.Pages.Notifications
             }
 
             CultureAndResistance = await _cultureAndResistanceService.GetCultureAndResistanceDetailsAsync(NotificationId);
-            GroupedTreatmentEvents = Notification.TreatmentEvents.GroupByEpisode();
+            TreatmentPeriods = Notification.TreatmentEvents.GroupEpisodesIntoPeriods();
 
             CalculateTreatmentOutcomes();
             return Page();

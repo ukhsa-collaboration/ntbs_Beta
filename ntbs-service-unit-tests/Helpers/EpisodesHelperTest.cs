@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
@@ -20,9 +22,16 @@ namespace ntbs_service_unit_tests.Helpers
             },
             new TreatmentEvent
             {
+                EventDate = new DateTime(2011, 6, 1),
+                TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                TreatmentOutcome = new TreatmentOutcome {TreatmentOutcomeType = TreatmentOutcomeType.TreatmentStopped}
+            },
+            // Transfer
+            new TreatmentEvent
+            {
                 EventDate = new DateTime(2012, 1, 1), TreatmentEventType = TreatmentEventType.TransferOut
             },
-            // Episode 2               
+            // Episode 2
             new TreatmentEvent
             {
                 EventDate = new DateTime(2014, 1, 1),
@@ -58,17 +67,30 @@ namespace ntbs_service_unit_tests.Helpers
         };
 
         [Fact]
-        public void GroupTreatmentEventsByEpisode_GroupsBasedOnEndingOutcomeType()
+        public void GroupEpisodesIntoPeriods_GroupsBasedOnEndingOutcomeType()
         {
             // Act
-            var groupedEpisodes = _testTreatmentEvents.GroupByEpisode();
+            var periods = _testTreatmentEvents.GroupEpisodesIntoPeriods();
 
             // Assert
-            Assert.Equal(4, groupedEpisodes.Count);
-            Assert.Equal(2, groupedEpisodes[1].Count);
-            Assert.Single(groupedEpisodes[2]);
-            Assert.Equal(2, groupedEpisodes[3].Count);
-            Assert.Equal(3, groupedEpisodes[4].Count);
+            Assert.Equal(5, periods.Count);
+            var expectedPeriod0 = TreatmentPeriod.CreateTreatmentPeriod(1, _testTreatmentEvents[0]);
+            expectedPeriod0.TreatmentEvents.Add(_testTreatmentEvents[1]);
+
+            var expectedPeriod1 = TreatmentPeriod.CreateTransferPeriod(_testTreatmentEvents[2]);
+            var expectedPeriod2 = TreatmentPeriod.CreateTreatmentPeriod(2, _testTreatmentEvents[3]);
+
+            var expectedPeriod3 = TreatmentPeriod.CreateTreatmentPeriod(3, _testTreatmentEvents[5]);
+            expectedPeriod3.TreatmentEvents.Add(_testTreatmentEvents[4]);
+
+            var expectedPeriod4 = TreatmentPeriod.CreateTreatmentPeriod(4, _testTreatmentEvents[6]);
+            expectedPeriod4.TreatmentEvents.AddRange(new[] { _testTreatmentEvents[8], _testTreatmentEvents[7] });
+
+            AssertTreatmentPeriodMatchesExpected(expectedPeriod0, periods[0]);
+            AssertTreatmentPeriodMatchesExpected(expectedPeriod1, periods[1]);
+            AssertTreatmentPeriodMatchesExpected(expectedPeriod2, periods[2]);
+            AssertTreatmentPeriodMatchesExpected(expectedPeriod3, periods[3]);
+            AssertTreatmentPeriodMatchesExpected(expectedPeriod4, periods[4]);
         }
 
         [Fact]
@@ -82,7 +104,7 @@ namespace ntbs_service_unit_tests.Helpers
         }
 
         [Fact]
-        public void CorrectlySortThroughEventsOnTheSameDay()
+        public void GroupEpisodesIntoPeriods_CorrectlySortsThroughEventsOnTheSameDay()
         {
             // Arrange
             var treatmentEvents = new List<TreatmentEvent>
@@ -120,20 +142,29 @@ namespace ntbs_service_unit_tests.Helpers
             };
 
             // Act
-            var episodes = treatmentEvents.GroupByEpisode();
+            var periods = treatmentEvents.GroupEpisodesIntoPeriods();
 
             // Assert
-            Assert.Collection(episodes,
-                ep => Assert.Collection(ep.Value,
-                    ev => Assert.Equal(TreatmentEventType.TreatmentStart, ev.TreatmentEventType),
+            Assert.Collection(periods,
+                period => Assert.Collection(period.TreatmentEvents,
+                    ev => Assert.Equal(TreatmentEventType.TreatmentStart, ev.TreatmentEventType)
+                ),
+                period => Assert.Collection(period.TreatmentEvents,
                     ev => Assert.Equal(TreatmentEventType.TransferOut, ev.TreatmentEventType)
                 ),
-                ep => Assert.Collection(ep.Value,
+                period => Assert.Collection(period.TreatmentEvents,
                     ev => Assert.Equal(TreatmentEventType.TransferIn, ev.TreatmentEventType),
                     ev => Assert.Equal(TreatmentEventType.TreatmentRestart, ev.TreatmentEventType),
                     ev => Assert.Equal(TreatmentEventType.TreatmentOutcome, ev.TreatmentEventType)
                 )
             );
+        }
+
+        private void AssertTreatmentPeriodMatchesExpected(TreatmentPeriod expected, TreatmentPeriod actual)
+        {
+            Assert.Equal(expected.TreatmentEvents, actual.TreatmentEvents);
+            Assert.Equal(expected.PeriodNumber, actual.PeriodNumber);
+            Assert.Equal(expected.IsTransfer, actual.IsTransfer);
         }
     }
 }
