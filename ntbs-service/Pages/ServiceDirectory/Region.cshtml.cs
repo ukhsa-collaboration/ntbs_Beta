@@ -25,6 +25,7 @@ namespace ntbs_service.Pages.ServiceDirectory
 
         public Dictionary<TBService, List<User>> TbServicesWithCaseManagers;
         public PHEC Phec;
+        public IList<User> RegionalCaseManagers;
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -39,6 +40,8 @@ namespace ntbs_service.Pages.ServiceDirectory
                     );
 
             Phec = await _referenceDataRepository.GetPhecByCode(PhecCode);
+
+            RegionalCaseManagers = await _referenceDataRepository.GetRegionalTeamByPhecAdGroup(Phec.AdGroup);
 
             PrepareBreadcrumbs();
 

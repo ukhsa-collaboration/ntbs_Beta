@@ -1,0 +1,31 @@
+﻿@model _UserTablePartialModel
+
+<nhs-table id="@Model.TableId" caption="@Model.TableCaption">
+    <nhs-table-head>
+        <nhs-table-item>
+            Full Name
+        </nhs-table-item>
+        <nhs-table-item>
+            Job Title
+        </nhs-table-item>
+        <nhs-table-item>
+        </nhs-table-item>
+    </nhs-table-head>
+    <nhs-table-body>
+        @foreach (var regionalMember in Model.Users)
+        {
+            <nhs-table-body-row>
+                <nhs-table-item>
+                    @regionalMember.DisplayName
+                </nhs-table-item>
+                <nhs-table-item>
+                    @regionalMember.JobTitle
+                </nhs-table-item>
+                <nhs-table-item>
+                    <a class="link-without-visited-state"
+                       href=@($"/ContactDetails/{regionalMember.Username}")>View</a>
+                </nhs-table-item>
+            </nhs-table-body-row>
+        }
+    </nhs-table-body>
+</nhs-table>
