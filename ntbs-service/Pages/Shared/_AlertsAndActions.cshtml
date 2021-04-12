@@ -58,9 +58,9 @@
                         </button>
                     </form>
                 }
-                else if (Model.Notification.Group?.Notifications != null && Model.NotificationId != Model.Notification.Group.Notifications.LastOrDefault()?.NotificationId)
+                else if (Model.LatestLinkedNotificationId.HasValue && Model.LatestLinkedNotificationId != Model.NotificationId)
                 {
-                    <a id='new-linked-notification-button' class="nhsuk-button ntbsuk-button--secondary" role="button" href="/Notifications/@Model.Notification.Group.Notifications.LastOrDefault()?.NotificationId/Overview">
+                    <a id='new-linked-notification-button' class="nhsuk-button ntbsuk-button--secondary" role="button" href="@RouteHelper.GetNotificationPath(Model.LatestLinkedNotificationId.Value, NotificationSubPaths.Overview)">
                         Navigate to latest linked notification
                     </a>
                 }
