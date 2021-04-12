@@ -4,8 +4,10 @@ using Castle.Core.Internal;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Pages.Search;
 using ntbs_service.Services;
 
@@ -15,14 +17,17 @@ namespace ntbs_service.Pages.ServiceDirectory
     public class SearchResults : ServiceDirectorySearchBase
     {
         private readonly ICaseManagerSearchService _caseManagerSearchService;
+        private IReferenceDataRepository _referenceDataRepository;
         private PaginationParametersBase _paginationParameters;
         public PaginatedList<User> CaseManagersSearchResults;
+        public IList<PHEC> AllPhecs;
         public string NextPageUrl;
         public string PreviousPageUrl;
 
-        public SearchResults(ICaseManagerSearchService caseManagerSearchService)
+        public SearchResults(ICaseManagerSearchService caseManagerSearchService, IReferenceDataRepository referenceDataRepository)
         {
             _caseManagerSearchService = caseManagerSearchService;
+            _referenceDataRepository = referenceDataRepository;
         }
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex = null, int? offset = null)
@@ -43,6 +48,8 @@ namespace ntbs_service.Pages.ServiceDirectory
                 await _caseManagerSearchService.OrderAndPaginateQueryableAsync(SearchKeyword, _paginationParameters);
 
             CaseManagersSearchResults = new PaginatedList<User>(caseManagersToDisplay, count, _paginationParameters);
+
+            AllPhecs = await _referenceDataRepository.GetAllPhecs();
 
             if (CaseManagersSearchResults.HasNextPage)
             {

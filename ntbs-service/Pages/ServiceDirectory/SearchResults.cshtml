@@ -77,6 +77,20 @@
                                     </nhs-summary-list-row-value>
                                 </nhs-summary-list-row>
                             }
+                            @foreach (var region in Model.AllPhecs.Where(p => caseManager.AdGroups.Split(",").Contains(p.AdGroup)))
+                            {
+                                <nhs-summary-list-row>
+                                    <nhs-summary-list-row-key>Region:</nhs-summary-list-row-key>
+                                    <nhs-summary-list-row-value>
+                                        <span>
+                                            <a class="link-without-visited-state"
+                                               href=@($"/ServiceDirectory/Region/{region.Code}")>
+                                                @region.Name
+                                            </a>
+                                        </span>
+                                    </nhs-summary-list-row-value>
+                                </nhs-summary-list-row>
+                            }
                             <nhs-summary-list-row>
                                 <nhs-summary-list-row-key>Job Title:</nhs-summary-list-row-key>
                                 <nhs-summary-list-row-value>@caseManager.JobTitle</nhs-summary-list-row-value>
