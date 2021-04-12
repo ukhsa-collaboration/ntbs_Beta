@@ -131,16 +131,15 @@ namespace ntbs_service.DataMigration
 
         private async Task<ImportResult> ValidateAndImportNotificationGroupAsync(PerformContext context, string requestId, List<Notification> notifications)
         {
-            var patientName = notifications.First().PatientDetails.FullName;
-            var importResult = new ImportResult(patientName);
+            var importResult = new ImportResult(notifications.First().PatientDetails.FullName);
 
-            _logger.LogInformation(context, requestId, $"{notifications.Count} notifications found to import for {patientName}");
+            _logger.LogInformation(context, requestId, $"{notifications.Count} notifications found to import in notification group containing legacy ID {notifications.First().LegacyId}");
 
             // Verify that no repeated NotificationIds have returned
             var ids = notifications.Select(n => n.LegacyId).ToList();
             if (ids.Distinct().Count() != ids.Count)
             {
-                var errorMessage = $"Duplicate records found ({string.Join(',', ids)}) - aborting import for {patientName}";
+                var errorMessage = $"Duplicate records found ({string.Join(',', ids)}) - aborting import for notification group containing legacy ID {notifications.First().LegacyId}";
                 importResult.AddGroupError(errorMessage);
                 _logger.LogImportFailure(context, requestId, errorMessage);
                 return importResult;
@@ -175,7 +174,7 @@ namespace ntbs_service.DataMigration
 
             if (isAnyNotificationInvalid)
             {
-                _logger.LogImportFailure(context, requestId, $"Terminating importing notifications for {patientName} due to validation errors");
+                _logger.LogImportFailure(context, requestId, $"Terminating importing notification group containing legacy ID {notifications.First().LegacyId} due to validation errors");
                 return importResult;
             }
 
@@ -191,7 +190,7 @@ namespace ntbs_service.DataMigration
                 var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));
                 _logger.LogSuccess(context, requestId, $"Imported notifications have following Ids: {newIdsString}");
 
-                _logger.LogInformation(context, requestId, $"Finished importing notification for {patientName}");
+                _logger.LogInformation(context, requestId, $"Finished importing notification group containing legacy ID {notifications.First().LegacyId}");
             }
             catch (MarkingNotificationsAsImportedFailedException e)
             {
@@ -202,7 +201,7 @@ namespace ntbs_service.DataMigration
             catch (Exception e)
             {
                 Log.Error(e, e.Message);
-                _logger.LogImportFailure(context, requestId, message: $"Failed to save notification for {patientName} or mark it as imported ", e);
+                _logger.LogImportFailure(context, requestId, message: $"Failed to save notification in notification group containing legacy ID {notifications.First().LegacyId} or mark it as imported ", e);
                 importResult.AddGroupError($"{e.Message}: {e.StackTrace}");
             }
             return importResult;
