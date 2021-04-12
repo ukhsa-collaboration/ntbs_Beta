@@ -43,11 +43,13 @@
     </div>
     
     <br/>
-    <div class="case-manager-details-edit-container">
-        <h3 class="nhsuk-heading-m"> Assigned Services </h3>
-    </div>
-    <div class="case-manager-details-container">
-        <nhs-table id="regions-and-services" caption="Assigned Services" classes="nhsuk-table--reduced-font">
+    @if (Model.CaseManagerTbServices.Any())
+    {
+        <div class="case-manager-details-edit-container">
+            <h3 class="nhsuk-heading-m"> TB service membership </h3>
+        </div>
+        <div class="case-manager-details-container">
+            <nhs-table id="regions-and-services" classes="nhsuk-table--reduced-font">
                 <nhs-table-head>
                     <nhs-table-item>
                         Region
@@ -70,5 +72,6 @@
                     }
                 </nhs-table-body>
             </nhs-table>
-    </div>
+        </div>
+    }
 </nhs-width-container>

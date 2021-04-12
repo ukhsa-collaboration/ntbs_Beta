@@ -14,3 +14,8 @@
 </nhs-width-container>
 
 <partial name="_CaseManagerDetailsPartial" model="@Model.ContactDetails"/>
+
+@if (Model.RegionalMemberships.Any())
+{
+    <partial name="_RegionalMembershipDetailsPartial" model="@Model.RegionalMemberships"/>
+}

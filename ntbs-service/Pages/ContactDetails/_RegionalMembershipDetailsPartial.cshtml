@@ -1,0 +1,26 @@
+﻿@model List<ntbs_service.Models.ReferenceEntities.PHEC>
+
+<nhs-width-container container-width="Standard">
+    <div class="case-manager-details-edit-container">
+        <h3 class="nhsuk-heading-m"> Regional membership </h3>
+    </div>
+    <div class="case-manager-details-container">
+        <nhs-table id="regional-memberships" classes="nhsuk-table--reduced-font">
+            <nhs-table-head>
+                <nhs-table-item>
+                    Region
+                </nhs-table-item>
+            </nhs-table-head>
+            <nhs-table-body>
+                @foreach (var region in Model)
+                {
+                    <nhs-table-body-row id="region-@region.Code">
+                        <nhs-table-item>
+                            @region.Name
+                        </nhs-table-item>
+                    </nhs-table-body-row>
+                }
+            </nhs-table-body>
+        </nhs-table>
+    </div>
+</nhs-width-container>
