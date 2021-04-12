@@ -39,8 +39,9 @@ namespace ntbs_service.Services
             var filteredPhecs = allPhecs.Where(phec => searchKeywords.Any(s => phec.Name.ToLower().Contains(s)));
 
             var caseManagersAndRegionalUsers = (await _referenceDataRepository.GetAllCaseManagersOrdered())
-                .Concat(_userRepository.GetUserQueryable()
-                    .Where(user => allPhecs.Any(phec => user.AdGroups.Contains(phec.AdGroup))))
+                .Concat(_userRepository.GetUserQueryable().ToList()
+                    .Where(user => user.AdGroups != null && allPhecs.Any(phec => user.AdGroups.Contains(phec.AdGroup))))
+                .Distinct()
                 .OrderBy(u => u.DisplayName);
 
             // This query is too complex to translate to sql, so we explicitly work on an in-memory list.
@@ -51,7 +52,7 @@ namespace ntbs_service.Services
                     || searchKeywords.Any(s => c.DisplayName != null && c.DisplayName.ToLower().Contains(s))
                     || c.CaseManagerTbServices.Any(x =>
                         searchKeywords.Any(s => x.TbService.Name.ToLower().Contains(s)))
-                    || filteredPhecs.Any(phec => c.AdGroups.Split(",").Contains(phec.AdGroup)))
+                    || (c.AdGroups != null && filteredPhecs.Any(phec => c.AdGroups.Split(",").Contains(phec.AdGroup))))
                 .ToList();
 
             return (GetPaginatedItems(filteredCaseManagersAndRegionalUsers, paginationParameters), filteredCaseManagersAndRegionalUsers.Count);
