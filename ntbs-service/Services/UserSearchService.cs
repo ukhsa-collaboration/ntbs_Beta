@@ -9,25 +9,25 @@ using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
 {
-    public interface ICaseManagerSearchService
+    public interface IUserSearchService
     {
-        Task<(IList<User> caseManagers, int count)> OrderAndPaginateQueryableAsync(
+        Task<(IList<User> users, int count)> OrderAndPaginateQueryableAsync(
             string searchKeyword,
             PaginationParametersBase paginationParameters);
     }
 
-    public class CaseManagerSearchService : ICaseManagerSearchService
+    public class UserSearchService : IUserSearchService
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IUserRepository _userRepository;
 
-        public CaseManagerSearchService(IReferenceDataRepository referenceDataRepository, IUserRepository userRepository)
+        public UserSearchService(IReferenceDataRepository referenceDataRepository, IUserRepository userRepository)
         {
             _referenceDataRepository = referenceDataRepository;
             _userRepository = userRepository;
         }
 
-        public async Task<(IList<User> caseManagers, int count)> OrderAndPaginateQueryableAsync(
+        public async Task<(IList<User> users, int count)> OrderAndPaginateQueryableAsync(
             string searchKeyword,
             PaginationParametersBase paginationParameters)
         {
@@ -40,7 +40,7 @@ namespace ntbs_service.Services
 
             var caseManagersAndRegionalUsers = (await _referenceDataRepository.GetAllCaseManagersOrdered())
                 .Concat(_userRepository.GetUserQueryable().ToList()
-                    .Where(user => user.AdGroups != null && allPhecs.Any(phec => user.AdGroups.Contains(phec.AdGroup))))
+                    .Where(user => user.AdGroups != null && allPhecs.Any(phec => user.AdGroups.Split(",").Contains(phec.AdGroup))))
                 .Distinct()
                 .OrderBy(u => u.DisplayName);
 

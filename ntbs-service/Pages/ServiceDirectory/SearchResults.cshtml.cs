@@ -16,17 +16,17 @@ namespace ntbs_service.Pages.ServiceDirectory
     // ReSharper disable once ClassNeverInstantiated.Global
     public class SearchResults : ServiceDirectorySearchBase
     {
-        private readonly ICaseManagerSearchService _caseManagerSearchService;
+        private readonly IUserSearchService _userSearchService;
         private IReferenceDataRepository _referenceDataRepository;
         private PaginationParametersBase _paginationParameters;
-        public PaginatedList<User> CaseManagersSearchResults;
+        public PaginatedList<User> UserSearchResults;
         public IList<PHEC> AllPhecs;
         public string NextPageUrl;
         public string PreviousPageUrl;
 
-        public SearchResults(ICaseManagerSearchService caseManagerSearchService, IReferenceDataRepository referenceDataRepository)
+        public SearchResults(IUserSearchService userSearchService, IReferenceDataRepository referenceDataRepository)
         {
-            _caseManagerSearchService = caseManagerSearchService;
+            _userSearchService = userSearchService;
             _referenceDataRepository = referenceDataRepository;
         }
 
@@ -44,25 +44,25 @@ namespace ntbs_service.Pages.ServiceDirectory
                 Offset = offset ?? 0
             };
 
-            var (caseManagersToDisplay, count) =
-                await _caseManagerSearchService.OrderAndPaginateQueryableAsync(SearchKeyword, _paginationParameters);
+            var (usersToDisplay, count) =
+                await _userSearchService.OrderAndPaginateQueryableAsync(SearchKeyword, _paginationParameters);
 
-            CaseManagersSearchResults = new PaginatedList<User>(caseManagersToDisplay, count, _paginationParameters);
+            UserSearchResults = new PaginatedList<User>(usersToDisplay, count, _paginationParameters);
 
             AllPhecs = await _referenceDataRepository.GetAllPhecs();
 
-            if (CaseManagersSearchResults.HasNextPage)
+            if (UserSearchResults.HasNextPage)
             {
                 NextPageUrl = QueryHelpers.AddQueryString("/ServiceDirectory/SearchResults",
                     new Dictionary<string, string>
                     {
                         {"SearchKeyword", SearchKeyword},
                         {"pageIndex", (_paginationParameters.PageIndex + 1).ToString()},
-                        {"offset", (_paginationParameters.Offset + caseManagersToDisplay.Count).ToString()}
+                        {"offset", (_paginationParameters.Offset + usersToDisplay.Count).ToString()}
                     });
             }
 
-            if (CaseManagersSearchResults.HasPreviousPage)
+            if (UserSearchResults.HasPreviousPage)
             {
                 PreviousPageUrl = QueryHelpers.AddQueryString("/ServiceDirectory/SearchResults",
                     new Dictionary<string, string>
