@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.SeedData;
 
 namespace ntbs_service.Services
 {
@@ -27,12 +28,8 @@ namespace ntbs_service.Services
     {
         public const string AuditUserSystem = "SYSTEM";
         private readonly AuditDatabaseContext _auditContext;
-
-        private const string READ_EVENT = "Read";
-        private const string UNMATCH_EVENT = "Unmatch";
-        private const string MATCH_EVENT = "Match";
-        private const string SPECIMEN_ENTITY_TYPE = "Specimen";
-        private const string PRINT_EVENT = "Print";
+        
+        public static string SPECIMEN_ENTITY_TYPE = "Specimen";
 
         public AuditService(AuditDatabaseContext auditContext)
         {
@@ -47,7 +44,7 @@ namespace ntbs_service.Services
                 notificationIdString,
                 RootEntities.Notification,
                 auditDetails.ToString(),
-                READ_EVENT,
+                AuditEventType.READ_EVENT,
                 userName,
                 RootEntities.Notification,
                 notificationIdString);
@@ -62,7 +59,7 @@ namespace ntbs_service.Services
                 labReferenceNumber,
                 SPECIMEN_ENTITY_TYPE,
                 auditType.ToString(),
-                UNMATCH_EVENT,
+                AuditEventType.UNMATCH_EVENT,
                 userName,
                 RootEntities.Notification,
                 notificationId.ToString());
@@ -77,19 +74,10 @@ namespace ntbs_service.Services
                 labReferenceNumber,
                 SPECIMEN_ENTITY_TYPE,
                 auditType.ToString(),
-                MATCH_EVENT,
+                AuditEventType.MATCH_EVENT,
                 userName,
                 RootEntities.Notification,
                 notificationId.ToString());
-        }
-
-        public async Task<IList<AuditLog>> GetWriteAuditsForNotification(int notificationId)
-        {
-            return await _auditContext.AuditLogs
-                .Where(log => log.EventType != READ_EVENT && log.EventType != PRINT_EVENT)
-                .Where(log => log.RootEntity == RootEntities.Notification)
-                .Where(log => log.RootId == notificationId.ToString())
-                .ToListAsync();
         }
 
         public async Task AuditPrint(int notificationId, string userName)
@@ -98,10 +86,19 @@ namespace ntbs_service.Services
                 notificationId.ToString(),
                 RootEntities.Notification,
                 null,
-                PRINT_EVENT,
+                AuditEventType.PRINT_EVENT,
                 userName,
                 RootEntities.Notification,
                 notificationId.ToString());
+        }
+
+        public async Task<IList<AuditLog>> GetWriteAuditsForNotification(int notificationId)
+        {
+            return await _auditContext.AuditLogs
+                .Where(log => log.EventType != AuditEventType.READ_EVENT && log.EventType != AuditEventType.PRINT_EVENT)
+                .Where(log => log.RootEntity == RootEntities.Notification)
+                .Where(log => log.RootId == notificationId.ToString())
+                .ToListAsync();
         }
     }
 }
