@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
+using Microsoft.EntityFrameworkCore;
 using MoreLinq;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
@@ -35,24 +36,20 @@ namespace ntbs_service.Services
                 .Where(x => !x.IsNullOrEmpty())
                 .Select(s => s.ToLower()).ToList();
             
-            var allPhecs = await _referenceDataRepository.GetAllPhecs();
-            var filteredPhecs = allPhecs.Where(phec => searchKeywords.Any(s => phec.Name.ToLower().Contains(s)));
+            var filteredPhecs = (await _referenceDataRepository.GetAllPhecs())
+                .Where(phec => searchKeywords.Any(s => phec.Name.ToLower().Contains(s)));
 
-            var caseManagersAndRegionalUsers = (await _referenceDataRepository.GetAllCaseManagersOrdered())
-                .Concat(_userRepository.GetUserQueryable().ToList()
-                    .Where(user => user.AdGroups != null && allPhecs.Any(phec => user.AdGroups.Split(",").Contains(phec.AdGroup))))
-                .Distinct()
-                .OrderBy(u => u.DisplayName);
+            var allUsers = await _userRepository.GetOrderedUsers();
 
             // This query is too complex to translate to sql, so we explicitly work on an in-memory list.
             // The size of the directory should make this ok.
-            var filteredCaseManagersAndRegionalUsers = caseManagersAndRegionalUsers.Where(c =>
+            var filteredCaseManagersAndRegionalUsers = allUsers.Where(c =>
                     searchKeywords.Any(s => c.FamilyName != null && c.FamilyName.ToLower().Contains(s))
                     || searchKeywords.Any(s => c.GivenName != null && c.GivenName.ToLower().Contains(s))
                     || searchKeywords.Any(s => c.DisplayName != null && c.DisplayName.ToLower().Contains(s))
                     || c.CaseManagerTbServices.Any(x =>
                         searchKeywords.Any(s => x.TbService.Name.ToLower().Contains(s)))
-                    || (c.AdGroups != null && filteredPhecs.Any(phec => c.AdGroups.Split(",").Contains(phec.AdGroup))))
+                    || filteredPhecs.Any(phec => c.AdGroups != null && c.AdGroups.Split(",").Contains(phec.AdGroup)))
                 .ToList();
 
             return (GetPaginatedItems(filteredCaseManagersAndRegionalUsers, paginationParameters), filteredCaseManagersAndRegionalUsers.Count);

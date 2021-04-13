@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 using Microsoft.Identity.Client;
 using Moq;
 using ntbs_service.DataAccess;
@@ -62,9 +63,8 @@ namespace ntbs_service_unit_tests.Services
         {
             // Arrange
             const string searchString = "";
-            _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered()).ReturnsAsync(new List<User>());
             _mockReferenceDataRepository.Setup(r => r.GetAllPhecs()).ReturnsAsync(new List<PHEC>());
-            _mockUserRepository.Setup(u => u.GetUserQueryable()).Returns(new List<User>().AsQueryable());
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(new List<User>());
 
             // Act
             var results = await _service.OrderAndPaginateQueryableAsync(searchString, DefaultPaginationParameters);
@@ -80,10 +80,8 @@ namespace ntbs_service_unit_tests.Services
             // Arrange
             const string searchString = "abcdefg";
 
-            _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered())
-                .ReturnsAsync(DefaultDisplayNameCaseManagers);
             _mockReferenceDataRepository.Setup(r => r.GetAllPhecs()).ReturnsAsync(new List<PHEC>());
-            _mockUserRepository.Setup(u => u.GetUserQueryable()).Returns(new List<User>().AsQueryable());
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(DefaultDisplayNameCaseManagers);
 
             // Act
             var results = await _service.OrderAndPaginateQueryableAsync(searchString, DefaultPaginationParameters);
@@ -99,10 +97,8 @@ namespace ntbs_service_unit_tests.Services
             // Arrange
             const string searchString = "abcdefg";
 
-            _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered())
-                .ReturnsAsync(DefaultGivenNameCaseManagers);
             _mockReferenceDataRepository.Setup(r => r.GetAllPhecs()).ReturnsAsync(new List<PHEC>());
-            _mockUserRepository.Setup(u => u.GetUserQueryable()).Returns(new List<User>().AsQueryable());
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(DefaultGivenNameCaseManagers);
 
             // Act
             var results = await _service.OrderAndPaginateQueryableAsync(searchString, DefaultPaginationParameters);
@@ -118,10 +114,8 @@ namespace ntbs_service_unit_tests.Services
             // Arrange
             const string searchString = "abcdefg";
 
-            _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered())
-                .ReturnsAsync(DefaultFamilyNameCaseManagers);
             _mockReferenceDataRepository.Setup(r => r.GetAllPhecs()).ReturnsAsync(new List<PHEC>());
-            _mockUserRepository.Setup(u => u.GetUserQueryable()).Returns(new List<User>().AsQueryable());
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(DefaultFamilyNameCaseManagers);
 
             // Act
             var results = await _service.OrderAndPaginateQueryableAsync(searchString, DefaultPaginationParameters);
@@ -136,12 +130,10 @@ namespace ntbs_service_unit_tests.Services
         {
             // Arrange
             const string searchString = "UserT";
-            var expectedResults = new List<User> { DefaultDisplayNameCaseManagers[1], DefaultDisplayNameCaseManagers[2] }.OrderBy(u => u.DisplayName);
+            var expectedResults = new List<User> { DefaultDisplayNameCaseManagers[1], DefaultDisplayNameCaseManagers[2] };
 
-            _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered())
-                .ReturnsAsync(DefaultDisplayNameCaseManagers);
             _mockReferenceDataRepository.Setup(r => r.GetAllPhecs()).ReturnsAsync(new List<PHEC>());
-            _mockUserRepository.Setup(u => u.GetUserQueryable()).Returns(new List<User>().AsQueryable());
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(DefaultDisplayNameCaseManagers);
 
             // Act
             var results = await _service.OrderAndPaginateQueryableAsync(searchString, DefaultPaginationParameters);
@@ -158,10 +150,8 @@ namespace ntbs_service_unit_tests.Services
             const string searchString = "UserT";
             var expectedResults = new List<User> { DefaultGivenNameCaseManagers[1], DefaultGivenNameCaseManagers[2] };
 
-            _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered())
-                .ReturnsAsync(DefaultGivenNameCaseManagers);
             _mockReferenceDataRepository.Setup(r => r.GetAllPhecs()).ReturnsAsync(new List<PHEC>());
-            _mockUserRepository.Setup(u => u.GetUserQueryable()).Returns(new List<User>().AsQueryable());
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(DefaultGivenNameCaseManagers);
 
             // Act
             var results = await _service.OrderAndPaginateQueryableAsync(searchString, DefaultPaginationParameters);
@@ -178,10 +168,8 @@ namespace ntbs_service_unit_tests.Services
             const string searchString = "UserT";
             var expectedResults = new List<User> { DefaultFamilyNameCaseManagers[1], DefaultFamilyNameCaseManagers[2] };
 
-            _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered())
-                .ReturnsAsync(DefaultFamilyNameCaseManagers);
             _mockReferenceDataRepository.Setup(r => r.GetAllPhecs()).ReturnsAsync(new List<PHEC>());
-            _mockUserRepository.Setup(u => u.GetUserQueryable()).Returns(new List<User>().AsQueryable());
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(DefaultFamilyNameCaseManagers);
 
             // Act
             var results = await _service.OrderAndPaginateQueryableAsync(searchString, DefaultPaginationParameters);
@@ -200,12 +188,12 @@ namespace ntbs_service_unit_tests.Services
             var caseManagerWithRegion = CreateDefaultCaseManager("Thomas Haverford");
             caseManagerWithRegion.AdGroups = regionAdGroup;
             var expectedResult = new List<User> {DefaultRegionalUsers[0], caseManagerWithRegion};
+            var usersToReturn = DefaultRegionalUsers;
+            usersToReturn.Add(caseManagerWithRegion);
 
-            _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered())
-                .ReturnsAsync(new List<User>{caseManagerWithRegion});
             _mockReferenceDataRepository.Setup(r => r.GetAllPhecs())
                 .ReturnsAsync(new List<PHEC>{new PHEC{AdGroup = regionAdGroup, Name = searchString}});
-            _mockUserRepository.Setup(u => u.GetUserQueryable()).Returns(DefaultRegionalUsers.AsQueryable());
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(usersToReturn);
 
             // Act
             var results = await _service.OrderAndPaginateQueryableAsync(searchString, DefaultPaginationParameters);
@@ -226,11 +214,9 @@ namespace ntbs_service_unit_tests.Services
                 CreateRegionalUser("RegionalAdGroup", "Ben Wyatt"), expectedResult
             };
 
-            _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered())
-                .ReturnsAsync(new List<User>());
             _mockReferenceDataRepository.Setup(r => r.GetAllPhecs())
                 .ReturnsAsync(new List<PHEC>{new PHEC{AdGroup = "RegionalAdGroup", Name = "Pawnee"}});
-            _mockUserRepository.Setup(u => u.GetUserQueryable()).Returns(regionalUsers.AsQueryable());
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(regionalUsers);
 
             // Act
             var results = await _service.OrderAndPaginateQueryableAsync(searchString, DefaultPaginationParameters);
@@ -247,10 +233,8 @@ namespace ntbs_service_unit_tests.Services
             const string searchString = "oNe";
             var expectedResults = new List<User> { DefaultDisplayNameCaseManagers[0] };
 
-            _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered())
-                .ReturnsAsync(DefaultDisplayNameCaseManagers);
             _mockReferenceDataRepository.Setup(r => r.GetAllPhecs()).ReturnsAsync(new List<PHEC>());
-            _mockUserRepository.Setup(u => u.GetUserQueryable()).Returns(new List<User>().AsQueryable());
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(DefaultDisplayNameCaseManagers);
 
             // Act
             var results = await _service.OrderAndPaginateQueryableAsync(searchString, DefaultPaginationParameters);
@@ -270,9 +254,8 @@ namespace ntbs_service_unit_tests.Services
 
             var expectedResults = new List<User> { caseManagers[2], caseManagers[3], caseManagers[4] };
 
-            _mockReferenceDataRepository.Setup(r => r.GetAllCaseManagersOrdered()).ReturnsAsync(caseManagers);
             _mockReferenceDataRepository.Setup(r => r.GetAllPhecs()).ReturnsAsync(new List<PHEC>());
-            _mockUserRepository.Setup(u => u.GetUserQueryable()).Returns(new List<User>().AsQueryable());
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(caseManagers);
 
             // Act
             var results = await _service.OrderAndPaginateQueryableAsync(searchString, paginationParameters);
