@@ -65,6 +65,8 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<MBovisOccupationExposure> MBovisOccupationExposures { get; set; }
         public virtual DbSet<MBovisAnimalExposure> MBovisAnimalExposure { get; set; }
         public DbSet<NotificationAndDuplicateIds> NotificationAndDuplicateIds { get; set; }
+        
+        public DbSet<ReleaseVersion> ReleaseVersion { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
@@ -118,6 +120,10 @@ namespace ntbs_service.DataAccess
             var treatmentRegimentEnumConverter = new EnumToStringConverter<TreatmentRegimen>();
 
             #endregion
+
+            modelBuilder.Entity<ReleaseVersion>(entity =>
+                entity.HasKey(rv => rv.Version)
+            );
 
             modelBuilder.Entity<Country>(entity =>
             {

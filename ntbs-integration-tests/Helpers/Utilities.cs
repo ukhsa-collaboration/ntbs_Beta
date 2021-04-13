@@ -5,6 +5,7 @@ using ntbs_integration_tests.LabResultsPage;
 using ntbs_integration_tests.NotificationPages;
 using ntbs_integration_tests.TransferPage;
 using ntbs_service.DataAccess;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
@@ -128,6 +129,7 @@ namespace ntbs_integration_tests.Helpers
             context.User.AddRange(GetCaseManagers());
             context.CaseManagerTbService.AddRange(GetCaseManagerTbServicesJoinEntries());
             context.Alert.AddRange(GetSeedingAlerts());
+            context.ReleaseVersion.Add(new ReleaseVersion {Version = "test-version", Date = DateTime.UtcNow});
 
             // Entities required for specific test suites
             context.Notification.AddRange(OverviewPageTests.GetSeedingNotifications());
