@@ -41,7 +41,7 @@ namespace ntbs_service.Pages.ServiceDirectory
 
             Phec = await _referenceDataRepository.GetPhecByCode(PhecCode);
 
-            RegionalCaseManagers = await _referenceDataRepository.GetRegionalTeamByPhecAdGroup(Phec.AdGroup);
+            RegionalCaseManagers = await _referenceDataRepository.GetUsersByPhecAdGroup(Phec.AdGroup);
 
             PrepareBreadcrumbs();
 

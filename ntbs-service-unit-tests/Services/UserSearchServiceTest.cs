@@ -296,7 +296,7 @@ namespace ntbs_service_unit_tests.Services
             };
         }
 
-        private static User CreateRegionalUser(string regionAdGroup = null, string displayName = null)
+        private static User CreateRegionalUser(string regionAdGroup, string displayName = null)
         {
             return new User
             {
