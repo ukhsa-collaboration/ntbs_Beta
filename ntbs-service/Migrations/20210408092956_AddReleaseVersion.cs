@@ -18,6 +18,10 @@ namespace ntbs_service.Migrations
                 {
                     table.PrimaryKey("PK_ReleaseVersion", x => x.Version);
                 });
+            migrationBuilder.InsertData(
+                table: "ReleaseVersion",
+                columns: new[] { "Version", "Date" },
+                values: new object[] { "pre-release", DateTime.UtcNow });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
