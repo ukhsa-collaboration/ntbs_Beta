@@ -1,0 +1,36 @@
+name: Run UI tests
+
+on: push
+
+jobs:
+  run-ui-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ntbs-ui-tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Install Selenium
+        run: sudo npm install -g selenium-standalone
+      - name: Run UI tests
+        env:
+          EnvironmentUnderTest: int
+          Users__ServiceUser__Password: ${{ secrets.UI_TESTS_SERVICE_USER_PASSWORD }}
+          Environments__int__ConnectionString: ${{ secrets.UI_TESTS_INT_CONNECTION_STRING }}
+        run: |
+          sudo selenium-standalone install --drivers.chrome.version=89.0.4389.23
+          selenium-standalone start --drivers.chrome.version=89.0.4389.23 > /dev/null 2>&1 &
+          PROCESS_ID=$(echo $!)
+          echo "Selenium server started in process $PROCESS_ID"
+          function stopSeleniumServer()
+          {
+              echo "Shutting down selenium server in process $PROCESS_ID..."
+              kill $PROCESS_ID
+              echo "Successfully shut down selenium server."
+          }
+          trap stopSeleniumServer EXIT
+          echo "Running tests..."
+          dotnet test
