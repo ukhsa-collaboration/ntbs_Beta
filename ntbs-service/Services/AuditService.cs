@@ -86,7 +86,7 @@ namespace ntbs_service.Services
         public async Task<IList<AuditLog>> GetWriteAuditsForNotification(int notificationId)
         {
             return await _auditContext.AuditLogs
-                .Where(log => log.EventType != READ_EVENT)
+                .Where(log => log.EventType != READ_EVENT && log.EventType != PRINT_EVENT)
                 .Where(log => log.RootEntity == RootEntities.Notification)
                 .Where(log => log.RootId == notificationId.ToString())
                 .ToListAsync();
