@@ -13,7 +13,12 @@
     </back-link-retaining-history>
 </nhs-width-container>
 
-<partial name="_CaseManagerDetailsPartial" model="@Model.ContactDetails"/>
+<partial name="_ContactDetailsPartial" model="@Model.ContactDetails"/>
+
+@if (Model.ContactDetails.CaseManagerTbServices.Any())
+{
+    <partial name ="_TbServiceMembershipDetailsPartial" model="Model.ContactDetails.CaseManagerTbServices" />
+}
 
 @if (Model.RegionalMemberships.Any())
 {

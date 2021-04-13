@@ -1,0 +1,32 @@
+﻿@model List<ntbs_service.Models.Entities.CaseManagerTbService>
+
+<nhs-width-container container-width="Standard">
+    <div class="case-manager-details-edit-container">
+        <h3 class="nhsuk-heading-m"> TB service membership </h3>
+    </div>
+    <div class="case-manager-details-container">
+        <nhs-table id="regions-and-services" classes="nhsuk-table--reduced-font">
+            <nhs-table-head>
+                <nhs-table-item>
+                    Region
+                </nhs-table-item>
+                <nhs-table-item>
+                    Service
+                </nhs-table-item>
+            </nhs-table-head>
+            <nhs-table-body>
+                @foreach (var result in Model)
+                {
+                    <nhs-table-body-row id="tb-service-@result.TbService.Code">
+                        <nhs-table-item>
+                            @result.TbService.PHEC.Name
+                        </nhs-table-item>
+                        <nhs-table-item>
+                            @result.TbService.Name
+                        </nhs-table-item>
+                    </nhs-table-body-row>
+                }
+            </nhs-table-body>
+        </nhs-table>
+    </div>
+</nhs-width-container>
