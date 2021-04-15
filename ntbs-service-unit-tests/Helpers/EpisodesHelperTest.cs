@@ -94,6 +94,78 @@ namespace ntbs_service_unit_tests.Helpers
         }
 
         [Fact]
+        public void GroupEpisodesIntoPeriods_GroupsTransfers()
+        {
+            // Arrange
+            List<TreatmentEvent> testTransferEvents = new List<TreatmentEvent>
+            {
+                // Episode 1
+                new TreatmentEvent
+                {
+                    EventDate = new DateTime(2010, 1, 1), TreatmentEventType = TreatmentEventType.TreatmentStart
+                },
+                new TreatmentEvent
+                {
+                    EventDate = new DateTime(2011, 1, 1),
+                    TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                    TreatmentOutcome = new TreatmentOutcome {TreatmentOutcomeType = TreatmentOutcomeType.TreatmentStopped}
+                },
+                // Transfer
+                new TreatmentEvent
+                {
+                    EventDate = new DateTime(2012, 1, 1), TreatmentEventType = TreatmentEventType.TransferOut
+                },
+                // Episode 2
+                new TreatmentEvent
+                {
+                    EventDate = new DateTime(2013, 1, 1), TreatmentEventType = TreatmentEventType.TransferIn
+                },
+                new TreatmentEvent
+                {
+                    EventDate = new DateTime(2014, 1, 1), TreatmentEventType = TreatmentEventType.TreatmentRestart
+                },
+                new TreatmentEvent
+                {
+                    EventDate = new DateTime(2015, 1, 1),
+                    TreatmentEventType = TreatmentEventType.TransferOut
+                },
+                // Episode 3
+                new TreatmentEvent
+                {
+                    EventDate = new DateTime(2016, 1, 1),
+                    TreatmentEventType = TreatmentEventType.TransferIn
+                },
+                new TreatmentEvent
+                {
+                    EventDate = new DateTime(2017, 1, 1),
+                    TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                    TreatmentOutcome = new TreatmentOutcome {TreatmentOutcomeType = TreatmentOutcomeType.Completed}
+                },
+            };
+
+            // Act
+            var periods = testTransferEvents.GroupEpisodesIntoPeriods();
+
+            // Assert
+            Assert.Equal(4, periods.Count);
+            var expectedPeriod0 = TreatmentPeriod.CreateTreatmentPeriod(1, testTransferEvents[0]);
+            expectedPeriod0.TreatmentEvents.Add(testTransferEvents[1]);
+
+            var expectedPeriod1 = TreatmentPeriod.CreateTransferPeriod(testTransferEvents[2]);
+
+            var expectedPeriod2 = TreatmentPeriod.CreateTreatmentPeriod(2, testTransferEvents[3]);
+            expectedPeriod2.TreatmentEvents.AddRange(new[] { testTransferEvents[4], testTransferEvents[5] });
+
+            var expectedPeriod3 = TreatmentPeriod.CreateTreatmentPeriod(3, testTransferEvents[6]);
+            expectedPeriod3.TreatmentEvents.Add(testTransferEvents[7]);
+
+            AssertTreatmentPeriodMatchesExpected(expectedPeriod0, periods[0]);
+            AssertTreatmentPeriodMatchesExpected(expectedPeriod1, periods[1]);
+            AssertTreatmentPeriodMatchesExpected(expectedPeriod2, periods[2]);
+            AssertTreatmentPeriodMatchesExpected(expectedPeriod3, periods[3]);
+        }
+
+        [Fact]
         public void GetMostRecentTreatmentEvent_ReturnsLastTreatmentEvent()
         {
             // Act
@@ -147,9 +219,7 @@ namespace ntbs_service_unit_tests.Helpers
             // Assert
             Assert.Collection(periods,
                 period => Assert.Collection(period.TreatmentEvents,
-                    ev => Assert.Equal(TreatmentEventType.TreatmentStart, ev.TreatmentEventType)
-                ),
-                period => Assert.Collection(period.TreatmentEvents,
+                    ev => Assert.Equal(TreatmentEventType.TreatmentStart, ev.TreatmentEventType),
                     ev => Assert.Equal(TreatmentEventType.TransferOut, ev.TreatmentEventType)
                 ),
                 period => Assert.Collection(period.TreatmentEvents,
