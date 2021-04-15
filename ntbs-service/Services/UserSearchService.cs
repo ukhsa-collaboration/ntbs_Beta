@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
-using Microsoft.EntityFrameworkCore;
-using MoreLinq;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -35,15 +33,18 @@ namespace ntbs_service.Services
             var searchKeywords = searchKeyword.Split(" ")
                 .Where(x => !x.IsNullOrEmpty())
                 .Select(s => s.ToLower()).ToList();
-            
-            var filteredPhecs = (await _referenceDataRepository.GetAllPhecs())
+
+            var allPhecs = await _referenceDataRepository.GetAllPhecs();
+            var filteredPhecs = allPhecs
                 .Where(phec => searchKeywords.Any(s => phec.Name.ToLower().Contains(s)));
 
-            var allUsers = await _userRepository.GetOrderedUsers();
+            var caseManagersAndRegionalUsers = (await _userRepository.GetOrderedUsers())
+                .Where(u => u.IsCaseManager
+                            || (u.AdGroups != null && allPhecs.Any(phec => u.AdGroups.Split(",").Contains(phec.AdGroup))));
 
             // This query is too complex to translate to sql, so we explicitly work on an in-memory list.
             // The size of the directory should make this ok.
-            var filteredCaseManagersAndRegionalUsers = allUsers.Where(c =>
+            var filteredCaseManagersAndRegionalUsers = caseManagersAndRegionalUsers.Where(c =>
                     searchKeywords.Any(s => c.FamilyName != null && c.FamilyName.ToLower().Contains(s))
                     || searchKeywords.Any(s => c.GivenName != null && c.GivenName.ToLower().Contains(s))
                     || searchKeywords.Any(s => c.DisplayName != null && c.DisplayName.ToLower().Contains(s))

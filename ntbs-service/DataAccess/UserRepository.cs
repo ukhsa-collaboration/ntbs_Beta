@@ -66,9 +66,6 @@ namespace ntbs_service.DataAccess
         public async Task<IList<User>> GetOrderedUsers()
         {
             return await GetUserQueryable()
-                .Include(u => u.CaseManagerTbServices)
-                .ThenInclude(c => c.TbService)
-                .ThenInclude(s => s.PHEC)
                 .OrderBy(u => u.DisplayName)
                 .ToListAsync();
         }

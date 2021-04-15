@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
-using Microsoft.Identity.Client;
 using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
@@ -242,6 +240,22 @@ namespace ntbs_service_unit_tests.Services
             // Assert
             Assert.Equal(1, results.count);
             Assert.Equal(expectedResults, results.users);
+        }
+
+        [Fact]
+        public async Task OrderAndPaginateQueryableAsync_DoesNotFindNonCaseManagerOrRegionalUsers()
+        {
+            // Arrange
+            const string searchString = "Frank";
+
+            _mockReferenceDataRepository.Setup(r => r.GetAllPhecs()).ReturnsAsync(new List<PHEC>());
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(new List<User> {new User {DisplayName = "Frank Ma"}});
+
+            // Act
+            var results = await _service.OrderAndPaginateQueryableAsync(searchString, DefaultPaginationParameters);
+
+            // Assert
+            Assert.Empty(results.users);
         }
 
         [Fact]
