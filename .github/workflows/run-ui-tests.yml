@@ -17,16 +17,15 @@ jobs:
       run:
         working-directory: ntbs-ui-tests
     steps:
-      - name: Set environment
-        id: set_environment
-        env:
-          DEFAULT_ENVIRONMENT: int
-        run: |
-          echo '::set-output name=ENVIRONMENT_UNDER_TEST::${{ github.event.inputs.env || env.DEFAULT_ENVIRONMENT }}'
       - name: Checkout
         uses: actions/checkout@v2
         with:
           submodules: true
+      - name: Set environment
+        id: set_environment
+        env:
+          DEFAULT_ENVIRONMENT: int
+        run: echo "::set-output name=ENVIRONMENT_UNDER_TEST::${{ github.event.inputs.env || env.DEFAULT_ENVIRONMENT }}"
       - name: Install Selenium
         run: sudo npm install -g selenium-standalone
       - name: Run UI tests
