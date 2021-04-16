@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   dnsNames:
-    - ntbs-int.61b431d7ea3041e89733.uksouth.aksapp.io
+    - ntbs-int.e32846b1ddf0432eb63f.northeurope.aksapp.io
   secretName: phe-ntbs-int-tls
   issuerRef:
     name: int-cluster-issuer

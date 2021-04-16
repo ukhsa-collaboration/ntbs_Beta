@@ -99,7 +99,7 @@ Ensure you have `azure-cli` installed
 - `az login` to log into the azure subscription
 - use `az account set -s <Name or Id>` to set a default subscription if there are multiple
 - `az aks install-cli` to install `kubectl`
-- `az aks get-credentials -g NTBS_Development -n ntbs-envs` to add appropriate credentials to your `~/.kube/config` file
+- `az aks get-credentials -g NTBS_Development -n ntbs-envs2` to add appropriate credentials to your `~/.kube/config` file
 
 ## Images registry
 We're using ACR to store docker images. When logged in to Azure, run this command to see the username-password for registry user.
@@ -155,7 +155,7 @@ Live it should be left out.
   - e.g. https://aptemus.com/ntbs-int or https://phe.gov.uk/ntbs (for live)
 
 Authentication:
-- Redirect URIs: https://[homepage]/Index e.g. https://ntbs-int.61b431d7ea3041e89733.uksouth.aksapp.io//Index
+- Redirect URIs: https://[domain]/signin-oidc e.g. https://ntbs-int.e32846b1ddf0432eb63f.northeurope.aksapp.io/signin-oidc
 - Implicit Grant: Enable ID token
 - Supported account type: Accounts in this organisation directory only (Single Tenant)
 - Allow Public Flows: false
@@ -186,7 +186,7 @@ The Azure AD Application requires the following permissions:
   - `kubectl get deployment -o wide` - all envs
   - `kubectl get deployment ntbs-<env> -o wide` - specific <env>
 - logs: `kubectl logs deployment/ntbs-<env>` - specific <env>
-- dashboard - UI access to env health, logs, etc : `az aks browse --resource-group PHE-NTBS --name ntbs-envs`
+- dashboard - UI access to env health, logs, etc : `az aks browse --resource-group PHE-NTBS --name ntbs-envs2`
 - adding kubernetes secrets: `kubectl create secret generic <secret> --from-literal=<key>=<value>`
 - purging registry - every once in a while the images registry [should be purged](../scripts/purge-images.ps1) so it
  doesn't grow too big. It runs with `--dry-run` by default,
