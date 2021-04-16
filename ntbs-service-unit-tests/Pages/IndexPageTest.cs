@@ -96,9 +96,9 @@ namespace ntbs_service_unit_tests.Pages
         public async Task OnGetAsync_PopulatesHomepageKpisDetailsWithPhecCodes_WhenUserIsPheUser()
         {
             // Arrange
-            _mockUserService.Setup(s => s.GetUserType(It.IsAny<ClaimsPrincipal>())).Returns(UserType.PheUser);
+            _mockUserService.Setup(s => s.GetUserType(It.IsAny<ClaimsPrincipal>())).Returns(null);
             _mockUserService.Setup(s => s.GetPhecCodesAsync(It.IsAny<ClaimsPrincipal>()))
-                .Returns(Task.FromResult(new List<string> { mockHomepageKpiWithPhec.Code } as IEnumerable<string>));
+                .Returns(Task.FromResult(new List<string>() as IEnumerable<string>));
 
             var pageModel = new IndexModel(_mockNotificationRepository.Object,
                 _mockAlertRepository.Object,

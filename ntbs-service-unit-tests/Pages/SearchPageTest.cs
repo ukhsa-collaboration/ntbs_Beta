@@ -101,9 +101,9 @@ namespace ntbs_service_unit_tests.Pages
             // Assert
             var results = Assert.IsAssignableFrom<PaginatedList<NotificationBannerModel>>(pageModel.SearchResults);
             Assert.True(results.Count == 3);
-            Assert.Equal("Bob Ross", results[0].Name);
-            Assert.Equal("Jack Jill", results[1].Name);
-            Assert.Equal("Luke Arrow", results[2].Name);
+            Assert.Equal("Bob Ross's Paintings", results[0].Name);
+            Assert.Equal("Jack Jill And Bill", results[1].Name);
+            Assert.Equal("Luke Warm Arrow", results[2].Name);
         }
 
         public (IList<int> notificationIds, int count) GetNotificationIdsAndCount()
