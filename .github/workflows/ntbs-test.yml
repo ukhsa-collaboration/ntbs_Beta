@@ -1,0 +1,27 @@
+name: run tests
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      # Run all the tests
+      - name: Run unit tests
+        working-directory: ntbs-service-unit-tests
+        run: dotnet test
+      - name: Run unit tests (EF auditer)
+        working-directory: EFAuditer-tests
+        run: dotnet test
+      - name: Run integration tests
+        working-directory: ntbs-integration-tests
+        run: dotnet test
