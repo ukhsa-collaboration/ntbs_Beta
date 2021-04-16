@@ -3,12 +3,14 @@ Feature: Notification creation
     Notification deletion
 
     Background: Create new notification
+        Given I have logged in as ServiceUser
         Given I am on the Search page
         When I enter 1 into 'SearchParameters_IdFilter'
         And I click on the 'search-button' button
         Then I should be on the Search page
         When I click on the 'create-button' button
-        Then I should be on the PatientDetails page
+        Then A new notification should have been created
+        And I should be on the PatientDetails page
 
     Scenario: Create and submit notification without errors
         # PatientDetails page
@@ -30,10 +32,10 @@ Feature: Notification creation
         When I enter 1 into 'FormattedNotificationDate_Day'
         And I enter 1 into 'FormattedNotificationDate_Month'
         And I enter 2019 into 'FormattedNotificationDate_Year'
-        And I select Ashford Hospital for 'HospitalDetails_TBServiceCode'
+        And I select Birmingham & Solihull for 'HospitalDetails_TBServiceCode'
         # Wait until javascript has populated the hospital dropdown
         And I wait
-        And I select ASHFORD HOSPITAL for 'HospitalDetails_HospitalId'
+        And I select SELLY OAK HOSPITAL for 'HospitalDetails_HospitalId'
         And I click on the 'save-button' button
 
         # Clinical details page

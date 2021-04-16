@@ -1,0 +1,78 @@
+name: Run UI tests
+
+on:
+  schedule:
+    - cron:  '00 8 * * *'
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'One of `int` `test` or `uat`'
+        required: true
+        default: 'int'
+
+jobs:
+  run-ui-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ntbs-ui-tests
+    steps:
+      - name: Set environment
+        id: set_environment
+        env:
+          DEFAULT_ENVIRONMENT: int
+        run: |
+          echo '::set-output name=ENVIRONMENT_UNDER_TEST::${{ github.event.inputs.env || env.DEFAULT_ENVIRONMENT }}'
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Install Selenium
+        run: sudo npm install -g selenium-standalone
+      - name: Run UI tests
+        env:
+          EnvironmentUnderTest: ${{ steps.set_environment.outputs.ENVIRONMENT_UNDER_TEST }}
+          Users__ServiceUser__Password: ${{ secrets.UI_TESTS_SERVICE_USER_PASSWORD }}
+          Environments__int__ConnectionString: ${{ secrets.UI_TESTS_INT_CONNECTION_STRING }}
+          Environments__test__ConnectionString: ${{ secrets.UI_TESTS_TEST_CONNECTION_STRING }}
+          Environments__uat__ConnectionString: ${{ secrets.UI_TESTS_UAT_CONNECTION_STRING }}
+        run: |
+          sudo selenium-standalone install --drivers.chrome.version=89.0.4389.23
+          selenium-standalone start --drivers.chrome.version=89.0.4389.23 > /dev/null 2>&1 &
+          PROCESS_ID=$(echo $!)
+          echo "Selenium server started in process $PROCESS_ID"
+          function stopSeleniumServer()
+          {
+              echo "Shutting down selenium server in process $PROCESS_ID..."
+              kill $PROCESS_ID
+              echo "Successfully shut down selenium server."
+          }
+          trap stopSeleniumServer EXIT
+          echo "Running tests..."
+          dotnet test
+
+      # Notify slack
+      - name: Notify success
+        if: ${{ success() }}
+        uses: rtCamp/action-slack-notify@v2.1.0
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: '#dev-ci'
+          SLACK_USERNAME: github actions
+          SLACK_COLOR: '#23b828' #green
+          SLACK_MESSAGE: The UI tests have passed
+          SLACK_TITLE: ':green_heart: :computer: Build succeeded'
+          SLACK_ICON_EMOJI: ':octopus:'
+          SLACK_FOOTER: ''
+      - name: Notify failure
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@v2.1.0
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: '#dev-ci'
+          SLACK_USERNAME: github actions
+          SLACK_COLOR: '#d12121' #red
+          SLACK_MESSAGE: '@here The UI tests have failed'
+          SLACK_TITLE: ':red_circle: :computer: Build failed'
+          SLACK_ICON_EMOJI: ':octopus:'
+          SLACK_FOOTER: ''
