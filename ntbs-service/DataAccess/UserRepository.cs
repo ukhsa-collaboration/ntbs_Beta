@@ -13,6 +13,7 @@ namespace ntbs_service.DataAccess
         Task AddUserLoginEvent(UserLoginEvent userLoginEvent);
         Task<User> GetUserByUsername(string username);
         IQueryable<User> GetUserQueryable();
+        Task<IList<User>> GetOrderedUsers();
         Task UpdateUserContactDetails(User user);
         Task<Dictionary<string, string>> GetUsernameDictionary();
     }
@@ -60,6 +61,13 @@ namespace ntbs_service.DataAccess
             var user = await GetUserQueryable()
                 .FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
             return user;
+        }
+
+        public async Task<IList<User>> GetOrderedUsers()
+        {
+            return await GetUserQueryable()
+                .OrderBy(u => u.DisplayName)
+                .ToListAsync();
         }
 
         /// <summary>

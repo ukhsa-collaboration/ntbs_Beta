@@ -19,6 +19,8 @@ spec:
         ports:
         - containerPort: 8080
         env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: "Staging"
           - name: ConnectionStrings__ntbsContext
             valueFrom:
               secretKeyRef:
@@ -113,6 +115,7 @@ metadata:
   name: ntbs-uat
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 16k
 spec:
   tls:
     - hosts:

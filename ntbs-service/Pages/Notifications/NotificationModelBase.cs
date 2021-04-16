@@ -31,6 +31,7 @@ namespace ntbs_service.Pages.Notifications
             NotificationRepository = notificationRepository;
         }
         public int NumberOfLinkedNotifications { get; set; }
+        public int? LatestLinkedNotificationId { get; private set; }
 
         public Notification Notification { get; set; }
         public NotificationBannerModel NotificationBannerModel { get; set; }
@@ -74,6 +75,7 @@ namespace ntbs_service.Pages.Notifications
                     Notification.Group = notificationGroup;
                 }
                 NumberOfLinkedNotifications = Notification.Group?.Notifications.Count - 1 ?? 0;
+                LatestLinkedNotificationId = Notification.Group?.Notifications.LastOrDefault()?.NotificationId;
             }
         }
 

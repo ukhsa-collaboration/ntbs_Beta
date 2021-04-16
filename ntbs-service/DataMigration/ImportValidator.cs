@@ -177,7 +177,8 @@ namespace ntbs_service.DataMigration
                 return validationsResults;
             }
 
-            var message = $"Case manager {details.CaseManagerUsername} is not present in NTBS database";
+            // As we have imported the case manager in a previous step we don't expect to see this message
+            var message = "Case manager assigned to notification is not present in NTBS database";
             validationsResults.Add(new ValidationResult(message, new[] { nameof(details.CaseManagerUsername) }));
 
             return validationsResults;

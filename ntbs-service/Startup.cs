@@ -196,6 +196,7 @@ namespace ntbs_service
             services.AddScoped<IDataQualityRepository, DataQualityRepository>();
             services.AddScoped<IDrugResistanceProfileRepository, DrugResistanceProfileRepository>();
             services.AddScoped<IFaqRepository, FaqRepository>();
+            services.AddScoped<IVersionService, VersionService>();
 
             // Services
             services.AddScoped<INotificationService, NotificationService>();
@@ -214,7 +215,7 @@ namespace ntbs_service
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceFactory>();
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
             services.AddScoped<INotificationCloningService, NotificationCloningService>();
-            services.AddScoped<ICaseManagerSearchService, CaseManagerSearchService>();
+            services.AddScoped<IUserSearchService, UserSearchService>();
             services.AddScoped<IClusterImportService, ClusterImportService>();
             services.AddScoped<ICaseManagerImportService, CaseManagerImportService>();
             services.AddScoped<IAdUserService, AdUserService>();

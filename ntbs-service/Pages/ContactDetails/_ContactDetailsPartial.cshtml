@@ -41,34 +41,4 @@
           </nhs-summary-list-row>
         </nhs-summary-list>
     </div>
-    
-    <br/>
-    <div class="case-manager-details-edit-container">
-        <h3 class="nhsuk-heading-m"> Assigned Services </h3>
-    </div>
-    <div class="case-manager-details-container">
-        <nhs-table id="regions-and-services" caption="Assigned Services" classes="nhsuk-table--reduced-font">
-                <nhs-table-head>
-                    <nhs-table-item>
-                        Region
-                    </nhs-table-item>
-                    <nhs-table-item>
-                        Service
-                    </nhs-table-item>
-                </nhs-table-head>
-                <nhs-table-body>
-                    @foreach (var result in Model.CaseManagerTbServices)
-                    {
-                        <nhs-table-body-row id="tb-service-@result.TbService.Code">
-                            <nhs-table-item>
-                                @result.TbService.PHEC.Name
-                            </nhs-table-item>
-                            <nhs-table-item>
-                                @result.TbService.Name
-                            </nhs-table-item>
-                        </nhs-table-body-row>
-                    }
-                </nhs-table-body>
-            </nhs-table>
-    </div>
 </nhs-width-container>
