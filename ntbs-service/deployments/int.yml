@@ -64,8 +64,6 @@ spec:
             value: "Global.NIS.NTBS.NTS"
           - name: AdOptions__ServiceGroupAdPrefix
             value: "Global.NIS.NTBS.Service"
-          - name: AdfsOptions__Wtrealm
-            value: "https://ntbs-int.61b431d7ea3041e89733.uksouth.aksapp.io/"
           - name: AzureAdOptions__ClientId
             valueFrom:
               secretKeyRef:
@@ -83,11 +81,6 @@ spec:
                 key: authority
           - name: AzureAdOptions__Enabled
             value: "true"
-          - name: LdapSettings__Password
-            valueFrom:
-              secretKeyRef:
-                name: development-ad-sync-credentials
-                key: password
           - name: ExternalLinks__ReportingUri
             value: ""
           - name: MigrationConfig__TablePrefix
@@ -119,10 +112,10 @@ metadata:
 spec:
   tls:
     - hosts:
-      - ntbs-int.61b431d7ea3041e89733.uksouth.aksapp.io
+      - ntbs-int.e32846b1ddf0432eb63f.northeurope.aksapp.io
       secretName: phe-ntbs-int-tls
   rules:
-  - host: ntbs-int.61b431d7ea3041e89733.uksouth.aksapp.io
+  - host: ntbs-int.e32846b1ddf0432eb63f.northeurope.aksapp.io
     http:
       paths:
       - backend:
