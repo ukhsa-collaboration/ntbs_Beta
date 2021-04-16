@@ -12,18 +12,18 @@
         </nhs-table-item>
     </nhs-table-head>
     <nhs-table-body>
-        @foreach (var regionalMember in Model.Users)
+        @foreach (var user in Model.Users)
         {
             <nhs-table-body-row>
                 <nhs-table-item>
-                    @regionalMember.DisplayName
+                    @user.DisplayName
                 </nhs-table-item>
                 <nhs-table-item>
-                    @regionalMember.JobTitle
+                    @user.JobTitle
                 </nhs-table-item>
                 <nhs-table-item>
                     <a class="link-without-visited-state"
-                       href=@($"/ContactDetails/{regionalMember.Username}")>View</a>
+                       href=@($"/ContactDetails/{user.Username}")>View</a>
                 </nhs-table-item>
             </nhs-table-body-row>
         }
