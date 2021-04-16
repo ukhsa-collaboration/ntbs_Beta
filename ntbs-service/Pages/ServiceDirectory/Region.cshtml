@@ -1,4 +1,5 @@
 ﻿@page "/ServiceDirectory/Region/{PhecCode}"
+@using ntbs_service.Pages.ServiceDirectory.Partials
 @model ntbs_service.Pages.ServiceDirectory.RegionModel
 
 @{
@@ -16,10 +17,27 @@
     <h2 class="nhsuk-heading-l">Service directory</h2>
 
     <div class="govuk-accordion tb-services-and-case-managers" data-module="govuk-accordion" id="accordion-region-@Model.PhecCode">
+        @if (Model.RegionalCaseManagers.Any())
+        {
+            var regionalTeamTableModel = new _UserTablePartialModel {Users = Model.RegionalCaseManagers, TableCaption = "", TableId = "regional-team"};
+            <div class="govuk-accordion__section">
+                <div class="govuk-accordion__section-header">
+                    <h3 class="govuk-accordion__section-heading">
+                        <span class="govuk-accordion__section-button" id="accordion-heading-regional-team">
+                            Regional Team
+                        </span>
+                    </h3>
+                </div>
+                <div id="accordion-content-regional-team" class="govuk-accordion__section-content">
+                    <partial name="Partials/_UserTablePartial" model="regionalTeamTableModel"/>
+                </div>
+            </div>
+        }
         @foreach (var tbServiceWithCaseManagers in Model.TbServicesWithCaseManagers)
         {
             var tbService = tbServiceWithCaseManagers.Key;
             var caseManagers = tbServiceWithCaseManagers.Value;
+            var caseManagerTableModel = new _UserTablePartialModel {Users = caseManagers, TableCaption = "Case Managers", TableId = $"case-managers-{tbService.Code}"};
             <div class="govuk-accordion__section">
                 <div class="govuk-accordion__section-header">
                     <h3 class="govuk-accordion__section-heading">
@@ -32,35 +50,7 @@
                     aria-labelledby="accordion-heading-@tbService.Code">
                     @if (caseManagers.Any())
                     {
-                        <nhs-table id="regions-and-services-@tbService.Code" caption="Assigned Services">
-                            <nhs-table-head>
-                                <nhs-table-item>
-                                    Full Name
-                                </nhs-table-item>
-                                <nhs-table-item>
-                                    Job Title
-                                </nhs-table-item>
-                                <nhs-table-item>
-                                </nhs-table-item>
-                            </nhs-table-head>
-                            <nhs-table-body>
-                                @foreach (var caseManager in caseManagers)
-                                {
-                                    <nhs-table-body-row>
-                                        <nhs-table-item>
-                                            @caseManager.DisplayName
-                                        </nhs-table-item>
-                                        <nhs-table-item>
-                                            @caseManager.JobTitle
-                                        </nhs-table-item>
-                                        <nhs-table-item>
-                                            <a class="link-without-visited-state" 
-                                               href=@($"/ContactDetails/{caseManager.Username}")>View</a>
-                                        </nhs-table-item>
-                                    </nhs-table-body-row>
-                                }
-                            </nhs-table-body>
-                        </nhs-table>
+                        <partial name="Partials/_UserTablePartial" model="caseManagerTableModel"/>
                     }
                 </div>
             </div>

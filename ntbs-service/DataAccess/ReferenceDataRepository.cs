@@ -53,6 +53,8 @@ namespace ntbs_service.DataAccess
         Task<IList<TreatmentOutcome>> GetTreatmentOutcomesForType(TreatmentOutcomeType type);
         Task<TreatmentOutcome> GetTreatmentOutcomeForTypeAndSubType(TreatmentOutcomeType type, TreatmentOutcomeSubType? subType);
         Task<string> GetLocationPhecCodeForPostcodeAsync(string postcode);
+        Task<IList<User>> GetUsersByPhecAdGroup(string phecAdGroup);
+        Task<IList<PHEC>> GetPhecsByAdGroups(string adGroups);
     }
 
     public class ReferenceDataRepository : IReferenceDataRepository
@@ -353,6 +355,17 @@ namespace ntbs_service.DataAccess
         {
             return await _context.CaseManagerTbService.Where(cmtb => cmtb.CaseManager.Username == username)
                 .ToListAsync();
+        }
+
+        public async Task<IList<User>> GetUsersByPhecAdGroup(string phecAdGroup)
+        {
+            return await _context.User.Where(u => u.AdGroups.Contains(phecAdGroup)).ToListAsync();
+        }
+
+        public async Task<IList<PHEC>> GetPhecsByAdGroups(string adGroupsString)
+        {
+            var adGroups = adGroupsString.Split(",");
+            return await _context.PHEC.Where(phec => adGroups.Contains(phec.AdGroup)).ToListAsync();
         }
     }
 }

@@ -8,6 +8,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.ContactDetails
@@ -24,6 +25,8 @@ namespace ntbs_service.Pages.ContactDetails
         }
 
         public User ContactDetails { get; set; }
+        
+        public IList<PHEC> RegionalMemberships { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public string Username { get; set; }
@@ -38,6 +41,8 @@ namespace ntbs_service.Pages.ContactDetails
             {
                 return NotFound();
             }
+
+            RegionalMemberships = await this._referenceDataRepository.GetPhecsByAdGroups(ContactDetails.AdGroups);
 
             ViewData["IsEditable"] = Username == null || Username == User.Username();
 

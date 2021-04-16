@@ -39,26 +39,26 @@
 
     <div class="case-manager-results-summary">
         @{
-            var resultCount = Model.CaseManagersSearchResults?.NumberOfResults ?? 0;
+            var resultCount = Model.UserSearchResults?.NumberOfResults ?? 0;
             var resultsText = resultCount == 1 ? "result" : "results";
             var resultsFoundString = $"{resultCount.ToString()} {resultsText} found";
         }
         <p> @resultsFoundString </p>
     </div>
     
-    @if (Model.CaseManagersSearchResults != null)
+    @if (Model.UserSearchResults != null)
     {
         <ol class="search-results-list" id="search-results">
-            @foreach (var caseManager in @Model.CaseManagersSearchResults)
+            @foreach (var user in @Model.UserSearchResults)
             {
                 <li>
                     <!-- Each search hit is displayed using a notification banner -->
                     <div class="case-manager-search-result-container" id="search-result-item">
-                        <a class="case-manager-search-result-name" href=@($"/ContactDetails/{caseManager.Username}")>
-                             @caseManager.DisplayName
+                        <a class="case-manager-search-result-name" href=@($"/ContactDetails/{user.Username}")>
+                             @user.DisplayName
                         </a>
                         <nhs-summary-list classes="case-manager-search-result-item-summary" is-without-border="true">
-                            @foreach (var tbService in caseManager.CaseManagerTbServices.Select(x => x.TbService))
+                            @foreach (var tbService in user.CaseManagerTbServices.Select(x => x.TbService))
                             {
                                 <nhs-summary-list-row>
                                     <nhs-summary-list-row-key>Service:</nhs-summary-list-row-key>
@@ -77,9 +77,23 @@
                                     </nhs-summary-list-row-value>
                                 </nhs-summary-list-row>
                             }
+                            @foreach (var region in Model.AllPhecs.Where(p => user.AdGroups != null && user.AdGroups.Split(",").Contains(p.AdGroup)))
+                            {
+                                <nhs-summary-list-row>
+                                    <nhs-summary-list-row-key>Region:</nhs-summary-list-row-key>
+                                    <nhs-summary-list-row-value>
+                                        <span>
+                                            <a class="link-without-visited-state"
+                                               href=@($"/ServiceDirectory/Region/{region.Code}")>
+                                                @region.Name
+                                            </a>
+                                        </span>
+                                    </nhs-summary-list-row-value>
+                                </nhs-summary-list-row>
+                            }
                             <nhs-summary-list-row>
                                 <nhs-summary-list-row-key>Job Title:</nhs-summary-list-row-key>
-                                <nhs-summary-list-row-value>@caseManager.JobTitle</nhs-summary-list-row-value>
+                                <nhs-summary-list-row-value>@user.JobTitle</nhs-summary-list-row-value>
                             </nhs-summary-list-row>
                         </nhs-summary-list>
                     </div>
@@ -90,9 +104,9 @@
     
         <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
             <ul class="nhsuk-list nhsuk-pagination__list">
-                <nhs-pagination next-link-text="@Model.CaseManagersSearchResults.NextPageText" 
+                <nhs-pagination next-link-text="@Model.UserSearchResults.NextPageText" 
                                 next-url="@Model.NextPageUrl"
-                                previous-link-text="@Model.CaseManagersSearchResults.PreviousPageText" 
+                                previous-link-text="@Model.UserSearchResults.PreviousPageText" 
                                 previous-url="@Model.PreviousPageUrl">
                 </nhs-pagination>
             </ul>

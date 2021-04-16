@@ -4,8 +4,10 @@ using Castle.Core.Internal;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Pages.Search;
 using ntbs_service.Services;
 
@@ -14,15 +16,18 @@ namespace ntbs_service.Pages.ServiceDirectory
     // ReSharper disable once ClassNeverInstantiated.Global
     public class SearchResults : ServiceDirectorySearchBase
     {
-        private readonly ICaseManagerSearchService _caseManagerSearchService;
+        private readonly IUserSearchService _userSearchService;
+        private IReferenceDataRepository _referenceDataRepository;
         private PaginationParametersBase _paginationParameters;
-        public PaginatedList<User> CaseManagersSearchResults;
+        public PaginatedList<User> UserSearchResults;
+        public IList<PHEC> AllPhecs;
         public string NextPageUrl;
         public string PreviousPageUrl;
 
-        public SearchResults(ICaseManagerSearchService caseManagerSearchService)
+        public SearchResults(IUserSearchService userSearchService, IReferenceDataRepository referenceDataRepository)
         {
-            _caseManagerSearchService = caseManagerSearchService;
+            _userSearchService = userSearchService;
+            _referenceDataRepository = referenceDataRepository;
         }
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex = null, int? offset = null)
@@ -39,23 +44,25 @@ namespace ntbs_service.Pages.ServiceDirectory
                 Offset = offset ?? 0
             };
 
-            var (caseManagersToDisplay, count) =
-                await _caseManagerSearchService.OrderAndPaginateQueryableAsync(SearchKeyword, _paginationParameters);
+            var (usersToDisplay, count) =
+                await _userSearchService.OrderAndPaginateQueryableAsync(SearchKeyword, _paginationParameters);
 
-            CaseManagersSearchResults = new PaginatedList<User>(caseManagersToDisplay, count, _paginationParameters);
+            UserSearchResults = new PaginatedList<User>(usersToDisplay, count, _paginationParameters);
 
-            if (CaseManagersSearchResults.HasNextPage)
+            AllPhecs = await _referenceDataRepository.GetAllPhecs();
+
+            if (UserSearchResults.HasNextPage)
             {
                 NextPageUrl = QueryHelpers.AddQueryString("/ServiceDirectory/SearchResults",
                     new Dictionary<string, string>
                     {
                         {"SearchKeyword", SearchKeyword},
                         {"pageIndex", (_paginationParameters.PageIndex + 1).ToString()},
-                        {"offset", (_paginationParameters.Offset + caseManagersToDisplay.Count).ToString()}
+                        {"offset", (_paginationParameters.Offset + usersToDisplay.Count).ToString()}
                     });
             }
 
-            if (CaseManagersSearchResults.HasPreviousPage)
+            if (UserSearchResults.HasPreviousPage)
             {
                 PreviousPageUrl = QueryHelpers.AddQueryString("/ServiceDirectory/SearchResults",
                     new Dictionary<string, string>
