@@ -1,8 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using ntbs_service;
+using Microsoft.EntityFrameworkCore;
+using ntbs_service.DataAccess;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Validations;
 using ntbs_ui_tests.Helpers;
 using ntbs_ui_tests.Hooks;
@@ -10,61 +11,49 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using TechTalk.SpecFlow;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace ntbs_ui_tests.StepDefinitions
 {
-    public class StepsData
-    {
-        public int NotificationId;
-    }
-
     [Binding]
     public class Steps
     {
         private readonly IWebDriver Browser;
-        private readonly SeleniumServerFactory<Startup> Server;
-        private readonly ITestOutputHelper output;
-        private readonly TestSettings Settings;
+        private readonly TestConfig Settings;
+        private readonly TestContext TestContext;
 
-        private readonly StepsData stepsData = new StepsData();
-
-        public Steps(IWebDriver driver, SeleniumServerFactory<Startup> server, ITestOutputHelper output, TestSettings settings)
+        public Steps(IWebDriver driver, TestConfig settings, TestContext testContext)
         {
             Browser = driver;
-            Server = server;
-            this.output = output;
             Settings = settings;
+            TestContext = testContext;
         }
 
-        [Given(@"I am on current notification overview page")]
-        public void GivenIAmOnNotificationOverviewPage()
+        [Given(@"I have logged in as (.*)")]
+        public void GivenIHaveLoggedIn(string userId)
         {
-            Browser.Navigate().GoToUrl($"{Server.RootUri}/Notifications/{stepsData.NotificationId}");
+            var user = Settings.Users[userId];
+            Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}");
+            Browser.FindElement(By.CssSelector("input[type=email]")).SendKeys(user.Username);
+            Browser.FindElement(By.CssSelector("input[type=submit][value=Next]")).Click();
+            Browser.FindElement(By.CssSelector("input[type=password]")).SendKeys(user.Password);
+            Browser.FindElement(By.CssSelector("input[type=submit][value='Sign in']")).Click();
+            Browser.FindElement(By.CssSelector("input[type=submit][value=Yes]"));
+            TestContext.LoggedInUser = user;
         }
 
         [Given(@"I am on the (.*) page")]
         public void GivenIAmOnPage(string pageName)
         {
-            Browser.Navigate().GoToUrl($"{Server.RootUri}/{pageName}");
+            Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}/{pageName}");
         }
 
         [Given(@"I am on seeded '(.*)' notification overview page")]
-        public void GivenIAmOnANotificationPage(string notificationIdName)
+        public void GivenIAmOnANotificationPage(string notificationName)
         {
-            int notificationId;
-            switch (notificationIdName)
-            {
-                case "TO_BE_DENOTIFIED":
-                    notificationId = Utilities.TO_BE_DENOTIFIED_ID;
-                    break;
-                case "M_BOVIS":
-                    notificationId = Utilities.M_BOVIS_NOTIFICATION;
-                    break;
-                default:
-                    throw new ArgumentException($"Unexpected notification name {notificationIdName} given");
-            }
-            Browser.Navigate().GoToUrl($"{Server.RootUri}/Notifications/{notificationId}");
+            var notification = Utilities.GetNotificationForUser(notificationName, TestContext.LoggedInUser);
+            SaveNotificationInDatabase(notification);
+
+            Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}/Notifications/{notification.NotificationId}");
 
             if (!Settings.IsHeadless)
             {
@@ -135,9 +124,7 @@ namespace ntbs_ui_tests.StepDefinitions
         {
             var urlRegex = new Regex(@".*/Notifications/(\d+)/?(#.+)?$");
             var match = urlRegex.Match(Browser.Url);
-            var idString = match.Groups[1].Value;
             Assert.True(match.Success, $"Url I am on instead: {Browser.Url}");
-            stepsData.NotificationId = int.Parse(idString);
         }
 
         [Then(@"I can see the starting event '(.*)` dated `(.*)'")]
@@ -153,7 +140,17 @@ namespace ntbs_ui_tests.StepDefinitions
         [Then(@"I should be on the Homepage")]
         public void ThenIShouldBeOnTheHomepage()
         {
-            Assert.Equal($"{Server.RootUri}/", Browser.Url);
+            Assert.Equal($"{Settings.EnvironmentConfig.RootUri}/", Browser.Url);
+        }
+
+        [Then("A new notification should have been created")]
+        public void ThenNotificationCreated()
+        {
+            var urlRegex = new Regex(@".*/Notifications/(\d+)/.*$");
+            var match = urlRegex.Match(Browser.Url);
+            var idString = match.Groups[1].Value;
+            Assert.True(match.Success, $"Url I am on instead: {Browser.Url}");
+            TestContext.AddedNotificationIds.Add(int.Parse(idString));
         }
 
         [Then(@"I should be on the (.*) page")]
@@ -191,6 +188,18 @@ namespace ntbs_ui_tests.StepDefinitions
         {
             var notificationHeading = Browser.FindElement(By.TagName("h1")).Text;
             Assert.Contains("Denotified", notificationHeading);
+        }
+
+        private void SaveNotificationInDatabase(Notification notification)
+        {
+            var options = new DbContextOptionsBuilder<NtbsContext>();
+            options.UseSqlServer(Settings.EnvironmentConfig.ConnectionString);
+            using (var context = new NtbsContext(options.Options))
+            {
+                context.Add(notification);
+                context.SaveChanges();
+            }
+            TestContext.AddedNotificationIds.Add(notification.NotificationId);
         }
     }
 }

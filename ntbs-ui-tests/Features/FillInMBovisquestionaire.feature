@@ -1,5 +1,8 @@
 Feature: M. bovis
 
+  Background: Create new notification
+    Given I have logged in as ServiceUser
+
   Scenario: Fill in M. bovis exposure to known cases page
     Given I am on seeded 'M_BOVIS' notification overview page
     When I go to edit the 'overview-mbovis-exposure-details' section
