@@ -364,6 +364,10 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<PHEC>> GetPhecsByAdGroups(string adGroupsString)
         {
+            if (adGroupsString == null)
+            {
+                return new List<PHEC>();
+            }
             var adGroups = adGroupsString.Split(",");
             return await _context.PHEC.Where(phec => adGroups.Contains(phec.AdGroup)).ToListAsync();
         }
