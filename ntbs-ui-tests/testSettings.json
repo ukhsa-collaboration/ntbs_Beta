@@ -11,13 +11,13 @@
       "ConnectionString": "data source=localhost\\MSSQLSERVER01;initial catalog=ntbsDev;trusted_connection=true;MultipleActiveResultSets=true;"
     },
     "int": {
-      "RootUri": "https://ntbs-int.61b431d7ea3041e89733.uksouth.aksapp.io"
+      "RootUri": "https://ntbs-int.e32846b1ddf0432eb63f.northeurope.aksapp.io"
     },
     "test": {
-      "RootUri": "https://ntbs-test.61b431d7ea3041e89733.uksouth.aksapp.io"
+      "RootUri": "https://ntbs-test.e32846b1ddf0432eb63f.northeurope.aksapp.io"
     },
     "uat": {
-      "RootUri": "https://ntbs-uat.61b431d7ea3041e89733.uksouth.aksapp.io"
+      "RootUri": "https://ntbs-uat.e32846b1ddf0432eb63f.northeurope.aksapp.io"
     }
   },
   "EnvironmentUnderTest": "local"
