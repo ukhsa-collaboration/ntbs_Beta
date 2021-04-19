@@ -8,22 +8,22 @@
 
 <nhs-width-container container-width="Standard">
     <h1 class="nhsuk-heading-xl">Service directory</h1>
-    <p>Search for a service or case manager</p>
+    <p>Search for a region, service or user</p>
 
     <form method="get" autocomplete="off">
         @{
             var hasSearchKeywordError = !Model.IsValid("SearchKeyword");
             var searchKeywordGroupState = hasSearchKeywordError ? Error : Standard;
         }
-        <nhs-form-group classes="case-manager-search-keyword" nhs-form-group-type=@searchKeywordGroupState id="search-keyword">
+        <nhs-form-group classes="service-directory-search-keyword" nhs-form-group-type=@searchKeywordGroupState id="search-keyword">
             <span ref="errorField" nhs-span-type="ErrorMessage" id="search-keyword-error"
                   asp-validation-for="SearchKeyword" has-error="@hasSearchKeywordError">
             </span>
-            <label class="nhsuk-u-visually-hidden" for="search-field">Search for a service or case manager</label>
+            <label class="nhsuk-u-visually-hidden" for="search-field">Search for a region, service or user</label>
             <input is-error-input=@hasSearchKeywordError id="search-field"
                    nhs-input-type="Standard" asp-for="SearchKeyword" fixed-width="Twenty">
 
-            <button class="case-manager-search-button" type="submit">
+            <button class="service-directory-search-button" type="submit">
                 <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                     <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
                 </svg>
