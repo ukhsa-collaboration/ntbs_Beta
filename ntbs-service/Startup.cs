@@ -119,7 +119,11 @@ namespace ntbs_service
 
             var baseUserGroupRole = adOptions.BaseUserGroup;
 
-            if (basicAuthEnabled)
+            if (adOptions.UseDummyAuth)
+            {
+                UseDummyAuth(services);
+            }
+            else if (basicAuthEnabled)
             {
                 UseHttpBasicAuth(services, httpBasicAuthConfig, adOptions);
             }
@@ -253,9 +257,14 @@ namespace ntbs_service
             }
         }
 
+        private static void UseDummyAuth(IServiceCollection services)
+        {
+            var authSetup = services.AddAuthentication(DummyAuthHandler.Name);
+            authSetup.AddScheme<AuthenticationSchemeOptions, DummyAuthHandler>(DummyAuthHandler.Name, o => { });
+        }
+
         private static void UseAdfsAuthentication(IServiceCollection services, AdOptions adOptions, AdfsOptions adfsOptions)
         {
-            var setupDummyAuth = adOptions.UseDummyAuth;
             var authSetup = services
                 .AddAuthentication(sharedOptions =>
                 {
@@ -299,21 +308,14 @@ namespace ntbs_service
                 })
                 .AddCookie(options =>
                 {
-                    options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
+                    options.ForwardAuthenticate = null;
                     options.SlidingExpiration = false;
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(adOptions.MaxSessionCookieLifetimeInMinutes);
                 });
-
-
-            if (setupDummyAuth)
-            {
-                authSetup.AddScheme<AuthenticationSchemeOptions, DummyAuthHandler>(DummyAuthHandler.Name, o => { });
-            }
         }
 
-        private void UseAzureAdAuthentication(IServiceCollection services, AdOptions adOptions, AzureAdOptions azureAdOptions)
+        private static void UseAzureAdAuthentication(IServiceCollection services, AdOptions adOptions, AzureAdOptions azureAdOptions)
         {
-            var setupDummyAuth = adOptions.UseDummyAuth;
             var authSetup = services
                 .AddAuthentication(sharedOptions =>
                 {
@@ -323,7 +325,7 @@ namespace ntbs_service
                 })
                 .AddCookie(options =>
                 {
-                    options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
+                    options.ForwardAuthenticate = null;
                     options.SlidingExpiration = false;
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(adOptions.MaxSessionCookieLifetimeInMinutes);
                 })
@@ -388,11 +390,6 @@ namespace ntbs_service
                     };
 
                 });
-
-            if (setupDummyAuth)
-            {
-                authSetup.AddScheme<AuthenticationSchemeOptions, DummyAuthHandler>(DummyAuthHandler.Name, o => { });
-            }
         }
 
         private static void UseHttpBasicAuth(IServiceCollection services,
