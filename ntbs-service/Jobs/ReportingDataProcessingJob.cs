@@ -62,11 +62,11 @@ namespace ntbs_service.Jobs
             Log.Information(serialisedResult);
             _context.WriteLine($"Result: {serialisedResult}");
 
-            if (!resultToTest.Any())
+            if (resultToTest.Any())
             {
-                return true;
+                throw new ApplicationException("Stored procedure did not execute successfully as result has messages, check the logs.");
             }
-            throw new ApplicationException("Stored procedure did not execute successfully as result has messages, check the logs.");
+            return true;
         }
 
 
