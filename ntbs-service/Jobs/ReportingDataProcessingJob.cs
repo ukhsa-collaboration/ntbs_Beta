@@ -36,34 +36,16 @@ namespace ntbs_service.Jobs
             _context = context;
             Log.Information($"Starting weekly reporting data processing job.");
 
-            var stepOneResults = await ExecuteProcessingMIDataStoredProcedure(token);
-            var stepTwoResults = await ExecutePopulateForestExtractStoredProcedure(token);
+            var results = await ExecutePopulateForestExtractStoredProcedure(token);
 
-            var allResults = new List<dynamic>();
-            allResults.AddRange(stepOneResults);
-            allResults.AddRange(stepTwoResults);
-
-            var success = DidExecuteSuccessfully(allResults);
+            DidExecuteSuccessfully(results);
 
             Log.Information($"Finishing weekly reporting data processing job.");
         }
 
-        protected virtual async Task<IEnumerable<dynamic>> ExecuteProcessingMIDataStoredProcedure(IJobCancellationToken token)
-        {
-            IEnumerable<dynamic> result = new List<dynamic>();
-
-            using (var connection = new SqlConnection(_reportingDatabaseConnectionString))
-            {
-                connection.Open();
-                result = await connection.QueryAsync("[dbo].[uspProcessMIData]", _parameters, null, Constants.SqlServerDefaultCommandTimeOut, System.Data.CommandType.StoredProcedure);
-            }
-
-            return result;
-        }
-
         protected virtual async Task<IEnumerable<dynamic>> ExecutePopulateForestExtractStoredProcedure(IJobCancellationToken token)
         {
-            IEnumerable<dynamic> result = new List<dynamic>();
+            IEnumerable<dynamic> result;
 
             using (var connection = new SqlConnection(_reportingDatabaseConnectionString))
             {
@@ -74,24 +56,17 @@ namespace ntbs_service.Jobs
             return result;
         }
 
-        protected override bool DidExecuteSuccessfully(System.Collections.Generic.IEnumerable<dynamic> resultToTest)
+        protected override bool DidExecuteSuccessfully(IEnumerable<dynamic> resultToTest)
         {
-            var success = false;
-
             var serialisedResult = JsonConvert.SerializeObject(resultToTest);
             Log.Information(serialisedResult);
             _context.WriteLine($"Result: {serialisedResult}");
 
-            if (resultToTest.Count() == 0)
-            {
-                success = true;
-            }
-            else
+            if (resultToTest.Any())
             {
                 throw new ApplicationException("Stored procedure did not execute successfully as result has messages, check the logs.");
             }
-
-            return success;
+            return true;
         }
 
 
