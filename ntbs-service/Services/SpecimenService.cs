@@ -49,7 +49,6 @@ namespace ntbs_service.Services
 
     public class SpecimenService : ISpecimenService
     {
-        private readonly string _reportingDbConnectionString;
         private readonly string _specimenMatchingDbConnectionString;
         private readonly IAuditService _auditService;
         private readonly IAlertRepository _alertRepository;
@@ -59,8 +58,8 @@ namespace ntbs_service.Services
             IAuditService auditService,
             IAlertRepository alertRepository)
         {
-            _reportingDbConnectionString = configuration.GetConnectionString(Constants.DbConnectionStringReporting);
-            _specimenMatchingDbConnectionString = configuration.GetConnectionString("specimenMatching");
+            _specimenMatchingDbConnectionString =
+                configuration.GetConnectionString(Constants.DbConnectionStringSpecimenMatching);
             _auditService = auditService;
             _alertRepository = alertRepository;
         }
@@ -68,7 +67,7 @@ namespace ntbs_service.Services
         public async Task<IEnumerable<MatchedSpecimen>> GetMatchedSpecimenDetailsForNotificationAsync(
             int notificationId)
         {
-            using (var connection = new SqlConnection(_reportingDbConnectionString))
+            using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
             {
                 connection.Open();
                 return await connection.QueryAsync<MatchedSpecimen>(
@@ -105,7 +104,7 @@ namespace ntbs_service.Services
         public async Task<IEnumerable<SpecimenMatchPairing>> GetAllSpecimenPotentialMatchesAsync()
         {
             var query = SpecimenQueryHelper.GetAllSpecimenPotentialMatchesQuery;
-            using (var connection = new SqlConnection(_reportingDbConnectionString))
+            using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
             {
                 connection.Open();
                 return await connection.QueryAsync<SpecimenMatchPairing>(query);
@@ -116,7 +115,7 @@ namespace ntbs_service.Services
             string query,
             string param = null)
         {
-            using (var connection = new SqlConnection(_reportingDbConnectionString))
+            using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
             {
                 connection.Open();
                 return await connection.QueryAsync<SpecimenBase, SpecimenPotentialMatch, UnmatchedQueryResultRow>(

@@ -80,7 +80,7 @@ namespace ntbs_service.Services
             string.Join(
                 ' ',
                 _selectUnmatchedSpecimensQuery,
-                "FROM [dbo].[ufnGetUnmatchedSpecimensByService] (@param)",
+                "FROM [dbo].[ufnGetUnmatchedSpecimensByTbService] (@param)",
                 _orderByUnmatchedStatement);
 
         public static string GetUnmatchedSpecimensForPhecsQuery =>
