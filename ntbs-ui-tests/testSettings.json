@@ -8,7 +8,7 @@
   "Environments": {
     "local": {
       "RootUri": "https://localhost:5001",
-      "ConnectionString": "data source=localhost\\MSSQLSERVER01;initial catalog=ntbsDev;trusted_connection=true;MultipleActiveResultSets=true;"
+      "ConnectionString": "data source=localhost;initial catalog=ntbsDev;trusted_connection=true;MultipleActiveResultSets=true;"
     },
     "int": {
       "RootUri": "https://ntbs-int.e32846b1ddf0432eb63f.northeurope.aksapp.io"
