@@ -15,11 +15,12 @@ namespace ntbs_service.DataAccess
 
     public class DrugResistanceProfileRepository : IDrugResistanceProfileRepository
     {
-        private readonly string _reportingDbConnectionString;
+        private readonly string _specimenMatchingDbConnectionString;
 
         public DrugResistanceProfileRepository(IConfiguration configuration)
         {
-            _reportingDbConnectionString = configuration.GetConnectionString(Constants.DbConnectionStringReporting);
+            _specimenMatchingDbConnectionString =
+                configuration.GetConnectionString(Constants.DbConnectionStringSpecimenMatching);
         }
 
         public async Task<Dictionary<int, DrugResistanceProfile>> GetDrugResistanceProfilesAsync()
@@ -30,7 +31,7 @@ namespace ntbs_service.DataAccess
                     [New Species] AS [Species]
                 FROM [dbo].[vwChangesToDRPSpecies]";
 
-            using (var connection = new SqlConnection(_reportingDbConnectionString))
+            using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
             {
                 connection.Open();
                 return (await connection.QueryAsync(query)).ToDictionary(
