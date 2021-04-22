@@ -52,7 +52,7 @@ You can switch between these environments using the `EnvironmentUnderTest` setti
 The `int`, `test` and `uat` are hosted in Azure, and should always be running.
 
 If you wish to run with the `local` configuration against your local copy of the code, then you first need to run the site locally.
-Follow the instructions in the [ntbs-serice README](../ntbs-service/README.md) to do this (in short: run `dotnet run` in the project root).
+Follow the instructions in the [ntbs-service README](../ntbs-service/README.md) to do this (in short: run `dotnet run` in the project root).
 
 ## Troubleshooting
 
