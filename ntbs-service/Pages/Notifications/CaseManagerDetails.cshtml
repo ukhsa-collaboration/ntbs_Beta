@@ -8,4 +8,14 @@
     ViewData["CurrentPage"] = NotificationSubPaths.ContactDetails;
 }
 
-<partial name="ContactDetails/_CaseManagerDetailsPartial" model="@Model.CaseManagerDetails" />
+<partial name="ContactDetails/_ContactDetailsPartial" model="@Model.CaseManagerDetails"/>
+
+@if (Model.CaseManagerDetails.CaseManagerTbServices.Any())
+{
+    <partial name ="ContactDetails/_TbServiceMembershipDetailsPartial" model="Model.CaseManagerDetails.CaseManagerTbServices" />
+}
+
+@if (Model.RegionalMemberships.Any())
+{
+    <partial name="ContactDetails/_RegionalMembershipDetailsPartial" model="@Model.RegionalMemberships"/>
+}

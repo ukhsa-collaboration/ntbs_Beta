@@ -1,6 +1,5 @@
 ﻿@page "/ServiceDirectory/SearchResults/{handler?}"
 @model ntbs_service.Pages.ServiceDirectory.SearchResults
-@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
     Layout = "Shared/_Layout";
@@ -11,31 +10,8 @@
     <back-link-retaining-history inline-template>
         <nhs-back-link v-on:click="navigateBack" href="/ServiceDirectory">Back</nhs-back-link>
     </back-link-retaining-history>
-
-    <h1 class="nhsuk-heading-xl">Search results</h1>
-    <p>Search for a service or case manager</p>
     
-    <form method="get" autocomplete="off">
-        @{
-            var hasSearchKeywordError = !Model.IsValid("SearchKeyword");
-            var searchKeywordGroupState = hasSearchKeywordError ? Error : Standard;
-        } 
-        <nhs-form-group classes="case-manager-search-keyword" nhs-form-group-type=@searchKeywordGroupState id="search-keyword">
-            <span ref="errorField" nhs-span-type="ErrorMessage" id="search-keyword-error"
-                  asp-validation-for="SearchKeyword" has-error="@hasSearchKeywordError">
-            </span>
-            <input is-error-input=@hasSearchKeywordError nhs-input-type="Standard" 
-                   asp-for="SearchKeyword" fixed-width="Twenty">
-            
-            <button class="nhsuk-search__submit case-manager-search-button" type="submit">
-                <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
-                </svg>
-                <span class="nhsuk-u-visually-hidden">Search</span>
-            </button>
-        </nhs-form-group>
-    </form>
-
+    <partial name="Partials/SearchFormPartial" model="Model"/>
 
     <div class="case-manager-results-summary">
         @{

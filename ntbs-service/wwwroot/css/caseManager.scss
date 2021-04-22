@@ -68,7 +68,7 @@
     margin-bottom: 50px;
 }
 
-.case-manager-search-keyword {
+.service-directory-search-keyword {
     display: flex;
 }
 
@@ -76,7 +76,7 @@
 // However the narrow-viewport version is not a style that we want, so we have our own class that just uses the styles
 // for wide viewports. The original can be found at:
 // https://github.com/nhsuk/nhsuk-frontend/blob/master/packages/components/header/_header.scss
-.case-manager-search-button {
+.service-directory-search-button {
     padding-top: 4px;
     border-bottom: 2px solid #4c6272;
     border-top: 2px solid #4c6272;
