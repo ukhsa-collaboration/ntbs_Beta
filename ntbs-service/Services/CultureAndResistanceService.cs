@@ -33,7 +33,7 @@ namespace ntbs_service.Services
 
         public CultureAndResistanceService(IConfiguration _configuration)
         {
-            connectionString = _configuration.GetConnectionString(Constants.DbConnectionStringReporting);
+            connectionString = _configuration.GetConnectionString(Constants.DbConnectionStringSpecimenMatching);
         }
 
         public async Task<CultureAndResistance> GetCultureAndResistanceDetailsAsync(int notificationId)
