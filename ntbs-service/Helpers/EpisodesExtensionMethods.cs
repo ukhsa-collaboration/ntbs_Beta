@@ -29,16 +29,20 @@ namespace ntbs_service.Helpers
 
             foreach (var treatmentEvent in treatmentEvents.OrderForEpisodes())
             {
-                // If a transfer out event, make a new period just for this event
-                if (treatmentEvent.TreatmentEventType == TreatmentEventType.TransferOut)
-                {
-                    treatmentPeriods.Add(TreatmentPeriod.CreateTransferPeriod(treatmentEvent));
-                }
                 // If at the start of a new treatment period, make it and add the event
-                else if (currentTreatmentPeriod == null)
+                if (currentTreatmentPeriod == null)
                 {
-                    currentTreatmentPeriod = TreatmentPeriod.CreateTreatmentPeriod(periodNumber, treatmentEvent);
-                    periodNumber++;
+                    // If a transfer out event, make a special period just for this event
+                    if (treatmentEvent.TreatmentEventType == TreatmentEventType.TransferOut)
+                    {
+                        currentTreatmentPeriod = TreatmentPeriod.CreateTransferPeriod(treatmentEvent);
+                    }
+                    else
+                    {
+                        currentTreatmentPeriod = TreatmentPeriod.CreateTreatmentPeriod(periodNumber, treatmentEvent);
+                        periodNumber++;
+                    }
+
                     treatmentPeriods.Add(currentTreatmentPeriod);
                 }
                 // Otherwise append this event to the existing period
