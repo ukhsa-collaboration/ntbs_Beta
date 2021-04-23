@@ -1,12 +1,12 @@
 @import "./colors.scss";
 
 .ntbsuk-button--primary {
-    background-color: $phe-red;
+    background-color: $primary-button;
     box-shadow: 0 4px 0 $button-drop-shadow;
     margin-bottom: 24px;
 
     &:hover {
-        background-color: $phe-red-focus;
+        background-color: $primary-button-focus;
     }
 }
 
@@ -21,10 +21,10 @@
 }
 
 .ntbsuk-button--warning {
-    background-color: #d4351c;
+    background-color: $warning-button;
     box-shadow: 0 4px 0 $button-drop-shadow;
 
     &:hover {
-        background-color: #aa2a16;
+        background-color: $warning-button-focus;
     }
 }

@@ -1,3 +1,5 @@
+@import "./colors.scss";
+
 .heading {
     margin: auto 0;
 }
@@ -17,7 +19,7 @@
 }
 
 .homepage-kpi-card {
-  background-color: $phe-red;
+  background-color: $kpi-card;
   background-clip: content-box;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
