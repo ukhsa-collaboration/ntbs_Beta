@@ -15,6 +15,7 @@
         public const string ScheduledJobsConfig = "ScheduledJobsConfig";
         public const string DbConnectionStringMigration = "migration";
         public const string DbConnectionStringSpecimenMatching = "specimenMatching";
+        public const string ExternalLinks = "ExternalLinks";
 
         public const int SqlServerDefaultCommandTimeOut = 600;
     }
