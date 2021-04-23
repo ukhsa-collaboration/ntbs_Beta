@@ -264,9 +264,6 @@ namespace ntbs_service.DataAccess
                 entity.OwnsOne(e => e.HospitalDetails,
                     hospitalDetails =>
                     {
-                        hospitalDetails.Property(e => e.CaseManagerUsername)
-                            .HasMaxLength(64);
-
                         hospitalDetails.HasOne(e => e.CaseManager);
 
                         hospitalDetails.ToTable("HospitalDetails");
@@ -549,7 +546,8 @@ namespace ntbs_service.DataAccess
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.Username).HasMaxLength(64).ValueGeneratedOnAdd();
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.Property(e => e.Username).HasMaxLength(64);
                 entity.Property(e => e.FamilyName).HasMaxLength(64);
                 entity.Property(e => e.GivenName).HasMaxLength(64);
                 entity.Property(e => e.DisplayName).HasMaxLength(256);
@@ -560,19 +558,18 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.EmailSecondary).HasMaxLength(50);
                 entity.Property(e => e.Notes).HasMaxLength(500);
 
-                entity.HasKey(e => e.Username);
+                entity.HasKey(e => e.Id);
             });
 
             modelBuilder.Entity<CaseManagerTbService>(entity =>
             {
-                entity.Property(e => e.CaseManagerUsername).HasMaxLength(64);
                 entity.Property(e => e.TbServiceCode).HasMaxLength(16);
 
-                entity.HasKey(e => new { e.CaseManagerUsername, e.TbServiceCode });
+                entity.HasKey(e => new { e.CaseManagerId, e.TbServiceCode });
 
                 entity.HasOne(e => e.CaseManager)
                     .WithMany(caseManager => caseManager.CaseManagerTbServices)
-                    .HasForeignKey(e => e.CaseManagerUsername)
+                    .HasForeignKey(e => e.CaseManagerId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired(false);
 
@@ -774,7 +771,6 @@ namespace ntbs_service.DataAccess
                     .HasConversion(transferReasonEnumConverter)
                     .HasMaxLength(EnumMaxLength);
                 entity.Property(e => e.TbServiceCode).HasColumnName("TbServiceCode").HasMaxLength(16);
-                entity.Property(e => e.CaseManagerUsername).HasColumnName("CaseManagerUsername").HasMaxLength(64); ;
             });
             modelBuilder.Entity<UnmatchedLabResultAlert>(entity =>
             {
@@ -802,7 +798,7 @@ namespace ntbs_service.DataAccess
                     .HasMaxLength(EnumMaxLength);
                 entity.HasOne(e => e.CaseManager)
                     .WithMany()
-                    .HasForeignKey(e => e.CaseManagerUsername);
+                    .HasForeignKey(e => e.CaseManagerId);
                 entity.HasOne(e => e.TbService)
                     .WithMany()
                     .HasForeignKey(e => e.TbServiceCode);

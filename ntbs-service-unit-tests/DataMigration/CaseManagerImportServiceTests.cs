@@ -54,7 +54,7 @@ namespace ntbs_service_unit_tests.DataMigration
             await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS00TEST", HOSPITAL_GUID_1);
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateCaseManagersFromNotificationAndTreatmentEvents(notification, null, "test-request-1");
+            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, "test-request-1");
 
             // Assert
             var addedUser = _context.User.SingleOrDefault();
@@ -75,7 +75,7 @@ namespace ntbs_service_unit_tests.DataMigration
             await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS11FAKE", HOSPITAL_GUID_1);
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateCaseManagersFromNotificationAndTreatmentEvents(notification, null, "test-request-1");
+            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, "test-request-1");
 
             // Assert
             var addedUser = _context.User.SingleOrDefault();
@@ -97,7 +97,7 @@ namespace ntbs_service_unit_tests.DataMigration
             await GivenUserExistsInNtbsWithName("Jon", "Jonston");
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateCaseManagersFromNotificationAndTreatmentEvents(notification, null, "test-request-1");
+            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, "test-request-1");
 
             // Assert
             var updatedUser = _context.User.Single();
@@ -119,7 +119,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 new List<TreatmentEvent> {new TreatmentEvent {CaseManagerUsername = CASE_MANAGER_USERNAME_2, TbServiceCode = "TBS00TEST"}};
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateCaseManagersFromNotificationAndTreatmentEvents(notification, null, "test-request-1");
+            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, "test-request-1");
 
             // Assert
             var addedUsers = _context.User.ToList();
@@ -148,7 +148,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 new List<TreatmentEvent> {new TreatmentEvent {CaseManagerUsername = CASE_MANAGER_USERNAME_2, TbServiceCode = "TBS00TEST"}};
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateCaseManagersFromNotificationAndTreatmentEvents(notification, null, "test-request-1");
+            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, "test-request-1");
 
             // Assert
             var addedUsers = _context.User.ToList();
@@ -181,7 +181,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 };
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateCaseManagersFromNotificationAndTreatmentEvents(notification, null, "test-request-1");
+            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, "test-request-1");
 
             // Assert
             var addedUsers = _context.User.ToList();

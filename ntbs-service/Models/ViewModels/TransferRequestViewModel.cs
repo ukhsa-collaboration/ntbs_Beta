@@ -24,7 +24,7 @@ namespace ntbs_service.Models.ViewModels
         [Display(Name = "Case Manager")]
         [AssertThat(nameof(CaseManagerAllowedForTbService),
             ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
-        public string CaseManagerUsername { get; set; }
+        public int CaseManagerId { get; set; }
 
         public virtual User CaseManager { get; set; }
 
@@ -54,7 +54,7 @@ namespace ntbs_service.Models.ViewModels
             get
             {
                 // If email not set, or TBService missing (ergo navigation properties not yet retrieved) pass validation
-                if (string.IsNullOrEmpty(CaseManagerUsername) || TbServiceCode == null)
+                if (CaseManagerId == null || TbServiceCode == null)
                 {
                     return true;
                 }

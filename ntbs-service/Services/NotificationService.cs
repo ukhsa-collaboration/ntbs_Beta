@@ -384,14 +384,15 @@ namespace ntbs_service.Services
         {
             var defaultTbService = await _userService.GetDefaultTbService(user);
             var caseManagerEmail = await GetDefaultCaseManagerEmail(user, defaultTbService?.Code);
-
+            var caseManager = await _referenceDataRepository.GetUserByUsernameAsync(caseManagerEmail);
+            
             var notification = new Notification
             {
                 CreationDate = DateTime.Now,
                 HospitalDetails =
                 {
                     TBService = defaultTbService,
-                    CaseManagerUsername = caseManagerEmail
+                    CaseManagerId = caseManager?.Id
                 }
             };
 

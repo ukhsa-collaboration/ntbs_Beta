@@ -90,7 +90,7 @@ namespace ntbs_service.Pages.Alerts
             {
                 NotificationId = NotificationId,
                 TbServiceCode = TransferRequest.TbServiceCode,
-                CaseManagerUsername = TransferRequest.CaseManagerUsername,
+                CaseManagerId = TransferRequest.CaseManagerId,
                 TransferReason = TransferRequest.TransferReason,
                 OtherReasonDescription = TransferRequest.OtherReasonDescription,
                 TransferRequestNote = TransferRequest.TransferRequestNote
@@ -108,10 +108,10 @@ namespace ntbs_service.Pages.Alerts
                     await _referenceDataRepository.GetTbServiceByCodeAsync(TransferRequest.TbServiceCode);
             }
 
-            if (TransferRequest.CaseManagerUsername != null)
+            if (TransferRequest.CaseManagerId != null)
             {
                 TransferRequest.CaseManager =
-                    await _referenceDataRepository.GetCaseManagerByUsernameAsync(TransferRequest.CaseManagerUsername);
+                    await _referenceDataRepository.GetUserByIdAsync(TransferRequest.CaseManagerId);
             }
 
             TransferRequest.NotificationTbServiceCode = Notification.HospitalDetails.TBServiceCode;

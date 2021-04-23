@@ -157,17 +157,17 @@ namespace ntbs_service.DataMigration
         }
 
         private async Task<IEnumerable<ValidationResult>> ValidateAndSetCaseManager(PerformContext context,
-            string requestId,HospitalDetails details)
+            string requestId, HospitalDetails details)
         {
             var validationsResults = new List<ValidationResult>();
 
-            if (string.IsNullOrEmpty(details.CaseManagerUsername))
+            if (details.CaseManagerId == null)
             {
                 return validationsResults;
             }
-
+            
             var possibleCaseManager =
-                await _referenceDataRepository.GetUserByUsernameAsync(details.CaseManagerUsername);
+                await _referenceDataRepository.GetUserByIdAsync((int)details.CaseManagerId);
             if (possibleCaseManager != null)
             {
                 if (!possibleCaseManager.IsCaseManager)
@@ -179,7 +179,7 @@ namespace ntbs_service.DataMigration
 
             // As we have imported the case manager in a previous step we don't expect to see this message
             var message = "Case manager assigned to notification is not present in NTBS database";
-            validationsResults.Add(new ValidationResult(message, new[] { nameof(details.CaseManagerUsername) }));
+            validationsResults.Add(new ValidationResult(message, new[] { nameof(details.CaseManagerId) }));
 
             return validationsResults;
         }

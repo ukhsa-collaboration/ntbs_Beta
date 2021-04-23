@@ -45,7 +45,7 @@ namespace ntbs_service.Models.Entities
         public string TbServiceCode { get; set; }
         public virtual TBService TbService { get; set; }
 
-        public string CaseManagerUsername { get; set; }
+        public int? CaseManagerId { get; set; }
         public User CaseManager { get; set; }
 
         [NotMapped]
