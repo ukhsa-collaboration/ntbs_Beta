@@ -38,3 +38,10 @@ $banner-header--denotified: #787878;
 $banner-border--denotified: black;
 $banner-header--legacy: #ffdbbc;
 $banner-border--legacy: #ff9c44;
+
+// Translate CSS colours into strings that can be used in URL-encoded SVGs,
+// such as the "Manage notification" circle.
+// See: https://stackoverflow.com/a/25478589
+@function url-friendly-colour($colour) {
+    @return '%23' + str-slice('#{$colour}', 2, -1)
+}
