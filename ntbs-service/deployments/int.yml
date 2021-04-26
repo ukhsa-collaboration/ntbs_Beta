@@ -81,7 +81,7 @@ spec:
                 key: authority
           - name: AzureAdOptions__Enabled
             value: "true"
-          - name: ExternalLinks__ReportingUri
+          - name: ExternalLinks__ReportingOverview
             value: ""
           - name: MigrationConfig__TablePrefix
             value: "Int"

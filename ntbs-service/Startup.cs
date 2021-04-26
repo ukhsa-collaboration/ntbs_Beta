@@ -223,6 +223,7 @@ namespace ntbs_service
             services.AddScoped<IClusterImportService, ClusterImportService>();
             services.AddScoped<ICaseManagerImportService, CaseManagerImportService>();
             services.AddScoped<IAdUserService, AdUserService>();
+            services.AddScoped<IReportingLinksService, ReportingLinksService>();
 
             AddAuditService(services, auditDbConnectionString);
             AddReferenceLabResultServices(services);
