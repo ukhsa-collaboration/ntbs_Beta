@@ -6,6 +6,7 @@ namespace ntbs_service.Services
     public interface IReportingLinksService
     {
         string GetReportingPageUrl();
+        string GetClusterReport(string clusterId);
     }
 
     public class ReportingLinksService : IReportingLinksService
@@ -19,5 +20,11 @@ namespace ntbs_service.Services
         }
 
         public string GetReportingPageUrl() => _externalLinks.ReportingOverview;
+
+        public string GetClusterReport(string clusterId)
+        {
+            // TODO Implement this properly in NTBS-2249
+            return "";
+        }
     }
 }
