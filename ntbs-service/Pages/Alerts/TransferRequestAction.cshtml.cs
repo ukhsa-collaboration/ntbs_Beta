@@ -43,7 +43,7 @@ namespace ntbs_service.Pages.Alerts
         [BindProperty]
         public Guid TargetHospitalId { get; set; }
         [BindProperty]
-        public int TargetCaseManagerId { get; set; }
+        public int? TargetCaseManagerId { get; set; }
 
 
         public TransferRequestActionModel(
@@ -87,7 +87,7 @@ namespace ntbs_service.Pages.Alerts
             var caseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(
                 new List<string> { TransferAlert.TbServiceCode });
             CaseManagers = new SelectList(caseManagers,
-                nameof(Models.Entities.User.Username),
+                nameof(Models.Entities.User.Id),
                 nameof(Models.Entities.User.DisplayName));
             TargetCaseManagerId = TransferAlert.CaseManagerId;
             return Page();
@@ -121,7 +121,7 @@ namespace ntbs_service.Pages.Alerts
                 NotificationId = NotificationId,
                 EventDate = currentTime,
                 TreatmentEventType = TreatmentEventType.TransferOut,
-                CaseManagerId = Notification.HospitalDetails.CaseManager.Id,
+                CaseManagerId = Notification.HospitalDetails.CaseManagerId,
                 TbServiceCode = Notification.HospitalDetails.TBServiceCode,
                 Note = TransferAlert.TransferRequestNote
             };

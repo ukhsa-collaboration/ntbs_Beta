@@ -336,7 +336,7 @@ namespace ntbs_service.DataMigration
                 }
             }
 
-            if (rawNotification.CaseManager != null)
+            if (!string.IsNullOrEmpty(rawNotification.CaseManager))
             {
                 await _caseManagerImportService.ImportOrUpdateLegacyUser(rawNotification.CaseManager, details.TBServiceCode);
                 details.CaseManagerId = (await _referenceDataRepository.GetUserByUsernameAsync(rawNotification.CaseManager)).Id;
@@ -877,7 +877,7 @@ namespace ntbs_service.DataMigration
                 }
             }
 
-            if (caseManagerUsername != null)
+            if (!string.IsNullOrEmpty(caseManagerUsername))
             {
                 await _caseManagerImportService.ImportOrUpdateLegacyUser(caseManagerUsername, ev.TbServiceCode);
                 ev.CaseManagerId = (await _referenceDataRepository.GetUserByUsernameAsync(caseManagerUsername)).Id;

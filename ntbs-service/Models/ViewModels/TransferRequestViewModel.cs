@@ -24,7 +24,7 @@ namespace ntbs_service.Models.ViewModels
         [Display(Name = "Case Manager")]
         [AssertThat(nameof(CaseManagerAllowedForTbService),
             ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
-        public int CaseManagerId { get; set; }
+        public int? CaseManagerId { get; set; }
 
         public virtual User CaseManager { get; set; }
 

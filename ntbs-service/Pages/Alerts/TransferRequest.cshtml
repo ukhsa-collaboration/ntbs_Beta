@@ -47,11 +47,11 @@
                         </select>
                     </nhs-form-group>
                     @{
-                        var hasCaseManagerError = !Model.ValidationService.IsValid("TransferRequest.CaseManagerUsername");
+                        var hasCaseManagerError = !Model.ValidationService.IsValid("TransferRequest.CaseManagerId");
                         var caseManagerGroupState = hasCaseManagerError ? Error : Standard;
                         var caseManagerSelectErrorState = hasCaseManagerError ? SelectType.Error : SelectType.Standard;
                     }
-                    <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="TransferRequest-CaseManagerUsername" ref="caseManagers">
+                    <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="TransferRequest-CaseManagerId" ref="caseManagers">
                         <label nhs-label-type="Standard" asp-for="TransferRequest.CaseManagerId">
                             @Html.DisplayNameFor(model => model.TransferRequest.CaseManagerId)
                         </label>

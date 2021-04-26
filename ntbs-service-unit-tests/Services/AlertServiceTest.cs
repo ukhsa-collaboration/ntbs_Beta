@@ -73,7 +73,7 @@ namespace ntbs_service_unit_tests.Services
                 NotificationId = 1,
                 HospitalDetails = new HospitalDetails
                 {
-                    CaseManagerUsername = "testUsername@email.com",
+                    CaseManagerId = 1,
                     TBServiceCode = "AB0000001"
                 }
             });

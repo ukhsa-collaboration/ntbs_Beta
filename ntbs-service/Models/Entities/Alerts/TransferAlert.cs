@@ -42,7 +42,7 @@ namespace ntbs_service.Models.Entities.Alerts
         public string TbServiceCode { get; set; }
         public virtual TBService TbService { get; set; }
         [Display(Name = "Case Manager")]
-        public int CaseManagerId { get; set; }
+        public int? CaseManagerId { get; set; }
         public virtual User CaseManager { get; set; }
     }
 }

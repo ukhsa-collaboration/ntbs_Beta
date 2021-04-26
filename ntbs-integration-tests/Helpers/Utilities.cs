@@ -118,15 +118,16 @@ namespace ntbs_integration_tests.Helpers
         public const string PERMITTED_POSTCODE = "TW153AA";
         public const string UNPERMITTED_POSTCODE = "NW51TL";
         public const string CASEMANAGER_ABINGDON_EMAIL = "pheNtbs_nhsUser2@ntbs.phe.com";
+        public const int CASEMANAGER_ABINGDON_ID = 1234;
         public const string CASEMANAGER_ABINGDON_EMAIL2 = "pheNtbs_nhsUser3@ntbs.phe.com";
 
         public static void SeedDatabase(NtbsContext context)
         {
             // General purpose entities shared between tests
+            context.User.AddRange(GetCaseManagers());
             context.Notification.AddRange(GetSeedingNotifications());
             context.PostcodeLookup.AddRange(GetTestPostcodeLookups());
             context.NotificationGroup.AddRange(GetTestNotificationGroups());
-            context.User.AddRange(GetCaseManagers());
             context.CaseManagerTbService.AddRange(GetCaseManagerTbServicesJoinEntries());
             context.Alert.AddRange(GetSeedingAlerts());
             context.ReleaseVersion.Add(new ReleaseVersion {Version = "test-version", Date = DateTime.UtcNow});
@@ -188,6 +189,7 @@ namespace ntbs_integration_tests.Helpers
         {
             return TestUser.GetAll().Select(user => new User
             {
+                Id = user.Id,
                 Username = user.Username,
                 DisplayName = user.DisplayName,
                 AdGroups = string.Join(',', user.AdGroups),
@@ -202,7 +204,7 @@ namespace ntbs_integration_tests.Helpers
                 new CaseManagerTbService
                 {
                     TbServiceCode = serviceCode,
-                    CaseManagerUsername = user.Username
+                    CaseManagerId = user.Id
                 }));
         }
 
@@ -238,7 +240,7 @@ namespace ntbs_integration_tests.Helpers
                     {
                         TBServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                         HospitalId = Guid.Parse(HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID),
-                        CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL
+                        CaseManagerId = CASEMANAGER_ABINGDON_ID
                     },
                     PatientDetails = new PatientDetails
                     {
@@ -260,7 +262,7 @@ namespace ntbs_integration_tests.Helpers
                     {
                         TBServiceCode = PERMITTED_SERVICE_CODE,
                         HospitalId = Guid.Parse(HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID),
-                        CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL
+                        CaseManagerId = CASEMANAGER_ABINGDON_ID
                     },
                     PatientDetails = new PatientDetails
                     {
@@ -329,6 +331,7 @@ namespace ntbs_integration_tests.Helpers
                     AlertId = TRANSFER_ALERT_ID,
                     NotificationId = NOTIFIED_ID,
                     TbServiceCode = PERMITTED_SERVICE_CODE,
+                    CaseManagerId = CASEMANAGER_ABINGDON_ID,
                     AlertStatus = AlertStatus.Open
                 },
                 new TransferAlert
@@ -337,7 +340,7 @@ namespace ntbs_integration_tests.Helpers
                     AlertId = TRANSFER_ALERT_ID_TO_ACCEPT,
                     NotificationId = NOTIFIED_ID_WITH_NOTIFICATION_DATE,
                     TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
-                    CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL,
+                    CaseManagerId = CASEMANAGER_ABINGDON_ID,
                     AlertStatus = AlertStatus.Open
                 },
                 new TransferAlert
@@ -346,7 +349,7 @@ namespace ntbs_integration_tests.Helpers
                     AlertId = TRANSFER_ALERT_ID_TO_REJECT,
                     NotificationId = NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT,
                     TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
-                    CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL,
+                    CaseManagerId = CASEMANAGER_ABINGDON_ID,
                     AlertStatus = AlertStatus.Open
                 },
                 new TransferAlert
@@ -355,7 +358,7 @@ namespace ntbs_integration_tests.Helpers
                     AlertId = TRANSFER_ALERT_ID_TO_ACCEPT_2,
                     NotificationId = NOTIFICATION_WITH_TRANSFER_REQUEST_TO_ACCEPT,
                     TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
-                    CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL,
+                    CaseManagerId = CASEMANAGER_ABINGDON_ID,
                     AlertStatus = AlertStatus.Open
                 },
                 new TransferRejectedAlert
