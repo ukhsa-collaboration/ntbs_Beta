@@ -82,7 +82,7 @@ spec:
           - name: AzureAdOptions__Enabled
             value: "true"
           - name: ExternalLinks__ReportingOverview
-            value: ""
+            value: "https://aptemus.sharepoint.com/:u:/r/sites/NTBS-development/SitePages/Reports_int.aspx"
           - name: MigrationConfig__TablePrefix
             value: "Int"
           - name: Sentry__Environment
