@@ -45,11 +45,6 @@ namespace ntbs_service.Jobs
             _dataQualityRepository.GetNotificationsEligibleForDqClinicalDatesAlertsAsync
         );
 
-        private async Task CreateClusterAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityClusterAlert>(
-            _dataQualityRepository.GetNotificationsEligibleForDqClusterAlertsCountAsync,
-            _dataQualityRepository.GetNotificationsEligibleForDqClusterAlertsAsync
-        );
-
         private async Task CreateDotVotAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityDotVotAlert>(
             _dataQualityRepository.GetNotificationsEligibleForDqDotVotAlertsCountAsync,
             _dataQualityRepository.GetNotificationsEligibleForDqDotVotAlertsAsync
@@ -105,7 +100,6 @@ namespace ntbs_service.Jobs
             await CreateDraftAlertsInBulkAsync();
             await CreateBirthCountryAlertsInBulkAsync();
             await CreateClinicalDatesAlertsInBulkAsync();
-            await CreateClusterAlertsInBulkAsync();
             await CreateDotVotAlertsInBulkAsync();
             await CreateTreatmentOutcome12MonthAlertsInBulkAsync();
             await CreateTreatmentOutcome24MonthAlertsInBulkAsync();

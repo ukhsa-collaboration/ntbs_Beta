@@ -6,6 +6,7 @@ using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;
@@ -435,13 +436,16 @@ namespace ntbs_service_unit_tests.Services
             const int existingNotification = 1;
             _mockNotificationRepository
                 .Setup(r => r.GetNotificationAsync(existingNotification))
-                .Returns(Task.FromResult(new Notification()));
+                .Returns(Task.FromResult(new Notification {
+                    SocialContextVenues = new List<SocialContextVenue>(),
+                    SocialContextAddresses = new List<SocialContextAddress>()
+                }));
 
             // If action throws, then the test fails - used frameworks do not explicitly expose a DoesNotThrow
             await _notificationService.UpdateNotificationClustersAsync(
                 new List<NotificationClusterValue>
                 {
-                    new NotificationClusterValue {NotificationId = existingNotification, ClusterId = null}
+                    new NotificationClusterValue {NotificationId = existingNotification, ClusterId = "Cluster1"}
                 });
         }
 
@@ -457,9 +461,81 @@ namespace ntbs_service_unit_tests.Services
                 _notificationService.UpdateNotificationClustersAsync(
                     new List<NotificationClusterValue>
                     {
-                        new NotificationClusterValue {NotificationId = notExistingNotification, ClusterId = null}
+                        new NotificationClusterValue {NotificationId = notExistingNotification, ClusterId = "Cluster1"}
                     })
             );
+        }
+
+        [Fact]
+        public async Task UpdateNotificationClustersAsync_RaisesAlertIfSocialContextMissing()
+        {
+            // Arrange
+            const int existingNotification = 1;
+            _mockNotificationRepository
+                .Setup(r => r.GetNotificationAsync(existingNotification))
+                .Returns(Task.FromResult(new Notification
+                {
+                    SocialContextVenues = new List<SocialContextVenue>(),
+                    SocialContextAddresses = new List<SocialContextAddress>()
+                }));
+
+            // Act
+            await _notificationService.UpdateNotificationClustersAsync(
+                new List<NotificationClusterValue>
+                {
+                    new NotificationClusterValue {NotificationId = existingNotification, ClusterId = "Cluster1"}
+                });
+
+            // Assert
+            _mockAlertService.Verify(x => x.AddUniqueAlertAsync(It.IsAny<DataQualityClusterAlert>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task UpdateNotificationClustersAsync_DoesNotRaiseAlertIfSocialContextPresent()
+        {
+            // Arrange
+            const int existingNotification = 1;
+            _mockNotificationRepository
+                .Setup(r => r.GetNotificationAsync(existingNotification))
+                .Returns(Task.FromResult(new Notification
+                {
+                    SocialContextVenues = new List<SocialContextVenue> { new SocialContextVenue() },
+                    SocialContextAddresses = new List<SocialContextAddress>()
+                }));
+
+            // Act
+            await _notificationService.UpdateNotificationClustersAsync(
+                new List<NotificationClusterValue>
+                {
+                    new NotificationClusterValue {NotificationId = existingNotification, ClusterId = "Cluster1"}
+                });
+
+            // Assert
+            _mockAlertService.Verify(x => x.AddUniqueAlertAsync(It.IsAny<DataQualityClusterAlert>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task UpdateNotificationClustersAsync_DismissesAlertOnClusterRemove()
+        {
+            // Arrange
+            const int existingNotification = 1;
+            _mockNotificationRepository
+                .Setup(r => r.GetNotificationAsync(existingNotification))
+                .Returns(Task.FromResult(new Notification
+                {
+                    SocialContextVenues = new List<SocialContextVenue> { new SocialContextVenue() },
+                    SocialContextAddresses = new List<SocialContextAddress>()
+                }));
+
+            // Act
+            await _notificationService.UpdateNotificationClustersAsync(
+                new List<NotificationClusterValue>
+                {
+                    new NotificationClusterValue {NotificationId = existingNotification, ClusterId = "Cluster1"}
+                });
+
+            // Assert
+            _mockAlertService.Verify(x => x.AutoDismissAlertAsync<DataQualityClusterAlert>(It.IsAny<Notification>()), Times.Once);
         }
 
         [Fact]
