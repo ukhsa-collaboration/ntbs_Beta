@@ -27,6 +27,13 @@ namespace ntbs_service.Migrations
             migrationBuilder.DropPrimaryKey(
                 name: "PK_CaseManager",
                 table: "User");
+            
+            migrationBuilder.CreateIndex(
+                name: "IX_User_Username",
+                table: "User",
+                column: "Username",
+                unique: true,
+                filter: "[Username] IS NOT NULL");
 
             migrationBuilder.DropIndex(
                 name: "IX_TreatmentEvent_CaseManagerUsername",
@@ -49,16 +56,14 @@ namespace ntbs_service.Migrations
                     name: "Id",
                     table: "User",
                     type: "int",
-                    nullable: false,
-                    defaultValue: 0)
+                    nullable: false)
                 .Annotation("SqlServer:Identity", "1, 1");
 
             migrationBuilder.AddColumn<int>(
                 name: "CaseManagerId",
                 table: "TreatmentEvent",
                 type: "int",
-                nullable: true,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.AddColumn<int>(
                 name: "CaseManagerId",
@@ -121,7 +126,7 @@ namespace ntbs_service.Migrations
                 column: "CaseManagerId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.SetNull);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_CaseManagerTbService_User_CaseManagerId",
@@ -137,7 +142,7 @@ namespace ntbs_service.Migrations
                 column: "CaseManagerId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                onDelete: ReferentialAction.SetNull);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_TreatmentEvent_User_CaseManagerId",
@@ -145,7 +150,7 @@ namespace ntbs_service.Migrations
                 column: "CaseManagerId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.SetNull);
 
             // Drop old columns
             migrationBuilder.DropColumn(
@@ -167,74 +172,6 @@ namespace ntbs_service.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Alert_User_CaseManagerId",
-                table: "Alert");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_CaseManagerTbService_User_CaseManagerId",
-                table: "CaseManagerTbService");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_HospitalDetails_User_CaseManagerId",
-                table: "HospitalDetails");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_TreatmentEvent_User_CaseManagerId",
-                table: "TreatmentEvent");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_User",
-                table: "User");
-
-            migrationBuilder.DropIndex(
-                name: "IX_TreatmentEvent_CaseManagerId",
-                table: "TreatmentEvent");
-
-            migrationBuilder.DropIndex(
-                name: "IX_HospitalDetails_CaseManagerId",
-                table: "HospitalDetails");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_CaseManagerTbService",
-                table: "CaseManagerTbService");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Alert_CaseManagerId",
-                table: "Alert");
-
-            migrationBuilder.DropColumn(
-                name: "Id",
-                table: "User");
-
-            migrationBuilder.DropColumn(
-                name: "CaseManagerId",
-                table: "TreatmentEvent");
-
-            migrationBuilder.DropColumn(
-                name: "CaseManagerId",
-                table: "HospitalDetails");
-
-            migrationBuilder.DropColumn(
-                name: "CaseManagerId",
-                table: "CaseManagerTbService");
-
-            migrationBuilder.DropColumn(
-                name: "CaseManagerId",
-                table: "Alert");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Username",
-                table: "User",
-                type: "nvarchar(64)",
-                maxLength: 64,
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "nvarchar(64)",
-                oldMaxLength: 64,
-                oldNullable: true);
-
             migrationBuilder.AddColumn<string>(
                 name: "CaseManagerUsername",
                 table: "TreatmentEvent",
@@ -262,6 +199,68 @@ namespace ntbs_service.Migrations
                 type: "nvarchar(64)",
                 maxLength: 64,
                 nullable: true);
+            
+            migrationBuilder.DropForeignKey(
+                name: "FK_Alert_User_CaseManagerId",
+                table: "Alert");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_CaseManagerTbService_User_CaseManagerId",
+                table: "CaseManagerTbService");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_HospitalDetails_User_CaseManagerId",
+                table: "HospitalDetails");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_TreatmentEvent_User_CaseManagerId",
+                table: "TreatmentEvent");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_User",
+                table: "User");
+
+            migrationBuilder.DropIndex(
+                name: "IX_User_Username",
+                table: "User");
+
+            migrationBuilder.DropIndex(
+                name: "IX_TreatmentEvent_CaseManagerId",
+                table: "TreatmentEvent");
+
+            migrationBuilder.DropIndex(
+                name: "IX_HospitalDetails_CaseManagerId",
+                table: "HospitalDetails");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_CaseManagerTbService",
+                table: "CaseManagerTbService");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Alert_CaseManagerId",
+                table: "Alert");
+            
+            // Update values of new columns
+            migrationBuilder.Sql(
+                @"UPDATE [CaseManagerTbService] SET CaseManagerUsername = (SELECT Username FROM [User] WHERE Id = CaseManagerId)");
+            migrationBuilder.Sql(
+                @"UPDATE [Alert] SET CaseManagerUsername = (SELECT Username FROM [User] WHERE Id = CaseManagerId)");
+            migrationBuilder.Sql(
+                @"UPDATE [HospitalDetails] SET CaseManagerUsername = (SELECT Username FROM [User] WHERE Id = CaseManagerId)");
+            migrationBuilder.Sql(
+                @"UPDATE [TreatmentEvent] SET CaseManagerUsername = (SELECT Username FROM [User] WHERE Id = CaseManagerId)");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Username",
+                table: "User",
+                type: "nvarchar(64)",
+                maxLength: 64,
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "nvarchar(64)",
+                oldMaxLength: 64,
+                oldNullable: true);
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_CaseManager",
@@ -319,6 +318,26 @@ namespace ntbs_service.Migrations
                 principalTable: "User",
                 principalColumn: "Username",
                 onDelete: ReferentialAction.Restrict);
+            
+            migrationBuilder.DropColumn(
+                name: "Id",
+                table: "User");
+
+            migrationBuilder.DropColumn(
+                name: "CaseManagerId",
+                table: "TreatmentEvent");
+
+            migrationBuilder.DropColumn(
+                name: "CaseManagerId",
+                table: "HospitalDetails");
+
+            migrationBuilder.DropColumn(
+                name: "CaseManagerId",
+                table: "CaseManagerTbService");
+
+            migrationBuilder.DropColumn(
+                name: "CaseManagerId",
+                table: "Alert");
         }
     }
 }

@@ -158,7 +158,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private async Task GetRelatedEntities()
         {
-            if (HospitalDetails.HospitalId != null)
+            if (HospitalDetails.HospitalId.HasValue)
             {
                 HospitalDetails.Hospital = await _referenceDataRepository.GetHospitalByGuidAsync(HospitalDetails.HospitalId.Value);
             }
@@ -166,9 +166,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 HospitalDetails.TBService = await _referenceDataRepository.GetTbServiceByCodeAsync(HospitalDetails.TBServiceCode);
             }
-            if (HospitalDetails.CaseManagerId != null)
+            if (HospitalDetails.CaseManagerId.HasValue)
             {
-                HospitalDetails.CaseManager = await _referenceDataRepository.GetUserByIdAsync((int)HospitalDetails.CaseManagerId);
+                HospitalDetails.CaseManager = await _referenceDataRepository.GetUserByIdAsync(HospitalDetails.CaseManagerId.Value);
             }
         }
 

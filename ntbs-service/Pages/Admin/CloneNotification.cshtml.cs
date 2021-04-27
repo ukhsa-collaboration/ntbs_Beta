@@ -119,7 +119,7 @@ namespace ntbs_service.Pages.Admin
             return RedirectToPage("/Notifications/Overview", new { notificationToClone.NotificationId });
         }
 
-        private async void OverrideValues(Notification clone)
+        private void OverrideValues(Notification clone)
         {
             if (TBServiceCode != null)
             {

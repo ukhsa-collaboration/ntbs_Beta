@@ -108,10 +108,10 @@ namespace ntbs_service.Pages.Alerts
                     await _referenceDataRepository.GetTbServiceByCodeAsync(TransferRequest.TbServiceCode);
             }
 
-            if (TransferRequest.CaseManagerId != null)
+            if (TransferRequest.CaseManagerId.HasValue)
             {
                 TransferRequest.CaseManager =
-                    await _referenceDataRepository.GetUserByIdAsync((int)TransferRequest.CaseManagerId);
+                    await _referenceDataRepository.GetUserByIdAsync(TransferRequest.CaseManagerId.Value);
             }
 
             TransferRequest.NotificationTbServiceCode = Notification.HospitalDetails.TBServiceCode;

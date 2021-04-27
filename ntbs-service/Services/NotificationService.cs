@@ -383,8 +383,7 @@ namespace ntbs_service.Services
         public async Task<Notification> CreateNewNotificationForUserAsync(ClaimsPrincipal user)
         {
             var defaultTbService = await _userService.GetDefaultTbService(user);
-            var caseManagerEmail = await GetDefaultCaseManagerEmail(user, defaultTbService?.Code);
-            var caseManager = await _referenceDataRepository.GetUserByUsernameAsync(caseManagerEmail);
+            var caseManagerId = await GetDefaultCaseManagerId(user, defaultTbService?.Code);
             
             var notification = new Notification
             {
@@ -392,7 +391,7 @@ namespace ntbs_service.Services
                 HospitalDetails =
                 {
                     TBService = defaultTbService,
-                    CaseManagerId = caseManager?.Id
+                    CaseManagerId = caseManagerId
                 }
             };
 
@@ -467,14 +466,16 @@ namespace ntbs_service.Services
             await _notificationRepository.SaveChangesAsync();
         }
 
-        private async Task<string> GetDefaultCaseManagerEmail(ClaimsPrincipal user, string tbServiceCode)
+        private async Task<int?> GetDefaultCaseManagerId(ClaimsPrincipal user, string tbServiceCode)
         {
             var caseManagersForTbService =
                 await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(new List<string> { tbServiceCode });
             var username = user.Username();
             var upperUserEmail = username?.ToUpperInvariant();
 
-            return caseManagersForTbService.Any(c => c.Username.ToUpperInvariant() == upperUserEmail) ? username : null;
+            return caseManagersForTbService.Any(c => c.Username.ToUpperInvariant() == upperUserEmail) 
+                ? (await _referenceDataRepository.GetUserByUsernameAsync(username)).Id
+                : null as int?;
         }
 
         public async Task UpdateComorbidityAsync(Notification notification, ComorbidityDetails comorbidityDetails)

@@ -529,7 +529,7 @@ namespace ntbs_service.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CaseManagerId")
+                    b.Property<int?>("CaseManagerId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("EventDate")
@@ -624,6 +624,10 @@ namespace ntbs_service.Migrations
                         .HasColumnType("nvarchar(64)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Username")
+                        .IsUnique()
+                        .HasFilter("[Username] IS NOT NULL");
 
                     b.ToTable("User");
                 });
@@ -24043,7 +24047,7 @@ namespace ntbs_service.Migrations
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
 
-                    b.Property<int>("CaseManagerId")
+                    b.Property<int?>("CaseManagerId")
                         .HasColumnType("int");
 
                     b.Property<string>("OtherReasonDescription")
@@ -25091,8 +25095,7 @@ namespace ntbs_service.Migrations
                     b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
                         .WithMany()
                         .HasForeignKey("CaseManagerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("ntbs_service.Models.Entities.Notification", "Notification")
                         .WithMany("TreatmentEvents")
@@ -25183,8 +25186,7 @@ namespace ntbs_service.Migrations
                     b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
                         .WithMany()
                         .HasForeignKey("CaseManagerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")
                         .WithMany()

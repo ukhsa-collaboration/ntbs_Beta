@@ -558,6 +558,8 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.EmailSecondary).HasMaxLength(50);
                 entity.Property(e => e.Notes).HasMaxLength(500);
 
+                entity.HasIndex(e => e.Username).IsUnique();
+                
                 entity.HasKey(e => e.Id);
             });
 
@@ -771,6 +773,10 @@ namespace ntbs_service.DataAccess
                     .HasConversion(transferReasonEnumConverter)
                     .HasMaxLength(EnumMaxLength);
                 entity.Property(e => e.TbServiceCode).HasColumnName("TbServiceCode").HasMaxLength(16);
+                entity.HasOne(e => e.CaseManager)
+                    .WithMany()
+                    .HasForeignKey(e => e.CaseManagerId)
+                    .OnDelete(DeleteBehavior.SetNull);
             });
             modelBuilder.Entity<UnmatchedLabResultAlert>(entity =>
             {
@@ -798,7 +804,9 @@ namespace ntbs_service.DataAccess
                     .HasMaxLength(EnumMaxLength);
                 entity.HasOne(e => e.CaseManager)
                     .WithMany()
-                    .HasForeignKey(e => e.CaseManagerId);
+                    .HasForeignKey(e => e.CaseManagerId)
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .IsRequired(false);
                 entity.HasOne(e => e.TbService)
                     .WithMany()
                     .HasForeignKey(e => e.TbServiceCode);
