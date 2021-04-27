@@ -5,17 +5,17 @@
 }
 
 .header-navigation-background {
-    background: $phe-red;
-  
+    background: $header-navigation-background;
+
     @media print {
-      display: none;
+        display: none;
     }
 }
 
 @media print {
-  .govuk-phase-banner {
-    display: none;
-  } 
+    .govuk-phase-banner {
+        display: none;
+    }
 }
 
 .header-navigation-list {
@@ -28,40 +28,40 @@
     .nav-menu-with-dropdown {
         display: inline-block;
     }
-  
+
     .nav-submenu-list {
         position: absolute;
-        background-color: #f9f9f9;
+        background-color: $header-submenu-background;
         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
         z-index: 1;
         margin: 13px 0 -13px -10px;
-        border: 1px solid black;        
+        border: 1px solid black;
         list-style-type: none;
         padding: 0;
         overflow: hidden;
     }
-  
+
     .nav-submenu-list .nav-submenu-list-item {
         margin: 0;
         padding: 5px;
         width: 100%;
         outline: 1px solid black;
     }
-  
+
     .nav-with-submenu-header-link {
-      color: white;
+        color: white;
     }
-  
+
     .nav-with-submenu-header {
         margin-bottom: 8px;
-      
+
         @media (min-width: 768px) {
             & {
                 margin-right: 15px;
             }
         }
     }
-  
+
     .nav-submenu-list a {
         color: black;
         padding: 6px 8px;
@@ -70,8 +70,10 @@
         text-align: left;
         font-weight: 200;
     }
-  
-    .show {display: block;}
+
+    .show {
+        display: block;
+    }
 }
 
 body:not(.js-enabled) {
@@ -88,16 +90,16 @@ body:not(.js-enabled) {
 }
 
 .arrow {
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  display: inline-block;
-  padding: 3px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
 }
 
 .down {
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
-  margin-bottom: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    margin-bottom: 3px;
 }
 
 .header-title {
@@ -116,12 +118,13 @@ body:not(.js-enabled) {
     margin: 0;
     width: 200px;
     box-sizing: content-box;
+
+    img {
+        height: 30px;
+        width: 200px;
+    }
 }
 
-.header-phe-logo {
-    height: 30px;
-    width: 200px;
-}
 
 .header-expand-menu-button {
     color: black;
@@ -135,7 +138,7 @@ body:not(.js-enabled) {
     .breadcrumb-trail {
         display: block;
         height: 45px;
-        background-color: #DDDACF;
+        background-color: $breadcrumb-trail-background;
         margin-top: 10px;
 
         @media print {
@@ -145,5 +148,5 @@ body:not(.js-enabled) {
 }
 
 .breadcrumb-trail-background {
-    background-color: #DDDACF;
+    background-color: $breadcrumb-trail-background;
 }

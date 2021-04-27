@@ -10,6 +10,7 @@
 @import "./reset.scss";
 // We're importing the raw scss instaed of a packaged css bundle since we're using some of the dynamic elements ourselves (colour variables, functions etc)
 @import "../../node_modules/nhsuk-frontend/packages/nhsuk.scss";
+@import "../../node_modules/govuk-frontend/govuk/settings/_colours-applied.scss";
 @import "../../node_modules/vue-accessible-modal/dist/index.css";
 @import "./_colors.scss";
 @import "./checkboxes.scss";
@@ -84,11 +85,11 @@ html {
 }
 
 .border-top {
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid $page-border;
 }
 
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid $page-border;
 }
 
 .box-shadow {
@@ -123,7 +124,7 @@ body {
 .contents-list-item--current {
   font-weight: bold;
   padding-left: 10px;
-  border-left: 4px solid #1d70b8;
+  border-left: 4px solid $govuk-link-colour;
 }
 
 .text-align-right {
@@ -198,23 +199,23 @@ body {
 .button-link {
   background: none;
   border: none;
-  color: #003078;
+  color: $nhsuk-link-active-color;
   text-decoration: underline;
   cursor: pointer;
   font-size: large;
   outline: none;
 
   &:hover {
-    background-color: #ffcd60;
-    box-shadow: 0 0 0 4px #ffcd60;
-    color: #212b32;
+    background-color: $button-link-hover;
+    box-shadow: 0 0 0 4px $button-link-hover;
+    color: $nhsuk-focus-text-color;
     text-decoration: none;
   }
 
   &:focus {
-    background-color: #ffb81c;
-    box-shadow: 0 0 0 4px #ffb81c;
-    color: #212b32;
+    background-color: $button-link-focus;
+    box-shadow: 0 0 0 4px $button-link-focus;
+    color: $nhsuk-focus-text-color;
     outline: 4px solid transparent;
     outline-offset: 4px;
   }
@@ -259,7 +260,7 @@ body {
 
   /* If link should be displayed use display-link to explicitly declare behaviour. */
   a.display-link:after {
-    color: #212b32;
+    color: $nhsuk-focus-text-color;
     content: " (Link: " attr(href) ")";
     /* [1] */
     font-size: 14pt;

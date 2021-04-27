@@ -1,6 +1,8 @@
-﻿.case-manager-details-edit-container {
+﻿@import "./colors.scss";
+
+.case-manager-details-edit-container {
     display: flex;
-    border-bottom: 1px solid #cccccc;
+    border-bottom: 1px solid $lighter-grey;
     padding-top: 10px;
     width: 70%;
 }
@@ -26,11 +28,10 @@
 .case-manager-search-result-container {
     width: 70%;
     margin-bottom: 18px;
-    border-bottom: 1px solid #cccccc;
+    border-bottom: 1px solid $lighter-grey;
 
     a {
         text-decoration: none;
-        color: #005eb8;
     }
 
     .case-manager-search-result-name {
@@ -41,7 +42,7 @@
 .case-manager-results-summary {
     width: 70%;
     margin-bottom: 18px;
-    border-bottom: 1px solid #cccccc;
+    border-bottom: 1px solid $lighter-grey;
 }
 
 .case-manager-search-result-item-summary {
@@ -78,13 +79,12 @@
 // https://github.com/nhsuk/nhsuk-frontend/blob/master/packages/components/header/_header.scss
 .service-directory-search-button {
     padding-top: 4px;
-    border-bottom: 2px solid #4c6272;
-    border-top: 2px solid #4c6272;
-    border-right: 2px solid #4c6272;
+    border-bottom: 2px solid $nhsuk-form-border-color;
+    border-top: 2px solid $nhsuk-form-border-color;
+    border-right: 2px solid $nhsuk-form-border-color;
     border-left: 0;
     background-color: $color_nhsuk-grey-5;
     border-radius: 0 $nhsuk-border-radius $nhsuk-border-radius 0;
-
     display: block;
     float: right;
     font-size: inherit;
@@ -108,9 +108,9 @@
         border: 1px solid $color_nhsuk-white;
         cursor: pointer;
 
-      .nhsuk-icon__search {
-          fill: $color_nhsuk-white;
-      }
+        .nhsuk-icon__search {
+            fill: $color_nhsuk-white;
+        }
     }
 
     &:focus {
