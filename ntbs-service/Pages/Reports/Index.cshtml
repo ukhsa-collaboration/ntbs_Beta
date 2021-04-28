@@ -1,4 +1,4 @@
-﻿@page "/Reports/{ReportType?}/{Id?}"
+﻿@page "/Reports"
 @model IndexModel
 @{
     ViewData["Title"] = "Reports";
@@ -9,17 +9,16 @@
     <h1>Reports</h1>
 
     <span>
-        @if (!string.IsNullOrEmpty(Model.ReportType))
+        @if (!string.IsNullOrEmpty(Model.ReportingPageExternalUrl))
         {
-            @: Attempted to navigate to report type: <strong>@Model.ReportType </strong>
-            @if (!string.IsNullOrEmpty(Model.Id))
-            {
-                @: with Id <strong> @Model.Id </strong>
-            } 
+            @: Attempted to navigate to
+            <a class="govuk-link govuk-link--no-visited-state" href="@Model.ReportingPageExternalUrl" target="_blank" rel="noopener noreferrer">
+                reports home page.
+            </a>
         }
         else
         {
-            @: Attempted to navigate to reports home page.
+            @: The reporting service has not been configured for this app.
         }
     </span>
 </nhs-width-container>

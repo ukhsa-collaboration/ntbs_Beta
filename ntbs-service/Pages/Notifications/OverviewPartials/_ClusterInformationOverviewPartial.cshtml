@@ -1,11 +1,13 @@
+@using ntbs_service.Services
+@inject IReportingLinksService ReportingLinksService
 @model ntbs_service.Models.Entities.Notification
 
 @if (Model.ClusterId != null)
 {
     <div class="notification-overview-type-and-edit-container">
-        <h3 class="notification-details-type">@Html.DisplayNameFor(m => m.ClusterId): 
-            <a href="@($"/Reports/Cluster/{Model.ClusterId}")" class="no-print"> @Model.ClusterId </a>
-            <span class="no-screen"> @Model.ClusterId </span> 
+        <h3 class="notification-details-type">@Html.DisplayNameFor(m => m.ClusterId):
+            <a href="@(ReportingLinksService.GetClusterReport(Model.ClusterId))" class="no-print"> @Model.ClusterId </a>
+            <span class="no-screen"> @Model.ClusterId </span>
         </h3>
     </div>
 }

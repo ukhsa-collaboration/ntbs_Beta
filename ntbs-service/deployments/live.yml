@@ -96,7 +96,7 @@ spec:
                 secretKeyRef:
                   name: live-connection-strings
                   key: reporting
-            - name: ExternalLinks__ReportingUri
+            - name: ExternalLinks__ReportingOverview
               value: ""
             - name: HttpBasicAuth__Enabled
               value: "false"
