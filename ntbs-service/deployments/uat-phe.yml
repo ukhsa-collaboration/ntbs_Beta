@@ -94,7 +94,7 @@ spec:
                 secretKeyRef:
                   name: uat-connection-strings
                   key: reporting
-            - name: ExternalLinks__ReportingUri
+            - name: ExternalLinks__ReportingOverview
               value: ""
             - name: HttpBasicAuth__Enabled
               value: "false"
@@ -117,7 +117,7 @@ spec:
             - name: LdapSettings__Password
               value: "" # intentionally empty so the app's service account gets used for authentication
             - name: LdapSettings__BaseDomain
-              value: "DC=phe,DC=gov,DC=uk"              
+              value: "DC=phe,DC=gov,DC=uk"
             - name: MigrationConfig__TablePrefix
               value: "UatPheMigration"
             - name: ScheduledJobsConfig__UserSyncEnabled
