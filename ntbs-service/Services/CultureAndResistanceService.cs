@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,12 +11,13 @@ namespace ntbs_service.Services
     public interface ICultureAndResistanceService
     {
         Task<CultureAndResistance> GetCultureAndResistanceDetailsAsync(int notificationId);
+        Task MigrateNotificationCultureResistanceSummary(List<Notification> notifications);
     }
 
     public class CultureAndResistanceService : ICultureAndResistanceService
     {
-        private readonly string connectionString;
-        private readonly string getCultureAndResistanceDetailsSqlFunction = @"
+        private readonly string _connectionString;
+        private readonly string _getCultureAndResistanceDetailsSqlFunction = @"
             SELECT NotificationId,
                 CulturePositive,
                 Species,
@@ -28,21 +30,48 @@ namespace ntbs_service.Services
                 Aminoglycoside,
                 Quinolone,
                 MDR,
-                XDR 
+                XDR
             FROM [dbo].[ufnGetNotificationCultureAndResistanceSummary] (@notificationId)";
 
-        public CultureAndResistanceService(IConfiguration _configuration)
+
+        public CultureAndResistanceService(IConfiguration configuration)
         {
-            connectionString = _configuration.GetConnectionString(Constants.DbConnectionStringSpecimenMatching);
+            _connectionString = configuration.GetConnectionString(Constants.DbConnectionStringSpecimenMatching);
         }
 
         public async Task<CultureAndResistance> GetCultureAndResistanceDetailsAsync(int notificationId)
         {
-            using (var connection = new SqlConnection(connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var rawResult = await connection.QueryAsync<CultureAndResistance>(getCultureAndResistanceDetailsSqlFunction, new { notificationId });
+                var rawResult = await connection.QueryAsync<CultureAndResistance>(
+                    _getCultureAndResistanceDetailsSqlFunction,
+                    new { notificationId });
                 return rawResult.FirstOrDefault();
+            }
+        }
+
+        public async Task MigrateNotificationCultureResistanceSummary(List<Notification> notifications)
+        {
+            foreach (var notification in notifications)
+            {
+                var ntbsNotificationId = notification.NotificationId;
+                if (!string.IsNullOrWhiteSpace(notification.ETSID)
+                    && int.TryParse(notification.ETSID, out var etsNotificationId))
+                {
+                    await MigrateNotificationCultureResistanceSummary(etsNotificationId, ntbsNotificationId);
+                }
+            }
+        }
+
+        private async Task MigrateNotificationCultureResistanceSummary(int etsNotificationId, int ntbsNotificationId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                await connection.ExecuteAsync(
+                    @"EXEC [dbo].[uspMigrateNotificationCultureResistanceSummary] @etsNotificationId, @ntbsNotificationId;",
+                    new { etsNotificationId, ntbsNotificationId });
             }
         }
     }
