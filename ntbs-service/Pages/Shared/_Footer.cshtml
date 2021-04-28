@@ -1,6 +1,15 @@
 @using ntbs_service.Services
 @inject IVersionService VersionService
 
+@using Microsoft.Extensions.Configuration
+@using ntbs_service.Properties
+@inject IConfiguration Configuration
+
+@{
+    var links = new ExternalLinks();
+    Configuration.GetSection(Constants.ExternalLinks).Bind(links);
+}
+
 <footer class="govuk-footer footer" role="contentinfo">
     <div class="govuk-width-container">
         <div class="govuk-footer__meta footer-body-and-copyright">
@@ -9,22 +18,22 @@
                 <div class="footer-list-and-release">
                     <ul class="govuk-footer__inline-list footer-link-list">
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link footer-link" href="https://www.england.nhs.uk/tuberculosis-strategy-for-england-2015-2020/" target="_blank" rel="noopener noreferrer">
+                            <a class="govuk-footer__link footer-link" href="@links.TbStrategy" target="_blank" rel="noopener noreferrer">
                                 TB Strategy
                             </a>
                         </li>
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link footer-link" href="https://www.gov.uk/government/publications/tuberculosis-in-england-annual-report" target="_blank" rel="noopener noreferrer">
+                            <a class="govuk-footer__link footer-link" href="@links.AnnualReport" target="_blank" rel="noopener noreferrer">
                                 Annual report
                             </a>
                         </li>
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link footer-link" href="https://fingertips.phe.org.uk/profile/tb-monitoring" target="_blank" rel="noopener noreferrer">
+                            <a class="govuk-footer__link footer-link" href="@links.Fingertips" target="_blank" rel="noopener noreferrer">
                                 Fingertips
                             </a>
                         </li>
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link footer-link" href="#3">
+                            <a class="govuk-footer__link footer-link" href="@links.AccessibilityStatement" target="_blank" rel="noopener noreferrer">
                                 Accessibility Statement
                             </a>
                         </li>
@@ -38,11 +47,11 @@
                 </svg>
                 <span class="govuk-footer__licence-description">
                     All content is available under the
-                    <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated
+                    <a class="govuk-footer__link" href="@links.License" rel="license">Open Government Licence v3.0</a>, except where otherwise stated
                 </span>
             </div>
             <div class="govuk-footer__meta-item footer-copyright-message-container">
-                <a class="govuk-footer__link footer-copyright-message" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright</a>
+                <a class="govuk-footer__link footer-copyright-message" href="@links.Copyright">© Crown copyright</a>
             </div>
         </div>
     </div>
