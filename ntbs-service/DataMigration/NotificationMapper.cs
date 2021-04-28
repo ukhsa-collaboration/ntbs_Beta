@@ -40,18 +40,21 @@ namespace ntbs_service.DataMigration
         private readonly TreatmentOutcome _postMortemOutcomeType;
         private readonly IPostcodeService _postcodeService;
         private readonly ICaseManagerImportService _caseManagerImportService;
+        private readonly ITreatmentEventMapper _treatmentEventMapper;
 
         public NotificationMapper(IMigrationRepository migrationRepository,
             IReferenceDataRepository referenceDataRepository,
             IImportLogger logger,
             IPostcodeService postcodeService,
-            ICaseManagerImportService caseManagerImportService)
+            ICaseManagerImportService caseManagerImportService,
+            ITreatmentEventMapper treatmentEventMapper)
         {
             _migrationRepository = migrationRepository;
             _referenceDataRepository = referenceDataRepository;
             _logger = logger;
             _postcodeService = postcodeService;
             _caseManagerImportService = caseManagerImportService;
+            _treatmentEventMapper = treatmentEventMapper;
 
             // This is a database-based value, but static from the runtime point of view, so we fetch it once here.
             _postMortemOutcomeType = _referenceDataRepository.GetTreatmentOutcomeForTypeAndSubType(
@@ -149,12 +152,12 @@ namespace ntbs_service.DataMigration
                 var notificationTransferEvents = new List<TreatmentEvent>();
                 foreach (var transfer in transferEvents.Where(sc => sc.OldNotificationId == id))
                 {
-                    notificationTransferEvents.Add(await AsTransferEvent(transfer));
+                    notificationTransferEvents.Add(await _treatmentEventMapper.AsTransferEvent(transfer));
                 }
                 var notificationOutcomeEvents = new List<TreatmentEvent>();
                 foreach (var transfer in outcomeEvents.Where(sc => sc.OldNotificationId == id))
                 {
-                    notificationOutcomeEvents.Add(await AsOutcomeEvent(transfer));
+                    notificationOutcomeEvents.Add(await _treatmentEventMapper.AsOutcomeEvent(transfer));
                 }
                 var notificationMBovisAnimalExposures = mbovisAnimalExposures
                     .Where(sc => sc.OldNotificationId == id)
@@ -831,57 +834,6 @@ namespace ntbs_service.DataMigration
             }
 
             return mdr;
-        }
-
-        private async Task<TreatmentEvent> AsTransferEvent(MigrationDbTransferEvent rawEvent)
-        {
-            var ev = new TreatmentEvent
-            {
-                EventDate = rawEvent.EventDate,
-                TreatmentEventType = Converter.GetEnumValue<TreatmentEventType>(rawEvent.TreatmentEventType)
-            };
-
-            await TryAddTbServiceAndCaseManagerToTreatmentEvent(ev, rawEvent.HospitalId, rawEvent.CaseManager);
-
-            return ev;
-        }
-
-        private async Task<TreatmentEvent> AsOutcomeEvent(MigrationDbOutcomeEvent rawEvent)
-        {
-            var ev = new TreatmentEvent
-            {
-                EventDate = rawEvent.EventDate,
-                TreatmentEventType = Converter.GetEnumValue<TreatmentEventType>(rawEvent.TreatmentEventType),
-                TreatmentOutcomeId = rawEvent.TreatmentOutcomeId,
-                Note = rawEvent.Note
-            };
-
-            await TryAddTbServiceAndCaseManagerToTreatmentEvent(ev, rawEvent.NtbsHospitalId, rawEvent.CaseManager);
-
-            return ev;
-        }
-
-        private async Task TryAddTbServiceAndCaseManagerToTreatmentEvent(TreatmentEvent ev, Guid? hospitalId, string caseManagerUsername)
-        {
-            if (hospitalId is Guid guid)
-            {
-                var tbService = (await _referenceDataRepository.GetTbServiceFromHospitalIdAsync(guid));
-                if (tbService == null)
-                {
-                    Log.Warning(
-                        $"No TB service exists for hospital with guid {guid} - treatment event recorded without a service");
-                }
-                else
-                {
-                    ev.TbServiceCode = tbService.Code;
-                }
-            }
-
-            if (!string.IsNullOrEmpty(caseManagerUsername))
-            {
-                await _caseManagerImportService.ImportOrUpdateLegacyUser(caseManagerUsername, ev.TbServiceCode);
-                ev.CaseManagerId = (await _referenceDataRepository.GetUserByUsernameAsync(caseManagerUsername)).Id;
-            }
         }
     }
 }

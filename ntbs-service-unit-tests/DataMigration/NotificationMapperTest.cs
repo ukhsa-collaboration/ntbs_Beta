@@ -41,6 +41,7 @@ namespace ntbs_service_unit_tests.DataMigration
         private readonly Mock<IPostcodeService> _postcodeService = new Mock<IPostcodeService>();
         private readonly Mock<ICaseManagerImportService> _caseManagerImportService =
             new Mock<ICaseManagerImportService>();
+        private readonly ITreatmentEventMapper _treatmentEventMapper;
 
         private Dictionary<Guid, TBService> _hospitalToTbServiceCodeDict;
         private Dictionary<string, User> _usernameToUserDict = SetUserDict();
@@ -68,12 +69,15 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Needs to happen after the mocking, as the constructor uses a method from reference data repo
             var importLogger = new ImportLogger();
+            _treatmentEventMapper =
+                new TreatmentEventMapper(_caseManagerImportService.Object, _referenceDataRepositoryMock.Object);
             _notificationMapper = new NotificationMapper(
                 _migrationRepository,
                 _referenceDataRepositoryMock.Object,
                 importLogger,
                 _postcodeService.Object,
-                _caseManagerImportService.Object);
+                _caseManagerImportService.Object,
+                _treatmentEventMapper);
             _importValidator = new ImportValidator(importLogger, _referenceDataRepositoryMock.Object);
         }
 
