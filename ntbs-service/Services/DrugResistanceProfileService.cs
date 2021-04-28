@@ -9,12 +9,12 @@ using ntbs_service.Models.Projections;
 
 namespace ntbs_service.Services
 {
-    public interface IDrugResistanceProfilesService
+    public interface IDrugResistanceProfileService
     {
         Task<int> UpdateDrugResistanceProfiles(int maxNumberOfUpdates);
     }
 
-    public class DrugResistanceProfileService : IDrugResistanceProfilesService
+    public class DrugResistanceProfileService : IDrugResistanceProfileService
     {
         private readonly INotificationService _notificationService;
         private readonly INotificationRepository _notificationRepository;
@@ -132,7 +132,7 @@ namespace ntbs_service.Services
         }
     }
 
-    internal class MockDrugResistanceProfilesService : IDrugResistanceProfilesService
+    internal class MockDrugResistanceProfileService : IDrugResistanceProfileService
     {
         public Task<int> UpdateDrugResistanceProfiles(int maxNumberOfUpdates)
         {
