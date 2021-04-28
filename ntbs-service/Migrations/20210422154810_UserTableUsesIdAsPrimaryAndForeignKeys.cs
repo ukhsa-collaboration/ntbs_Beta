@@ -126,7 +126,7 @@ namespace ntbs_service.Migrations
                 column: "CaseManagerId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.SetNull);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_CaseManagerTbService_User_CaseManagerId",
@@ -142,7 +142,7 @@ namespace ntbs_service.Migrations
                 column: "CaseManagerId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.SetNull);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_TreatmentEvent_User_CaseManagerId",
@@ -150,7 +150,7 @@ namespace ntbs_service.Migrations
                 column: "CaseManagerId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.SetNull);
+                onDelete: ReferentialAction.Restrict);
 
             // Drop old columns
             migrationBuilder.DropColumn(

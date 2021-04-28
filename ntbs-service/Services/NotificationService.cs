@@ -473,9 +473,8 @@ namespace ntbs_service.Services
             var username = user.Username();
             var upperUserEmail = username?.ToUpperInvariant();
 
-            return caseManagersForTbService.Any(c => c.Username.ToUpperInvariant() == upperUserEmail) 
-                ? (await _referenceDataRepository.GetUserByUsernameAsync(username)).Id
-                : null as int?;
+            var caseManager = caseManagersForTbService.FirstOrDefault(c => c.Username.ToUpperInvariant() == upperUserEmail);
+            return caseManager?.Id;
         }
 
         public async Task UpdateComorbidityAsync(Notification notification, ComorbidityDetails comorbidityDetails)

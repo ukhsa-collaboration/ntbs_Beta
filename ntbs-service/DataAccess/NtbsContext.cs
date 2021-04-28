@@ -775,8 +775,7 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.TbServiceCode).HasColumnName("TbServiceCode").HasMaxLength(16);
                 entity.HasOne(e => e.CaseManager)
                     .WithMany()
-                    .HasForeignKey(e => e.CaseManagerId)
-                    .OnDelete(DeleteBehavior.SetNull);
+                    .HasForeignKey(e => e.CaseManagerId);
             });
             modelBuilder.Entity<UnmatchedLabResultAlert>(entity =>
             {
@@ -805,7 +804,6 @@ namespace ntbs_service.DataAccess
                 entity.HasOne(e => e.CaseManager)
                     .WithMany()
                     .HasForeignKey(e => e.CaseManagerId)
-                    .OnDelete(DeleteBehavior.SetNull)
                     .IsRequired(false);
                 entity.HasOne(e => e.TbService)
                     .WithMany()

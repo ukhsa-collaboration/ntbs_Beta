@@ -25094,8 +25094,7 @@ namespace ntbs_service.Migrations
                 {
                     b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
                         .WithMany()
-                        .HasForeignKey("CaseManagerId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("CaseManagerId");
 
                     b.HasOne("ntbs_service.Models.Entities.Notification", "Notification")
                         .WithMany("TreatmentEvents")
@@ -25185,8 +25184,7 @@ namespace ntbs_service.Migrations
                 {
                     b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
                         .WithMany()
-                        .HasForeignKey("CaseManagerId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("CaseManagerId");
 
                     b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")
                         .WithMany()
