@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.EntityFrameworkCore;
@@ -31,14 +32,25 @@ namespace ntbs_ui_tests.StepDefinitions
         [Given(@"I have logged in as (.*)")]
         public void GivenIHaveLoggedIn(string userId)
         {
-            var user = Settings.Users[userId];
-            Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}");
-            Browser.FindElement(By.CssSelector("input[type=email]")).SendKeys(user.Username);
-            Browser.FindElement(By.CssSelector("input[type=submit][value=Next]")).Click();
-            Browser.FindElement(By.CssSelector("input[type=password]")).SendKeys(user.Password);
-            Browser.FindElement(By.CssSelector("input[type=submit][value='Sign in']")).Click();
-            Browser.FindElement(By.CssSelector("input[type=submit][value=Yes]"));
-            TestContext.LoggedInUser = user;
+            try
+            {
+                var user = Settings.Users[userId];
+                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}");
+                Browser.FindElement(By.CssSelector("input[type=email]")).SendKeys(user.Username);
+                Browser.FindElement(By.CssSelector("input[type=submit][value=Next]")).Click();
+                Browser.FindElement(By.CssSelector("input[type=password]")).SendKeys(user.Password);
+                Browser.FindElement(By.CssSelector("input[type=submit][value='Sign in']")).Click();
+                Browser.FindElement(By.CssSelector("input[type=submit][value=Yes]"));
+                TestContext.LoggedInUser = user;
+            }
+            catch
+            {
+                // TODO:Remove this code
+                // This is temporary debugging to help determine why the login is sometimes failing
+                var webElement = (string)((IJavaScriptExecutor)Browser).ExecuteScript("return document.body.innerHTML;");
+                Console.WriteLine(webElement);
+                throw;
+            }
         }
 
         [Given(@"I am on the (.*) page")]
