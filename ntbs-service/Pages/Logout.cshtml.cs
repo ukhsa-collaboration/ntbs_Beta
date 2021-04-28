@@ -9,36 +9,40 @@ namespace ntbs_service.Pages
 {
     public class LogoutModel : PageModel
     {
-        private readonly string ReturnUrl;
-        private readonly string BaseUrl;
+        private readonly IOptionsMonitor<AzureAdOptions> _azureAdOptions;
+        private readonly IOptionsMonitor<AdfsOptions> _adfsOptions;
 
-        private readonly string RedirectUrl;
+        private string IndexUrl => $"{Request.Scheme}://{Request.Host}/Index";
 
-        public LogoutModel(IOptionsMonitor<AdfsOptions> options, IOptionsMonitor<AzureAdOptions> azureAdOptions)
+        public LogoutModel(IOptionsMonitor<AdfsOptions> adfsOptions, IOptionsMonitor<AzureAdOptions> azureAdOptions)
         {
-            // We just want to return to the homepage (which will trigger going to login again)
-            // Check to see if Azure Ad Auth is enabled.
-            if (azureAdOptions.CurrentValue.Enabled)
-            {
-                BaseUrl = azureAdOptions.CurrentValue.Authority;
-                RedirectUrl =
-                    $"{BaseUrl}/oauth2/logout?client_id={azureAdOptions.CurrentValue.ClientId}&post_logout_redirect_uri={options.CurrentValue.Wtrealm}";
-            }
-            else
-            {
-                ReturnUrl = $"{options.CurrentValue.Wtrealm}Index";
-                BaseUrl = options.CurrentValue.AdfsUrl;
-                RedirectUrl = $"{BaseUrl}/adfs/ls/?wa=wsignout1.0&wreply={ReturnUrl}";
-            }
+            _azureAdOptions = azureAdOptions;
+            _adfsOptions = adfsOptions;
         }
 
         public async Task<RedirectResult> OnGetAsync()
         {
+            var redirectUrl = _azureAdOptions.CurrentValue.Enabled ? AzureAdRedirectUrl() : AdfsRedirectUrl();
+
             // Erase the cookie ...
             await HttpContext.SignOutAsync();
 
-            // ... and sign out of adfs
-            return Redirect(RedirectUrl);
+            // ... and sign out of the AD
+            // We want to return to the homepage, which will trigger going to login again
+            return Redirect(redirectUrl);
+        }
+
+        private string AzureAdRedirectUrl()
+        {
+            var baseUrl = _azureAdOptions.CurrentValue.Authority;
+            var clientId = _azureAdOptions.CurrentValue.ClientId;
+            return $"{baseUrl}/oauth2/logout?client_id={clientId}&post_logout_redirect_uri={IndexUrl}";
+        }
+
+        private string AdfsRedirectUrl()
+        {
+            var baseUrl = _adfsOptions.CurrentValue.AdfsUrl;
+            return $"{baseUrl}/adfs/ls/?wa=wsignout1.0&wreply={IndexUrl}";
         }
     }
 }
