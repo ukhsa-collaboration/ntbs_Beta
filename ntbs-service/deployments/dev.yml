@@ -73,7 +73,7 @@ spec:
                 secretKeyRef:
                   name: dev-http-basic-auth-credentials
                   key: password
-            - name: ExternalLinks__ReportingUri
+            - name: ExternalLinks__ReportingOverview
               value: ""
             - name: MigrationConfig__TablePrefix
               value: "PheDev"
