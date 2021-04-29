@@ -9,5 +9,6 @@
         public string License { get; set; }
         public string Copyright { get; set; }
         public string ReportingOverview { get; set; }
+        public string ClusterReport { get; set; }
     }
 }

@@ -23,8 +23,12 @@ namespace ntbs_service.Services
 
         public string GetClusterReport(string clusterId)
         {
-            // TODO Implement this properly in NTBS-2249
-            return "";
+            const string clusterReportReplacementSymbol = "<CLUSTER_ID>";
+            var clusterReportBase = _externalLinks.ClusterReport;
+
+            return string.IsNullOrEmpty(clusterReportBase)
+                ? null
+                : clusterReportBase.Replace(clusterReportReplacementSymbol, clusterId);
         }
     }
 }
