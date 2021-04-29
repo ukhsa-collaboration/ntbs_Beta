@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ntbs_service.Models.Entities;
 
@@ -34,6 +35,11 @@ namespace ntbs_service.Services
                 });
             }
             return Task.FromResult<CultureAndResistance>(null);
+        }
+
+        public Task MigrateNotificationCultureResistanceSummary(List<Notification> notifications)
+        {
+            return Task.CompletedTask;
         }
     }
 }

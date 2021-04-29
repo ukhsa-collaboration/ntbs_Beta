@@ -22,7 +22,7 @@ namespace ntbs_service_unit_tests.Services
         private readonly Mock<INotificationRepository> mockNotificationRepository;
         private readonly Mock<INotificationService> mockNotificationService;
         private readonly Mock<IEnhancedSurveillanceAlertsService> mockMdrService;
-        private readonly Mock<IDrugResistanceProfileRepository> mockDrugResistanceProfileService;
+        private readonly Mock<IDrugResistanceProfileRepository> mockDrugResistanceProfileRepository;
 
         private static readonly DrugResistanceProfile drpWithMdr = new DrugResistanceProfile
         {
@@ -88,12 +88,12 @@ namespace ntbs_service_unit_tests.Services
                     numberOfUpdatesOnLastRun = x.Count();
                 });
             mockMdrService = new Mock<IEnhancedSurveillanceAlertsService>();
-            mockDrugResistanceProfileService = new Mock<IDrugResistanceProfileRepository>();
+            mockDrugResistanceProfileRepository = new Mock<IDrugResistanceProfileRepository>();
 
             drpService = new DrugResistanceProfileService(
                 mockNotificationService.Object,
                 mockNotificationRepository.Object,
-                mockDrugResistanceProfileService.Object,
+                mockDrugResistanceProfileRepository.Object,
                 mockMdrService.Object);
         }
 
@@ -101,7 +101,7 @@ namespace ntbs_service_unit_tests.Services
         public async Task UpdateDrugResistanceProfile_DoesNotUpdateRecordIfNotMatching()
         {
             // Arrange
-            mockDrugResistanceProfileService.Setup(x => x.GetDrugResistanceProfilesAsync())
+            mockDrugResistanceProfileRepository.Setup(x => x.GetDrugResistanceProfilesAsync())
                 .Returns(Task.FromResult(new Dictionary<int, DrugResistanceProfile>
                 {
                     {3, drpWithMdr}
@@ -129,7 +129,7 @@ namespace ntbs_service_unit_tests.Services
         public async Task UpdateDrugResistanceProfile_DoesUpdateRecordIfMatching()
         {
             // Arrange
-            mockDrugResistanceProfileService.Setup(x => x.GetDrugResistanceProfilesAsync())
+            mockDrugResistanceProfileRepository.Setup(x => x.GetDrugResistanceProfilesAsync())
                 .Returns(Task.FromResult(new Dictionary<int, DrugResistanceProfile>
                 {
                     {1, drpWithMdr},
@@ -156,7 +156,7 @@ namespace ntbs_service_unit_tests.Services
         public async Task UpdateDrugResistanceProfile_WhenNoUpdatedDrp_NoAlertCreated()
         {
             // Arrange
-            mockDrugResistanceProfileService.Setup(x => x.GetDrugResistanceProfilesAsync())
+            mockDrugResistanceProfileRepository.Setup(x => x.GetDrugResistanceProfilesAsync())
                 .Returns(Task.FromResult(new Dictionary<int, DrugResistanceProfile>
                 {
                     {1, drpWithMdr},
@@ -188,7 +188,7 @@ namespace ntbs_service_unit_tests.Services
         public async Task UpdateDrugResistanceProfile_UpdatedOnlyChangedDrpString()
         {
             // Arrange
-            mockDrugResistanceProfileService.Setup(x => x.GetDrugResistanceProfilesAsync())
+            mockDrugResistanceProfileRepository.Setup(x => x.GetDrugResistanceProfilesAsync())
                 .Returns(Task.FromResult(new Dictionary<int, DrugResistanceProfile>
                 {
                     {1, drpWithMdr},
@@ -220,7 +220,7 @@ namespace ntbs_service_unit_tests.Services
         public async Task UpdateDrugResistanceProfile_UpdatedOnlyChangedDrpSpecies()
         {
             // Arrange
-            mockDrugResistanceProfileService.Setup(x => x.GetDrugResistanceProfilesAsync())
+            mockDrugResistanceProfileRepository.Setup(x => x.GetDrugResistanceProfilesAsync())
                 .Returns(Task.FromResult(new Dictionary<int, DrugResistanceProfile>
                 {
                     {3, drpWithMbovis},
@@ -254,7 +254,7 @@ namespace ntbs_service_unit_tests.Services
             // Arrange
             var drugResistanceProfiles = Enumerable.Range(1, MaxNumberOfUpdates + 1)
                 .ToDictionary(i => i, i => drpWithoutMdr);
-            mockDrugResistanceProfileService.Setup(x => x.GetDrugResistanceProfilesAsync())
+            mockDrugResistanceProfileRepository.Setup(x => x.GetDrugResistanceProfilesAsync())
                 .Returns(Task.FromResult(drugResistanceProfiles));
 
             mockNotificationRepository
@@ -283,7 +283,7 @@ namespace ntbs_service_unit_tests.Services
             // Arrange
             var drugResistanceProfiles = Enumerable.Range(1, totalNotifications)
                 .ToDictionary(i => i, i => drpWithoutMdr);
-            mockDrugResistanceProfileService.Setup(x => x.GetDrugResistanceProfilesAsync())
+            mockDrugResistanceProfileRepository.Setup(x => x.GetDrugResistanceProfilesAsync())
                 .Returns(Task.FromResult(drugResistanceProfiles));
 
             mockNotificationRepository
@@ -296,6 +296,42 @@ namespace ntbs_service_unit_tests.Services
             // Assert
             Assert.Equal(expectedRemaining, notificationsRemaining);
         }
+
+        [Fact]
+        public async Task UpdateDrugResistanceProfileForNotifications_OnlyUpdatesThoseNotifications()
+        {
+            // Arrange
+            mockDrugResistanceProfileRepository.Setup(x => x.GetDrugResistanceProfilesAsync())
+                .Returns(Task.FromResult(new Dictionary<int, DrugResistanceProfile>
+                {
+                    { 1, new DrugResistanceProfile { NotificationId = 1, Species = "M. bovis" } },
+                    { 2, new DrugResistanceProfile { NotificationId = 2, DrugResistanceProfileString = "RR/MDR/XDR" } },
+                    { 3, new DrugResistanceProfile { NotificationId = 3, Species = "M. tuberculosis" } }
+                }));
+
+            mockNotificationRepository
+                .Setup(x => x.GetNotificationsForDrugResistanceImportAsync(It.IsAny<IEnumerable<int>>()))
+                .Returns<IEnumerable<int>>(GetNotificationsWithEmptyDrugResistanceProfile);
+
+            var notificationsToUpdate = new List<Notification>
+            {
+                new Notification { NotificationId = 1 },
+                new Notification { NotificationId = 3 }
+            };
+
+            // Act
+            await drpService.UpdateDrugResistanceProfiles(notificationsToUpdate);
+
+            // Assert
+            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfilesAsync(
+                    It.Is<IEnumerable<(DrugResistanceProfile, DrugResistanceProfile)>>(list =>
+                        list.Any(pair => pair.Item2.NotificationId == 1) &&
+                        list.Any(pair => pair.Item2.NotificationId == 3) &&
+                        !list.Any(pair => pair.Item2.NotificationId == 2)
+                    )),
+                Times.Once);
+        }
+
 
         private static Task<IEnumerable<NotificationForDrugResistanceImport>> GetNotificationsWithEmptyDrugResistanceProfile(
             IEnumerable<int> notificationIds)

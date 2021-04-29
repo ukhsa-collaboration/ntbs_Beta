@@ -510,12 +510,12 @@ namespace ntbs_service
             if (string.IsNullOrEmpty(Configuration.GetConnectionString(Constants.DbConnectionStringReporting)))
             {
                 services.AddScoped<IHomepageKpiService, MockHomepageKpiService>();
-                services.AddScoped<IDrugResistanceProfilesService, MockDrugResistanceProfilesService>();
+                services.AddScoped<IDrugResistanceProfileService, MockDrugResistanceProfileService>();
             }
             else
             {
                 services.AddScoped<IHomepageKpiService, HomepageKpiService>();
-                services.AddScoped<IDrugResistanceProfilesService, DrugResistanceProfileService>();
+                services.AddScoped<IDrugResistanceProfileService, DrugResistanceProfileService>();
             }
         }
 

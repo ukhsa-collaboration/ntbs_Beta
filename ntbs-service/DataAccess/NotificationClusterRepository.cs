@@ -16,11 +16,11 @@ namespace ntbs_service.DataAccess
 
     public class NotificationClusterRepository : INotificationClusterRepository
     {
-        private readonly string _reportingDbConnectionString;
+        private readonly string _specimenMatchingConnectionString;
 
         public NotificationClusterRepository(IConfiguration configuration)
         {
-            _reportingDbConnectionString = configuration.GetConnectionString(Constants.DbConnectionStringReporting);
+            _specimenMatchingConnectionString = configuration.GetConnectionString(Constants.DbConnectionStringSpecimenMatching);
         }
 
         public async Task<IEnumerable<NotificationClusterValue>> GetNotificationClusterValues()
@@ -31,7 +31,7 @@ namespace ntbs_service.DataAccess
                     ,[{nameof(NotificationClusterValue.ClusterId)}]
                 FROM [dbo].[vwNotificationClusterMatch]";
 
-            using (var connection = new SqlConnection(_reportingDbConnectionString))
+            using (var connection = new SqlConnection(_specimenMatchingConnectionString))
             {
                 connection.Open();
                 return await connection.QueryAsync<NotificationClusterValue>(query);
@@ -47,7 +47,7 @@ namespace ntbs_service.DataAccess
                 FROM [dbo].[NotificationClusterMatch]
                 WHERE [{nameof(NotificationClusterValue.NotificationId)}] = @etsNotificationId";
 
-            using (var connection = new SqlConnection(_reportingDbConnectionString))
+            using (var connection = new SqlConnection(_specimenMatchingConnectionString))
             {
                 connection.Open();
                 return await connection.QuerySingleOrDefaultAsync<NotificationClusterValue>(query, new { etsNotificationId });
@@ -56,7 +56,7 @@ namespace ntbs_service.DataAccess
 
         public async Task SetNotificationClusterValue(int etsNotificationId, int ntbsNotificationId)
         {
-            using (var connection = new SqlConnection(_reportingDbConnectionString))
+            using (var connection = new SqlConnection(_specimenMatchingConnectionString))
             {
                 connection.Open();
                 await connection.ExecuteAsync(

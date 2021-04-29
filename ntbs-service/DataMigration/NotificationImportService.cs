@@ -40,6 +40,8 @@ namespace ntbs_service.DataMigration
         private readonly ISpecimenService _specimenService;
         private readonly IImportValidator _importValidator;
         private readonly IClusterImportService _clusterImportService;
+        private readonly ICultureAndResistanceService _cultureAndResistanceService;
+        private readonly IDrugResistanceProfileService _drugResistanceProfileService;
         private readonly ICaseManagerImportService _caseManagerImportService;
 
         public NotificationImportService(INotificationMapper notificationMapper,
@@ -52,6 +54,8 @@ namespace ntbs_service.DataMigration
                              ISpecimenService specimenService,
                              IImportValidator importValidator,
                              IClusterImportService clusterImportService,
+                             ICultureAndResistanceService cultureAndResistanceService,
+                             IDrugResistanceProfileService drugResistanceProfileService,
                              ICaseManagerImportService caseManagerImportService)
         {
             sentryHub.ConfigureScope(s =>
@@ -68,6 +72,8 @@ namespace ntbs_service.DataMigration
             _specimenService = specimenService;
             _importValidator = importValidator;
             _clusterImportService = clusterImportService;
+            _cultureAndResistanceService = cultureAndResistanceService;
+            _drugResistanceProfileService = drugResistanceProfileService;
             _caseManagerImportService = caseManagerImportService;
         }
 
@@ -185,6 +191,8 @@ namespace ntbs_service.DataMigration
                 await _migratedNotificationsMarker.MarkNotificationsAsImportedAsync(savedNotifications);
                 importResult.NtbsIds = savedNotifications.ToDictionary(x => x.LegacyId, x => x.NotificationId);
                 await ImportReferenceLabResultsAsync(context, requestId, savedNotifications, importResult);
+                await _cultureAndResistanceService.MigrateNotificationCultureResistanceSummary(savedNotifications);
+                await _drugResistanceProfileService.UpdateDrugResistanceProfiles(savedNotifications);
                 await _clusterImportService.UpdateClusterInformation(savedNotifications);
 
                 var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));

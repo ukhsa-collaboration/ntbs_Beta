@@ -9,9 +9,9 @@ namespace ntbs_service.Jobs
     {
         private const int MaxNumberOfUpdatesPerRun = 2000;
 
-        private readonly IDrugResistanceProfilesService _service;
+        private readonly IDrugResistanceProfileService _service;
 
-        public DrugResistanceProfileUpdateJob(IDrugResistanceProfilesService service)
+        public DrugResistanceProfileUpdateJob(IDrugResistanceProfileService service)
         {
             _service = service;
         }

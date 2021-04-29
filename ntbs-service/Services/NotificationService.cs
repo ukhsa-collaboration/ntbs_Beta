@@ -411,6 +411,20 @@ namespace ntbs_service.Services
                 }
 
                 notification.ClusterId = clusterValue.ClusterId;
+
+                // Create or dismiss data quality alert based on this change to the cluster ID
+                if (DataQualityClusterAlert.NotificationQualifies(notification))
+                {
+                    await _alertService.AddUniqueAlertAsync(new DataQualityClusterAlert
+                    {
+                        NotificationId = notification.NotificationId,
+                        CreationDate = DateTime.Now
+                    });
+                }
+                else
+                {
+                    await _alertService.AutoDismissAlertAsync<DataQualityClusterAlert>(notification);
+                }
             }
 
             await _notificationRepository.SaveChangesAsync(
