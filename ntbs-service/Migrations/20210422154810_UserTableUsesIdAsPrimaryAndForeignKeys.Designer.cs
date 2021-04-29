@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20210422154810_UserTableUsesIdAsPrimaryAndForeignKeys")]
+    partial class UserTableUsesIdAsPrimaryAndForeignKeys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -529,7 +531,7 @@ namespace ntbs_service.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CaseManagerId")
+                    b.Property<int>("CaseManagerId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("EventDate")
@@ -624,10 +626,6 @@ namespace ntbs_service.Migrations
                         .HasColumnType("nvarchar(64)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Username")
-                        .IsUnique()
-                        .HasFilter("[Username] IS NOT NULL");
 
                     b.ToTable("User");
                 });
@@ -24047,7 +24045,7 @@ namespace ntbs_service.Migrations
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
 
-                    b.Property<int?>("CaseManagerId")
+                    b.Property<int>("CaseManagerId")
                         .HasColumnType("int");
 
                     b.Property<string>("OtherReasonDescription")
@@ -25094,7 +25092,9 @@ namespace ntbs_service.Migrations
                 {
                     b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
                         .WithMany()
-                        .HasForeignKey("CaseManagerId");
+                        .HasForeignKey("CaseManagerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ntbs_service.Models.Entities.Notification", "Notification")
                         .WithMany("TreatmentEvents")
@@ -25184,7 +25184,9 @@ namespace ntbs_service.Migrations
                 {
                     b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
                         .WithMany()
-                        .HasForeignKey("CaseManagerId");
+                        .HasForeignKey("CaseManagerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")
                         .WithMany()

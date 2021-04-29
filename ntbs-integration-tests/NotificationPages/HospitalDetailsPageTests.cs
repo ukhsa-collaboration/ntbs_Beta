@@ -220,7 +220,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["HospitalDetails.HospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["HospitalDetails.TBServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["HospitalDetails.Consultant"] = "Consultant",
-                ["HospitalDetails.CaseManagerUsername"] = Utilities.CASEMANAGER_ABINGDON_EMAIL,
+                ["HospitalDetails.CaseManagerId"] = Utilities.CASEMANAGER_ABINGDON_ID.ToString(),
                 ["FormattedNotificationDate.Day"] = "1",
                 ["FormattedNotificationDate.Month"] = "1",
                 ["FormattedNotificationDate.Year"] = "2012",
@@ -248,7 +248,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["HospitalDetails.HospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["HospitalDetails.TBServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["HospitalDetails.Consultant"] = "Consultant",
-                ["HospitalDetails.CaseManagerUsername"] = Utilities.CASEMANAGER_ABINGDON_EMAIL2,
+                ["HospitalDetails.CaseManagerId"] = Utilities.CASEMANAGER_ABINGDON_ID.ToString(),
                 ["FormattedNotificationDate.Day"] = "1",
                 ["FormattedNotificationDate.Month"] = "1",
                 ["FormattedNotificationDate.Year"] = "2012",
@@ -295,7 +295,7 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
                 ["HospitalDetails.TBServiceCode"] = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID,
-                ["HospitalDetails.CaseManagerUsername"] = Utilities.CASEMANAGER_ABINGDON_EMAIL
+                ["HospitalDetails.CaseManagerId"] = Utilities.CASEMANAGER_ABINGDON_ID.ToString()
             };
 
             // Act
@@ -304,7 +304,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorSummaryMessage("HospitalDetails-CaseManagerUsername", "case-manager", "Case Manager must be allowed for selected TB Service");
+            resultDocument.AssertErrorSummaryMessage("HospitalDetails-CaseManagerId", "case-manager", "Case Manager must be allowed for selected TB Service");
         }
 
         [Fact]
@@ -346,7 +346,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var result = await response.Content.ReadAsStringAsync();
             var filteredLists = JsonConvert.DeserializeObject<FilteredHospitalDetailsPageSelectLists>(result);
-            Assert.Contains(Utilities.CASEMANAGER_ABINGDON_EMAIL, filteredLists.CaseManagers.Select(x => x.Value));
+            Assert.Contains(Utilities.CASEMANAGER_ABINGDON_ID.ToString(), filteredLists.CaseManagers.Select(x => x.Value));
             Assert.Contains(Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID, filteredLists.Hospitals.Select(x => x.Value.ToUpperInvariant()));
         }
 
@@ -364,7 +364,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["HospitalDetails.HospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["HospitalDetails.TBServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["HospitalDetails.Consultant"] = "Consultant",
-                ["HospitalDetails.CaseManagerUsername"] = Utilities.CASEMANAGER_ABINGDON_EMAIL,
+                ["HospitalDetails.CaseManagerId"] = Utilities.CASEMANAGER_ABINGDON_ID.ToString(),
                 ["FormattedNotificationDate.Day"] = "1",
                 ["FormattedNotificationDate.Month"] = "1",
                 ["FormattedNotificationDate.Year"] = "2012",

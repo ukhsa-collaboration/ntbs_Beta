@@ -31,6 +31,7 @@ namespace ntbs_service.DataAccess
         Task<IList<User>> GetAllCaseManagers();
         Task<List<User>> GetAllCaseManagersOrdered();
         Task<User> GetCaseManagerByUsernameAsync(string username);
+        Task<User> GetUserByIdAsync(int id);
         Task<User> GetUserByUsernameAsync(string username);
         Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices);
         Task<Hospital> GetHospitalByGuidAsync(Guid guid);
@@ -200,6 +201,16 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync(c => c.Username == username);
         }
 
+        public async Task<User> GetUserByIdAsync(int id)
+        {
+            return await _context.User
+                .Include(u => u.CaseManagerTbServices)
+                .ThenInclude(ct => ct.TbService)
+                .ThenInclude(ct => ct.PHEC)
+                .Where(u => u.Id == id)
+                .SingleOrDefaultAsync();
+        }
+
         public async Task<User> GetUserByUsernameAsync(string username)
         {
             return await _context.User
@@ -247,7 +258,7 @@ namespace ntbs_service.DataAccess
                 }),
                 CaseManagers = filteredCaseManagers.Select(n => new OptionValue
                 {
-                    Value = n.Username,
+                    Value = n.Id.ToString(),
                     Text = n.DisplayName
                 })
             };

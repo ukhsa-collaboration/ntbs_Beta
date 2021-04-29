@@ -7,6 +7,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
 using ntbs_service.DataMigration.RawModels;
 using ntbs_service.Helpers;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;
@@ -38,11 +39,20 @@ namespace ntbs_service_unit_tests.DataMigration
         private readonly Mock<IReferenceDataRepository> _referenceDataRepositoryMock =
             new Mock<IReferenceDataRepository>();
         private readonly Mock<IPostcodeService> _postcodeService = new Mock<IPostcodeService>();
+        private readonly Mock<ICaseManagerImportService> _caseManagerImportService =
+            new Mock<ICaseManagerImportService>();
+        private readonly ITreatmentEventMapper _treatmentEventMapper;
 
         private Dictionary<Guid, TBService> _hospitalToTbServiceCodeDict;
+        private Dictionary<string, User> _usernameToUserDict = SetUserDict();
 
         public NotificationMapperTest()
         {
+            _caseManagerImportService
+                .Setup(serv => serv.ImportOrUpdateLegacyUser(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(() => Task.CompletedTask);
+            _referenceDataRepositoryMock.Setup(repo => repo.GetUserByUsernameAsync(It.IsAny<string>()))
+                .Returns((string username) => Task.FromResult(_usernameToUserDict[username]));
             _referenceDataRepositoryMock.Setup(repo => repo.GetTbServiceFromHospitalIdAsync(It.IsAny<Guid>()))
                 .Returns((Guid guid) => Task.FromResult(_hospitalToTbServiceCodeDict[guid]));
             _referenceDataRepositoryMock.Setup(repo =>
@@ -59,11 +69,15 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Needs to happen after the mocking, as the constructor uses a method from reference data repo
             var importLogger = new ImportLogger();
+            _treatmentEventMapper =
+                new TreatmentEventMapper(_caseManagerImportService.Object, _referenceDataRepositoryMock.Object);
             _notificationMapper = new NotificationMapper(
                 _migrationRepository,
                 _referenceDataRepositoryMock.Object,
                 importLogger,
-                _postcodeService.Object);
+                _postcodeService.Object,
+                _caseManagerImportService.Object,
+                _treatmentEventMapper);
             _importValidator = new ImportValidator(importLogger, _referenceDataRepositoryMock.Object);
         }
 
@@ -397,6 +411,15 @@ namespace ntbs_service_unit_tests.DataMigration
             _migrationRepository.GroupedNotificationsStub = grouped;
         }
 
+        private static Dictionary<string, User> SetUserDict()
+        {
+            return new Dictionary<string, User>
+            {
+                { "Nancy.Pickering@ntbs.phe.com", new User{ Id = 1 } },
+                { "Robert.Greene@ntbs.phe.com", new User { Id = 2 } }
+            };
+        }
+
         private class MigrationRepositoryStub : IMigrationRepository
         {
             public Task<IEnumerable<MigrationDbNotification>> GetNotificationsById(List<string> legacyIds)
@@ -472,7 +495,7 @@ namespace ntbs_service_unit_tests.DataMigration
 
             public Task<MigrationLegacyUser> GetLegacyUserByUsername(string username)
             {
-                throw new NotImplementedException();
+                return Task.FromResult(CvsUserRecords(username));
             }
 
             public Task<IEnumerable<MigrationLegacyUserHospital>> GetLegacyUserHospitalsByUsername(string username)
@@ -488,6 +511,12 @@ namespace ntbs_service_unit_tests.DataMigration
                 return CsvParser
                     .GetRecordsFromCsv<T>($"../../../TestData/MigrationDatabaseMock/{file}.csv")
                     .Where(record => legacyIds.Contains(record.OldNotificationId));
+            }
+            private static MigrationLegacyUser CvsUserRecords(string username)
+            {
+                return CsvParser
+                    .GetRecordsFromCsv<MigrationLegacyUser>($"../../../TestData/MigrationDatabaseMock/legacyUsers.csv")
+                    .SingleOrDefault(user => user.Username == username);
             }
         }
     }

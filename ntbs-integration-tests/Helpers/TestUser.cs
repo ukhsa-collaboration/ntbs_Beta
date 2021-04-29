@@ -18,6 +18,7 @@ namespace ntbs_integration_tests.Helpers
     // Tech debt: Some of the AD groups which are hardcoded here should actually be taken from config.
     public class TestUser : ITestUser
     {
+        public int Id { get; }
         public string Username { get; }
         public string DisplayName { get; }
         public UserType Type { get; }
@@ -25,12 +26,14 @@ namespace ntbs_integration_tests.Helpers
         public IEnumerable<string> TbServiceCodes { get; }
 
         private TestUser(
+            int id,
             string username,
             string displayName,
             UserType type,
             IEnumerable<string> adGroups,
             IEnumerable<string> tbServiceCodes = null)
         {
+            Id = id;
             Username = username;
             DisplayName = displayName;
             Type = type;
@@ -50,6 +53,7 @@ namespace ntbs_integration_tests.Helpers
         };
 
         public static TestUser NhsUserForAbingdonAndPermitted = new TestUser(
+            1234,
             "abingdon@nhs.uk",
             "Abingdon Permitted",
             UserType.NhsUser,
@@ -61,24 +65,28 @@ namespace ntbs_integration_tests.Helpers
             });
 
         public static TestUser NhsUserWithNoTbServices = new TestUser(
+            2345,
             "no-service@nhs.uk",
             "No Service",
             UserType.NhsUser,
             new string[] { });
 
         public static TestUser PheUserWithPermittedPhecCode = new TestUser(
+            3456,
             "permitted-phec@phe.com",
             "Permitted Phec",
             UserType.PheUser,
             new[] { "Global.NIS.NTBS.Admin", "Global.NIS.NTBS.SoE" });
 
         public static TestUser NationalTeamUser = new TestUser(
+            4567,
             "national-team@ntbs.com",
             "National Team",
             UserType.NationalTeam,
             new[] { "Global.NIS.NTBS.Admin", "Global.NIS.NTBS.NTS" });
 
         public static TestUser AbingdonCaseManager = new TestUser(
+            5678,
             Utilities.CASEMANAGER_ABINGDON_EMAIL,
             "TestCase TestManager",
             UserType.NhsUser,
@@ -86,6 +94,7 @@ namespace ntbs_integration_tests.Helpers
             tbServiceCodes: new[] { Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID });
 
         public static TestUser AbingdonCaseManager2 = new TestUser(
+            6789,
             Utilities.CASEMANAGER_ABINGDON_EMAIL2,
             "TestCase TestManager",
             UserType.NhsUser,
@@ -93,6 +102,7 @@ namespace ntbs_integration_tests.Helpers
             tbServiceCodes: new[] { Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID });
 
         public static TestUser Developer = new TestUser(
+            7890,
             "Developer@ntbs.phe.com",
             "BaseTestCase BaseTestManager",
             UserType.NationalTeam,

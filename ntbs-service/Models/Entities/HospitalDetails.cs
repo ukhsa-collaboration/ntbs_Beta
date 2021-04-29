@@ -21,7 +21,7 @@ namespace ntbs_service.Models.Entities
 
         [AssertThat("CaseManagerAllowedForTbService", ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
         [Display(Name = "Case Manager")]
-        public string CaseManagerUsername { get; set; }
+        public int? CaseManagerId { get; set; }
         public virtual User CaseManager { get; set; }
 
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
@@ -44,7 +44,7 @@ namespace ntbs_service.Models.Entities
             get
             {
                 // If email not set, or TBService missing (ergo navigation properties not yet retrieved) pass validation
-                if (string.IsNullOrEmpty(CaseManagerUsername) || TBService == null)
+                if (CaseManagerId == null || TBService == null)
                 {
                     return true;
                 }

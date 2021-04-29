@@ -39,7 +39,7 @@ namespace ntbs_service.Pages.Notifications
 
             await TryGetLinkedNotificationsAsync();
             await AuthorizeAndSetBannerAsync();
-            CaseManagerDetails = await _userRepository.GetUserByUsername(Notification.HospitalDetails.CaseManagerUsername);
+            CaseManagerDetails = await _userRepository.GetUserByUsername(Notification.HospitalDetails.CaseManager.Username);
             CaseManagerDetails.CaseManagerTbServices = CaseManagerDetails.CaseManagerTbServices
                 .OrderBy(x => x.TbService.PHEC.Name)
                 .ThenBy(x => x.TbService.Name)

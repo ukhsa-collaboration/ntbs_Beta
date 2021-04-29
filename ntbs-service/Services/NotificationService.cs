@@ -383,15 +383,15 @@ namespace ntbs_service.Services
         public async Task<Notification> CreateNewNotificationForUserAsync(ClaimsPrincipal user)
         {
             var defaultTbService = await _userService.GetDefaultTbService(user);
-            var caseManagerEmail = await GetDefaultCaseManagerEmail(user, defaultTbService?.Code);
-
+            var caseManagerId = await GetDefaultCaseManagerId(user, defaultTbService?.Code);
+            
             var notification = new Notification
             {
                 CreationDate = DateTime.Now,
                 HospitalDetails =
                 {
                     TBService = defaultTbService,
-                    CaseManagerUsername = caseManagerEmail
+                    CaseManagerId = caseManagerId
                 }
             };
 
@@ -466,14 +466,15 @@ namespace ntbs_service.Services
             await _notificationRepository.SaveChangesAsync();
         }
 
-        private async Task<string> GetDefaultCaseManagerEmail(ClaimsPrincipal user, string tbServiceCode)
+        private async Task<int?> GetDefaultCaseManagerId(ClaimsPrincipal user, string tbServiceCode)
         {
             var caseManagersForTbService =
                 await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(new List<string> { tbServiceCode });
             var username = user.Username();
             var upperUserEmail = username?.ToUpperInvariant();
 
-            return caseManagersForTbService.Any(c => c.Username.ToUpperInvariant() == upperUserEmail) ? username : null;
+            var caseManager = caseManagersForTbService.FirstOrDefault(c => c.Username.ToUpperInvariant() == upperUserEmail);
+            return caseManager?.Id;
         }
 
         public async Task UpdateComorbidityAsync(Notification notification, ComorbidityDetails comorbidityDetails)
