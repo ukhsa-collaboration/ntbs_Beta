@@ -126,6 +126,8 @@ spec:
               value: "false"
             - name: ScheduledJobsConfig__MarkImportedNotificationsAsImportedEnabled
               value: "false"
+            - name: ExternalLinks__ReportingOverview
+              value: "https://app.powerbi.com/Redirect?action=OpenApp&appId=70e1af43-d5ca-48f8-b8c3-e146fc470fb7&ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666"
             - name: Sentry__Environment
               value: live
             - name: KRB5_CLIENT_KTNAME
