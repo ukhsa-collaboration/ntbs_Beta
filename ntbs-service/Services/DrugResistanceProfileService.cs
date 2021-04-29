@@ -9,12 +9,13 @@ using ntbs_service.Models.Projections;
 
 namespace ntbs_service.Services
 {
-    public interface IDrugResistanceProfilesService
+    public interface IDrugResistanceProfileService
     {
         Task<int> UpdateDrugResistanceProfiles(int maxNumberOfUpdates);
+        Task UpdateDrugResistanceProfiles(List<Notification> notifications);
     }
 
-    public class DrugResistanceProfileService : IDrugResistanceProfilesService
+    public class DrugResistanceProfileService : IDrugResistanceProfileService
     {
         private readonly INotificationService _notificationService;
         private readonly INotificationRepository _notificationRepository;
@@ -49,6 +50,18 @@ namespace ntbs_service.Services
             return totalNumberOfProfilesInNeedOfUpdate > maxNumberOfUpdates
                 ? totalNumberOfProfilesInNeedOfUpdate - maxNumberOfUpdates
                 : 0;
+        }
+
+        public async Task UpdateDrugResistanceProfiles(List<Notification> notifications)
+        {
+            var drugResistanceProfiles = await _drugResistanceProfileRepository.GetDrugResistanceProfilesAsync();
+
+            var notificationIds = notifications.Select(n => n.NotificationId);
+            var profilesToUpdateOnThisRun = drugResistanceProfiles
+                .Where(keyValuePair => notificationIds.Contains(keyValuePair.Key))
+                .ToDictionary(keyValuePair => keyValuePair.Key, keyValuePair => keyValuePair.Value);
+
+            await UpdateDrugResistanceProfiles(profilesToUpdateOnThisRun);
         }
 
         private async Task UpdateDrugResistanceProfiles(Dictionary<int, DrugResistanceProfile> updatedDrugResistanceProfiles)
@@ -132,11 +145,16 @@ namespace ntbs_service.Services
         }
     }
 
-    internal class MockDrugResistanceProfilesService : IDrugResistanceProfilesService
+    internal class MockDrugResistanceProfileService : IDrugResistanceProfileService
     {
         public Task<int> UpdateDrugResistanceProfiles(int maxNumberOfUpdates)
         {
             return Task.FromResult(0);
+        }
+
+        public Task UpdateDrugResistanceProfiles(List<Notification> notifications)
+        {
+            return Task.CompletedTask;
         }
     }
 
