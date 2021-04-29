@@ -218,7 +218,6 @@ namespace ntbs_service
             services.AddScoped<ILegacySearchService, LegacySearchService>();
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceFactory>();
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
-            services.AddScoped<INotificationCloningService, NotificationCloningService>();
             services.AddScoped<IUserSearchService, UserSearchService>();
             services.AddScoped<IClusterImportService, ClusterImportService>();
             services.AddScoped<ICaseManagerImportService, CaseManagerImportService>();
