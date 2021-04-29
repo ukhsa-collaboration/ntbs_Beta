@@ -107,7 +107,7 @@ namespace ntbs_service.Pages.Notifications
         
         public async Task<ContentResult> OnPostAuditPrintAsync()
         {
-            await _auditService.AuditPrint(NotificationId, UsernameHelper.GetUsername(HttpContext));
+            await _auditService.AuditPrint(NotificationId, UserHelper.GetUsername(HttpContext));
             return new ContentResult();
         }
     }

@@ -17,11 +17,13 @@ namespace ntbs_service.Pages.ContactDetails
     {
         private readonly IUserService _userService;
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly UserHelper _userHelper;
 
-        public IndexModel(IUserService userService, IReferenceDataRepository userRepository)
+        public IndexModel(IUserService userService, IReferenceDataRepository userRepository, UserHelper userHelper)
         {
             _userService = userService;
             _referenceDataRepository = userRepository;
+            _userHelper = userHelper;
         }
 
         public User ContactDetails { get; set; }
@@ -44,7 +46,7 @@ namespace ntbs_service.Pages.ContactDetails
 
             RegionalMemberships = await this._referenceDataRepository.GetPhecsByAdGroups(ContactDetails.AdGroups);
 
-            ViewData["IsEditable"] = Username == null || Username == User.Username();
+            ViewData["IsEditable"] = Username == null || Username == User.Username() || _userHelper.UserIsAdmin(HttpContext);
 
             ContactDetails.CaseManagerTbServices = ContactDetails.CaseManagerTbServices
                 .OrderBy(x => x.TbService.PHEC.Name)

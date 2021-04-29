@@ -42,9 +42,9 @@ namespace ntbs_service.Helpers
             return $"/LabResults/#specimen-{specimenId}";
         }
 
-        public static string GetContactDetailsSubPath(string subPath)
+        public static string GetContactDetailsSubPath(string user, string subPath)
         {
-            return $"/ContactDetails/{subPath}";
+            return $"/ContactDetails/{user}/{subPath}";
         }
 
         public static string GetFaqPageWithSectionAnchor(string anchorId)
