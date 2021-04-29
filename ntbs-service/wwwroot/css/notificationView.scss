@@ -1,7 +1,9 @@
+@import "./colors.scss";
+
 .notification-overview-type-and-edit-container {
   display: flex;
-  border-bottom: 1px solid #cccccc;
-  border-top: 1px solid #cccccc;
+  border-bottom: 1px solid $lighter-grey;
+  border-top: 1px solid $lighter-grey;
   padding-top: 10px;
   width: 100%;
 }
@@ -12,7 +14,7 @@
 
 .notification-edit-link {
   margin: auto 5px 14px auto;
-  
+
   @media print {
     display: none;
   }
@@ -45,16 +47,16 @@
 }
 
 .overview-alerts-container {
-  border-top: 1px #cccccc solid;
+  border-top: 1px $lighter-grey solid;
 }
 
 .overview-alert {
-  border-bottom: 1px #cccccc solid;
+  border-bottom: 1px $lighter-grey solid;
   padding: 10px 0;
 }
 
 .episode-grouping-overview-heading {
-  display: inline; 
+  display: inline;
   padding-right: 50px;
 }
 

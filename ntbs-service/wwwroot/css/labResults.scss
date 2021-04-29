@@ -1,3 +1,5 @@
+@import "./colors.scss";
+
 .lab-results-radio-container {
   width: 60px;
   display: flex;
@@ -67,12 +69,12 @@
 }
 
 .nhsuk-care-card--specimen {
-  @include care-card($phe-navy, $color_nhsuk-white, 4px);
+  @include care-card($specimen-card-border, $color_nhsuk-white, 4px);
 
   .nhsuk-care-card__arrow {
     &:before,
     &:after {
-      border-color: $phe-navy;
+      border-color: $specimen-card-border;
     }
   }
 

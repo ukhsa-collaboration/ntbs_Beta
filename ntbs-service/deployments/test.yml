@@ -86,8 +86,8 @@ spec:
               secretKeyRef:
                 name: development-ad-sync-credentials
                 key: password
-          - name: ExternalLinks__ReportingUri
-            value: ""
+          - name: ExternalLinks__ReportingOverview
+            value: "https://aptemus.sharepoint.com/:u:/r/sites/NTBS-development/SitePages/Reports_test.aspx"
           - name: MigrationConfig__TablePrefix
             value: "Test"
           - name: Sentry__Environment

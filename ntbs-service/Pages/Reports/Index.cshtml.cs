@@ -1,39 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Configuration;
+using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Reports
 {
-    /// <summary>
-    /// Route intended to be both a dummy location that's navigable for
-    /// when ExternalLinks__ReportingUri env variable is not set, and additional
-    /// a centralised location for logic when routing out to external reporting.
-    ///
-    /// Intended for all external links to reporting to route through here, to then be
-    /// redirected.
-    /// </summary>
     public class IndexModel : PageModel
     {
-        [BindProperty(SupportsGet = true)]
-        public string ReportType { get; set; }
+        public string ReportingPageExternalUrl { get; }
 
-        [BindProperty(SupportsGet = true)]
-        public string Id { get; set; }
-
-        public string ReportingUri { get; }
-
-
-        public IndexModel(IConfiguration configuration)
+        public IndexModel(IReportingLinksService reportingLinksService)
         {
-            ReportingUri = configuration.GetSection("ExternalLinks")?["ReportingUri"];
+            ReportingPageExternalUrl = reportingLinksService.GetReportingPageUrl();
         }
 
         public IActionResult OnGet()
         {
-            if (!string.IsNullOrEmpty(ReportingUri))
+            if (!string.IsNullOrEmpty(ReportingPageExternalUrl))
             {
-                return Redirect(ReportingUri);
-                // TODO: Add logic for routing to difference report types directly.
+                return Redirect(ReportingPageExternalUrl);
             }
 
             return Page();
