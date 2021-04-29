@@ -65,7 +65,7 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<MBovisOccupationExposure> MBovisOccupationExposures { get; set; }
         public virtual DbSet<MBovisAnimalExposure> MBovisAnimalExposure { get; set; }
         public DbSet<NotificationAndDuplicateIds> NotificationAndDuplicateIds { get; set; }
-        
+
         public DbSet<ReleaseVersion> ReleaseVersion { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
@@ -559,7 +559,7 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.Notes).HasMaxLength(500);
 
                 entity.HasIndex(e => e.Username).IsUnique();
-                
+
                 entity.HasKey(e => e.Id);
             });
 
@@ -653,6 +653,12 @@ namespace ntbs_service.DataAccess
 
             modelBuilder.Entity<DrugResistanceProfile>(entity =>
             {
+                entity.Property(e => e.Species)
+                    .HasMaxLength(30)
+                    .HasDefaultValue("No result");
+                entity.Property(e => e.DrugResistanceProfileString)
+                    .HasMaxLength(30)
+                    .HasDefaultValue("No result");
                 entity.ToTable("DrugResistanceProfile").HasKey(e => e.NotificationId);
             });
 
