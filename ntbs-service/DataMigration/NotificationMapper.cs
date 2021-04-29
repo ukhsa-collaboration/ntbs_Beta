@@ -155,9 +155,9 @@ namespace ntbs_service.DataMigration
                     notificationTransferEvents.Add(await _treatmentEventMapper.AsTransferEvent(transfer));
                 }
                 var notificationOutcomeEvents = new List<TreatmentEvent>();
-                foreach (var transfer in outcomeEvents.Where(sc => sc.OldNotificationId == id))
+                foreach (var outcome in outcomeEvents.Where(sc => sc.OldNotificationId == id))
                 {
-                    notificationOutcomeEvents.Add(await _treatmentEventMapper.AsOutcomeEvent(transfer));
+                    notificationOutcomeEvents.Add(await _treatmentEventMapper.AsOutcomeEvent(outcome));
                 }
                 var notificationMBovisAnimalExposures = mbovisAnimalExposures
                     .Where(sc => sc.OldNotificationId == id)
