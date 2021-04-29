@@ -20,7 +20,7 @@ namespace ntbs_integration_tests.ContactDetailsPages
         public async Task EditDetails_ValidFields_Success()
         {
             var user = TestUser.NationalTeamUser;
-            var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Username, ContactDetailsSubPaths.Edit));
+            var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Id, ContactDetailsSubPaths.Edit));
             using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
             {
                 client.DefaultRequestHeaders.Authorization =
@@ -52,7 +52,7 @@ namespace ntbs_integration_tests.ContactDetailsPages
         public async Task EditDetails_InvalidFields_DisplayErrors()
         {
             var user = TestUser.NationalTeamUser;
-            var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Username, ContactDetailsSubPaths.Edit));
+            var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Id, ContactDetailsSubPaths.Edit));
             using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
             {
                 // Arrange
@@ -96,7 +96,7 @@ namespace ntbs_integration_tests.ContactDetailsPages
         public async Task EditDetails_EditingOtherUser_IsAllowedForAdmin()
         {
             var user = TestUser.NationalTeamUser;
-            var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Username, ContactDetailsSubPaths.Edit));
+            var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Id, ContactDetailsSubPaths.Edit));
             using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
             {
                 // Arrange
@@ -126,7 +126,7 @@ namespace ntbs_integration_tests.ContactDetailsPages
         public async Task EditDetails_EditingOtherUser_IsForbiddenForNonAdmin()
         {
             var user = TestUser.NhsUserWithNoTbServices;
-            var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Username, ContactDetailsSubPaths.Edit));
+            var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Id, ContactDetailsSubPaths.Edit));
             using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
             {
                 // Arrange

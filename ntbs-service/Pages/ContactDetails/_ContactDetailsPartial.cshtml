@@ -7,7 +7,7 @@
         <h3 class="nhsuk-heading-m"> Contact details </h3>
         @if (ViewData["IsEditable"] as bool? == true)
         {
-            <a href="@RouteHelper.GetContactDetailsSubPath(Model.Username, ContactDetailsSubPaths.Edit)"
+            <a href="@RouteHelper.GetContactDetailsSubPath(Model.Id, ContactDetailsSubPaths.Edit)"
                class="case-manager-details-edit-link govuk-link--no-visited-state">
                 Edit
             </a>

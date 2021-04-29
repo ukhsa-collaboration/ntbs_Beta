@@ -1,4 +1,5 @@
 ﻿@page "/ServiceDirectory/SearchResults/{handler?}"
+@using ntbs_service.Helpers
 @model ntbs_service.Pages.ServiceDirectory.SearchResults
 
 @{
@@ -30,7 +31,7 @@
                 <li>
                     <!-- Each search hit is displayed using a notification banner -->
                     <div class="case-manager-search-result-container" id="search-result-item">
-                        <a class="case-manager-search-result-name" href=@($"/ContactDetails/{user.Username}")>
+                        <a class="case-manager-search-result-name" href="@RouteHelper.GetContactDetailsPath(user.Id)">
                              @user.DisplayName
                         </a>
                         <nhs-summary-list classes="case-manager-search-result-item-summary" is-without-border="true">

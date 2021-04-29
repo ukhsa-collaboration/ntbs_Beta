@@ -1,4 +1,5 @@
-﻿@page "/ContactDetails/{Username}/Edit/{handler?}"
+﻿@page "/ContactDetails/{UserId}/Edit/{handler?}"
+@using ntbs_service.Helpers
 @using ntbs_service.Models
 @model ntbs_service.Pages.ContactDetails.EditModel
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
@@ -137,7 +138,7 @@
                 id="save-button">
                     Save
             </button>
-            <nhs-back-link href="/ContactDetails/@RouteData.Values["Username"]">
+            <nhs-back-link href="@RouteHelper.GetContactDetailsPath(int.Parse((string)RouteData.Values["UserId"]))">
                 Cancel
             </nhs-back-link>
         </form>

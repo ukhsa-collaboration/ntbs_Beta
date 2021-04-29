@@ -15,9 +15,9 @@ namespace ntbs_service.Pages.ContactDetails
     {
         private readonly IUserRepository _userRepository;
         private readonly ValidationService _validationService;
-        private readonly UserHelper _userHelper;
+        private readonly IUserHelper _userHelper;
 
-        public EditModel(IUserRepository userRepository, UserHelper userHelper)
+        public EditModel(IUserRepository userRepository, IUserHelper userHelper)
         {
             _userRepository = userRepository;
             _userHelper = userHelper;
@@ -28,11 +28,11 @@ namespace ntbs_service.Pages.ContactDetails
         public User ContactDetails { get; set; }
         
         [BindProperty(SupportsGet = true)]
-        public string Username { get; set; }
+        public int UserId { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            ContactDetails = await _userRepository.GetUserByUsername(Username);
+            ContactDetails = await _userRepository.GetUserById(UserId);
             ContactDetails.CaseManagerTbServices = ContactDetails.CaseManagerTbServices
                 .OrderBy(x => x.TbService.Name)
                 .ThenBy(x => x.TbService.PHEC.Name)
@@ -48,8 +48,7 @@ namespace ntbs_service.Pages.ContactDetails
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await _userRepository.GetUserByUsername(Username);
-            if (ContactDetails.Username != user.Username && !_userHelper.UserIsAdmin(HttpContext))
+            if (!_userHelper.CurrentUserMatchesUsernameOrIsAdmin(HttpContext, ContactDetails.Username))
             {
                 return StatusCode((int)HttpStatusCode.Forbidden);
             }
@@ -61,7 +60,7 @@ namespace ntbs_service.Pages.ContactDetails
             }
 
             await _userRepository.UpdateUserContactDetails(ContactDetails);
-            return RedirectToPage("/ContactDetails/Index", new {username = Username});
+            return RedirectToPage("/ContactDetails/Index", new {userId = UserId});
         }
 
         private void ValidateModel()

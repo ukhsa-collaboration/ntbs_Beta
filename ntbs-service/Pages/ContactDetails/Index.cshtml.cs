@@ -17,9 +17,9 @@ namespace ntbs_service.Pages.ContactDetails
     {
         private readonly IUserService _userService;
         private readonly IReferenceDataRepository _referenceDataRepository;
-        private readonly UserHelper _userHelper;
+        private readonly IUserHelper _userHelper;
 
-        public IndexModel(IUserService userService, IReferenceDataRepository userRepository, UserHelper userHelper)
+        public IndexModel(IUserService userService, IReferenceDataRepository userRepository, IUserHelper userHelper)
         {
             _userService = userService;
             _referenceDataRepository = userRepository;
@@ -31,13 +31,14 @@ namespace ntbs_service.Pages.ContactDetails
         public IList<PHEC> RegionalMemberships { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public string Username { get; set; }
+        public int? UserId { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            ContactDetails = (Username == null)
-                ? await _userService.GetUser(User)
-                : await _referenceDataRepository.GetUserByUsernameAsync(Username);
+            var loggedInUser = await _userService.GetUser(User);
+            ContactDetails = UserId.HasValue
+                ? await _referenceDataRepository.GetUserByIdAsync(UserId.Value)
+                : loggedInUser;
 
             if (ContactDetails == null)
             {
@@ -46,9 +47,9 @@ namespace ntbs_service.Pages.ContactDetails
 
             RegionalMemberships = await this._referenceDataRepository.GetPhecsByAdGroups(ContactDetails.AdGroups);
 
-            ViewData["IsEditable"] = Username == null || Username == User.Username() || _userHelper.UserIsAdmin(HttpContext);
+            ViewData["IsEditable"] = _userHelper.CurrentUserMatchesUsernameOrIsAdmin(HttpContext, ContactDetails.Username);
 
-            ContactDetails.CaseManagerTbServices = ContactDetails.CaseManagerTbServices
+            ContactDetails.CaseManagerTbServices = ContactDetails?.CaseManagerTbServices
                 .OrderBy(x => x.TbService.PHEC.Name)
                 .ThenBy(x => x.TbService.Name)
                 .ToList();

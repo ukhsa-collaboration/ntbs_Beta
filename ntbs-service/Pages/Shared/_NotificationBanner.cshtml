@@ -51,13 +51,13 @@
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="bold-label"> Case manager </dt>
                 <dd class="cell-min-height" id="banner-case-manager">
-                     @if (@Model.CaseManagerUsername == null)
+                     @if (!Model.CaseManagerId.HasValue)
                      {
                          @Model.CaseManager
                      }
                      else
                      {
-                         <a class="case-manager-link" href=@($"/ContactDetails/{@Model.CaseManagerUsername}")>
+                         <a class="case-manager-link" href="@RouteHelper.GetContactDetailsPath(Model.CaseManagerId.Value)">
                              @Model.CaseManager
                          </a>
                      }
