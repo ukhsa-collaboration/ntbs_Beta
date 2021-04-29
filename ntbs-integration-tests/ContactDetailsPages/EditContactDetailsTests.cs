@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_integration_tests.TestServices;
 using ntbs_service;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Validations;
 using Xunit;
 
@@ -15,18 +16,17 @@ namespace ntbs_integration_tests.ContactDetailsPages
         public EditContactDetailsTests(NtbsWebApplicationFactory<Startup> factory)
             : base(factory) { }
 
-        private const string PageRoute = "/ContactDetails/Edit";
-
         [Fact]
         public async Task EditDetails_ValidFields_Success()
         {
             var user = TestUser.NationalTeamUser;
+            var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Username, ContactDetailsSubPaths.Edit));
             using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
             {
                 client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue(UserAuthentication.SchemeName);
                 // Arrange
-                var initialPage = await client.GetAsync(PageRoute);
+                var initialPage = await client.GetAsync(pageRoute);
                 var initialDocument = await GetDocumentAsync(initialPage);
 
                 var formData = new Dictionary<string, string>
@@ -41,7 +41,7 @@ namespace ntbs_integration_tests.ContactDetailsPages
                 };
 
                 // Act
-                var result = await client.SendPostFormWithData(initialDocument, formData, PageRoute);
+                var result = await client.SendPostFormWithData(initialDocument, formData, pageRoute);
 
                 // Assert
                 Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
@@ -52,10 +52,11 @@ namespace ntbs_integration_tests.ContactDetailsPages
         public async Task EditDetails_InvalidFields_DisplayErrors()
         {
             var user = TestUser.NationalTeamUser;
+            var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Username, ContactDetailsSubPaths.Edit));
             using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
             {
                 // Arrange
-                var initialPage = await client.GetAsync(PageRoute);
+                var initialPage = await client.GetAsync(pageRoute);
                 var initialDocument = await GetDocumentAsync(initialPage);
 
                 var formData = new Dictionary<string, string>
@@ -70,7 +71,7 @@ namespace ntbs_integration_tests.ContactDetailsPages
                 };
 
                 // Act
-                var result = await client.SendPostFormWithData(initialDocument, formData, PageRoute);
+                var result = await client.SendPostFormWithData(initialDocument, formData, pageRoute);
 
                 // Assert
                 var resultDocument = await GetDocumentAsync(result);
@@ -92,13 +93,14 @@ namespace ntbs_integration_tests.ContactDetailsPages
         }
 
         [Fact]
-        public async Task EditDetails_EditingOtherUser_IsForbidden()
+        public async Task EditDetails_EditingOtherUser_IsAllowedForAdmin()
         {
             var user = TestUser.NationalTeamUser;
+            var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Username, ContactDetailsSubPaths.Edit));
             using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
             {
                 // Arrange
-                var initialPage = await client.GetAsync(PageRoute);
+                var initialPage = await client.GetAsync(pageRoute);
                 var initialDocument = await GetDocumentAsync(initialPage);
 
                 var formData = new Dictionary<string, string>
@@ -113,7 +115,37 @@ namespace ntbs_integration_tests.ContactDetailsPages
                 };
 
                 // Act
-                var result = await client.SendPostFormWithData(initialDocument, formData, PageRoute);
+                var result = await client.SendPostFormWithData(initialDocument, formData, pageRoute);
+
+                // Assert
+                Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
+            }
+        }
+
+        [Fact]
+        public async Task EditDetails_EditingOtherUser_IsForbiddenForNonAdmin()
+        {
+            var user = TestUser.NhsUserWithNoTbServices;
+            var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Username, ContactDetailsSubPaths.Edit));
+            using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
+            {
+                // Arrange
+                var initialPage = await client.GetAsync(pageRoute);
+                var initialDocument = await GetDocumentAsync(initialPage);
+
+                var formData = new Dictionary<string, string>
+                {
+                    ["ContactDetails.Username"] = Utilities.CASEMANAGER_ABINGDON_EMAIL,
+                    ["ContactDetails.JobTitle"] = "Teacher",
+                    ["ContactDetails.PhoneNumberPrimary"] = "0888192311",
+                    ["ContactDetails.PhoneNumberSecondary"] = "0123871623",
+                    ["ContactDetails.EmailPrimary"] = "primary@email",
+                    ["ContactDetails.EmailSecondary"] = "secondary@email",
+                    ["ContactDetails.Notes"] = "Notes"
+                };
+
+                // Act
+                var result = await client.SendPostFormWithData(initialDocument, formData, pageRoute);
 
                 // Assert
                 Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
