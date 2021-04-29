@@ -90,7 +90,7 @@ namespace ntbs_service.Pages.Alerts
             {
                 NotificationId = NotificationId,
                 TbServiceCode = TransferRequest.TbServiceCode,
-                CaseManagerUsername = TransferRequest.CaseManagerUsername,
+                CaseManagerId = TransferRequest.CaseManagerId,
                 TransferReason = TransferRequest.TransferReason,
                 OtherReasonDescription = TransferRequest.OtherReasonDescription,
                 TransferRequestNote = TransferRequest.TransferRequestNote
@@ -108,10 +108,10 @@ namespace ntbs_service.Pages.Alerts
                     await _referenceDataRepository.GetTbServiceByCodeAsync(TransferRequest.TbServiceCode);
             }
 
-            if (TransferRequest.CaseManagerUsername != null)
+            if (TransferRequest.CaseManagerId.HasValue)
             {
                 TransferRequest.CaseManager =
-                    await _referenceDataRepository.GetCaseManagerByUsernameAsync(TransferRequest.CaseManagerUsername);
+                    await _referenceDataRepository.GetUserByIdAsync(TransferRequest.CaseManagerId.Value);
             }
 
             TransferRequest.NotificationTbServiceCode = Notification.HospitalDetails.TBServiceCode;
@@ -123,7 +123,7 @@ namespace ntbs_service.Pages.Alerts
             TbServices = new SelectList(tbServices, nameof(TBService.Code), nameof(TBService.Name));
             var caseManagers = await _referenceDataRepository.GetAllCaseManagers();
             CaseManagers = new SelectList(caseManagers,
-                nameof(Models.Entities.User.Username),
+                nameof(Models.Entities.User.Id),
                 nameof(Models.Entities.User.DisplayName));
             var phecs = await _referenceDataRepository.GetAllPhecs();
             Phecs = new SelectList(phecs, nameof(PHEC.Code), nameof(PHEC.Name));
@@ -165,7 +165,7 @@ namespace ntbs_service.Pages.Alerts
                 {
                     CaseManagers = filteredCaseManagers.Select(n => new OptionValue
                     {
-                        Value = n.Username.ToString(),
+                        Value = n.Id.ToString(),
                         Text = n.DisplayName
                     })
                 });

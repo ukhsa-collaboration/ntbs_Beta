@@ -45,7 +45,7 @@ namespace ntbs_service.Models
             TbServicePHECCode = notification.HospitalDetails.TBService?.PHECCode;
             LocationPHECCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
             CaseManager = notification.HospitalDetails.CaseManagerName;
-            CaseManagerUsername = notification.HospitalDetails.CaseManagerUsername;
+            CaseManagerUsername = notification.HospitalDetails.CaseManager?.Username;
             NhsNumber = notification.PatientDetails.FormattedNhsNumber;
             DateOfBirth = notification.PatientDetails.FormattedDob;
             CountryOfBirth = notification.PatientDetails.CountryName;

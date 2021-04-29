@@ -8,7 +8,7 @@ namespace ntbs_service.Models.Entities
         public string TbServiceCode { get; set; }
         public virtual TBService TbService { get; set; }
 
-        public string CaseManagerUsername { get; set; }
+        public int CaseManagerId { get; set; }
         public virtual User CaseManager { get; set; }
 
         public bool Equals(CaseManagerTbService other)
@@ -23,7 +23,7 @@ namespace ntbs_service.Models.Entities
                 return true;
             }
 
-            return TbServiceCode == other.TbServiceCode && CaseManagerUsername == other.CaseManagerUsername;
+            return TbServiceCode == other.TbServiceCode && CaseManagerId == other.CaseManagerId;
         }
 
         public override bool Equals(object obj)
@@ -48,7 +48,7 @@ namespace ntbs_service.Models.Entities
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(TbServiceCode, CaseManagerUsername);
+            return HashCode.Combine(TbServiceCode, CaseManagerId);
         }
     }
 }

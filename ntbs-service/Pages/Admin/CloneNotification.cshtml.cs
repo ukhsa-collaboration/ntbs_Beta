@@ -66,7 +66,7 @@ namespace ntbs_service.Pages.Admin
         public Guid? HospitalId { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public string CaseManagerUsername { get; set; }
+        public int? CaseManagerId { get; set; }
 
         [BindProperty(SupportsGet = true)]
         [StringLength(35)]
@@ -131,9 +131,9 @@ namespace ntbs_service.Pages.Admin
                 clone.HospitalDetails.HospitalId = HospitalId;
             }
 
-            if (CaseManagerUsername != null)
+            if (CaseManagerId != null)
             {
-                clone.HospitalDetails.CaseManagerUsername = CaseManagerUsername;
+                clone.HospitalDetails.CaseManagerId = CaseManagerId;
             }
 
             if (GivenName != null)

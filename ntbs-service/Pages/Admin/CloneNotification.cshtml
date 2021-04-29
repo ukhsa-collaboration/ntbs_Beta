@@ -161,13 +161,13 @@
                         var caseManagerSelectErrorState = hasCaseManagerError ? SelectType.Error : SelectType.Standard;
                     }
                     <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="CaseManagerUsername">
-                        <label nhs-label-type="Standard" asp-for="CaseManagerUsername">
+                        <label nhs-label-type="Standard" asp-for="CaseManagerId">
                             Case manager
                         </label>
                         <span nhs-span-type="ErrorMessage" id="case-manager-error" has-error="@hasCaseManagerError"
-                              ref="errorField" asp-validation-for="CaseManagerUsername">
+                              ref="errorField" asp-validation-for="CaseManagerId">
                         </span>
-                        <select ref="selectField" nhs-select-type="@caseManagerSelectErrorState" asp-for="CaseManagerUsername"
+                        <select ref="selectField" nhs-select-type="@caseManagerSelectErrorState" asp-for="CaseManagerId"
                                 asp-items="Model.CaseManagers" v-on:change="validate">
                             <option value="" selected>Please select</option>
                         </select>

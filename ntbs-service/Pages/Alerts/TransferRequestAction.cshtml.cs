@@ -43,7 +43,7 @@ namespace ntbs_service.Pages.Alerts
         [BindProperty]
         public Guid TargetHospitalId { get; set; }
         [BindProperty]
-        public string TargetCaseManagerUsername { get; set; }
+        public int? TargetCaseManagerId { get; set; }
 
 
         public TransferRequestActionModel(
@@ -87,9 +87,9 @@ namespace ntbs_service.Pages.Alerts
             var caseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(
                 new List<string> { TransferAlert.TbServiceCode });
             CaseManagers = new SelectList(caseManagers,
-                nameof(Models.Entities.User.Username),
+                nameof(Models.Entities.User.Id),
                 nameof(Models.Entities.User.DisplayName));
-            TargetCaseManagerUsername = TransferAlert.CaseManagerUsername;
+            TargetCaseManagerId = TransferAlert.CaseManagerId;
             return Page();
         }
 
@@ -121,7 +121,7 @@ namespace ntbs_service.Pages.Alerts
                 NotificationId = NotificationId,
                 EventDate = currentTime,
                 TreatmentEventType = TreatmentEventType.TransferOut,
-                CaseManagerUsername = Notification.HospitalDetails.CaseManagerUsername,
+                CaseManagerId = Notification.HospitalDetails.CaseManagerId,
                 TbServiceCode = Notification.HospitalDetails.TBServiceCode,
                 Note = TransferAlert.TransferRequestNote
             };
@@ -130,7 +130,7 @@ namespace ntbs_service.Pages.Alerts
                 NotificationId = NotificationId,
                 EventDate = currentTime.AddSeconds(1),
                 TreatmentEventType = TreatmentEventType.TransferIn,
-                CaseManagerUsername = TransferAlert.CaseManagerUsername,
+                CaseManagerId = TransferAlert.CaseManagerId,
                 TbServiceCode = TransferAlert.TbServiceCode,
                 Note = TransferAlert.TransferRequestNote
             };
@@ -145,7 +145,7 @@ namespace ntbs_service.Pages.Alerts
             Notification.PreviousTbServices.Add(previousTbService);
             Notification.HospitalDetails.TBServiceCode = TransferAlert.TbServiceCode;
             Notification.HospitalDetails.HospitalId = TargetHospitalId;
-            Notification.HospitalDetails.CaseManagerUsername = TargetCaseManagerUsername;
+            Notification.HospitalDetails.CaseManagerId = TargetCaseManagerId;
             await Service.UpdateHospitalDetailsAsync(Notification, Notification.HospitalDetails);
             await _treatmentEventRepository.AddAsync(transferOutEvent);
             await _treatmentEventRepository.AddAsync(transferInEvent);

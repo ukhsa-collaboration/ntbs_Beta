@@ -99,7 +99,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
 
             var caseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(tbServiceCodes);
-            CaseManagers = new SelectList(caseManagers, nameof(Models.Entities.User.Username), nameof(Models.Entities.User.DisplayName));
+            CaseManagers = new SelectList(caseManagers, nameof(Models.Entities.User.Id), nameof(Models.Entities.User.DisplayName));
         }
 
         protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
@@ -158,7 +158,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private async Task GetRelatedEntities()
         {
-            if (HospitalDetails.HospitalId != null)
+            if (HospitalDetails.HospitalId.HasValue)
             {
                 HospitalDetails.Hospital = await _referenceDataRepository.GetHospitalByGuidAsync(HospitalDetails.HospitalId.Value);
             }
@@ -166,9 +166,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 HospitalDetails.TBService = await _referenceDataRepository.GetTbServiceByCodeAsync(HospitalDetails.TBServiceCode);
             }
-            if (HospitalDetails.CaseManagerUsername != null)
+            if (HospitalDetails.CaseManagerId.HasValue)
             {
-                HospitalDetails.CaseManager = await _referenceDataRepository.GetCaseManagerByUsernameAsync(HospitalDetails.CaseManagerUsername);
+                HospitalDetails.CaseManager = await _referenceDataRepository.GetUserByIdAsync(HospitalDetails.CaseManagerId.Value);
             }
         }
 

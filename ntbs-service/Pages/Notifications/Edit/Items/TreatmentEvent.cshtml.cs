@@ -88,7 +88,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         protected override async Task ValidateAndSave()
         {
             TreatmentEvent.NotificationId = NotificationId;
-            TreatmentEvent.CaseManagerUsername = Notification.HospitalDetails.CaseManagerUsername;
+            TreatmentEvent.CaseManagerId = Notification.HospitalDetails.CaseManagerId;
             TreatmentEvent.TbServiceCode = Notification.HospitalDetails.TBServiceCode;
             TreatmentEvent.IsNotificationPostMortem = Notification.ClinicalDetails.IsPostMortem ?? false;
 
@@ -117,7 +117,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             {
                 if (RowId == null)
                 {
-                    TreatmentEvent.CaseManagerUsername = Notification.HospitalDetails.CaseManagerUsername;
+                    TreatmentEvent.CaseManagerId = Notification.HospitalDetails.CaseManagerId;
                     TreatmentEvent.TbServiceCode = Notification.HospitalDetails.TBServiceCode;
                     await _treatmentEventRepository.AddAsync(TreatmentEvent);
                 }

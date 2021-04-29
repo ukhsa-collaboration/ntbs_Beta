@@ -129,7 +129,7 @@ namespace ntbs_service.DataAccess
                 .Select(tb => new CaseManagerTbService
                 {
                     TbServiceCode = tb.Code,
-                    CaseManagerUsername = user.Username
+                    CaseManagerId = user.Id
                 })
                 .ToList();
 

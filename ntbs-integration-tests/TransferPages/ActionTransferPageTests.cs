@@ -33,7 +33,7 @@ namespace ntbs_integration_tests.TransferPage
                     {
                         TBServiceCode = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                         HospitalId = Guid.Parse(Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID),
-                        CaseManagerUsername = Utilities.CASEMANAGER_ABINGDON_EMAIL
+                        CaseManagerId = Utilities.CASEMANAGER_ABINGDON_ID
                     }
                 },
                 new Notification
@@ -43,7 +43,7 @@ namespace ntbs_integration_tests.TransferPage
                     HospitalDetails = new HospitalDetails()
                     {
                         TBServiceCode = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID,
-                        CaseManagerUsername = Utilities.CASEMANAGER_ABINGDON_EMAIL
+                        CaseManagerId = Utilities.CASEMANAGER_ABINGDON_ID
                     }
                 }
             };
@@ -100,7 +100,7 @@ namespace ntbs_integration_tests.TransferPage
             var formData = new Dictionary<string, string>
             {
                 ["AcceptTransfer"] = "true",
-                ["TargetCaseManagerUsername"] = Utilities.CASEMANAGER_ABINGDON_EMAIL,
+                ["TargetCaseManagerId"] = Utilities.CASEMANAGER_ABINGDON_ID.ToString(),
                 ["TargetHospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID
             };
 
@@ -113,7 +113,7 @@ namespace ntbs_integration_tests.TransferPage
             var overviewUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview);
             var overviewPage = await GetDocumentForUrlAsync(overviewUrl);
             Assert.Contains("Abingdon Community Hospital", overviewPage.QuerySelector("#banner-tb-service").TextContent);
-            Assert.Contains("TestCase TestManager", overviewPage.QuerySelector("#banner-case-manager").TextContent);
+            Assert.Contains("Abingdon Permitted", overviewPage.QuerySelector("#banner-case-manager").TextContent);
             Assert.Contains("ABINGDON COMMUNITY HOSPITAL", overviewPage.QuerySelector("#overview-hospital-name").TextContent);
             Assert.Null(overviewPage.QuerySelector("#alert-20003"));
         }
@@ -133,7 +133,7 @@ namespace ntbs_integration_tests.TransferPage
             var formData = new Dictionary<string, string>
             {
                 ["AcceptTransfer"] = "true",
-                ["TargetCaseManagerUsername"] = Utilities.CASEMANAGER_ABINGDON_EMAIL,
+                ["TargetCaseManagerId"] = Utilities.CASEMANAGER_ABINGDON_ID.ToString(),
                 ["TargetHospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID
             };
 

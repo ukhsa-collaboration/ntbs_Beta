@@ -139,7 +139,7 @@ namespace ntbs_service.DataMigration
             validationsResults.AddRange(ValidateObject(notification));
             singletonModels.Select(ValidateObject)
                 .ForEach(results => validationsResults.AddRange(results));
-            validationsResults.AddRange(await ValidateAndSetCaseManager(context, requestId, notification.HospitalDetails));
+            await VerifyCaseManager(context, requestId, notification.HospitalDetails);
             validationsResults.AddRange(
                 modelCollections.SelectMany(collection => collection.SelectMany(ValidateObject)));
 
@@ -156,32 +156,19 @@ namespace ntbs_service.DataMigration
             return validationsResults;
         }
 
-        private async Task<IEnumerable<ValidationResult>> ValidateAndSetCaseManager(PerformContext context,
-            string requestId,HospitalDetails details)
+        private async Task VerifyCaseManager(PerformContext context,
+            string requestId, HospitalDetails details)
         {
-            var validationsResults = new List<ValidationResult>();
-
-            if (string.IsNullOrEmpty(details.CaseManagerUsername))
+            if (!details.CaseManagerId.HasValue)
             {
-                return validationsResults;
+                return;
             }
-
-            var possibleCaseManager =
-                await _referenceDataRepository.GetUserByUsernameAsync(details.CaseManagerUsername);
-            if (possibleCaseManager != null)
+            
+            var possibleCaseManager = await _referenceDataRepository.GetUserByIdAsync(details.CaseManagerId.Value);
+            if (possibleCaseManager != null && !possibleCaseManager.IsCaseManager)
             {
-                if (!possibleCaseManager.IsCaseManager)
-                {
-                    _logger.LogWarning(context, requestId, "User set as case manager for notification is not a case manager.");
-                }
-                return validationsResults;
+                _logger.LogWarning(context, requestId, "User set as case manager for notification is not a case manager.");
             }
-
-            // As we have imported the case manager in a previous step we don't expect to see this message
-            var message = "Case manager assigned to notification is not present in NTBS database";
-            validationsResults.Add(new ValidationResult(message, new[] { nameof(details.CaseManagerUsername) }));
-
-            return validationsResults;
         }
     }
 }
