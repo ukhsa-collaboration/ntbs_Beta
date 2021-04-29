@@ -1,0 +1,20 @@
+﻿@using ntbs_service.Services
+@inject IReportingLinksService ReportingLinksService
+@model ntbs_service.Models.Entities.Notification
+
+@{
+    var clusterLink = ReportingLinksService.GetClusterReport(Model.ClusterId);
+}
+
+@if (string.IsNullOrEmpty(clusterLink))
+{
+    <span class="no-print"> @Model.ClusterId </span>
+}
+else
+{
+    <a href="@clusterLink" target="_blank" rel="noopener noreferrer">
+        @Model.ClusterId
+    </a>
+}
+
+<span class="no-screen"> @Model.ClusterId </span>
