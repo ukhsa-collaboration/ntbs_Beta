@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -38,16 +38,14 @@ namespace ntbs_service.Jobs
 
             try
             {
-                var stepOneResults = await ExecuteReportingLabSpecimanStoredProcedure(token);
-                var stepTwoResults = await ExecuteSpecimenMatchingGenerateStoredProcedure(token);
-                var stepThreeResults = await ExecuteReportingGenerateStoredProcedure(token);
-                var stepFourResults = await ExecuteMigrationGenerateStoredProcedure(token);
+                var stepOneResults = await ExecuteSpecimenMatchingGenerateStoredProcedure(token);
+                var stepTwoResults = await ExecuteReportingGenerateStoredProcedure(token);
+                var stepThreeResults = await ExecuteMigrationGenerateStoredProcedure(token);
 
                 var allResults = new List<dynamic>();
                 allResults.AddRange(stepOneResults);
                 allResults.AddRange(stepTwoResults);
                 allResults.AddRange(stepThreeResults);
-                allResults.AddRange(stepFourResults);
 
                 var success = DidExecuteSuccessfully(allResults);
             }
@@ -59,19 +57,6 @@ namespace ntbs_service.Jobs
             }
 
             Log.Information($"Finishing reporting data refresh job.");
-        }
-
-        protected virtual async Task<IEnumerable<dynamic>> ExecuteReportingLabSpecimanStoredProcedure(IJobCancellationToken token)
-        {
-            IEnumerable<dynamic> result = new List<dynamic>();
-
-            using (var connection = new SqlConnection(_reportingDatabaseConnectionString))
-            {
-                connection.Open();
-                result = await connection.QueryAsync("[dbo].[uspLabSpecimen]", _parameters, null, Constants.SqlServerDefaultCommandTimeOut, System.Data.CommandType.StoredProcedure);
-            }
-
-            return result;
         }
 
         protected virtual async Task<IEnumerable<dynamic>> ExecuteSpecimenMatchingGenerateStoredProcedure(IJobCancellationToken token)
