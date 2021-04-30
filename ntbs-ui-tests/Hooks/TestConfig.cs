@@ -38,6 +38,7 @@ namespace ntbs_ui_tests.Hooks
 
     public class UserConfig
     {
+        public int UserId { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string TbServiceCode { get; set; }

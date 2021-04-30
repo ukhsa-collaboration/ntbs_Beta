@@ -19,7 +19,7 @@ namespace ntbs_ui_tests.Helpers
             baseNotification.HospitalDetails = new HospitalDetails
             {
                 TBServiceCode = userConfig.TbServiceCode,
-                CaseManagerUsername = userConfig.Username
+                CaseManagerId = userConfig.UserId
             };
             return baseNotification;
         }
