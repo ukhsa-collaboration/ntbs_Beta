@@ -35,6 +35,7 @@ namespace ntbs_ui_tests.StepDefinitions
             try
             {
                 var user = Settings.Users[userId];
+                user.UserId = GetUserIdFromUsername(user.Username);
                 Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}");
                 Browser.FindElement(By.CssSelector("input[type=email]")).SendKeys(user.Username);
                 Browser.FindElement(By.CssSelector("input[type=submit][value=Next]")).Click();
@@ -212,6 +213,16 @@ namespace ntbs_ui_tests.StepDefinitions
                 context.SaveChanges();
             }
             TestContext.AddedNotificationIds.Add(notification.NotificationId);
+        }
+
+        private int GetUserIdFromUsername(string username)
+        {
+            var options = new DbContextOptionsBuilder<NtbsContext>();
+            options.UseSqlServer(Settings.EnvironmentConfig.ConnectionString);
+            using (var context = new NtbsContext(options.Options))
+            {
+                return context.User.Single(u => u.Username.ToLower() == username.ToLower()).Id;
+            }
         }
     }
 }
