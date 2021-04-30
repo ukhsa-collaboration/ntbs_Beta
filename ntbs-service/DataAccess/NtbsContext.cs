@@ -654,9 +654,11 @@ namespace ntbs_service.DataAccess
             modelBuilder.Entity<DrugResistanceProfile>(entity =>
             {
                 entity.Property(e => e.Species)
+                    .IsRequired()
                     .HasMaxLength(30)
                     .HasDefaultValue("No result");
                 entity.Property(e => e.DrugResistanceProfileString)
+                    .IsRequired()
                     .HasMaxLength(30)
                     .HasDefaultValue("No result");
                 entity.ToTable("DrugResistanceProfile").HasKey(e => e.NotificationId);
