@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ntbs-test
+  name: ntbs-load-test
 spec:
   selector:
     matchLabels:
-      app: ntbs-test
-  replicas: 1
+      app: ntbs-load-test
+  replicas: 2
   template:
     metadata:
       labels:
-        app: ntbs-test
+        app: ntbs-load-test
     spec:
       containers:
-      - name: ntbs-test
-        image: "ntbscontainerregistry.azurecr.io/ntbs-service:test"
+      - name: ntbs-load-test
+        image: "ntbscontainerregistry.azurecr.io/ntbs-service:load-test"
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -24,37 +24,37 @@ spec:
           - name: ConnectionStrings__ntbsContext
             valueFrom:
               secretKeyRef:
-                name: test-connection-strings
+                name: load-test-connection-strings
                 key: appDb
           - name: ConnectionStrings__ntbsMigratorContext
             valueFrom:
               secretKeyRef:
-                name: test-connection-strings
+                name: load-test-connection-strings
                 key: appDbMigrator
           - name: ConnectionStrings__keysContext
             valueFrom:
               secretKeyRef:
-                name: test-connection-strings
+                name: load-test-connection-strings
                 key: appDb
           - name: ConnectionStrings__auditContext
             valueFrom:
               secretKeyRef:
-                name: test-connection-strings
+                name: load-test-connection-strings
                 key: auditDb
           - name: ConnectionStrings__reporting
             valueFrom:
               secretKeyRef:
-                name: test-connection-strings
+                name: load-test-connection-strings
                 key: reportingDb
           - name: ConnectionStrings__specimenMatching
             valueFrom:
               secretKeyRef:
-                name: test-connection-strings
+                name: load-test-connection-strings
                 key: specimenMatchingDb
           - name: ConnectionStrings__migration
             valueFrom:
               secretKeyRef:
-                name: test-connection-strings
+                name: load-test-connection-strings
                 key: migrationDb
           - name: AdOptions__BaseUserGroup
             value: "Global.NIS.NTBS"
@@ -64,68 +64,46 @@ spec:
             value: "Global.NIS.NTBS.NTS"
           - name: AdOptions__ServiceGroupAdPrefix
             value: "Global.NIS.NTBS.Service"
-          - name: AzureAdOptions__ClientId
-            valueFrom:
-              secretKeyRef:
-                name: test-azuread-options
-                key: clientId
-          - name: AzureAdOptions__ClientSecret
-            valueFrom:
-              secretKeyRef:
-                name: test-azuread-options
-                key: clientSecret
-          - name: AzureAdOptions__Authority
-            valueFrom:
-              secretKeyRef:
-                name: test-azuread-options
-                key: authority
-          - name: AzureAdOptions__Enabled
+          - name: AdOptions__UseDummyAuth
             value: "true"
-          - name: LdapSettings__Password
-            valueFrom:
-              secretKeyRef:
-                name: development-ad-sync-credentials
-                key: password
-          - name: ExternalLinks__ReportingOverview
-            value: "https://app.powerbi.com/Redirect?action=OpenApp&appId=e3e5baa2-50f6-42c8-ae97-7c1bd720a204&ctid=dde2b1dd-a61c-4a89-9734-382c1f37630e"
-          - name: ExternalLinks__ClusterReport
-            value: "https://app.powerbi.com/groups/me/apps/e3e5baa2-50f6-42c8-ae97-7c1bd720a204/reports/c6fdd4ef-211f-4ae5-90e3-243fb341a3b4/ReportSection?ctid=dde2b1dd-a61c-4a89-9734-382c1f37630e&filter=Cluster%2FClusterId%20eq '<CLUSTER_ID>'"
           - name: MigrationConfig__TablePrefix
-            value: "Test"
+            value: "LoadTest"
           - name: Sentry__Environment
-            value: "test"
+            value: "load-test"
+          - name: ScheduledJobsConfig__UserSyncEnabled
+            value: "false"
       imagePullSecrets:
       - name: registry-password
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ntbs-test
+  name: ntbs-load-test
 spec:
   type: LoadBalancer
   ports:
     - port: 80
       targetPort: 8080
   selector:
-    app: ntbs-test
+    app: ntbs-load-test
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: ntbs-test
+  name: ntbs-load-test
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
     nginx.ingress.kubernetes.io/proxy-buffer-size: 16k
 spec:
   tls:
     - hosts:
-      - ntbs-test.e32846b1ddf0432eb63f.northeurope.aksapp.io
-      secretName: phe-ntbs-test-tls
+      - ntbs-load-test.e32846b1ddf0432eb63f.northeurope.aksapp.io
+      secretName: phe-ntbs-load-test-tls
   rules:
-  - host: ntbs-test.e32846b1ddf0432eb63f.northeurope.aksapp.io
+  - host: ntbs-load-test.e32846b1ddf0432eb63f.northeurope.aksapp.io
     http:
       paths:
       - backend:
-          serviceName: ntbs-test
+          serviceName: ntbs-load-test
           servicePort: 80
         path: /

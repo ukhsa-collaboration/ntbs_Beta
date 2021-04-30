@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: training-cluster-issuer
+spec:
+  acme:
+    email: team-ntbs@softwire.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: phe-ntbs-training-tls
+    solvers:
+    - http01:
+       ingress:
+         class: addon-http-application-routing

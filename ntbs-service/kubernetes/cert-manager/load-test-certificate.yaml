@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ntbs-load-test
+  namespace: default
+spec:
+  dnsNames:
+    - ntbs-load-test.e32846b1ddf0432eb63f.northeurope.aksapp.io
+  secretName: phe-ntbs-load-test-tls
+  issuerRef:
+    name: load-test-cluster-issuer
+    kind: ClusterIssuer
