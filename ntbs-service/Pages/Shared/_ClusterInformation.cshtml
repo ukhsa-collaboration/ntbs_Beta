@@ -1,5 +1,3 @@
-@using ntbs_service.Services
-@inject IReportingLinksService ReportingLinksService
 @model ntbs_service.Models.Entities.Notification
 
 @if (Model.ClusterId != null)
@@ -8,7 +6,8 @@
     <div>
         <p>
             <strong>@Html.DisplayNameFor(m => m.ClusterId): </strong>
-            <a href="@(ReportingLinksService.GetClusterReport(Model.ClusterId))"> @Model.ClusterId </a>
+
+            <partial name="_ClusterIdLink" model="@Model"/>
         </p>
     </div>
 }
