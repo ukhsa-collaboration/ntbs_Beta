@@ -18,7 +18,7 @@
   "dependencies": {
     "@babel/core": "7.13.14",
     "@babel/preset-env": "7.13.12",
-    "@sentry/browser": "6.2.5",
+    "@sentry/browser": "6.3.5",
     "@sentry/integrations": "6.2.5",
     "accessible-autocomplete": "2.0.3",
     "axios": "0.21.1",
