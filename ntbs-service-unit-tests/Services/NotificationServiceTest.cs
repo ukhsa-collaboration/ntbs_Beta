@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Moq;
 using ntbs_service.DataAccess;
@@ -428,6 +429,39 @@ namespace ntbs_service_unit_tests.Services
         {
             _mockNotificationRepository.Verify(mock =>
                 mock.SaveChangesAsync(It.IsAny<NotificationAuditType>(), It.IsAny<string>()));
+        }
+
+        [Fact]
+        public async Task CreateNewNotificationForUserAsync_CreatesCaseUsingUserDetails()
+        {
+            // Arrange
+            const string serviceCode = "TBS0008";
+            var tbService = new TBService
+            {
+                Code = serviceCode
+            };
+
+            const string username1 = "User1";
+            var userId1 = 1234;
+            var user1 = new User { Id = userId1, Username = username1 };
+            const string username2 = "User2";
+            var userId2 = 5678;
+            var user2 = new User { Id = userId2, Username = username2 };
+
+            var mockPrincipal1 = new Mock<ClaimsPrincipal>();
+            mockPrincipal1.Setup(u => u.FindFirst(ClaimTypes.Upn)).Returns(new Claim(ClaimTypes.Upn, username1));
+
+            _mockUserService.Setup(c => c.GetDefaultTbService(mockPrincipal1.Object)).Returns(Task.FromResult(tbService));
+            _mockReferenceDataRepository
+                .Setup(c => c.GetCaseManagersByTbServiceCodesAsync(new List<string> { serviceCode }))
+                .Returns(Task.FromResult((IList<User>)(new List<User> { user1, user2 })));
+
+            // Act
+            var newNotification = await _notificationService.CreateNewNotificationForUserAsync(mockPrincipal1.Object);
+
+            // Assert
+            Assert.Equal(tbService, newNotification.HospitalDetails.TBService);
+            Assert.Equal(userId1, newNotification.HospitalDetails.CaseManagerId);
         }
 
         [Fact]
