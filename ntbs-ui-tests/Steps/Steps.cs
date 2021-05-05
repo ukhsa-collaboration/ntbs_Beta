@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 using ntbs_ui_tests.Helpers;
 using ntbs_ui_tests.Hooks;
@@ -84,6 +86,17 @@ namespace ntbs_ui_tests.StepDefinitions
                 Thread.Sleep(1000);
             }
         }
+        
+        [When(@"I make selection (.*) from (.*) section for '(.*)'")]
+        public void WhenISelectValueFromGroupForFieldWithId(string value, string group, string elementId)
+        {
+            var selection = Browser.FindElement(By.XPath($"//select[@id='{elementId}']/optgroup[@label='{group}']/option[@value='{value}']"));
+            selection.Click();
+            if (!Settings.IsHeadless)
+            {
+                Thread.Sleep(1000);
+            }
+        }
 
         [When(@"I wait")]
         public void WhenIWait()
@@ -132,6 +145,15 @@ namespace ntbs_ui_tests.StepDefinitions
             link.Click();
         }
 
+        [When(@"I select (.*) from input list '(.*)'")]
+        public void WhenISelectFromInputList(string value, string inputListId)
+        {
+            FindById(inputListId).Click();
+            FindById(inputListId).SendKeys(value);
+            FindById(inputListId+"__option--0").Click();
+            FindById(inputListId).SendKeys("\t");
+        }
+
         [Then(@"I should see the Notification")]
         public void ThenIShouldSeeTheNotification()
         {
@@ -148,6 +170,36 @@ namespace ntbs_ui_tests.StepDefinitions
                 .FindElement(By.XPath(".."));
             Assert.Contains(eventType, episodesOverview.Text);
             Assert.Contains(dateString, episodesOverview.Text);
+        }
+
+        [Then(@"The value '(.*)' for the field '(.*)' in section '(.*)' is in the database")]
+        public void ThenDatabaseValueShouldEqual(string value, string field, string section)
+        {
+            CheckDatabaseValues(value, field, section);
+        }
+
+        [Then(@"The date '(.*)' for the field '(.*)' in section '(.*)' is in the database")]
+        public void ThenDatabaseDateValueShouldEqual(string date, string field, string section)
+        {
+            CheckDatabaseValues(DateTime.Parse(date, new CultureInfo("en-GB")), field, section);
+        }
+
+        [Then(@"The status '(.*)' for the field '(.*)' in section '(.*)' is in the database")]
+        public void ThenDatabaseStatusValueShouldEqual(Status status, string field, string section)
+        {
+            CheckDatabaseValues(status, field, section);
+        }
+        
+        [Then(@"The value for the field '(.*)' in section '(.*)' in the database is (.*)")]
+        public void ThenDatabaseBoolValueShouldEqual(string field, string section, bool value)
+        {
+            CheckDatabaseValues(value, field, section);
+        }
+        
+        [Then(@"The number '(.*)' for the field '(.*)' in section '(.*)' is in the database")]
+        public void ThenDatabaseIntValueShouldEqual(int value, string field, string section)
+        {
+            CheckDatabaseValues(value, field, section);
         }
 
         [Then(@"I should be on the Homepage")]
@@ -203,6 +255,31 @@ namespace ntbs_ui_tests.StepDefinitions
             Assert.Contains("Denotified", notificationHeading);
         }
 
+        private void CheckDatabaseValues(object value, string field, string section)
+        {
+            var currentNotificationId = GetNotificationIdFromUrl();
+            var notificationProperty = MapSectionToNotificationProperty(section);
+            var sectionProperty = MapFieldToSectionProperty(field);
+            var options = new DbContextOptionsBuilder<NtbsContext>();
+            options.UseSqlServer(Settings.EnvironmentConfig.ConnectionString);
+            using var context = new NtbsContext(options.Options);
+            var currentNotification = context.Notification.Single(n => n.NotificationId == currentNotificationId);
+            if (!string.IsNullOrEmpty(section))
+            {
+                var currentNotificationProperty = currentNotification.GetType().GetProperty(notificationProperty)
+                    .GetValue(currentNotification, null);
+                Assert.Equal(
+                    currentNotificationProperty.GetType().GetProperty(sectionProperty).GetValue(currentNotificationProperty, null),
+                    value);
+            }
+            else
+            {
+                Assert.Equal(
+                    currentNotification.GetType().GetProperty(sectionProperty).GetValue(currentNotification, null),
+                    value);
+            }
+        }
+
         private void SaveNotificationInDatabase(Notification notification)
         {
             var options = new DbContextOptionsBuilder<NtbsContext>();
@@ -223,6 +300,59 @@ namespace ntbs_ui_tests.StepDefinitions
             {
                 return context.User.Single(u => u.Username.ToLower() == username.ToLower()).Id;
             }
+        }
+
+        private int GetNotificationIdFromUrl()
+        {
+            var splitUrl = Browser.Url.Split("/").ToList();
+            return int.Parse(splitUrl[splitUrl.IndexOf("Notifications") + 1].Split("#")[0]);
+        }
+
+        private string MapSectionToNotificationProperty(string section)
+        {
+            return section switch
+            {
+                "Patient details" => "PatientDetails",
+                "Hospital details" => "HospitalDetails",
+                "Clinical details" => "ClinicalDetails",
+                "Test results" => "TestData",
+                "Contact tracing" => "ContactTracing",
+                "Social risk factors" => "SocialRiskFactors",
+                "Visitor details" => "VisitorDetails",
+                "Comorbidities" => "ComorbidityDetails",
+                "Immunosuppression" => "ImmunosuppressionDetails",
+                "Social context addresses" => "SocialContextAddress",
+                "Social context venues" => "SocialContextVenue",
+                "Previous history" => "PreviousTbHistory",
+                _ => null
+            };
+        }
+
+        private string MapFieldToSectionProperty(string field)
+        {
+            return field switch
+            {
+                "Given name" => "GivenName",
+                "Occupation other" => "OccupationOther",
+                "Notification date" => "NotificationDate",
+                "BCG vaccination" => "BCGVaccinationState",
+                "Home visit" => "HomeVisitCarriedOut",
+                "Home visit date" => "FirstHomeVisitDate",
+                "Test carried out" => "HasTestCarriedOut",
+                "Adults identified" => "AdultsIdentified",
+                "Adults screened" => "AdultsScreened",
+                "Children latent TB" => "ChildrenLatentTB",
+                "Children identified" => "ChildrenIdentified",
+                "Alcohol misuse" => "AlcoholMisuseStatus",
+                "Homelessness" => "RiskFactorHomelessness.Status",
+                "Asylum seeker" => "AsylumSeekerStatus",
+                "Has visitor" => "HasVisitor",
+                "Total number of countries" => "TotalNumberOfCountries",
+                "Stay length for country 1" => "StayLengthInMonths1",
+                "Immunosuppression status" => "Status",
+                "Immunosuppression other" => "OtherDescription",
+                _ => field
+            };
         }
     }
 }
