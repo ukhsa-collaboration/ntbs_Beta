@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>load_test_data_generation</RootNamespace>
+    <UserSecretsId>8256234F-BCDC-4B3C-9B2F-15450C83BC66</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

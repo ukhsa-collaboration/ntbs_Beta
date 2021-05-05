@@ -12,6 +12,10 @@ namespace load_test_data_generation.Notifications
     {
         private readonly IContextProvider contextProvider;
 
+        // There is one TB Service that we need to exclude from being added to a Notification, because
+        // there are no Hospitals in this TB Service.
+        private const string LondonClinicCode = "TBS0240";
+
         private List<Hospital> hospitals;
         private List<TBService> tbServices;
         private List<User> caseManagers;
@@ -25,14 +29,19 @@ namespace load_test_data_generation.Notifications
         public void Initialise()
         {
             hospitals = contextProvider.WithContext(context => context.Hospital.Where(h => !h.IsLegacy).ToList());
-            tbServices = contextProvider.WithContext(context => context.TbService.Where(s => !s.IsLegacy).ToList());
+            tbServices = contextProvider.WithContext(context =>
+            {
+                return context.TbService
+                    .Where(s => !s.IsLegacy && s.Code != LondonClinicCode)
+                    .ToList();
+            });
             caseManagers = contextProvider.WithContext(context =>
-                {
-                    return context.User
-                        .Include(u => u.CaseManagerTbServices)
-                        .Where(u => u.IsCaseManager)
-                        .ToList();
-                });
+            {
+                return context.User
+                    .Include(u => u.CaseManagerTbServices)
+                    .Where(u => u.IsCaseManager)
+                    .ToList();
+            });
 
             testHospitalDetails = new Faker<HospitalDetails>()
                 .RuleFor(h => h.TBServiceCode, f => f.PickRandom(tbServices).Code)
