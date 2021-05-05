@@ -1,0 +1,5 @@
+{
+  "ConnectionString": "data source=localhost;initial catalog=ntbsDev;trusted_connection=true;MultipleActiveResultSets=true;",
+  "GenerateUsers": false,
+  "NumberOfNotificationsToGenerate": null
+}
