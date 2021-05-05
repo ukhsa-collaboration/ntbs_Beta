@@ -90,6 +90,12 @@ namespace ntbs_service.Services
                 "FROM [dbo].[ufnGetUnmatchedSpecimensByPhec] (@param)",
                 _orderByUnmatchedStatement);
 
+        public static readonly string LegacyReferenceLaboratoryMatchesQuery = @"
+            SELECT [LegacyId], [ReferenceLaboratoryNumber]
+            FROM [dbo].[EtsSpecimenMatch]
+            WHERE LegacyId IN @Ids
+        ";
+
         public static string FormatEnumerableParams(IEnumerable<string> enumerable) =>
             enumerable != null ? string.Join(',', enumerable) : string.Empty;
     }

@@ -35,7 +35,6 @@ namespace ntbs_service.DataMigration
         private readonly INotificationRepository _notificationRepository;
         private readonly INotificationImportRepository _notificationImportRepository;
         private readonly IImportLogger _logger;
-        private readonly IMigrationRepository _migrationRepository;
         private readonly IMigratedNotificationsMarker _migratedNotificationsMarker;
         private readonly ISpecimenService _specimenService;
         private readonly IImportValidator _importValidator;
@@ -67,7 +66,6 @@ namespace ntbs_service.DataMigration
             _notificationRepository = notificationRepository;
             _notificationImportRepository = notificationImportRepository;
             _logger = logger;
-            _migrationRepository = migrationRepository;
             _migratedNotificationsMarker = migratedNotificationsMarker;
             _specimenService = specimenService;
             _importValidator = importValidator;
@@ -225,7 +223,7 @@ namespace ntbs_service.DataMigration
             ImportResult importResult)
         {
             var legacyIds = notifications.Select(n => n.ETSID);
-            var matches = await _migrationRepository.GetReferenceLaboratoryMatches(legacyIds);
+            var matches = await _specimenService.GetLegacyReferenceLaboratoryMatches(legacyIds);
             foreach (var (legacyId, referenceLaboratoryNumber) in matches)
             {
                 var notificationId = notifications.Single(n => n.ETSID == legacyId).NotificationId;

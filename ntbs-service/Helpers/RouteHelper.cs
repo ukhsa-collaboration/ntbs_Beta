@@ -51,6 +51,8 @@ namespace ntbs_service.Helpers
         {
             return $"/Help?faqId={anchorId}#{anchorId}";
         }
+
+        public static string GetCreateNotificationPath() => "Notifications/Create";
     }
 
     public static class NotificationSubPaths
