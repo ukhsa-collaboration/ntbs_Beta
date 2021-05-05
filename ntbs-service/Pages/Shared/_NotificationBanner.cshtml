@@ -42,7 +42,7 @@
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="bold-label"> Notification date </dt>
-                <dd class="cell-min-height"> @Model.NotificationDate </dd>
+                <dd class="cell-min-height" id="banner-notification-date"> @Model.NotificationDate </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="bold-label"> TB service </dt>
@@ -69,39 +69,39 @@
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter" classes="notification-banner-field">
                 <div class="bold-label"> Name </div>
-                <div class="cell-min-height"> @Model.Name </div>
+                <div class="cell-min-height" id="banner-name"> @Model.Name </div>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="bold-label"> Date of birth </div>
-                <div class="cell-min-height"> @Model.DateOfBirth </div>
+                <div class="cell-min-height" id="banner-dob"> @Model.DateOfBirth </div>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="bold-label"> Country of birth </div>
-                <div class="cell-min-height"> @Model.CountryOfBirth </div>
+                <div class="cell-min-height" id="banner-country-of-birth"> @Model.CountryOfBirth </div>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
-                <div class="bold-label"> Postcode </div>
+                <div class="bold-label" id="banner-postcode"> Postcode </div>
                 <div> @Model.Postcode </div>
             </nhs-grid-column>
         </nhs-grid-row>
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="bold-label"> NHS number </dt>
-                <dd class="cell-min-height">  @Model.NhsNumber </dd>
+                <dd class="cell-min-height" id="banner-nhs-number">  @Model.NhsNumber </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="bold-label"> Sex </div>
-                <div class="cell-min-height"> @Model.Sex </div>
+                <div class="cell-min-height" id="banner-sex"> @Model.Sex </div>
             </nhs-grid-column>
             @if (Model.NotificationStatus != NotificationStatus.Legacy)
             {
                 <nhs-grid-column grid-column-width="OneQuarter">
                     <div class="bold-label"> Drug resistance profile </div>
-                    <div> @Model.DrugResistance </div>
+                    <div id="banner-drug-resistance"> @Model.DrugResistance </div>
                 </nhs-grid-column>
                 <nhs-grid-column grid-column-width="OneQuarter">
                     <div class="bold-label"> Treatment outcome </div>
-                    <div> @Model.TreatmentOutcome </div>
+                    <div id="banner-treatment-outcome"> @Model.TreatmentOutcome </div>
                 </nhs-grid-column>
             }
         </nhs-grid-row>
