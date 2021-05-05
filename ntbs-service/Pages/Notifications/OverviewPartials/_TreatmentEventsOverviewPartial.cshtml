@@ -6,7 +6,7 @@
     var sectionSubPath = NotificationSubPaths.EditTreatmentEvents;
 }
 
-<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
+<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)-title">
     <h3 class="notification-details-type"> Treatment Events </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
@@ -19,7 +19,7 @@
 
 @if (Model.TreatmentPeriods.Count > 0)
 {
-     <div class="notification-overview-details-container">
+     <div class="notification-overview-details-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
         <div class="event-outcome-at-dates">
             @if (Model.Should12MonthOutcomeBeDisplayed)
             {

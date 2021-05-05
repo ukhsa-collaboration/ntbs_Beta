@@ -6,7 +6,7 @@
     var sectionSubPath = NotificationSubPaths.EditSocialContextVenues;
 }
 
-<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
+<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)-title">
     <h3 class="notification-details-type"> Social Context - Venues </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
@@ -19,7 +19,7 @@
 @if (Model.Notification.SocialContextVenues.Count > 0)
 {
     <br/>
-    <div class="notification-overview-details-container">
+    <div class="notification-overview-details-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
         <partial name="_SocialContextVenuesTable" for="Notification.SocialContextVenues"/>
     </div>
 }
