@@ -25,6 +25,9 @@ namespace ntbs_service.Services
 
         Task<IEnumerable<SpecimenMatchPairing>> GetAllSpecimenPotentialMatchesAsync();
 
+        Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>> GetLegacyReferenceLaboratoryMatches(
+            IEnumerable<string> legacyIds);
+
         /// <summary>
         /// Calls stored proc which removes the match record
         /// </summary>
@@ -108,6 +111,29 @@ namespace ntbs_service.Services
             {
                 connection.Open();
                 return await connection.QueryAsync<SpecimenMatchPairing>(query);
+            }
+        }
+
+        public async Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>>
+            GetLegacyReferenceLaboratoryMatches(IEnumerable<string> legacyIds)
+        {
+            // The table we're referencing here has legacyIds stored as INTs (since they are all ETS ids)
+            // Therefore we need to convert to and from strings
+            var intIds = legacyIds
+                .Select(id => int.TryParse(id, out var intId) ? intId : (int?)null)
+                .Where(id => id.HasValue)
+                .Select(id => id.Value);
+            using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
+            {
+                connection.Open();
+                var queryResult = await connection.QueryAsync<(int LegacyId, string ReferenceLaboratoryNumber)>(
+                    SpecimenQueryHelper.LegacyReferenceLaboratoryMatchesQuery,
+                    new { Ids = intIds });
+                return queryResult.Select(tuple =>
+                {
+                    var legacyId = tuple.LegacyId.ToString();
+                    return (legacyId, tuple.ReferenceLaboratoryNumber);
+                });
             }
         }
 

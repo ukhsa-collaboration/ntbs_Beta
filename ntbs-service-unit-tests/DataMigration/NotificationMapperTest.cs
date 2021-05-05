@@ -488,11 +488,6 @@ namespace ntbs_service_unit_tests.DataMigration
                 throw new NotImplementedException();
             }
 
-            public Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>> GetReferenceLaboratoryMatches(IEnumerable<string> legacyIds)
-            {
-                throw new NotImplementedException();
-            }
-
             public Task<MigrationLegacyUser> GetLegacyUserByUsername(string username)
             {
                 return Task.FromResult(CvsUserRecords(username));

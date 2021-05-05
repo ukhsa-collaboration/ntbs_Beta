@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -154,6 +154,13 @@ namespace ntbs_service.Services
         public Task<IEnumerable<SpecimenMatchPairing>> GetAllSpecimenPotentialMatchesAsync()
         {
             return Task.FromResult((IEnumerable<SpecimenMatchPairing>)new List<SpecimenMatchPairing>());
+        }
+
+        public Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>>
+            GetLegacyReferenceLaboratoryMatches(IEnumerable<string> legacyIds)
+        {
+            return Task.FromResult(
+                new List<(string LegacyId, string ReferenceLaboratoryNumber)>().AsEnumerable());
         }
 
         public Task<bool> UnmatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName)

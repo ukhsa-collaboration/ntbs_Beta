@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -31,9 +31,6 @@ namespace ntbs_service.DataMigration
         Task<IEnumerable<MigrationDbMBovisMilkConsumption>> GetMigrationMBovisUnpasteurisedMilkConsumption(List<string> legacyIds);
         Task<MigrationLegacyUser> GetLegacyUserByUsername(string username);
         Task<IEnumerable<MigrationLegacyUserHospital>> GetLegacyUserHospitalsByUsername(string username);
-
-        Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>> GetReferenceLaboratoryMatches(
-            IEnumerable<string> legacyIds);
     }
 
     public class MigrationRepository : IMigrationRepository
@@ -121,12 +118,6 @@ namespace ntbs_service.DataMigration
             FROM MigrationMBovisUnpasteurisedMilkConsumptionView
             WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
-        ";
-        private const string ReferenceLaboratoryMatchesQuery = @"
-            SELECT LegacyId, ReferenceLaboratoryNumber
-            FROM EtsLaboratoryResultsView
-            WITH (NOLOCK)
-            WHERE LegacyId IN @Ids
         ";
         const string LegacyUserByUsernameQuery = @"
             SELECT *
@@ -234,29 +225,6 @@ namespace ntbs_service.DataMigration
         public async Task<IEnumerable<MigrationDbMBovisMilkConsumption>> GetMigrationMBovisUnpasteurisedMilkConsumption(List<string> legacyIds)
         {
             return await ExecuteByIdQuery<MigrationDbMBovisMilkConsumption>(MigrationMBovisUnpasteurisedMilkConsumptionQuery, legacyIds);
-        }
-
-        public async Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>>
-            GetReferenceLaboratoryMatches(IEnumerable<string> legacyIds)
-        {
-            // The table we're referencing here has legacyIds stored as INTs (since they are all ETS ids)
-            // Therefore we need to convert to and from strings
-            var intIds = legacyIds
-                .Select(id => int.TryParse(id, out var intId) ? intId : (int?)null)
-                .Where(id => id.HasValue)
-                .Select((id => id.Value));
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                return (await connection.QueryAsync<(int LegacyId, string ReferenceLaboratoryNumber)>(
-                        ReferenceLaboratoryMatchesQuery,
-                        new { Ids = intIds }))
-                    .Select(tuple =>
-                    {
-                        var legacyId = tuple.LegacyId.ToString();
-                        return (LegacyId: legacyId, tuple.ReferenceLaboratoryNumber);
-                    });
-            }
         }
 
         public async Task<MigrationLegacyUser> GetLegacyUserByUsername(string username)
