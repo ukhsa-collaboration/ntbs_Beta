@@ -86,7 +86,7 @@ spec:
           - name: Sentry__Environment
             value: "uat"
       imagePullSecrets:
-      - name: registery-password
+      - name: registry-password
 ---
 apiVersion: v1
 kind: Service
