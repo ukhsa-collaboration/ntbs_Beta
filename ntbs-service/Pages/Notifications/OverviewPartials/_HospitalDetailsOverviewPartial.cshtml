@@ -6,7 +6,7 @@
     var sectionSubPath = NotificationSubPaths.EditHospitalDetails;
 }
 
-<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
+<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)-title">
     <h3 class="notification-details-type"> Hospital Details </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
@@ -17,7 +17,7 @@
     }
 </div>
 
-<div class="notification-overview-details-container">
+<div class="notification-overview-details-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
 
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
