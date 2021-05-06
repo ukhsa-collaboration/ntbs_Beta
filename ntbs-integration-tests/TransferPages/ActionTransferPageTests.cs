@@ -114,7 +114,7 @@ namespace ntbs_integration_tests.TransferPage
             var overviewPage = await GetDocumentForUrlAsync(overviewUrl);
             Assert.Contains("Abingdon Community Hospital", overviewPage.QuerySelector("#banner-tb-service").TextContent);
             Assert.Contains("Abingdon Permitted", overviewPage.QuerySelector("#banner-case-manager").TextContent);
-            Assert.Contains("ABINGDON COMMUNITY HOSPITAL", overviewPage.QuerySelector("#overview-hospital-name").TextContent);
+            Assert.Contains("ABINGDON COMMUNITY HOSPITAL", overviewPage.QuerySelector("#overview-hospital-details-hospital-name").TextContent);
             Assert.Null(overviewPage.QuerySelector("#alert-20003"));
         }
 
