@@ -4,9 +4,10 @@
 
 @{
     var sectionSubPath = NotificationSubPaths.EditTreatmentEvents;
+    var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath);
 }
 
-<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)-title">
+<div class="notification-overview-type-and-edit-container" id="@sectionId-title">
     <h3 class="notification-details-type"> Treatment Events </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
@@ -19,25 +20,25 @@
 
 @if (Model.TreatmentPeriods.Count > 0)
 {
-     <div class="notification-overview-details-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
+     <div class="notification-overview-details-container" id="@sectionId">
         <div class="event-outcome-at-dates">
             @if (Model.Should12MonthOutcomeBeDisplayed)
             {
-                <div>
+                <div  id="@sectionId-12-month-outcome">
                     <strong> Outcome at 12 months </strong> @(Model.OutcomeAt12Months?.TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded")
                 </div>
             }
 
             @if (Model.Should24MonthOutcomeBeDisplayed)
             {
-                <div>
+                <div id="@sectionId-24-month-outcome">
                     <strong> Outcome at 24 months </strong> @(Model.OutcomeAt24Months?.TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded")
                 </div>
             }
 
             @if (Model.Should36MonthOutcomeBeDisplayed)
             {
-                <div>
+                <div id="@sectionId-36-month-outcome">
                     <strong> Outcome at 36 months </strong> @(Model.OutcomeAt36Months?.TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded")
                 </div>
             }
@@ -45,18 +46,18 @@
 
         @foreach (var period in Model.TreatmentPeriods)
         {
-            <div>
+            <div id="@sectionId-@period.PeriodNumber">
                 <h4 class="episode-grouping-overview-heading">
                     @(period.IsTransfer ? "Transfer" :  $"Treatment period {period.PeriodNumber}")
                 </h4>
 
                 @if (period.TreatmentEvents.Last().IsEpisodeEndingTreatmentEvent())
                 {
-                    <span>@period.TreatmentEvents.First().FormattedEventDate to @period.TreatmentEvents.Last().FormattedEventDate</span>
+                    <span id="@sectionId-@period.PeriodNumber-dates">@period.TreatmentEvents.First().FormattedEventDate to @period.TreatmentEvents.Last().FormattedEventDate</span>
                 }
                 else
                 {
-                    <span>@period.TreatmentEvents.First().FormattedEventDate to Present</span>
+                    <span id="@sectionId-@period.PeriodNumber-dates">@period.TreatmentEvents.First().FormattedEventDate to Present</span>
                 }
             </div>
             <nhs-table classes="nhsuk-table--reduced-font" responsive>

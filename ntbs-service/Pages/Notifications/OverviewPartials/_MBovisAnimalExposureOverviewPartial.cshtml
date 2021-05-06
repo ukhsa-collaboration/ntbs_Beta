@@ -4,9 +4,10 @@
 
 @{
     var sectionSubPath = NotificationSubPaths.EditMBovisAnimalExposures;
+    var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath);
 }
 
-<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)-title">
+<div class="notification-overview-type-and-edit-container" id="@sectionId-title">
     <h3 class="notification-details-type"> M. bovis - Animal exposure </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
@@ -16,11 +17,11 @@
         </a>
     }
 </div>
-<div class="notification-overview-details-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
+<div class="notification-overview-details-container" id="@sectionId">
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneHalf">
             <div class="notification-details-label"> @Html.DisplayNameFor(m => m.Notification.MBovisDetails.AnimalExposureStatus) </div>
-            <div class="cell-min-height"> @Model.Notification.MBovisDetails.AnimalExposureStatus </div>
+            <div class="cell-min-height" id="@sectionId-animal-exposure-status"> @Model.Notification.MBovisDetails.AnimalExposureStatus </div>
         </nhs-grid-column>
     </nhs-grid-row>
 

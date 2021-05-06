@@ -4,9 +4,10 @@
 
 @{
     var sectionSubPath = NotificationSubPaths.EditSocialRiskFactors;
+    var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath);
 }
 
-<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)-title">
+<div class="notification-overview-type-and-edit-container" id="@sectionId-title">
     <h3 class="notification-details-type"> Social risk factors </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
@@ -16,19 +17,19 @@
         </a>
     }
 </div>
-<div class="notification-overview-details-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
+<div class="notification-overview-details-container" id="@sectionId">
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label">
                  @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.RiskFactorDrugs)
             </div>
-            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.RiskFactorDrugs?.Status </div>
+            <div class="cell-min-height" id="@sectionId-drugs"> @Model.Notification.SocialRiskFactors.RiskFactorDrugs?.Status </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneHalf">
             <div class="notification-details-label">
                  @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.DrugRiskFactorTimePeriods)
             </div>
-            <div> @Model.Notification.SocialRiskFactors.DrugRiskFactorTimePeriods </div>
+            <div id="@sectionId-drugs-time-period"> @Model.Notification.SocialRiskFactors.DrugRiskFactorTimePeriods </div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row>
@@ -36,13 +37,13 @@
             <div class="notification-details-label">
                  @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.RiskFactorHomelessness)
             </div>
-            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.RiskFactorHomelessness?.Status </div>
+            <div class="cell-min-height" id="@sectionId-homelessness"> @Model.Notification.SocialRiskFactors.RiskFactorHomelessness?.Status </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneHalf">
             <div class="notification-details-label">
                 @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.HomelessRiskFactorTimePeriods)
             </div>
-            <div> @Model.Notification.SocialRiskFactors.HomelessRiskFactorTimePeriods </div>
+            <div id="@sectionId-homelessness-time-period"> @Model.Notification.SocialRiskFactors.HomelessRiskFactorTimePeriods </div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row>
@@ -50,13 +51,13 @@
             <div class="notification-details-label">
                  @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.RiskFactorImprisonment)
             </div>
-            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.RiskFactorImprisonment?.Status </div>
+            <div class="cell-min-height" id="@sectionId-imprisonment"> @Model.Notification.SocialRiskFactors.RiskFactorImprisonment?.Status </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneHalf">
             <div class="notification-details-label">
                 @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.ImprisonmentRiskFactorTimePeriods)
             </div>
-            <div> @Model.Notification.SocialRiskFactors.ImprisonmentRiskFactorTimePeriods </div>
+            <div id="@sectionId-imprisonment-time-period"> @Model.Notification.SocialRiskFactors.ImprisonmentRiskFactorTimePeriods </div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row>
@@ -64,13 +65,13 @@
             <div class="notification-details-label">
                  @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.RiskFactorSmoking)
             </div>
-            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.RiskFactorSmoking?.Status </div>
+            <div class="cell-min-height" id="@sectionId-smoking"> @Model.Notification.SocialRiskFactors.RiskFactorSmoking?.Status </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneHalf">
             <div class="notification-details-label">
                 @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.SmokingRiskFactorTimePeriods)
             </div>
-            <div> @Model.Notification.SocialRiskFactors.SmokingRiskFactorTimePeriods </div>
+            <div id="@sectionId-smoking-time-period"> @Model.Notification.SocialRiskFactors.SmokingRiskFactorTimePeriods </div>
         </nhs-grid-column>
     </nhs-grid-row>
 
@@ -80,25 +81,25 @@
             <div class="notification-details-label">
                 @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.AlcoholMisuseStatus)
             </div>
-            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.AlcoholMisuseStatus </div>
+            <div class="cell-min-height" id="@sectionId-alcohol"> @Model.Notification.SocialRiskFactors.AlcoholMisuseStatus </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label">
                 @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.MentalHealthStatus)
             </div>
-            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.MentalHealthStatus </div>
+            <div class="cell-min-height" id="@sectionId-mental-health"> @Model.Notification.SocialRiskFactors.MentalHealthStatus </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label">
                 @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.AsylumSeekerStatus)
             </div>
-            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.AsylumSeekerStatus </div>
+            <div class="cell-min-height" id="@sectionId-asylum-seeker"> @Model.Notification.SocialRiskFactors.AsylumSeekerStatus </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label">
                 @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.ImmigrationDetaineeStatus)
             </div>
-            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.ImmigrationDetaineeStatus </div>
+            <div class="cell-min-height" id="@sectionId-immigration-detainee"> @Model.Notification.SocialRiskFactors.ImmigrationDetaineeStatus </div>
         </nhs-grid-column>
     </nhs-grid-row>
 </div>
