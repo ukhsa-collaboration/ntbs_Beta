@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
@@ -255,27 +256,34 @@ namespace ntbs_ui_tests.StepDefinitions
             Assert.Contains("Denotified", notificationHeading);
         }
 
+        [Then(@"I can see the value '(.*)' for the field '(.*)' in the '(.*)' overview section")]
+        public void ThenICanSeeValueInTheOverviewSection(string value, string field, string section)
+        {
+            var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(
+                (string) typeof(NotificationSubPaths).GetProperty($"Edit{section}").GetValue(null, null));
+            var htmlId = $"{sectionId}-{field}";
+            Assert.Contains(value, FindById(htmlId).Text);
+        }
+
         private void CheckDatabaseValues(object value, string field, string section)
         {
             var currentNotificationId = GetNotificationIdFromUrl();
-            var notificationProperty = MapSectionToNotificationProperty(section);
-            var sectionProperty = MapFieldToSectionProperty(field);
             var options = new DbContextOptionsBuilder<NtbsContext>();
             options.UseSqlServer(Settings.EnvironmentConfig.ConnectionString);
             using var context = new NtbsContext(options.Options);
             var currentNotification = context.Notification.Single(n => n.NotificationId == currentNotificationId);
             if (!string.IsNullOrEmpty(section))
             {
-                var currentNotificationProperty = currentNotification.GetType().GetProperty(notificationProperty)
+                var currentNotificationProperty = currentNotification.GetType().GetProperty(section)
                     .GetValue(currentNotification, null);
                 Assert.Equal(
-                    currentNotificationProperty.GetType().GetProperty(sectionProperty).GetValue(currentNotificationProperty, null),
+                    currentNotificationProperty.GetType().GetProperty(field).GetValue(currentNotificationProperty, null),
                     value);
             }
             else
             {
                 Assert.Equal(
-                    currentNotification.GetType().GetProperty(sectionProperty).GetValue(currentNotification, null),
+                    currentNotification.GetType().GetProperty(field).GetValue(currentNotification, null),
                     value);
             }
         }
@@ -325,33 +333,6 @@ namespace ntbs_ui_tests.StepDefinitions
                 "Social context venues" => "SocialContextVenue",
                 "Previous history" => "PreviousTbHistory",
                 _ => null
-            };
-        }
-
-        private string MapFieldToSectionProperty(string field)
-        {
-            return field switch
-            {
-                "Given name" => "GivenName",
-                "Occupation other" => "OccupationOther",
-                "Notification date" => "NotificationDate",
-                "BCG vaccination" => "BCGVaccinationState",
-                "Home visit" => "HomeVisitCarriedOut",
-                "Home visit date" => "FirstHomeVisitDate",
-                "Test carried out" => "HasTestCarriedOut",
-                "Adults identified" => "AdultsIdentified",
-                "Adults screened" => "AdultsScreened",
-                "Children latent TB" => "ChildrenLatentTB",
-                "Children identified" => "ChildrenIdentified",
-                "Alcohol misuse" => "AlcoholMisuseStatus",
-                "Homelessness" => "RiskFactorHomelessness.Status",
-                "Asylum seeker" => "AsylumSeekerStatus",
-                "Has visitor" => "HasVisitor",
-                "Total number of countries" => "TotalNumberOfCountries",
-                "Stay length for country 1" => "StayLengthInMonths1",
-                "Immunosuppression status" => "Status",
-                "Immunosuppression other" => "OtherDescription",
-                _ => field
             };
         }
     }
