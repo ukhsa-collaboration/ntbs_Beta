@@ -198,37 +198,37 @@ Feature: Notification creation
       # Notification overview + checks that submission went correctly
     Then I should see the Notification
       # Check patient details
-    And The value 'Test' for the field 'Given name' in section 'Patient details' is in the database
-    And The value 'Software Developer' for the field 'Occupation other' in section 'Patient details' is in the database
+    And The value 'Test' for the field 'GivenName' in section 'PatientDetails' is in the database
+    And The value 'Software Developer' for the field 'OccupationOther' in section 'PatientDetails' is in the database
       # Check hospital details
-    And The value 'Dr Lawton' for the field 'Consultant' in section 'Hospital details' is in the database
-    And The date '1/1/2019' for the field 'Notification date' in section '' is in the database
+    And The value 'Dr Lawton' for the field 'Consultant' in section 'HospitalDetails' is in the database
+    And The date '1/1/2019' for the field 'NotificationDate' in section '' is in the database
       # Check clinical details
-    And The value 'Patient has been doing well' for the field 'Notes' in section 'Clinical details' is in the database
-    And The status 'Yes' for the field 'BCG vaccination' in section 'Clinical details' is in the database
-    And The status 'Yes' for the field 'Home visit' in section 'Clinical details' is in the database
-    And The date '2/1/2018' for the field 'Home visit date' in section 'Clinical details' is in the database
+    And The value 'Patient has been doing well' for the field 'Notes' in section 'ClinicalDetails' is in the database
+    And The status 'Yes' for the field 'BCGVaccinationState' in section 'ClinicalDetails' is in the database
+    And The status 'Yes' for the field 'HomeVisitCarriedOut' in section 'ClinicalDetails' is in the database
+    And The date '2/1/2018' for the field 'FirstHomeVisitDate' in section 'ClinicalDetails' is in the database
       # Check test results - BROKEN
         # And The value for the field 'Test carried out' in section 'Test results' in the database is true
           # Check contact tracing
-    And The number '2' for the field 'Adults identified' in section 'Contact tracing' is in the database
-    And The number '1' for the field 'Adults screened' in section 'Contact tracing' is in the database
-    And The number '12' for the field 'Children identified' in section 'Contact tracing' is in the database
-    And The number '5' for the field 'Children latent TB' in section 'Contact tracing' is in the database
+    And The number '2' for the field 'AdultsIdentified' in section 'ContactTracing' is in the database
+    And The number '1' for the field 'AdultsScreened' in section 'ContactTracing' is in the database
+    And The number '12' for the field 'ChildrenIdentified' in section 'ContactTracing' is in the database
+    And The number '5' for the field 'ChildrenLatentTB' in section 'ContactTracing' is in the database
       # Check social risk factors
-    And The status 'Yes' for the field 'Alcohol misuse' in section 'Social risk factors' is in the database
+    And The status 'Yes' for the field 'AlcoholMisuseStatus' in section 'SocialRiskFactors' is in the database
       # Need to work out a way to access more nested fields
         # And The status 'Unknown' for the field 'Homelessness' in section 'Social risk factors' is in the database
-    And The status 'No' for the field 'Asylum seeker' in section 'Social risk factors' is in the database
+    And The status 'No' for the field 'AsylumSeekerStatus' in section 'SocialRiskFactors' is in the database
       # Check travel/visitor history
-    And The status 'Yes' for the field 'Has visitor' in section 'Visitor details' is in the database
-    And The number '1' for the field 'Total number of countries' in section 'Visitor details' is in the database
-    And The number '4' for the field 'Stay length for country 1' in section 'Visitor details' is in the database
+    And The status 'Yes' for the field 'HasVisitor' in section 'VisitorDetails' is in the database
+    And The number '1' for the field 'TotalNumberOfCountries' in section 'VisitorDetails' is in the database
+    And The number '4' for the field 'StayLengthInMonths1' in section 'VisitorDetails' is in the database
       # Check co-morbidities and immunosuppression
-    And The status 'Yes' for the field 'HepatitisBStatus' in section 'Comorbidities' is in the database
-    And The status 'Unknown' for the field 'LiverDiseaseStatus' in section 'Comorbidities' is in the database
-    And The status 'Yes' for the field 'Immunosuppression status' in section 'Immunosuppression' is in the database
-    And The value 'Bad illness' for the field 'Immunosuppression other' in section 'Immunosuppression' is in the database
+    And The status 'Yes' for the field 'HepatitisBStatus' in section 'ComorbidityDetails' is in the database
+    And The status 'Unknown' for the field 'LiverDiseaseStatus' in section 'ComorbidityDetails' is in the database
+    And The status 'Yes' for the field 'Status' in section 'ImmunosuppressionDetails' is in the database
+    And The value 'Bad illness' for the field 'OtherDescription' in section 'ImmunosuppressionDetails' is in the database
       # Check social context addresses - BROKEN
     #And The value '12 George Court' for the field 'Address' in section 'Social context addresses' is in the database
     #And The date '16/5/2002' for the field 'DateTo' in section 'Social context addresses' is in the database
@@ -236,10 +236,14 @@ Feature: Notification creation
     #And The value 'Nandos' for the field 'Name' in section 'Social context venues' is in the database
     #And The date '23/3/2003' for the field 'DateFrom' in section 'Social context venues' is in the database
       # Check previous history
-    And The status 'Yes' for the field 'PreviouslyHadTb' in section 'Previous history' is in the database
-    And The number '2000' for the field 'PreviousTbDiagnosisYear' in section 'Previous history' is in the database
+    And The status 'Yes' for the field 'PreviouslyHadTb' in section 'PreviousTbHistory' is in the database
+    And The number '2000' for the field 'PreviousTbDiagnosisYear' in section 'PreviousTbHistory' is in the database
       # Check treatment events
     And I can see the starting event 'Diagnosis date` dated `01 Jan 2018'
+    # Check overview page
+    And I can see the value 'Pulmonary' for the field 'sites' in the 'ClinicalDetails' overview section
+    And I can see the value '03 Mar 2017' for the field 'presentation-date' in the 'ClinicalDetails' overview section
+    And I can see the value 'Patient has been doing well' for the field 'notes' in the 'ClinicalDetails' overview section
 
   Scenario: Create and submit notification without content
     When I click on the 'submit-button' button
