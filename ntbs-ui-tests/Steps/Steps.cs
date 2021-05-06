@@ -77,10 +77,19 @@ namespace ntbs_ui_tests.StepDefinitions
             }
         }
 
+        [When(@"I click '(.*)' on the navigation bar")]
+        public void ClickOnTheNavigationBar(string label)
+        {
+            var pageLink = Browser.FindElement(By.XPath($"//*[@id='navigation-side-menu']/li[contains(.,'{label}')]/a"));
+            pageLink.Click();
+        }
+
         [When(@"I enter (.*) into '(.*)'")]
         public void WhenIEnterValueIntoFieldWithId(string value, string elementId)
         {
             FindById(elementId).Click();
+            FindById(elementId).SendKeys(Keys.Control + "a");
+            FindById(elementId).SendKeys(Keys.Delete);
             FindById(elementId).SendKeys(value + "\t");
             if (!Settings.IsHeadless)
             {
@@ -114,7 +123,10 @@ namespace ntbs_ui_tests.StepDefinitions
         [When(@"I select radio value '(.*)'")]
         public void WhenISelectRadioOrCheckbox(string elementId)
         {
-            FindById(elementId).Click();
+            if (!FindById(elementId).Selected)
+            {
+                FindById(elementId).Click();
+            }
         }
 
         [When(@"I click on the '(.*)' button")]
@@ -141,7 +153,7 @@ namespace ntbs_ui_tests.StepDefinitions
         [When(@"I go to edit the '(.*)' section")]
         public void WhenIGoToEditTheSection(string overviewSectionId)
         {
-            var link = Browser.FindElement(By.Id(overviewSectionId))
+            var link = Browser.FindElement(By.Id($"{overviewSectionId}-title"))
                 .FindElement(By.LinkText("Edit"));
             link.Click();
         }
@@ -150,6 +162,8 @@ namespace ntbs_ui_tests.StepDefinitions
         public void WhenISelectFromInputList(string value, string inputListId)
         {
             FindById(inputListId).Click();
+            FindById(inputListId).SendKeys(Keys.Control + "a");
+            FindById(inputListId).SendKeys(Keys.Delete);
             FindById(inputListId).SendKeys(value);
             FindById(inputListId+"__option--0").Click();
             FindById(inputListId).SendKeys("\t");
@@ -171,36 +185,6 @@ namespace ntbs_ui_tests.StepDefinitions
                 .FindElement(By.XPath(".."));
             Assert.Contains(eventType, episodesOverview.Text);
             Assert.Contains(dateString, episodesOverview.Text);
-        }
-
-        [Then(@"The value '(.*)' for the field '(.*)' in section '(.*)' is in the database")]
-        public void ThenDatabaseValueShouldEqual(string value, string field, string section)
-        {
-            CheckDatabaseValues(value, field, section);
-        }
-
-        [Then(@"The date '(.*)' for the field '(.*)' in section '(.*)' is in the database")]
-        public void ThenDatabaseDateValueShouldEqual(string date, string field, string section)
-        {
-            CheckDatabaseValues(DateTime.Parse(date, new CultureInfo("en-GB")), field, section);
-        }
-
-        [Then(@"The status '(.*)' for the field '(.*)' in section '(.*)' is in the database")]
-        public void ThenDatabaseStatusValueShouldEqual(Status status, string field, string section)
-        {
-            CheckDatabaseValues(status, field, section);
-        }
-        
-        [Then(@"The value for the field '(.*)' in section '(.*)' in the database is (.*)")]
-        public void ThenDatabaseBoolValueShouldEqual(string field, string section, bool value)
-        {
-            CheckDatabaseValues(value, field, section);
-        }
-        
-        [Then(@"The number '(.*)' for the field '(.*)' in section '(.*)' is in the database")]
-        public void ThenDatabaseIntValueShouldEqual(int value, string field, string section)
-        {
-            CheckDatabaseValues(value, field, section);
         }
 
         [Then(@"I should be on the Homepage")]
@@ -257,7 +241,7 @@ namespace ntbs_ui_tests.StepDefinitions
         }
 
         [Then(@"I can see the value '(.*)' for the field '(.*)' in the '(.*)' overview section")]
-        public void ThenICanSeeValueInTheOverviewSection(string value, string field, string section)
+        public void ThenICanSeeValueForFieldInTheOverviewSection(string value, string field, string section)
         {
             var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(
                 (string) typeof(NotificationSubPaths).GetProperty($"Edit{section}").GetValue(null, null));
@@ -265,27 +249,12 @@ namespace ntbs_ui_tests.StepDefinitions
             Assert.Contains(value, FindById(htmlId).Text);
         }
 
-        private void CheckDatabaseValues(object value, string field, string section)
+        [Then(@"I can see the value '(.*)' in the '(.*)' table overview section")]
+        public void ThenICanSeeValueInTheOverviewSection(string value, string section)
         {
-            var currentNotificationId = GetNotificationIdFromUrl();
-            var options = new DbContextOptionsBuilder<NtbsContext>();
-            options.UseSqlServer(Settings.EnvironmentConfig.ConnectionString);
-            using var context = new NtbsContext(options.Options);
-            var currentNotification = context.Notification.Single(n => n.NotificationId == currentNotificationId);
-            if (!string.IsNullOrEmpty(section))
-            {
-                var currentNotificationProperty = currentNotification.GetType().GetProperty(section)
-                    .GetValue(currentNotification, null);
-                Assert.Equal(
-                    currentNotificationProperty.GetType().GetProperty(field).GetValue(currentNotificationProperty, null),
-                    value);
-            }
-            else
-            {
-                Assert.Equal(
-                    currentNotification.GetType().GetProperty(field).GetValue(currentNotification, null),
-                    value);
-            }
+            var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(
+                (string) typeof(NotificationSubPaths).GetProperty($"Edit{section}").GetValue(null, null));
+            Assert.Contains(value, FindById(sectionId).Text);
         }
 
         private void SaveNotificationInDatabase(Notification notification)
@@ -308,32 +277,6 @@ namespace ntbs_ui_tests.StepDefinitions
             {
                 return context.User.Single(u => u.Username.ToLower() == username.ToLower()).Id;
             }
-        }
-
-        private int GetNotificationIdFromUrl()
-        {
-            var splitUrl = Browser.Url.Split("/").ToList();
-            return int.Parse(splitUrl[splitUrl.IndexOf("Notifications") + 1].Split("#")[0]);
-        }
-
-        private string MapSectionToNotificationProperty(string section)
-        {
-            return section switch
-            {
-                "Patient details" => "PatientDetails",
-                "Hospital details" => "HospitalDetails",
-                "Clinical details" => "ClinicalDetails",
-                "Test results" => "TestData",
-                "Contact tracing" => "ContactTracing",
-                "Social risk factors" => "SocialRiskFactors",
-                "Visitor details" => "VisitorDetails",
-                "Comorbidities" => "ComorbidityDetails",
-                "Immunosuppression" => "ImmunosuppressionDetails",
-                "Social context addresses" => "SocialContextAddress",
-                "Social context venues" => "SocialContextVenue",
-                "Previous history" => "PreviousTbHistory",
-                _ => null
-            };
         }
     }
 }
