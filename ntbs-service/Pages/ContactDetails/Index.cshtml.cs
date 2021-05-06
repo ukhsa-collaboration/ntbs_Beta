@@ -35,10 +35,9 @@ namespace ntbs_service.Pages.ContactDetails
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var loggedInUser = await _userService.GetUser(User);
             ContactDetails = UserId.HasValue
                 ? await _referenceDataRepository.GetUserByIdAsync(UserId.Value)
-                : loggedInUser;
+                : await _userService.GetUser(User);
 
             if (ContactDetails == null)
             {
