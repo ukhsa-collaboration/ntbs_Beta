@@ -34,12 +34,10 @@ namespace ntbs_service_unit_tests.DataMigration
                 new Notification { NotificationId = 101, ETSID = "1" },
                 new Notification { NotificationId = 102, ETSID = "2" }
             };
+            var queryIds = new[] { "1", "2" };
             var specimenMatches = new[] { ("1", "Reference1"), ("2", "Reference2"), ("2", "Reference3") };
 
-            _specimenService.Setup(s =>
-                    s.GetLegacyReferenceLaboratoryMatches(
-                        It.Is<IEnumerable<string>>(l => l.SequenceEqual(new[] { "1", "2" }))))
-                .Returns(Task.FromResult(specimenMatches.AsEnumerable()));
+            SetupLegacySpecimenMatchesForIds(queryIds, specimenMatches);
 
             _specimenService.Setup(s =>
                     s.MatchSpecimenAsync(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
@@ -51,12 +49,9 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Assert
             Assert.Empty(_importResult.ValidationErrors);
-            _specimenService.Verify(
-                s => s.MatchSpecimenAsync(101, "Reference1", AuditService.AuditUserSystem, true), Times.Once);
-            _specimenService.Verify(
-                s => s.MatchSpecimenAsync(102, "Reference2", AuditService.AuditUserSystem, true), Times.Once);
-            _specimenService.Verify(
-                s => s.MatchSpecimenAsync(102, "Reference3", AuditService.AuditUserSystem, true), Times.Once);
+            VerifySpecimenMatchedToNotification(101, "Reference1");
+            VerifySpecimenMatchedToNotification(102, "Reference2");
+            VerifySpecimenMatchedToNotification(102, "Reference3");
         }
 
         [Fact]
@@ -67,12 +62,10 @@ namespace ntbs_service_unit_tests.DataMigration
                 new Notification { NotificationId = 101, ETSID = "1" },
                 new Notification { NotificationId = 102, ETSID = "2" }
             };
+            var queryIds = new[] { "1", "2" };
             var specimenMatches = new[] { ("1", "Reference1"), ("2", "Reference2") };
 
-            _specimenService.Setup(s =>
-                    s.GetLegacyReferenceLaboratoryMatches(
-                        It.Is<IEnumerable<string>>(l => l.SequenceEqual(new[] { "1", "2" }))))
-                .Returns(Task.FromResult(specimenMatches.AsEnumerable()));
+            SetupLegacySpecimenMatchesForIds(queryIds, specimenMatches);
 
             _specimenService.Setup(s =>
                     s.MatchSpecimenAsync(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
@@ -88,6 +81,22 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Assert
             Assert.Collection(_importResult.ValidationErrors, errorPair => Assert.Equal("2", errorPair.Key));
+        }
+
+        private void SetupLegacySpecimenMatchesForIds(IEnumerable<string> queryIds,
+            IEnumerable<(string, string)> specimenMatches)
+        {
+            _specimenService.Setup(s =>
+                    s.GetLegacyReferenceLaboratoryMatches(
+                        It.Is<IEnumerable<string>>(l => l.SequenceEqual(queryIds))))
+                .Returns(Task.FromResult(specimenMatches));
+        }
+
+        private void VerifySpecimenMatchedToNotification(int notificationId, string labReferenceNumber)
+        {
+            _specimenService.Verify(
+                s => s.MatchSpecimenAsync(notificationId, labReferenceNumber, AuditService.AuditUserSystem, true),
+                Times.Once);
         }
     }
 }
