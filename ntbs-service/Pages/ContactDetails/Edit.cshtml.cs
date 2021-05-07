@@ -13,23 +13,26 @@ namespace ntbs_service.Pages.ContactDetails
 {
     public class EditModel : PageModel
     {
-        private readonly IUserService _userService;
         private readonly IUserRepository _userRepository;
         private readonly ValidationService _validationService;
+        private readonly IUserHelper _userHelper;
 
-        public EditModel(IUserService userService, IUserRepository userRepository)
+        public EditModel(IUserRepository userRepository, IUserHelper userHelper)
         {
-            _userService = userService;
             _userRepository = userRepository;
+            _userHelper = userHelper;
             _validationService = new ValidationService(this);
         }
 
         [BindProperty]
         public User ContactDetails { get; set; }
+        
+        [BindProperty(SupportsGet = true)]
+        public int UserId { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            ContactDetails = await _userService.GetUser(User);
+            ContactDetails = await _userRepository.GetUserById(UserId);
             ContactDetails.CaseManagerTbServices = ContactDetails.CaseManagerTbServices
                 .OrderBy(x => x.TbService.Name)
                 .ThenBy(x => x.TbService.PHEC.Name)
@@ -45,8 +48,7 @@ namespace ntbs_service.Pages.ContactDetails
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await _userService.GetUser(User);
-            if (ContactDetails.Username != user.Username)
+            if (!_userHelper.CurrentUserMatchesUsernameOrIsAdmin(HttpContext, ContactDetails.Username))
             {
                 return StatusCode((int)HttpStatusCode.Forbidden);
             }
@@ -58,7 +60,7 @@ namespace ntbs_service.Pages.ContactDetails
             }
 
             await _userRepository.UpdateUserContactDetails(ContactDetails);
-            return RedirectToPage("/ContactDetails/Index");
+            return RedirectToPage("/ContactDetails/Index", new {userId = UserId});
         }
 
         private void ValidateModel()
@@ -75,10 +77,10 @@ namespace ntbs_service.Pages.ContactDetails
             }
         }
 
-        public ContentResult OnGetValidateCaseManagerProperty(string key, string value)
+        public ContentResult OnPostValidateCaseManagerProperty([FromBody]InputValidationModel input)
         {
             var user = new User();
-            return _validationService.GetPropertyValidationResult(user, key, value);
+            return _validationService.GetPropertyValidationResult(user, input.Key, input.Value);
         }
     }
 }

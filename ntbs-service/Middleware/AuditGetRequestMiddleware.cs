@@ -43,7 +43,7 @@ namespace ntbs_service.Middleware
 
                 if (shouldAudit && int.TryParse(pathArray[notificationIndex + 1], out var id))
                 {
-                    var userName = UsernameHelper.GetUsername(context);
+                    var userName = UserHelper.GetUsername(context);
 
                     // TODO: Differentiate between Cluster and Full view.
                     await auditService.AuditNotificationReadAsync(id, NotificationAuditType.Full, userName);

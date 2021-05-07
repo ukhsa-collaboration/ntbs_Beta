@@ -12,6 +12,7 @@ namespace ntbs_service.DataAccess
         Task AddOrUpdateUser(User user, IEnumerable<TBService> tbServices);
         Task AddUserLoginEvent(UserLoginEvent userLoginEvent);
         Task<User> GetUserByUsername(string username);
+        Task<User> GetUserById(int id);
         IQueryable<User> GetUserQueryable();
         Task<IList<User>> GetOrderedUsers();
         Task UpdateUserContactDetails(User user);
@@ -60,6 +61,13 @@ namespace ntbs_service.DataAccess
         {
             var user = await GetUserQueryable()
                 .FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
+            return user;
+        }
+
+        public async Task<User> GetUserById(int id)
+        {
+            var user = await GetUserQueryable()
+                .FirstOrDefaultAsync(u => u.Id == id);
             return user;
         }
 
