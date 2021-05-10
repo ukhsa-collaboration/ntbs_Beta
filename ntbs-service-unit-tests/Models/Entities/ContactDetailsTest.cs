@@ -20,7 +20,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
 
             // Assert
-            var expectedErrorMessage = string.Format(ValidationMessages.InvalidCharacter, "Job Title");
+            var expectedErrorMessage = string.Format(ValidationMessages.InvalidCharacter, "Job title");
             Assert.False(isValid, "Expected details to be invalid");
             Assert.Equal(expectedErrorMessage, validationResults.First().ErrorMessage);
         }
