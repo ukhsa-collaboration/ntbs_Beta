@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -7,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
-using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 using ntbs_ui_tests.Helpers;
 using ntbs_ui_tests.Hooks;
@@ -16,7 +14,7 @@ using OpenQA.Selenium.Support.UI;
 using TechTalk.SpecFlow;
 using Xunit;
 
-namespace ntbs_ui_tests.StepDefinitions
+namespace ntbs_ui_tests.Steps
 {
     [Binding]
     public class Steps
@@ -218,6 +216,7 @@ namespace ntbs_ui_tests.StepDefinitions
             var match = urlRegex.Match(Browser.Url);
             var idString = match.Groups[1].Value;
             Assert.True(match.Success, $"Url I am on instead: {Browser.Url}");
+            Assert.DoesNotContain(int.Parse(idString), TestContext.AddedNotificationIds);
             TestContext.AddedNotificationIds.Add(int.Parse(idString));
         }
 
@@ -285,6 +284,13 @@ namespace ntbs_ui_tests.StepDefinitions
         {
             var warningElement = FindById(warningId);
             Assert.Contains(warningMessage, warningElement.Text);
+        }
+
+        [Then(@"I element with id '(.*)' is not present")]
+        public void ThenICannotSeeTheElement(string elementId)
+        {
+            var elements = Browser.FindElements(By.Id(elementId));
+            Assert.False(elements.Any());
         }
 
         #endregion
