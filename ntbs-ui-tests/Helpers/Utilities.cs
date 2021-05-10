@@ -56,7 +56,6 @@ namespace ntbs_ui_tests.Helpers
                         DrugResistanceProfile = new DrugResistanceProfile {Species = "M. bovis"}
                     }
                 },
-                
                 {
                     "TO_BE_EDITED",
                     new Notification
@@ -169,6 +168,11 @@ namespace ntbs_ui_tests.Helpers
                             EventDate = new DateTime(2012, 2, 2), Note = "He wanted meds",
                             TreatmentEventType = TreatmentEventType.TreatmentRestart
                         }},
+                        MDRDetails = new MDRDetails
+                        {
+                            RelationshipToCase = "Godmother", CountryId = 38,
+                            ExposureToKnownCaseStatus = Status.Yes, NotifiedToPheStatus = Status.Yes
+                        },
                         NotificationDate = new DateTime(2011, 1, 1),
                         NotificationStatus = NotificationStatus.Notified,
                         NotificationSites = new List<NotificationSite>
