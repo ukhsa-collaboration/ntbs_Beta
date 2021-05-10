@@ -94,7 +94,7 @@ Feature: Notification creation
     And I can see the value '01 Jan 2019' for the field 'notification-date' in the 'PatientDetails' overview section
 
   Scenario: Create notification with all clinical details fields
-    When I click 'Clinical Details' on the navigation bar
+    When I click 'Clinical details' on the navigation bar
     Then I should be on the ClinicalDetails page
     When I check 'NotificationSiteMap_PULMONARY_'
     And I check 'bcg-vaccination-yes'
@@ -154,7 +154,7 @@ Feature: Notification creation
     And I can see the value 'Patient has been doing well' for the field 'notes' in the 'ClinicalDetails' overview section
     
   Scenario: Create notification with all test results fields
-    When I click 'Test Results' on the navigation bar
+    When I click 'Test results' on the navigation bar
     Then I should be on the TestResults page
     When I select radio value 'test-carried-out-yes'
     And I click on the 'add-new-manual-test-result-button' button
@@ -174,7 +174,7 @@ Feature: Notification creation
     And I can see the value '01 Jan 2012' in the 'TestResults' table overview section
 
   Scenario: Create notification with all contact tracing fields
-    When I click 'Contact Tracing' on the navigation bar
+    When I click 'Contact tracing' on the navigation bar
     Then I should be on the ContactTracing page
     When I enter 3 into 'ContactTracing_AdultsIdentified'
     And I enter 2 into 'ContactTracing_AdultsScreened'
@@ -210,7 +210,7 @@ Feature: Notification creation
     And I can see the value '3' for the field 'total-finished-treatment' in the 'ContactTracing' overview section
 
   Scenario: Create notification with all social risk factor fields
-    When I click 'Social Risk Factors' on the navigation bar
+    When I click 'Social risk factors' on the navigation bar
     Then I should be on the SocialRiskFactors page
     When I check 'alcohol-radio-button-Yes'
     And I check 'RiskFactorDrugs-radio-button-yes'
@@ -290,7 +290,7 @@ Feature: Notification creation
     And I can see the value 'Bad illness' for the field 'immunosuppression-other' in the 'Comorbidities' overview section
 
   Scenario: Create notification with all social context addresses fields
-    When I click 'Social Context - Addresses' on the navigation bar
+    When I click 'Social context - addresses' on the navigation bar
     Then I should be on the SocialContextAddresses page
     When I click on the 'add-new-social-context-address-button' button
     And I enter 12 George Court into 'Address_Address'
@@ -310,7 +310,7 @@ Feature: Notification creation
     And I can see the value 'Lived here a while' in the 'SocialContextAddresses' table overview section
 
   Scenario: Create notification with all social context venues fields
-    When I click 'Social Context - Venues' on the navigation bar
+    When I click 'Social context - venues' on the navigation bar
     Then I should be on the SocialContextVenues page
     When I click on the 'add-new-social-context-venue-button' button
     And I enter Catering into 'Venue_VenueTypeId'
@@ -335,7 +335,7 @@ Feature: Notification creation
     And I can see the value 'Catering' in the 'SocialContextVenues' table overview section
 
   Scenario: Create notification with all previous tb history fields
-    When I click 'Previous History' on the navigation bar
+    When I click 'Previous history' on the navigation bar
     Then I should be on the PreviousHistory page
     When I check 'previous-tb-yes'
     And I enter 2000 into 'PreviousTbHistory_PreviousTbDiagnosisYear'
