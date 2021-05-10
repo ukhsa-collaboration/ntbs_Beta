@@ -32,6 +32,8 @@ namespace ntbs_ui_tests.StepDefinitions
             TestContext = testContext;
         }
 
+        #region Arrange
+
         [Given(@"I have logged in as (.*)")]
         public void GivenIHaveLoggedIn(string userId)
         {
@@ -77,6 +79,10 @@ namespace ntbs_ui_tests.StepDefinitions
             }
         }
 
+        #endregion
+
+        #region Act
+
         [When(@"I click '(.*)' on the navigation bar")]
         public void ClickOnTheNavigationBar(string label)
         {
@@ -118,16 +124,6 @@ namespace ntbs_ui_tests.StepDefinitions
         public void WhenIWait()
         {
             Thread.Sleep(1000);
-        }
-
-        private IWebElement FindById(string elementId)
-        {
-            return Browser.FindElement(By.Id(elementId));
-        }
-
-        private IWebElement FindByXpath(string xpath)
-        {
-            return Browser.FindElement(By.XPath(xpath));
         }
 
         [When(@"I uncheck '(.*)'")]
@@ -196,6 +192,10 @@ namespace ntbs_ui_tests.StepDefinitions
             FindById(inputListId+"__option--0").Click();
             FindById(inputListId).SendKeys("\t");
         }
+
+        #endregion
+
+        #region Assert
 
         [Then(@"I should see the Notification")]
         public void ThenIShouldSeeTheNotification()
@@ -271,6 +271,32 @@ namespace ntbs_ui_tests.StepDefinitions
         {
             var sectionId = GetSectionIdFromSection(section);
             Assert.Contains(value, FindById(sectionId).Text);
+        }
+
+        [Then(@"I can see the error '(.*)'")]
+        public void ThenICanSeeTheError(string errorMessage)
+        {
+            var errorSection = FindByXpath("//*[@class='nhsuk-error-summary']");
+            Assert.Contains(errorMessage, errorSection.Text);
+        }
+
+        [Then(@"I see the warning '(.*)' for '(.*)'")]
+        public void ThenICanSeeTheWarningForId(string warningMessage, string warningId)
+        {
+            var warningElement = FindById(warningId);
+            Assert.Contains(warningMessage, warningElement.Text);
+        }
+
+        #endregion
+
+        private IWebElement FindById(string elementId)
+        {
+            return Browser.FindElement(By.Id(elementId));
+        }
+
+        private IWebElement FindByXpath(string xpath)
+        {
+            return Browser.FindElement(By.XPath(xpath));
         }
 
         private void SaveNotificationInDatabase(Notification notification)
