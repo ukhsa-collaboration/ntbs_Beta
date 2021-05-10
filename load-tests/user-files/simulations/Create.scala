@@ -160,513 +160,271 @@ class Create extends Simulation {
 			.check(status.is(200)))
 		.pause(2)
 
-	val editHospitalDetails = exec(http("edit_hospital_details_page")
-			.get("/Notifications/${notificationId}/Edit/HospitalDetails")
-			.headers(get_headers)
-			.check(
-				css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken"),
-				status.is(200))
-			.resources(http("get_hospitals")
-				.get("/Notifications/${notificationId}/Edit/HospitalDetails/GetFilteredListsByTbService?value=TBS0357")
-				.headers(get_headers)
-				.check(status.is(200))))
-		.pause(2)
-		.exec(http("request_33")
-			.post("/Notifications/${notificationId}/Edit/HospitalDetails/ValidateNotificationDate")
-			.headers(validate_headers)
-			.body(StringBody("""{"day":"05","month":"05","year":"2021","key":"NotificationDate","notificationId":"${notificationId}"}"""))
-			.check(status.is(200)))
-		.pause(1)
-		.exec(http("request_34")
-			.post("/Notifications/${notificationId}/Edit/HospitalDetails/ValidateHospitalDetailsProperty")
-			.headers(validate_headers)
-			.body(StringBody("""{"value":"TBS0028","shouldValidateFull":false,"key":"TBServiceCode","TBServiceCode":"TBS0028"}"""))
-			.check(status.is(200))
-			.resources(http("request_35")
-				.get("/Notifications/${notificationId}/Edit/HospitalDetails/GetFilteredListsByTbService?value=TBS0028")
-				.headers(get_headers)
-				.check(status.is(200))))
-		.pause(1)
-		.exec(http("request_36")
-			.post("/Notifications/${notificationId}/Edit/HospitalDetails/ValidateHospitalDetailsProperty")
-			.headers(validate_headers)
-			.body(StringBody("""{"value":"bcfc88e8-ead4-4e40-9d7e-be7896adbd4a","shouldValidateFull":false,"key":"HospitalId","HospitalId":"bcfc88e8-ead4-4e40-9d7e-be7896adbd4a"}"""))
-			.check(status.is(200)))
-		.pause(1)
-		.exec(http("request_37")
-			.post("/Notifications/${notificationId}/Edit/HospitalDetails/ValidateHospitalDetailsProperty")
-			.headers(validate_headers)
-			.body(StringBody("""{"value":null,"shouldValidateFull":false,"key":"Consultant","Consultant":""}"""))
-			.check(status.is(200)))
-		.pause(1)
-		.exec(http("request_38")
-			.post("/Notifications/${notificationId}/Edit/HospitalDetails/ValidateHospitalDetailsProperty")
-			.headers(validate_headers)
-			.body(StringBody("""{"value":"1158","shouldValidateFull":false,"key":"CaseManagerId","CaseManagerId":"1158"}"""))
-			.check(status.is(200)))
-		.pause(1)
-		.exec(http("request_39")
-			.post("/Notifications/${notificationId}/Edit/HospitalDetails?isBeingSubmitted=False")
-			.headers(save_headers)
-			.formParam("NotificationId", "${notificationId}")
-			.formParam("FormattedNotificationDate.Day", "05")
-			.formParam("FormattedNotificationDate.Month", "05")
-			.formParam("FormattedNotificationDate.Year", "2021")
-			.formParam("HospitalDetails.TBServiceCode", "TBS0028")
-			.formParam("HospitalDetails.HospitalId", "bcfc88e8-ead4-4e40-9d7e-be7896adbd4a")
-			.formParam("HospitalDetails.Consultant", "")
-			.formParam("HospitalDetails.CaseManagerId", "1158")
-			.formParam("actionName", "Save")
-			.formParam("__RequestVerificationToken", "${requestVerificationToken}")
-			.check(status.is(200)))
-		.pause(2)
+    val editHospitalDetails = new EditScenarioBuilder("edit_hospital_details", "/Notifications/${notificationId}/Edit/HospitalDetails")
+        .withFilters(List(
+            "GetFilteredListsByTbService" -> "value=TBS0357",
+            "GetFilteredListsByTbService" -> "value=TBS0028"))
+        .withValidations(List(
+            "ValidateNotificationDate" -> """{"day":"05","month":"05","year":"2021","key":"NotificationDate","notificationId":"${notificationId}"}""",
+            "ValidateHospitalDetailsProperty" -> """{"value":"TBS0028","shouldValidateFull":false,"key":"TBServiceCode","TBServiceCode":"TBS0028"}""",
+            "ValidateHospitalDetailsProperty" -> """{"value":"bcfc88e8-ead4-4e40-9d7e-be7896adbd4a","shouldValidateFull":false,"key":"HospitalId","HospitalId":"bcfc88e8-ead4-4e40-9d7e-be7896adbd4a"}""",
+            "ValidateHospitalDetailsProperty" -> """{"value":null,"shouldValidateFull":false,"key":"Consultant","Consultant":""}""",
+            "ValidateHospitalDetailsProperty" -> """{"value":"1158","shouldValidateFull":false,"key":"CaseManagerId","CaseManagerId":"1158"}"""))
+        .withFormParams(Map(
+            "NotificationId" -> "${notificationId}",
+            "FormattedNotificationDate.Day" -> "05",
+            "FormattedNotificationDate.Month" -> "05",
+            "FormattedNotificationDate.Year" -> "2021",
+            "HospitalDetails.TBServiceCode" -> "TBS0028",
+            "HospitalDetails.HospitalId" -> "bcfc88e8-ead4-4e40-9d7e-be7896adbd4a",
+            "HospitalDetails.Consultant" -> "",
+            "HospitalDetails.CaseManagerId" -> "1158",
+            "actionName" -> "Save"))
+        .build()
 
-	val editClinicalDetails = exec(http("edit_clinical_details_page")
-			.get("/Notifications/${notificationId}/Edit/ClinicalDetails")
-			.headers(get_headers)
-			.check(
-				css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken"),
-				status.is(200)))
-		.pause(2)
-		.exec(http("request_44")
-			.get("/Notifications/${notificationId}/Edit/ClinicalDetails/ValidateNotificationSites?valueList%5B0%5D=PULMONARY&shouldValidateFull=False")
-			.headers(validate_headers))
-		.pause(1)
-		.exec(http("request_45")
-			.get("/Notifications/${notificationId}/Edit/ClinicalDetails/ValidateNotificationSites?valueList%5B0%5D=PULMONARY&valueList%5B1%5D=BONE_SPINE&shouldValidateFull=False")
-			.headers(validate_headers))
-		.pause(1)
-		.exec(http("request_46")
-			.post("/Notifications/${notificationId}/Edit/ClinicalDetails/ValidateClinicalDetailsYearComparison")
-			.headers(validate_headers)
-			.body(StringBody("""{"newYear":"2001","shouldValidateFull":"False","existingYear":"1933","propertyName":"BCG vaccination year"}""")))
-		.pause(1)
-		.exec(http("request_47")
-			.post("/Notifications/${notificationId}/Edit/ClinicalDetails/ValidateClinicalDetailsDate")
-			.headers(validate_headers)
-			.body(StringBody("""{"day":"01","month":"05","year":"2021","key":"FirstPresentationDate"}""")))
-		.pause(1)
-		.exec(http("request_48")
-			.post("/Notifications/${notificationId}/Edit/ClinicalDetails/ValidateClinicalDetailsDate")
-			.headers(validate_headers)
-			.body(StringBody("""{"day":"02","month":"05","year":"2021","key":"TBServicePresentationDate"}""")))
-		.pause(1)
-		.exec(http("request_49")
-			.post("/Notifications/${notificationId}/Edit/ClinicalDetails/ValidateClinicalDetailsDate")
-			.headers(validate_headers)
-			.body(StringBody("""{"day":"05","month":"05","year":"2021","key":"DiagnosisDate"}""")))
-		.pause(1)
-		.exec(http("request_51")
-			.post("/Notifications/${notificationId}/Edit/ClinicalDetails?isBeingSubmitted=False")
-			.headers(save_headers)
-			.formParam("NotificationId", "${notificationId}")
-			.formParam("PatientBirthYear", "1933")
-			.formParam("NotificationSiteMap[PULMONARY]", "true")
-			.formParam("NotificationSiteMap[PULMONARY]", "false")
-			.formParam("NotificationSiteMap[LARYNGEAL]", "false")
-			.formParam("NotificationSiteMap[MILIARY]", "false")
-			.formParam("NotificationSiteMap[BONE_SPINE]", "true")
-			.formParam("NotificationSiteMap[BONE_SPINE]", "false")
-			.formParam("NotificationSiteMap[BONE_OTHER]", "false")
-			.formParam("NotificationSiteMap[CNS_MENINGITIS]", "false")
-			.formParam("NotificationSiteMap[CNS_OTHER]", "false")
-			.formParam("NotificationSiteMap[LYMPH_INTRA]", "false")
-			.formParam("NotificationSiteMap[LYMPH_EXTRA]", "false")
-			.formParam("NotificationSiteMap[CRYPTIC]", "false")
-			.formParam("NotificationSiteMap[GASTROINTESTINAL]", "false")
-			.formParam("NotificationSiteMap[GENITOURINARY]", "false")
-			.formParam("NotificationSiteMap[OCULAR]", "false")
-			.formParam("NotificationSiteMap[PLEURAL]", "false")
-			.formParam("NotificationSiteMap[PERICARDIAL]", "false")
-			.formParam("NotificationSiteMap[SKIN]", "false")
-			.formParam("NotificationSiteMap[OTHER]", "false")
-			.formParam("OtherSite.SiteId", "17")
-			.formParam("OtherSite.SiteDescription", "")
-			.formParam("ClinicalDetails.BCGVaccinationState", "Yes")
-			.formParam("ClinicalDetails.BCGVaccinationYear", "2001")
-			.formParam("ClinicalDetails.HIVTestState", "0")
-			.formParam("FormattedSymptomDate.Day", "")
-			.formParam("FormattedSymptomDate.Month", "")
-			.formParam("FormattedSymptomDate.Year", "")
-			.formParam("ClinicalDetails.IsSymptomatic", "false")
-			.formParam("FormattedFirstPresentationDate.Day", "01")
-			.formParam("FormattedFirstPresentationDate.Month", "05")
-			.formParam("FormattedFirstPresentationDate.Year", "2021")
-			.formParam("ClinicalDetails.HealthcareSetting", "ContactTracing")
-			.formParam("ClinicalDetails.HealthcareDescription", "")
-			.formParam("FormattedTbServicePresentationDate.Day", "02")
-			.formParam("FormattedTbServicePresentationDate.Month", "05")
-			.formParam("FormattedTbServicePresentationDate.Year", "2021")
-			.formParam("FormattedDiagnosisDate.Day", "05")
-			.formParam("FormattedDiagnosisDate.Month", "05")
-			.formParam("FormattedDiagnosisDate.Year", "2021")
-			.formParam("FormattedTreatmentDate.Day", "")
-			.formParam("FormattedTreatmentDate.Month", "")
-			.formParam("FormattedTreatmentDate.Year", "")
-			.formParam("ClinicalDetails.DidNotStartTreatment", "true")
-			.formParam("FormattedHomeVisitDate.Day", "")
-			.formParam("FormattedHomeVisitDate.Month", "")
-			.formParam("FormattedHomeVisitDate.Year", "")
-			.formParam("ClinicalDetails.HomeVisitCarriedOut", "No")
-			.formParam("ClinicalDetails.IsPostMortem", "false")
-			.formParam("ClinicalDetails.IsDotOffered", "Yes")
-			.formParam("ClinicalDetails.DotStatus", "DotReceived")
-			.formParam("ClinicalDetails.EnhancedCaseManagementStatus", "No")
-			.formParam("ClinicalDetails.TreatmentRegimen", "StandardTherapy")
-			.formParam("FormattedMdrTreatmentDate.Day", "")
-			.formParam("FormattedMdrTreatmentDate.Month", "")
-			.formParam("FormattedMdrTreatmentDate.Year", "")
-			.formParam("ClinicalDetails.TreatmentRegimenOtherDescription", "")
-			.formParam("ClinicalDetails.Notes", "")
-			.formParam("actionName", "Save")
-			.formParam("__RequestVerificationToken", "${requestVerificationToken}"))
-		.pause(2)
+    val editClinicalDetails = new EditScenarioBuilder("edit_clinical_details", "/Notifications/${notificationId}/Edit/ClinicalDetails")
+        .withFilters(List(
+            "ValidateNotificationSites" -> "valueList%5B0%5D=PULMONARY&shouldValidateFull=False",
+            "ValidateNotificationSites" -> "valueList%5B0%5D=PULMONARY&valueList%5B1%5D=BONE_SPINE&shouldValidateFull=False"))
+        .withValidations(List(
+            "ValidateClinicalDetailsYearComparison" -> """{"newYear":"2001","shouldValidateFull":"False","existingYear":"1933","propertyName":"BCG vaccination year"}""",
+            "ValidateClinicalDetailsDate" -> """{"day":"01","month":"05","year":"2021","key":"FirstPresentationDate"}""",
+            "ValidateClinicalDetailsDate" -> """{"day":"02","month":"05","year":"2021","key":"TBServicePresentationDate"}""",
+            "ValidateClinicalDetailsDate" -> """{"day":"05","month":"05","year":"2021","key":"DiagnosisDate"}"""))
+        .withFormParams(Map(
+            "NotificationId" -> "${notificationId}",
+            "PatientBirthYear" -> "1933",
+            "NotificationSiteMap[PULMONARY]" -> "true",
+            "NotificationSiteMap[PULMONARY]" -> "false",
+            "NotificationSiteMap[LARYNGEAL]" -> "false",
+            "NotificationSiteMap[MILIARY]" -> "false",
+            "NotificationSiteMap[BONE_SPINE]" -> "true",
+            "NotificationSiteMap[BONE_SPINE]" -> "false",
+            "NotificationSiteMap[BONE_OTHER]" -> "false",
+            "NotificationSiteMap[CNS_MENINGITIS]" -> "false",
+            "NotificationSiteMap[CNS_OTHER]" -> "false",
+            "NotificationSiteMap[LYMPH_INTRA]" -> "false",
+            "NotificationSiteMap[LYMPH_EXTRA]" -> "false",
+            "NotificationSiteMap[CRYPTIC]" -> "false",
+            "NotificationSiteMap[GASTROINTESTINAL]" -> "false",
+            "NotificationSiteMap[GENITOURINARY]" -> "false",
+            "NotificationSiteMap[OCULAR]" -> "false",
+            "NotificationSiteMap[PLEURAL]" -> "false",
+            "NotificationSiteMap[PERICARDIAL]" -> "false",
+            "NotificationSiteMap[SKIN]" -> "false",
+            "NotificationSiteMap[OTHER]" -> "false",
+            "OtherSite.SiteId" -> "17",
+            "OtherSite.SiteDescription" -> "",
+            "ClinicalDetails.BCGVaccinationState" -> "Yes",
+            "ClinicalDetails.BCGVaccinationYear" -> "2001",
+            "ClinicalDetails.HIVTestState" -> "0",
+            "FormattedSymptomDate.Day" -> "",
+            "FormattedSymptomDate.Month" -> "",
+            "FormattedSymptomDate.Year" -> "",
+            "ClinicalDetails.IsSymptomatic" -> "false",
+            "FormattedFirstPresentationDate.Day" -> "01",
+            "FormattedFirstPresentationDate.Month" -> "05",
+            "FormattedFirstPresentationDate.Year" -> "2021",
+            "ClinicalDetails.HealthcareSetting" -> "ContactTracing",
+            "ClinicalDetails.HealthcareDescription" -> "",
+            "FormattedTbServicePresentationDate.Day" -> "02",
+            "FormattedTbServicePresentationDate.Month" -> "05",
+            "FormattedTbServicePresentationDate.Year" -> "2021",
+            "FormattedDiagnosisDate.Day" -> "05",
+            "FormattedDiagnosisDate.Month" -> "05",
+            "FormattedDiagnosisDate.Year" -> "2021",
+            "FormattedTreatmentDate.Day" -> "",
+            "FormattedTreatmentDate.Month" -> "",
+            "FormattedTreatmentDate.Year" -> "",
+            "ClinicalDetails.DidNotStartTreatment" -> "true",
+            "FormattedHomeVisitDate.Day" -> "",
+            "FormattedHomeVisitDate.Month" -> "",
+            "FormattedHomeVisitDate.Year" -> "",
+            "ClinicalDetails.HomeVisitCarriedOut" -> "No",
+            "ClinicalDetails.IsPostMortem" -> "false",
+            "ClinicalDetails.IsDotOffered" -> "Yes",
+            "ClinicalDetails.DotStatus" -> "DotReceived",
+            "ClinicalDetails.EnhancedCaseManagementStatus" -> "No",
+            "ClinicalDetails.TreatmentRegimen" -> "StandardTherapy",
+            "FormattedMdrTreatmentDate.Day" -> "",
+            "FormattedMdrTreatmentDate.Month" -> "",
+            "FormattedMdrTreatmentDate.Year" -> "",
+            "ClinicalDetails.TreatmentRegimenOtherDescription" -> "",
+            "ClinicalDetails.Notes" -> "",
+            "actionName" -> "Save"))
+        .build()
 
-	val editTestResults = exec(http("edit_test_results_page")
-			.get("/Notifications/${notificationId}/Edit/TestResults")
-			.headers(get_headers)
-			.check(
-				css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken"),
-				status.is(200)))
-		.pause(1)
-		.exec(http("request_56")
-			.post("/Notifications/${notificationId}/Edit/TestResults/ValidateTestDataProperty")
-			.headers(validate_headers)
-			.body(StringBody("""{"value":"true","shouldValidateFull":false,"key":"HasTestCarriedOut","HasTestCarriedOut":"true"}""")))
-		.pause(1)
-		.exec(http("request_57")
-			.post("/Notifications/${notificationId}/Edit/TestResults?isBeingSubmitted=False")
-			.headers(save_headers)
-			.formParam("NotificationId", "${notificationId}")
-			.formParam("TestData.NotificationId", "${notificationId}")
-			.formParam("TestData.HasTestCarriedOut", "true")
-			.formParam("actionName", "Create")
-			.formParam("__RequestVerificationToken", "${requestVerificationToken}"))
-		.pause(2)
+    val editTestResults = new EditScenarioBuilder("edit_test_results", "/Notifications/${notificationId}/Edit/TestResults")
+        .withValidations(List(
+            "ValidateTestDataProperty" -> """{"value":"true","shouldValidateFull":false,"key":"HasTestCarriedOut","HasTestCarriedOut":"true"}"""))
+        .withFormParams(Map(
+            "NotificationId" -> "${notificationId}",
+            "TestData.NotificationId" -> "${notificationId}",
+            "TestData.HasTestCarriedOut" -> "true",
+            "actionName" -> "Create"))
+        .build()
 
-	val addNewTestResult = exec(http("add_test_result_page")
-			.get("/Notifications/${notificationId}/Edit/ManualTestResult/New")
-			.headers(get_headers)
-			.check(
-				css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken"),
-				status.is(200)))
-		.pause(1)
-		.exec(http("request_63")
-			.post("/Notifications/${notificationId}/Edit/ManualTestResult/New/ValidateTestResultForEditDate")
-			.headers(validate_headers)
-			.body(StringBody("""{"day":"05","month":"05","year":"2021","key":"TestDate"}""")))
-		.pause(1)
-		.exec(http("request_64")
-			.get("/Notifications/${notificationId}/Edit/ManualTestResult/New/FilteredSampleTypesForManualTestType?value=4")
-			.headers(get_headers))
-		.pause(1)
-		.exec(http("request_65")
-			.post("/Notifications/${notificationId}/Edit/ManualTestResult/New")
-			.headers(save_headers)
-			.formParam("FormattedTestDate.Day", "05")
-			.formParam("FormattedTestDate.Month", "05")
-			.formParam("FormattedTestDate.Year", "2021")
-			.formParam("TestResultForEdit.ManualTestTypeId", "4")
-			.formParam("TestResultForEdit.SampleTypeId", "")
-			.formParam("TestResultForEdit.Result", "ConsistentWithTbOther")
-			.formParam("__RequestVerificationToken", "${requestVerificationToken}"))
-		.pause(2)
+    val addNewTestResult = new EditScenarioBuilder("add_test_result", "/Notifications/${notificationId}/Edit/ManualTestResult/New")
+        .withFilters(List(
+            "FilteredSampleTypesForManualTestType" -> "value=4"))
+        .withValidations(List(
+            "ValidateTestResultForEditDate" -> """{"day":"05","month":"05","year":"2021","key":"TestDate"}"""))
+        .withFormParams(Map(
+            "FormattedTestDate.Day" -> "05",
+            "FormattedTestDate.Month" -> "05",
+            "FormattedTestDate.Year" -> "2021",
+            "TestResultForEdit.ManualTestTypeId" -> "4",
+            "TestResultForEdit.SampleTypeId" -> "",
+            "TestResultForEdit.Result" -> "ConsistentWithTbOther"))
+        .build()
 
-	val editContactTracing = exec(http("edit_contact_tracing_page")
-			.get("/Notifications/${notificationId}/Edit/ContactTracing")
-			.headers(get_headers)
-			.check(
-				css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken"),
-				status.is(200)))
-		.pause(1)
-				.exec(http("request_75")
-			.post("/Notifications/${notificationId}/Edit/ContactTracing/ValidateContactTracing")
-			.headers(validate_headers)
-			.body(StringBody("""{"adultsIdentified":4,"childrenIdentified":null,"adultsScreened":null,"childrenScreened":null,"adultsLatentTb":null,"childrenLatentTb":null,"adultsActiveTb":null,"childrenActiveTb":null,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""")))
-		.pause(1)
-		.exec(http("request_76")
-			.post("/Notifications/${notificationId}/Edit/ContactTracing/ValidateContactTracing")
-			.headers(validate_headers)
-			.body(StringBody("""{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":null,"childrenScreened":null,"adultsLatentTb":null,"childrenLatentTb":null,"adultsActiveTb":null,"childrenActiveTb":null,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""")))
-		.pause(1)
-		.exec(http("request_77")
-			.post("/Notifications/${notificationId}/Edit/ContactTracing/ValidateContactTracing")
-			.headers(validate_headers)
-			.body(StringBody("""{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":null,"adultsLatentTb":null,"childrenLatentTb":null,"adultsActiveTb":null,"childrenActiveTb":null,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}"""))
-			.resources(http("request_78")
-			.post("/Notifications/${notificationId}/Edit/ContactTracing/ValidateContactTracing")
-			.headers(validate_headers)
-			.body(StringBody("""{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":null,"childrenLatentTb":null,"adultsActiveTb":null,"childrenActiveTb":null,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}"""))))
-		.pause(1)
-		.exec(http("request_79")
-			.post("/Notifications/${notificationId}/Edit/ContactTracing/ValidateContactTracing")
-			.headers(validate_headers)
-			.body(StringBody("""{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":null,"childrenLatentTb":null,"adultsActiveTb":0,"childrenActiveTb":null,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""")))
-		.pause(1)
-		.exec(http("request_80")
-			.post("/Notifications/${notificationId}/Edit/ContactTracing/ValidateContactTracing")
-			.headers(validate_headers)
-			.body(StringBody("""{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":null,"childrenLatentTb":null,"adultsActiveTb":0,"childrenActiveTb":0,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""")))
-		.pause(1)
-		.exec(http("request_81")
-			.post("/Notifications/${notificationId}/Edit/ContactTracing/ValidateContactTracing")
-			.headers(validate_headers)
-			.body(StringBody("""{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":0,"childrenLatentTb":null,"adultsActiveTb":0,"childrenActiveTb":0,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}"""))
-			.resources(http("request_82")
-			.post("/Notifications/${notificationId}/Edit/ContactTracing/ValidateContactTracing")
-			.headers(validate_headers)
-			.body(StringBody("""{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":0,"childrenLatentTb":0,"adultsActiveTb":0,"childrenActiveTb":0,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""")),
-            http("request_83")
-			.post("/Notifications/${notificationId}/Edit/ContactTracing/ValidateContactTracing")
-			.headers(validate_headers)
-			.body(StringBody("""{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":0,"childrenLatentTb":0,"adultsActiveTb":0,"childrenActiveTb":0,"adultsStartedTreatment":0,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""")),
-            http("request_84")
-			.post("/Notifications/${notificationId}/Edit/ContactTracing/ValidateContactTracing")
-			.headers(validate_headers)
-			.body(StringBody("""{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":0,"childrenLatentTb":0,"adultsActiveTb":0,"childrenActiveTb":0,"adultsStartedTreatment":0,"childrenStartedTreatment":0,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""")),
-            http("request_85")
-			.post("/Notifications/${notificationId}/Edit/ContactTracing/ValidateContactTracing")
-			.headers(validate_headers)
-			.body(StringBody("""{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":0,"childrenLatentTb":0,"adultsActiveTb":0,"childrenActiveTb":0,"adultsStartedTreatment":0,"childrenStartedTreatment":0,"adultsFinishedTreatment":0,"childrenFinishedTreatment":null}"""))))
-		.pause(2)
-		.exec(http("request_86")
-			.post("/Notifications/${notificationId}/Edit/ContactTracing/ValidateContactTracing")
-			.headers(validate_headers)
-			.body(StringBody("""{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":0,"childrenLatentTb":0,"adultsActiveTb":0,"childrenActiveTb":0,"adultsStartedTreatment":0,"childrenStartedTreatment":0,"adultsFinishedTreatment":0,"childrenFinishedTreatment":0}"""))
-			.resources(http("request_87")
-			.post("/Notifications/${notificationId}/Edit/ContactTracing")
-			.headers(save_headers)
-			.formParam("NotificationId", "${notificationId}")
-			.formParam("ContactTracing.AdultsIdentified", "4")
-			.formParam("ContactTracing.ChildrenIdentified", "1")
-			.formParam("ContactTracing.AdultsScreened", "0")
-			.formParam("ContactTracing.ChildrenScreened", "0")
-			.formParam("ContactTracing.AdultsActiveTB", "0")
-			.formParam("ContactTracing.ChildrenActiveTB", "0")
-			.formParam("ContactTracing.AdultsLatentTB", "0")
-			.formParam("ContactTracing.ChildrenLatentTB", "0")
-			.formParam("ContactTracing.AdultsStartedTreatment", "0")
-			.formParam("ContactTracing.ChildrenStartedTreatment", "0")
-			.formParam("ContactTracing.AdultsFinishedTreatment", "0")
-			.formParam("ContactTracing.ChildrenFinishedTreatment", "0")
-			.formParam("actionName", "Save")
-			.formParam("__RequestVerificationToken", "${requestVerificationToken}")))
-		.pause(2)
+    val editContactTracing = new EditScenarioBuilder("edit_contact_tracing", "/Notifications/${notificationId}/Edit/ContactTracing")
+        .withValidations(List(
+            "ValidateContactTracing" -> """{"adultsIdentified":4,"childrenIdentified":null,"adultsScreened":null,"childrenScreened":null,"adultsLatentTb":null,"childrenLatentTb":null,"adultsActiveTb":null,"childrenActiveTb":null,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""",
+            "ValidateContactTracing" -> """{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":null,"childrenScreened":null,"adultsLatentTb":null,"childrenLatentTb":null,"adultsActiveTb":null,"childrenActiveTb":null,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""",
+            "ValidateContactTracing" -> """{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":null,"adultsLatentTb":null,"childrenLatentTb":null,"adultsActiveTb":null,"childrenActiveTb":null,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""",
+            "ValidateContactTracing" -> """{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":null,"childrenLatentTb":null,"adultsActiveTb":null,"childrenActiveTb":null,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""",
+            "ValidateContactTracing" -> """{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":null,"childrenLatentTb":null,"adultsActiveTb":0,"childrenActiveTb":null,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""",
+            "ValidateContactTracing" -> """{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":null,"childrenLatentTb":null,"adultsActiveTb":0,"childrenActiveTb":0,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""",
+            "ValidateContactTracing" -> """{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":0,"childrenLatentTb":null,"adultsActiveTb":0,"childrenActiveTb":0,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""",
+            "ValidateContactTracing" -> """{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":0,"childrenLatentTb":0,"adultsActiveTb":0,"childrenActiveTb":0,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""",
+            "ValidateContactTracing" -> """{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":0,"childrenLatentTb":0,"adultsActiveTb":0,"childrenActiveTb":0,"adultsStartedTreatment":0,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""",
+            "ValidateContactTracing" -> """{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":0,"childrenLatentTb":0,"adultsActiveTb":0,"childrenActiveTb":0,"adultsStartedTreatment":0,"childrenStartedTreatment":0,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""",
+            "ValidateContactTracing" -> """{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":0,"childrenLatentTb":0,"adultsActiveTb":0,"childrenActiveTb":0,"adultsStartedTreatment":0,"childrenStartedTreatment":0,"adultsFinishedTreatment":0,"childrenFinishedTreatment":null}""",
+            "ValidateContactTracing" -> """{"adultsIdentified":4,"childrenIdentified":1,"adultsScreened":0,"childrenScreened":0,"adultsLatentTb":0,"childrenLatentTb":0,"adultsActiveTb":0,"childrenActiveTb":0,"adultsStartedTreatment":0,"childrenStartedTreatment":0,"adultsFinishedTreatment":0,"childrenFinishedTreatment":0}"""))
+        .withFormParams(Map(
+            "NotificationId" -> "${notificationId}",
+            "ContactTracing.AdultsIdentified" -> "4",
+            "ContactTracing.ChildrenIdentified" -> "1",
+            "ContactTracing.AdultsScreened" -> "0",
+            "ContactTracing.ChildrenScreened" -> "0",
+            "ContactTracing.AdultsActiveTB" -> "0",
+            "ContactTracing.ChildrenActiveTB" -> "0",
+            "ContactTracing.AdultsLatentTB" -> "0",
+            "ContactTracing.ChildrenLatentTB" -> "0",
+            "ContactTracing.AdultsStartedTreatment" -> "0",
+            "ContactTracing.ChildrenStartedTreatment" -> "0",
+            "ContactTracing.AdultsFinishedTreatment" -> "0",
+            "ContactTracing.ChildrenFinishedTreatment" -> "0",
+            "actionName" -> "Save"))
+        .build()
 
-	val editSocialRiskFactors = exec(http("edit_social_risk_factors_page")
-			.get("/Notifications/${notificationId}/Edit/SocialRiskFactors")
-			.headers(get_headers)
-			.check(
-				css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken"),
-				status.is(200)))
-		.pause(1)
-		.exec(http("request_92")
-			.post("/Notifications/${notificationId}/Edit/SocialRiskFactors?isBeingSubmitted=False")
-			.headers(save_headers)
-			.formParam("NotificationId", "${notificationId}")
-			.formParam("SocialRiskFactors.AlcoholMisuseStatus", "No")
-			.formParam("SocialRiskFactors.RiskFactorDrugs.IsCurrentView", "false")
-			.formParam("SocialRiskFactors.RiskFactorDrugs.InPastFiveYearsView", "false")
-			.formParam("SocialRiskFactors.RiskFactorDrugs.MoreThanFiveYearsAgoView", "false")
-			.formParam("SocialRiskFactors.RiskFactorDrugs.Status", "No")
-			.formParam("SocialRiskFactors.RiskFactorHomelessness.IsCurrentView", "false")
-			.formParam("SocialRiskFactors.RiskFactorHomelessness.InPastFiveYearsView", "false")
-			.formParam("SocialRiskFactors.RiskFactorHomelessness.MoreThanFiveYearsAgoView", "false")
-			.formParam("SocialRiskFactors.RiskFactorHomelessness.Status", "No")
-			.formParam("SocialRiskFactors.RiskFactorImprisonment.Status", "Yes")
-			.formParam("SocialRiskFactors.RiskFactorImprisonment.IsCurrentView", "false")
-			.formParam("SocialRiskFactors.RiskFactorImprisonment.InPastFiveYearsView", "false")
-			.formParam("SocialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgoView", "true")
-			.formParam("SocialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgoView", "false")
-			.formParam("SocialRiskFactors.MentalHealthStatus", "No")
-			.formParam("SocialRiskFactors.RiskFactorSmoking.Status", "Yes")
-			.formParam("SocialRiskFactors.RiskFactorSmoking.IsCurrentView", "false")
-			.formParam("SocialRiskFactors.RiskFactorSmoking.InPastFiveYearsView", "true")
-			.formParam("SocialRiskFactors.RiskFactorSmoking.InPastFiveYearsView", "false")
-			.formParam("SocialRiskFactors.RiskFactorSmoking.MoreThanFiveYearsAgoView", "false")
-			.formParam("SocialRiskFactors.AsylumSeekerStatus", "No")
-			.formParam("SocialRiskFactors.ImmigrationDetaineeStatus", "No")
-			.formParam("actionName", "Save")
-			.formParam("__RequestVerificationToken", "${requestVerificationToken}"))
-		.pause(2)
+    val editSocialRiskFactors = new EditScenarioBuilder("edit_social_risk_factors", "/Notifications/${notificationId}/Edit/SocialRiskFactors")
+        .withFormParams(Map(
+            "NotificationId" -> "${notificationId}",
+            "SocialRiskFactors.AlcoholMisuseStatus" -> "No",
+            "SocialRiskFactors.RiskFactorDrugs.IsCurrentView" -> "false",
+            "SocialRiskFactors.RiskFactorDrugs.InPastFiveYearsView" -> "false",
+            "SocialRiskFactors.RiskFactorDrugs.MoreThanFiveYearsAgoView" -> "false",
+            "SocialRiskFactors.RiskFactorDrugs.Status" -> "No",
+            "SocialRiskFactors.RiskFactorHomelessness.IsCurrentView" -> "false",
+            "SocialRiskFactors.RiskFactorHomelessness.InPastFiveYearsView" -> "false",
+            "SocialRiskFactors.RiskFactorHomelessness.MoreThanFiveYearsAgoView" -> "false",
+            "SocialRiskFactors.RiskFactorHomelessness.Status" -> "No",
+            "SocialRiskFactors.RiskFactorImprisonment.Status" -> "Yes",
+            "SocialRiskFactors.RiskFactorImprisonment.IsCurrentView" -> "false",
+            "SocialRiskFactors.RiskFactorImprisonment.InPastFiveYearsView" -> "false",
+            "SocialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgoView" -> "true",
+            "SocialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgoView" -> "false",
+            "SocialRiskFactors.MentalHealthStatus" -> "No",
+            "SocialRiskFactors.RiskFactorSmoking.Status" -> "Yes",
+            "SocialRiskFactors.RiskFactorSmoking.IsCurrentView" -> "false",
+            "SocialRiskFactors.RiskFactorSmoking.InPastFiveYearsView" -> "true",
+            "SocialRiskFactors.RiskFactorSmoking.InPastFiveYearsView" -> "false",
+            "SocialRiskFactors.RiskFactorSmoking.MoreThanFiveYearsAgoView" -> "false",
+            "SocialRiskFactors.AsylumSeekerStatus" -> "No",
+            "SocialRiskFactors.ImmigrationDetaineeStatus" -> "No",
+            "actionName" -> "Save"))
+        .build()
 
-	val editTravel = exec(http("edit_travel_page")
-			.get("/Notifications/${notificationId}/Edit/Travel")
-			.headers(get_headers)
-			.check(
-				css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken"),
-				status.is(200)))
-		.pause(1)
-		.exec(http("request_97")
-			.post("/Notifications/${notificationId}/Edit/Travel/Validatetravel")
-			.headers(validate_headers)
-			.body(StringBody("""{"totalNumberOfCountries":null,"country1Id":null,"country2Id":null,"country3Id":null,"stayLengthInMonths1":null,"stayLengthInMonths2":null,"stayLengthInMonths3":null,"shouldValidateFull":false,"hasTravel":"No"}"""))
-			.resources(http("request_98")
-			.post("/Notifications/${notificationId}/Edit/Travel/Validatevisitor")
-			.headers(validate_headers)
-			.body(StringBody("""{"totalNumberOfCountries":null,"country1Id":null,"country2Id":null,"country3Id":null,"stayLengthInMonths1":null,"stayLengthInMonths2":null,"stayLengthInMonths3":null,"shouldValidateFull":false,"hasVisitor":"No"}"""))))
-		.pause(1)
-		.exec(http("request_99")
-			.post("/Notifications/${notificationId}/Edit/Travel?isBeingSubmitted=False")
-			.headers(save_headers)
-			.formParam("NotificationId", "${notificationId}")
-			.formParam("TravelDetails.TotalNumberOfCountries", "")
-			.formParam("TravelDetails.Country1Id", "")
-			.formParam("TravelDetails.StayLengthInMonths1", "")
-			.formParam("TravelDetails.Country2Id", "")
-			.formParam("TravelDetails.StayLengthInMonths2", "")
-			.formParam("TravelDetails.Country3Id", "")
-			.formParam("TravelDetails.StayLengthInMonths3", "")
-			.formParam("TravelDetails.HasTravel", "No")
-			.formParam("VisitorDetails.TotalNumberOfCountries", "")
-			.formParam("VisitorDetails.Country1Id", "")
-			.formParam("VisitorDetails.StayLengthInMonths1", "")
-			.formParam("VisitorDetails.Country2Id", "")
-			.formParam("VisitorDetails.StayLengthInMonths2", "")
-			.formParam("VisitorDetails.Country3Id", "")
-			.formParam("VisitorDetails.StayLengthInMonths3", "")
-			.formParam("VisitorDetails.HasVisitor", "No")
-			.formParam("actionName", "Save")
-			.formParam("__RequestVerificationToken", "${requestVerificationToken}"))
-		.pause(2)
+    val editTravel = new EditScenarioBuilder("edit_travel", "/Notifications/${notificationId}/Edit/Travel")
+        .withValidations(List(
+            "Validatetravel" -> """{"totalNumberOfCountries":null,"country1Id":null,"country2Id":null,"country3Id":null,"stayLengthInMonths1":null,"stayLengthInMonths2":null,"stayLengthInMonths3":null,"shouldValidateFull":false,"hasTravel":"No"}""",
+            "Validatevisitor" -> """{"totalNumberOfCountries":null,"country1Id":null,"country2Id":null,"country3Id":null,"stayLengthInMonths1":null,"stayLengthInMonths2":null,"stayLengthInMonths3":null,"shouldValidateFull":false,"hasVisitor":"No"}"""))
+        .withFormParams(Map(
+            "NotificationId" -> "${notificationId}",
+            "TravelDetails.TotalNumberOfCountries" -> "",
+            "TravelDetails.Country1Id" -> "",
+            "TravelDetails.StayLengthInMonths1" -> "",
+            "TravelDetails.Country2Id" -> "",
+            "TravelDetails.StayLengthInMonths2" -> "",
+            "TravelDetails.Country3Id" -> "",
+            "TravelDetails.StayLengthInMonths3" -> "",
+            "TravelDetails.HasTravel" -> "No",
+            "VisitorDetails.TotalNumberOfCountries" -> "",
+            "VisitorDetails.Country1Id" -> "",
+            "VisitorDetails.StayLengthInMonths1" -> "",
+            "VisitorDetails.Country2Id" -> "",
+            "VisitorDetails.StayLengthInMonths2" -> "",
+            "VisitorDetails.Country3Id" -> "",
+            "VisitorDetails.StayLengthInMonths3" -> "",
+            "VisitorDetails.HasVisitor" -> "No",
+            "actionName" -> "Save"))
+        .build()
 
-	val editComorbidities = exec(http("edit_comorbidities_page")
-			.get("/Notifications/${notificationId}/Edit/Comorbidities")
-			.headers(get_headers)
-			.check(
-				css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken"),
-				status.is(200)))
-		.pause(1)
-		.exec(http("request_104")
-			.post("/Notifications/${notificationId}/Edit/Comorbidities/ValidateImmunosuppression")
-			.headers(validate_headers)
-			.body(StringBody("""{"status":"No","hasBioTherapy":false,"hasTransplantation":false,"hasOther":false,"otherDescription":""}"""))
-			.resources(http("request_105")
-			.post("/Notifications/${notificationId}/Edit/Comorbidities?isBeingSubmitted=False")
-			.headers(save_headers)
-			.formParam("NotificationId", "${notificationId}")
-			.formParam("ComorbidityDetails.DiabetesStatus", "No")
-			.formParam("ComorbidityDetails.HepatitisBStatus", "No")
-			.formParam("ComorbidityDetails.HepatitisCStatus", "No")
-			.formParam("ComorbidityDetails.LiverDiseaseStatus", "No")
-			.formParam("ComorbidityDetails.RenalDiseaseStatus", "No")
-			.formParam("HasBioTherapy", "false")
-			.formParam("HasTransplantation", "false")
-			.formParam("HasOther", "false")
-			.formParam("OtherDescription", "")
-			.formParam("ImmunosuppressionStatus", "No")
-			.formParam("actionName", "Save")
-			.formParam("__RequestVerificationToken", "${requestVerificationToken}")))
-		.pause(2)
+    val editComorbidities = new EditScenarioBuilder("edit_comorbidities", "/Notifications/${notificationId}/Edit/Comorbidities")
+        .withValidations(List(
+            "ValidateImmunosuppression" -> """{"status":"No","hasBioTherapy":false,"hasTransplantation":false,"hasOther":false,"otherDescription":""}"""))
+        .withFormParams(Map(
+            "NotificationId" -> "${notificationId}",
+            "ComorbidityDetails.DiabetesStatus" -> "No",
+            "ComorbidityDetails.HepatitisBStatus" -> "No",
+            "ComorbidityDetails.HepatitisCStatus" -> "No",
+            "ComorbidityDetails.LiverDiseaseStatus" -> "No",
+            "ComorbidityDetails.RenalDiseaseStatus" -> "No",
+            "HasBioTherapy" -> "false",
+            "HasTransplantation" -> "false",
+            "HasOther" -> "false",
+            "OtherDescription" -> "",
+            "ImmunosuppressionStatus" -> "No",
+            "actionName" -> "Save"))
+        .build()
 
-	val editSocialContextAddresses = exec(http("edit_social_context_addresses_page")
-			.get("/Notifications/${notificationId}/Edit/SocialContextAddresses")
-			.headers(get_headers)
-			.check(
-				css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken"),
-				status.is(200)))
-		.pause(1)
-		.exec(http("request_110")
-			.post("/Notifications/${notificationId}/Edit/SocialContextAddresses?isBeingSubmitted=False")
-			.headers(save_headers)
-			.formParam("NotificationId", "${notificationId}")
-			.formParam("NotificationId", "${notificationId}")
-			.formParam("actionName", "Create")
-			.formParam("__RequestVerificationToken", "${requestVerificationToken}"))
-		.pause(2)
+    val editSocialContextAddresses = new EditScenarioBuilder("edit_social_context_addresses", "/Notifications/${notificationId}/Edit/SocialContextAddresses")
+        .withFormParams(Map(
+            "NotificationId" -> "${notificationId}",
+            "actionName" -> "Create"))
+        .build()
 
-	val addSocialContextAddress = exec(http("add_social_context_address_page")
-			.get("/Notifications/${notificationId}/Edit/SocialContextAddresses/New")
-			.headers(get_headers)
-			.check(
-				css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken"),
-				status.is(200)))
-		.pause(1)
-		.exec(http("request_115")
-			.post("/Notifications/${notificationId}/Edit/SocialContextAddress/New/ValidateSocialContextProperty")
-			.headers(validate_headers)
-			.body(StringBody("""{"value":"124 Fake Street","shouldValidateFull":false,"key":"Address","Address":"124 Fake Street"}""")))
-		.pause(1)
-		.exec(http("request_116")
-			.post("/Notifications/${notificationId}/Edit/SocialContextAddress/New/ValidateSocialContextProperty")
-			.headers(validate_headers)
-			.body(StringBody("""{"value":"BS1 1PN","shouldValidateFull":false,"key":"Postcode","Postcode":"BS1 1PN"}""")))
-		.pause(1)
-		.exec(http("request_117")
-			.post("/Notifications/${notificationId}/Edit/SocialContextAddress/New/ValidateSocialContextDate")
-			.headers(validate_headers)
-			.body(StringBody("""{"day":"01","month":"01","year":"2015","key":"DateFrom"}""")))
-		.pause(1)
-		.exec(http("request_118")
-			.post("/Notifications/${notificationId}/Edit/SocialContextAddress/New")
-			.headers(save_headers)
-			.formParam("Address.Address", "124 Fake Street")
-			.formParam("Address.Postcode", "BS1 1PN")
-			.formParam("FormattedDateFrom.Day", "01")
-			.formParam("FormattedDateFrom.Month", "01")
-			.formParam("FormattedDateFrom.Year", "2015")
-			.formParam("FormattedDateTo.Day", "31")
-			.formParam("FormattedDateTo.Month", "12")
-			.formParam("FormattedDateTo.Year", "2020")
-			.formParam("Address.Details", "")
-			.formParam("__RequestVerificationToken", "${requestVerificationToken}")
-			.resources(http("request_119")
-			.get("/Notifications/${notificationId}/Edit/SocialContextAddress/New/ValidateSocialContextDates?keyValuePairs%5B0%5D%5Bkey%5D=DateFrom&keyValuePairs%5B0%5D%5Bday%5D=01&keyValuePairs%5B0%5D%5Bmonth%5D=01&keyValuePairs%5B0%5D%5Byear%5D=2015&keyValuePairs%5B1%5D%5Bkey%5D=DateTo&keyValuePairs%5B1%5D%5Bday%5D=31&keyValuePairs%5B1%5D%5Bmonth%5D=12&keyValuePairs%5B1%5D%5Byear%5D=2020")
-			.headers(validate_headers),
-            http("request_120")
-			.get("/Notifications/${notificationId}/Edit/SocialContextAddresses?isBeingSubmitted=False")
-			.headers(get_headers)))
-		.pause(2)
+    val addSocialContextAddress = new EditScenarioBuilder("add_social_context_address", "/Notifications/${notificationId}/Edit/SocialContextAddress/New")
+        .withValidations(List(
+            "ValidateSocialContextProperty" -> """{"value":"124 Fake Street","shouldValidateFull":false,"key":"Address","Address":"124 Fake Street"}""",
+            "ValidateSocialContextProperty" -> """{"value":"BS1 1PN","shouldValidateFull":false,"key":"Postcode","Postcode":"BS1 1PN"}""",
+            "ValidateSocialContextDate" -> """{"day":"01","month":"01","year":"2015","key":"DateFrom"}"""))
+        .withFormParams(Map(
+            "Address.Address" -> "124 Fake Street",
+            "Address.Postcode" -> "BS1 1PN",
+            "FormattedDateFrom.Day" -> "01",
+            "FormattedDateFrom.Month" -> "01",
+            "FormattedDateFrom.Year" -> "2015",
+            "FormattedDateTo.Day" -> "31",
+            "FormattedDateTo.Month" -> "12",
+            "FormattedDateTo.Year" -> "2020",
+            "Address.Details" -> ""))
+        .build()
 
-	val editTreatmentEvents = exec(http("edit_treatment_events_page")
-			.get("/Notifications/${notificationId}/Edit/TreatmentEvents")
-			.headers(get_headers)
-			.check(
-				css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken"),
-				status.is(200)))
-		.pause(1)
-		.exec(http("request_130")
-			.post("/Notifications/${notificationId}/Edit/TreatmentEvents")
-			.headers(save_headers)
-			.formParam("NotificationId", "${notificationId}")
-			.formParam("actionName", "Create")
-			.formParam("__RequestVerificationToken", "${requestVerificationToken}")
-			.resources(http("request_135")
-			.get("/Notifications/${notificationId}/Edit/TreatmentEvent/New/FilteredOutcomeSubTypesForType?value=")
-			.headers(get_headers)))
-		.pause(2)
+    val editTreatmentEvents = new EditScenarioBuilder("edit_treatment_events", "/Notifications/${notificationId}/Edit/TreatmentEvents")
+        .withFormParams(Map(
+            "NotificationId" -> "${notificationId}",
+            "actionName" -> "Create"))
+        .build()
 
-	val addTreatmentEvent = exec(http("add_treatment_event_page")
-			.get("/Notifications/${notificationId}/Edit/TreatmentEvents")
-			.headers(get_headers)
-			.check(
-				css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken"),
-				status.is(200)))
-		.pause(1)
-		.exec(http("request_136")
-			.post("/Notifications/${notificationId}/Edit/TreatmentEvent/New/ValidateTreatmentEventDate")
-			.headers(validate_headers)
-			.body(StringBody("""{"day":"05","month":"05","year":"2021","key":"EventDate"}"""))
-			.resources(http("request_137")
-			.post("/Notifications/${notificationId}/Edit/TreatmentEvent/New/ValidateTreatmentEventProperty")
-			.headers(validate_headers)
-			.body(StringBody("""{"value":"0","shouldValidateFull":false,"key":"TreatmentEventType","TreatmentEventType":"0"}"""))))
-		.pause(1)
-		.exec(http("request_118")
-			.post("/Notifications/${notificationId}/Edit/TreatmentEvent/New")
-			.headers(save_headers)
-			.formParam("TreatmentEvent.TreatmentOutcomeId", "")
-			.formParam("TreatmentEvent.CaseManagerId", "")
-			.formParam("TreatmentEvent.TbServiceCode", "")
-			.formParam("FormattedEventDate.Day", "05")
-			.formParam("FormattedEventDate.Month", "05")
-			.formParam("FormattedEventDate.Year", "2021")
-			.formParam("TreatmentEvent.TreatmentEventType", "1")
-			.formParam("SelectedTreatmentOutcomeType", "6")
-			.formParam("SelectedTreatmentOutcomeSubType", "11")
-			.formParam("TreatmentEvent.Note", "")
-			.formParam("__RequestVerificationToken", "${requestVerificationToken}"))
-		.pause(2)
+    val addTreatmentEvent = new EditScenarioBuilder("add_treatment_event", "/Notifications/${notificationId}/Edit/TreatmentEvent/New")
+        .withValidations(List(
+            "ValidateTreatmentEventDate" -> """{"day":"05","month":"05","year":"2021","key":"EventDate"}""",
+            "ValidateTreatmentEventProperty" -> """{"value":"0","shouldValidateFull":false,"key":"TreatmentEventType","TreatmentEventType":"0"}"""))
+        .withFormParams(Map(
+            "TreatmentEvent.TreatmentOutcomeId" -> "",
+            "TreatmentEvent.CaseManagerId" -> "",
+            "TreatmentEvent.TbServiceCode" -> "",
+            "FormattedEventDate.Day" -> "05",
+            "FormattedEventDate.Month" -> "05",
+            "FormattedEventDate.Year" -> "2021",
+            "TreatmentEvent.TreatmentEventType" -> "1",
+            "SelectedTreatmentOutcomeType" -> "6",
+            "SelectedTreatmentOutcomeSubType" -> "11",
+            "TreatmentEvent.Note" -> ""))
+        .build()
 
 	val subitDraftNotification = exec(http("edit_treatment_events_page")
 			.get("/Notifications/${notificationId}/Edit/TreatmentEvents")
