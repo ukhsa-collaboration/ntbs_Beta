@@ -92,7 +92,6 @@ Feature: Notification editing
     And I check 'dot-status-DotRefused'
     And I check 'enhanced-case-management-yes'
     And I check 'ecm-1'
-    And I check 'regimen-standardTherapy'
     And I enter Patient has no cool shoes into 'ClinicalDetails_Notes'
     When I click on the 'save-button' button
 
@@ -115,7 +114,6 @@ Feature: Notification editing
     And I can see the value 'Yes' for the field 'dot-offered' in the 'ClinicalDetails' overview section
     And I can see the value 'No' for the field 'bcg-vaccination' in the 'ClinicalDetails' overview section
     And I can see the value 'Yes' for the field 'case-management' in the 'ClinicalDetails' overview section
-    And I can see the value 'Standard therapy' for the field 'treatment-regimen' in the 'ClinicalDetails' overview section
     And I can see the value 'Patient has no cool shoes' for the field 'notes' in the 'ClinicalDetails' overview section
     
   Scenario: Edit notification test results fields
@@ -322,3 +320,15 @@ Feature: Notification editing
     And I can see the value 'Treatment outcome - Lost to follow-up' in the 'TreatmentEvents' table overview section
     And I can see the value 'Patient left UK' in the 'TreatmentEvents' table overview section
     And I can see the value 'Birmingham User' in the 'TreatmentEvents' table overview section
+    
+  Scenario: Edit notification MDR detail fields
+    When I go to edit the 'MDRDetails' section
+    Then I should be on the MDRDetails page
+    When I check 'exposure-yes'
+    And I enter Chauffeur into 'MDRDetails_RelationshipToCase'
+    And I enter Guyana into 'MDRDetails_CountryId'
+    And I click on the 'save-button' button
+    
+    Then I can see the value 'Yes' for the field 'known-case-exposure' in the 'MDRDetails' overview section
+    And I can see the value 'Chauffeur' for the field 'relationship-to-case' in the 'MDRDetails' overview section
+    And I can see the value 'Guyana' for the field 'country-name' in the 'MDRDetails' overview section
