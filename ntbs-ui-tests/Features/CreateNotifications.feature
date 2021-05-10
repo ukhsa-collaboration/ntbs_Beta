@@ -233,7 +233,7 @@ Feature: Notification creation
     And I can see the value 'No' for the field 'asylum-seeker' in the 'SocialRiskFactors' overview section
     And I can see the value 'Yes' for the field 'immigration-detainee' in the 'SocialRiskFactors' overview section
 
-  Scenario: Create notification with all travel and visitor fields fields
+  Scenario: Create notification with all travel and visitor fields
     When I click 'Travel/visitor history' on the navigation bar
     Then I should be on the Travel page
     When I check 'travelDetails-hasTravelYes'

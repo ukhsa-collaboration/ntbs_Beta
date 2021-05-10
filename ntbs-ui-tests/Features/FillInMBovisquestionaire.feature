@@ -5,7 +5,7 @@ Feature: M. bovis
 
   Scenario: Fill in M. bovis exposure to known cases page
     Given I am on seeded 'M_BOVIS' notification overview page
-    When I go to edit the 'overview-mbovis-exposure-details' section
+    When I go to edit the 'MBovisExposureToKnownCases' section
     Then I should be on the ExposureToKnownCases page
     When I select radio value 'has-exposure-yes'
     And I click on the 'add-new-button' button
@@ -17,7 +17,7 @@ Feature: M. bovis
     
   Scenario: Fill in M. bovis consumption of unpasteurised milk page
     Given I am on seeded 'M_BOVIS' notification overview page
-    When I go to edit the 'overview-mbovis-milk-consumption-details' section
+    When I go to edit the 'MBovisUnpasteurisedMilkConsumptions' section
     Then I should be on the UnpasteurisedMilkConsumptions page
     When I select radio value 'has-milk-consumption-yes'
     And I click on the 'add-new-button' button
@@ -28,7 +28,7 @@ Feature: M. bovis
     
   Scenario: Fill in M. bovis occupation exposure page
     Given I am on seeded 'M_BOVIS' notification overview page
-    When I go to edit the 'overview-mbovis-occupation-exposure' section
+    When I go to edit the 'MBovisOccupationExposures' section
     Then I should be on the OccupationExposures page
     When I select radio value 'has-exposure-yes'
     And I click on the 'add-new-button' button
@@ -39,7 +39,7 @@ Feature: M. bovis
     
   Scenario: Fill in M. bovis animal exposure page
     Given I am on seeded 'M_BOVIS' notification overview page
-    When I go to edit the 'overview-mbovis-animal-exposure-details' section
+    When I go to edit the 'MBovisAnimalExposures' section
     Then I should be on the AnimalExposures page
     When I select radio value 'has-exposure-yes'
     And I click on the 'add-new-button' button

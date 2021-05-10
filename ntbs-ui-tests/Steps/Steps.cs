@@ -80,8 +80,14 @@ namespace ntbs_ui_tests.StepDefinitions
         [When(@"I click '(.*)' on the navigation bar")]
         public void ClickOnTheNavigationBar(string label)
         {
-            var pageLink = Browser.FindElement(By.XPath($"//*[@id='navigation-side-menu']/li[contains(.,'{label}')]/a"));
+            var pageLink = FindByXpath($"//*[@id='navigation-side-menu']/li[contains(.,'{label}')]/a");
             pageLink.Click();
+        }
+
+        [When(@"I click on the (.*) link")]
+        public void WhenIClickOnTheLink(string linkLabel)
+        {
+            FindByXpath($"//a[contains(.,'{linkLabel}')]").Click();
         }
 
         [When(@"I enter (.*) into '(.*)'")]
@@ -100,7 +106,7 @@ namespace ntbs_ui_tests.StepDefinitions
         [When(@"I make selection (.*) from (.*) section for '(.*)'")]
         public void WhenISelectValueFromGroupForFieldWithId(string value, string group, string elementId)
         {
-            var selection = Browser.FindElement(By.XPath($"//select[@id='{elementId}']/optgroup[@label='{group}']/option[@value='{value}']"));
+            var selection = FindByXpath($"//select[@id='{elementId}']/optgroup[@label='{group}']/option[@value='{value}']");
             selection.Click();
             if (!Settings.IsHeadless)
             {
@@ -117,6 +123,20 @@ namespace ntbs_ui_tests.StepDefinitions
         private IWebElement FindById(string elementId)
         {
             return Browser.FindElement(By.Id(elementId));
+        }
+
+        private IWebElement FindByXpath(string xpath)
+        {
+            return Browser.FindElement(By.XPath(xpath));
+        }
+
+        [When(@"I uncheck '(.*)'")]
+        public void WhenIDeselectCheckbox(string elementId)
+        {
+            if (FindById(elementId).Selected)
+            {
+                FindById(elementId).Click();
+            }
         }
 
         [When(@"I check '(.*)'")]
@@ -151,11 +171,19 @@ namespace ntbs_ui_tests.StepDefinitions
         }
 
         [When(@"I go to edit the '(.*)' section")]
-        public void WhenIGoToEditTheSection(string overviewSectionId)
+        public void WhenIGoToEditTheSection(string section)
         {
-            var link = Browser.FindElement(By.Id($"{overviewSectionId}-title"))
+            var sectionId = GetSectionIdFromSection(section);
+            var link = Browser.FindElement(By.Id($"{sectionId}-title"))
                 .FindElement(By.LinkText("Edit"));
             link.Click();
+        }
+
+        [When(@"I expand the '(.*)' section")]
+        public void WhenIExpandSection(string sectionId)
+        {
+            var element = FindById(sectionId).FindElement(By.TagName("summary"));
+            element.Click();
         }
 
         [When(@"I select (.*) from input list '(.*)'")]
@@ -175,16 +203,6 @@ namespace ntbs_ui_tests.StepDefinitions
             var urlRegex = new Regex(@".*/Notifications/(\d+)/?(#.+)?$");
             var match = urlRegex.Match(Browser.Url);
             Assert.True(match.Success, $"Url I am on instead: {Browser.Url}");
-        }
-
-        [Then(@"I can see the starting event '(.*)` dated `(.*)'")]
-        public void ThenIShouldSeeTheNotification(string eventType, string dateString)
-        {
-            var episodesOverview = Browser
-                .FindElement(By.Id("overview-episodes"))
-                .FindElement(By.XPath(".."));
-            Assert.Contains(eventType, episodesOverview.Text);
-            Assert.Contains(dateString, episodesOverview.Text);
         }
 
         [Then(@"I should be on the Homepage")]
@@ -243,8 +261,7 @@ namespace ntbs_ui_tests.StepDefinitions
         [Then(@"I can see the value '(.*)' for the field '(.*)' in the '(.*)' overview section")]
         public void ThenICanSeeValueForFieldInTheOverviewSection(string value, string field, string section)
         {
-            var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(
-                (string) typeof(NotificationSubPaths).GetProperty($"Edit{section}").GetValue(null, null));
+            var sectionId = GetSectionIdFromSection(section);
             var htmlId = $"{sectionId}-{field}";
             Assert.Contains(value, FindById(htmlId).Text);
         }
@@ -252,8 +269,7 @@ namespace ntbs_ui_tests.StepDefinitions
         [Then(@"I can see the value '(.*)' in the '(.*)' table overview section")]
         public void ThenICanSeeValueInTheOverviewSection(string value, string section)
         {
-            var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(
-                (string) typeof(NotificationSubPaths).GetProperty($"Edit{section}").GetValue(null, null));
+            var sectionId = GetSectionIdFromSection(section);
             Assert.Contains(value, FindById(sectionId).Text);
         }
 
@@ -277,6 +293,12 @@ namespace ntbs_ui_tests.StepDefinitions
             {
                 return context.User.Single(u => u.Username.ToLower() == username.ToLower()).Id;
             }
+        }
+
+        private string GetSectionIdFromSection(string section)
+        {
+            return OverviewSubPathToAnchorMap.GetOverviewAnchorId(
+                (string)typeof(NotificationSubPaths).GetProperty($"Edit{section}").GetValue(null, null));
         }
     }
 }
