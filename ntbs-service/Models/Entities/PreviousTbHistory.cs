@@ -11,7 +11,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    [Display(Name = "Previous History")]
+    [Display(Name = "Previous history")]
     public partial class PreviousTbHistory : ModelBase, IOwnedEntityForAuditing
     {
         [Display(Name = "Previous TB occurrence")]

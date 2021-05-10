@@ -10,7 +10,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    [Display(Name = "Clinical Details")]
+    [Display(Name = "Clinical details")]
     public partial class ClinicalDetails : ModelBase, IOwnedEntityForAuditing
     {
         #region DB Mapped Fields

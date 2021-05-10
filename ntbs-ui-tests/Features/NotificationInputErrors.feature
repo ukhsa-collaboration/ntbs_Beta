@@ -40,7 +40,7 @@ Feature: Notification input errors
     And I enter 8 into 'FormattedDob_Month'
     And I enter 2011 into 'FormattedDob_Year'
     And I click on the 'save-button' button
-    And I click 'Clinical Details' on the navigation bar
+    And I click 'Clinical details' on the navigation bar
     
     When I check 'symptomatic-yes'
     And I enter 1 into 'FormattedSymptomDate_Day'
@@ -62,7 +62,7 @@ Feature: Notification input errors
     Then I can see the error 'Symptom onset date does not have a valid date selection'
 
   Scenario: Clinical date verification shows correct warnings
-    When I click 'Clinical Details' on the navigation bar
+    When I click 'Clinical details' on the navigation bar
     When I check 'symptomatic-yes'
     And I enter 1 into 'FormattedSymptomDate_Day'
     And I enter 8 into 'FormattedSymptomDate_Month'
@@ -107,7 +107,7 @@ Feature: Notification input errors
     Then I see the warning 'First home visit date is earlier than Treatment start date' for 'date-warning-text-5'
     
   Scenario: Contact tracing verification shows correct errors
-    When I click 'Contact Tracing' on the navigation bar
+    When I click 'Contact tracing' on the navigation bar
     When I enter 3 into 'ContactTracing_AdultsIdentified'
     And I enter 5 into 'ContactTracing_AdultsScreened'
     And I click on the 'save-button' button

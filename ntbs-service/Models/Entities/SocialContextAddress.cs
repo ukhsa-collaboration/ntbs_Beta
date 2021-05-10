@@ -8,7 +8,7 @@ namespace ntbs_service.Models.Entities
         nameof(Postcode),
         nameof(Details),
         ErrorMessage = ValidationMessages.SupplyOneOfTheAddressFields)]
-    [Display(Name = "Social Context Address")]
+    [Display(Name = "Social context address")]
     public class SocialContextAddress : SocialContextBase
     {
         public int SocialContextAddressId { get; set; }
