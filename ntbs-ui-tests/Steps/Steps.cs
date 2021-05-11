@@ -114,10 +114,11 @@ namespace ntbs_ui_tests.Steps
         [When(@"I enter (.*) into '(.*)'")]
         public void WhenIEnterValueIntoFieldWithId(string value, string elementId)
         {
-            FindElementById(elementId).Click();
-            FindElementById(elementId).SendKeys(Keys.Control + "a");
-            FindElementById(elementId).SendKeys(Keys.Delete);
-            FindElementById(elementId).SendKeys(value + "\t");
+            var element = FindElementById(elementId);
+            element.Click();
+            element.SendKeys(Keys.Control + "a");
+            element.SendKeys(Keys.Delete);
+            element.SendKeys(value + "\t");
             if (!Settings.IsHeadless)
             {
                 Thread.Sleep(1000);
@@ -144,9 +145,10 @@ namespace ntbs_ui_tests.Steps
         [When(@"I uncheck '(.*)'")]
         public void WhenIDeselectCheckbox(string elementId)
         {
-            if (FindElementById(elementId).Selected)
+            var element = FindElementById(elementId);
+            if (element.Selected)
             {
-                FindElementById(elementId).Click();
+                element.Click();
             }
         }
 
@@ -154,9 +156,10 @@ namespace ntbs_ui_tests.Steps
         [When(@"I select radio value '(.*)'")]
         public void WhenISelectRadioOrCheckbox(string elementId)
         {
-            if (!FindElementById(elementId).Selected)
+            var element = FindElementById(elementId);
+            if (!element.Selected)
             {
-                FindElementById(elementId).Click();
+                element.Click();
             }
         }
 
@@ -200,12 +203,13 @@ namespace ntbs_ui_tests.Steps
         [When(@"I select (.*) from input list '(.*)'")]
         public void WhenISelectFromInputList(string value, string inputListId)
         {
-            FindElementById(inputListId).Click();
-            FindElementById(inputListId).SendKeys(Keys.Control + "a");
-            FindElementById(inputListId).SendKeys(Keys.Delete);
-            FindElementById(inputListId).SendKeys(value);
+            var inputList = FindElementById(inputListId);
+            inputList.Click();
+            inputList.SendKeys(Keys.Control + "a");
+            inputList.SendKeys(Keys.Delete);
+            inputList.SendKeys(value);
             FindElementById(inputListId+"__option--0").Click();
-            FindElementById(inputListId).SendKeys("\t");
+            inputList.SendKeys("\t");
         }
 
         [When(@"I take action on the alert with title (.*)")]
@@ -242,7 +246,7 @@ namespace ntbs_ui_tests.Steps
         [Then("A new notification should have been created")]
         public void ThenNotificationCreated()
         {
-            var notificationId = GetIdAndAssertMatchFromUrl();
+            var notificationId = GetNotificationIdAndAssertMatchFromUrl();
             Assert.DoesNotContain(notificationId, TestContext.AddedNotificationIds);
             TestContext.AddedNotificationIds.Add(notificationId);
         }
@@ -313,7 +317,7 @@ namespace ntbs_ui_tests.Steps
             Assert.Contains(warningMessage, warningElement.Text);
         }
 
-        [Then(@"I element with id '(.*)' is not present")]
+        [Then(@"The element with id '(.*)' is not present")]
         public void ThenICannotSeeTheElement(string elementId)
         {
             var elements = FindElementsById(elementId);
@@ -377,7 +381,7 @@ namespace ntbs_ui_tests.Steps
                 (string)typeof(NotificationSubPaths).GetProperty($"Edit{section}").GetValue(null, null));
         }
 
-        private int GetIdAndAssertMatchFromUrl()
+        private int GetNotificationIdAndAssertMatchFromUrl()
         {
             var urlRegex = new Regex(@".*/Notifications/(\d+)/.*$");
             var match = urlRegex.Match(Browser.Url);

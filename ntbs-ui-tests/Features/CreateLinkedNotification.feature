@@ -83,4 +83,4 @@ Feature: Linked notification creation
     And I click on the 'submit-button' button
     And I expand manage notification section
     
-    Then I element with id 'new-linked-notification-button' is not present
+    Then The element with id 'new-linked-notification-button' is not present
