@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -32,6 +33,12 @@ namespace ntbs_ui_tests.Steps
 
         #region Arrange
 
+        [Given(@"I navigate to the app")]
+        public void GivenINavigateToApp()
+        {
+            Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}");
+        }
+        
         [Given(@"I have logged in as (.*)")]
         public void GivenIHaveLoggedIn(string userId)
         {
@@ -39,12 +46,10 @@ namespace ntbs_ui_tests.Steps
             {
                 var user = Settings.Users[userId];
                 user.UserId = GetUserIdFromUsername(user.Username);
-                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}");
                 Browser.FindElement(By.CssSelector("input[type=email]")).SendKeys(user.Username);
                 Browser.FindElement(By.CssSelector("input[type=submit][value=Next]")).Click();
                 Browser.FindElement(By.CssSelector("input[type=password]")).SendKeys(user.Password);
                 Browser.FindElement(By.CssSelector("input[type=submit][value='Sign in']")).Click();
-                Browser.FindElement(By.CssSelector("input[type=submit][value=Yes]"));
                 TestContext.LoggedInUser = user;
             }
             catch
@@ -55,6 +60,12 @@ namespace ntbs_ui_tests.Steps
                 Console.WriteLine(webElement);
                 throw;
             }
+        }
+
+        [Given(@"I choose to log in with a different account")]
+        public void GivenIChooseToLogInWithDifferentAccount()
+        {
+            FindElementById("otherTile").Click();
         }
 
         [Given(@"I am on the (.*) page")]
@@ -77,30 +88,36 @@ namespace ntbs_ui_tests.Steps
             }
         }
 
+        [When(@"I navigate to the url of the current notification")]
+        public void WhenINavigateToCurrentNotificationUrl()
+        {
+            Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}/Notifications/{TestContext.AddedNotificationIds.Single()}");
+        }
+
         #endregion
 
         #region Act
-
+        
         [When(@"I click '(.*)' on the navigation bar")]
         public void ClickOnTheNavigationBar(string label)
         {
-            var pageLink = FindByXpath($"//*[@id='navigation-side-menu']/li[contains(.,'{label}')]/a");
+            var pageLink = FindElementByXpath($"//*[@id='navigation-side-menu']/li[contains(.,'{label}')]/a");
             pageLink.Click();
         }
 
         [When(@"I click on the (.*) link")]
         public void WhenIClickOnTheLink(string linkLabel)
         {
-            FindByXpath($"//a[contains(.,'{linkLabel}')]").Click();
+            FindElementByXpath($"//a[contains(.,'{linkLabel}')]").Click();
         }
 
         [When(@"I enter (.*) into '(.*)'")]
         public void WhenIEnterValueIntoFieldWithId(string value, string elementId)
         {
-            FindById(elementId).Click();
-            FindById(elementId).SendKeys(Keys.Control + "a");
-            FindById(elementId).SendKeys(Keys.Delete);
-            FindById(elementId).SendKeys(value + "\t");
+            FindElementById(elementId).Click();
+            FindElementById(elementId).SendKeys(Keys.Control + "a");
+            FindElementById(elementId).SendKeys(Keys.Delete);
+            FindElementById(elementId).SendKeys(value + "\t");
             if (!Settings.IsHeadless)
             {
                 Thread.Sleep(1000);
@@ -110,7 +127,7 @@ namespace ntbs_ui_tests.Steps
         [When(@"I make selection (.*) from (.*) section for '(.*)'")]
         public void WhenISelectValueFromGroupForFieldWithId(string value, string group, string elementId)
         {
-            var selection = FindByXpath($"//select[@id='{elementId}']/optgroup[@label='{group}']/option[@value='{value}']");
+            var selection = FindElementByXpath($"//select[@id='{elementId}']/optgroup[@label='{group}']/option[@value='{value}']");
             selection.Click();
             if (!Settings.IsHeadless)
             {
@@ -127,9 +144,9 @@ namespace ntbs_ui_tests.Steps
         [When(@"I uncheck '(.*)'")]
         public void WhenIDeselectCheckbox(string elementId)
         {
-            if (FindById(elementId).Selected)
+            if (FindElementById(elementId).Selected)
             {
-                FindById(elementId).Click();
+                FindElementById(elementId).Click();
             }
         }
 
@@ -137,22 +154,22 @@ namespace ntbs_ui_tests.Steps
         [When(@"I select radio value '(.*)'")]
         public void WhenISelectRadioOrCheckbox(string elementId)
         {
-            if (!FindById(elementId).Selected)
+            if (!FindElementById(elementId).Selected)
             {
-                FindById(elementId).Click();
+                FindElementById(elementId).Click();
             }
         }
 
         [When(@"I click on the '(.*)' button")]
         public void WhenIClickOn(string elementId)
         {
-            FindById(elementId).Click();
+            FindElementById(elementId).Click();
         }
 
         [When(@"I select (.*) for '(.*)'")]
         public void WhenISelectTextFromDropdown(string text, string selectId)
         {
-            new SelectElement(FindById(selectId)).SelectByText(text);
+            new SelectElement(FindElementById(selectId)).SelectByText(text);
         }
 
         [When(@"I expand manage notification section")]
@@ -176,19 +193,32 @@ namespace ntbs_ui_tests.Steps
         [When(@"I expand the '(.*)' section")]
         public void WhenIExpandSection(string sectionId)
         {
-            var element = FindById(sectionId).FindElement(By.TagName("summary"));
+            var element = FindElementById(sectionId).FindElement(By.TagName("summary"));
             element.Click();
         }
 
         [When(@"I select (.*) from input list '(.*)'")]
         public void WhenISelectFromInputList(string value, string inputListId)
         {
-            FindById(inputListId).Click();
-            FindById(inputListId).SendKeys(Keys.Control + "a");
-            FindById(inputListId).SendKeys(Keys.Delete);
-            FindById(inputListId).SendKeys(value);
-            FindById(inputListId+"__option--0").Click();
-            FindById(inputListId).SendKeys("\t");
+            FindElementById(inputListId).Click();
+            FindElementById(inputListId).SendKeys(Keys.Control + "a");
+            FindElementById(inputListId).SendKeys(Keys.Delete);
+            FindElementById(inputListId).SendKeys(value);
+            FindElementById(inputListId+"__option--0").Click();
+            FindElementById(inputListId).SendKeys("\t");
+        }
+
+        [When(@"I take action on the alert with title (.*)")]
+        public void WhenITakeActionOnAlert(string title)
+        {
+            var alert = FindElementsByXpath("//*[contains(@id, 'alert-')]").Single(a => a.Text.Contains(title));
+            alert.FindElement(By.LinkText("Take action")).Click();
+        }
+
+        [When(@"I log out")]
+        public void WhenILogOut()
+        {
+            Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}/Logout");
         }
 
         #endregion
@@ -212,12 +242,9 @@ namespace ntbs_ui_tests.Steps
         [Then("A new notification should have been created")]
         public void ThenNotificationCreated()
         {
-            var urlRegex = new Regex(@".*/Notifications/(\d+)/.*$");
-            var match = urlRegex.Match(Browser.Url);
-            var idString = match.Groups[1].Value;
-            Assert.True(match.Success, $"Url I am on instead: {Browser.Url}");
-            Assert.DoesNotContain(int.Parse(idString), TestContext.AddedNotificationIds);
-            TestContext.AddedNotificationIds.Add(int.Parse(idString));
+            var notificationId = GetIdAndAssertMatchFromUrl();
+            Assert.DoesNotContain(notificationId, TestContext.AddedNotificationIds);
+            TestContext.AddedNotificationIds.Add(notificationId);
         }
 
         [Then(@"I should be on the (.*) page")]
@@ -262,47 +289,64 @@ namespace ntbs_ui_tests.Steps
         {
             var sectionId = GetSectionIdFromSection(section);
             var htmlId = $"{sectionId}-{field}";
-            Assert.Contains(value, FindById(htmlId).Text);
+            Assert.Contains(value, FindElementById(htmlId).Text);
         }
 
         [Then(@"I can see the value '(.*)' in the '(.*)' table overview section")]
         public void ThenICanSeeValueInTheOverviewSection(string value, string section)
         {
             var sectionId = GetSectionIdFromSection(section);
-            Assert.Contains(value, FindById(sectionId).Text);
+            Assert.Contains(value, FindElementById(sectionId).Text);
         }
 
         [Then(@"I can see the error '(.*)'")]
         public void ThenICanSeeTheError(string errorMessage)
         {
-            var errorSection = FindByXpath("//*[@class='nhsuk-error-summary']");
+            var errorSection = FindElementByXpath("//*[@class='nhsuk-error-summary']");
             Assert.Contains(errorMessage, errorSection.Text);
         }
 
         [Then(@"I see the warning '(.*)' for '(.*)'")]
         public void ThenICanSeeTheWarningForId(string warningMessage, string warningId)
         {
-            var warningElement = FindById(warningId);
+            var warningElement = FindElementById(warningId);
             Assert.Contains(warningMessage, warningElement.Text);
         }
 
         [Then(@"I element with id '(.*)' is not present")]
         public void ThenICannotSeeTheElement(string elementId)
         {
-            var elements = Browser.FindElements(By.Id(elementId));
+            var elements = FindElementsById(elementId);
             Assert.False(elements.Any());
+        }
+
+        [Then(@"A (.*) alert is present on the notification")]
+        public void ThenAlertIsPresent(string alertTitle)
+        {
+            var alerts = FindElementsByXpath("//*[contains(@id, 'alert-')]");
+            Assert.NotNull(alerts.SingleOrDefault(a => a.Text.Contains(alertTitle)));
         }
 
         #endregion
 
-        private IWebElement FindById(string elementId)
+        private IWebElement FindElementById(string elementId)
         {
             return Browser.FindElement(By.Id(elementId));
         }
 
-        private IWebElement FindByXpath(string xpath)
+        private ReadOnlyCollection<IWebElement> FindElementsById(string elementId)
+        {
+            return Browser.FindElements(By.Id(elementId));
+        }
+
+        private IWebElement FindElementByXpath(string xpath)
         {
             return Browser.FindElement(By.XPath(xpath));
+        }
+
+        private ReadOnlyCollection<IWebElement> FindElementsByXpath(string xpath)
+        {
+            return Browser.FindElements(By.XPath(xpath));
         }
 
         private void SaveNotificationInDatabase(Notification notification)
@@ -331,6 +375,15 @@ namespace ntbs_ui_tests.Steps
         {
             return OverviewSubPathToAnchorMap.GetOverviewAnchorId(
                 (string)typeof(NotificationSubPaths).GetProperty($"Edit{section}").GetValue(null, null));
+        }
+
+        private int GetIdAndAssertMatchFromUrl()
+        {
+            var urlRegex = new Regex(@".*/Notifications/(\d+)/.*$");
+            var match = urlRegex.Match(Browser.Url);
+            var idString = match.Groups[1].Value;
+            Assert.True(match.Success, $"Url I am on instead: {Browser.Url}");
+            return int.Parse(idString);
         }
     }
 }

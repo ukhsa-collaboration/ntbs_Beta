@@ -1,8 +1,12 @@
 {
   "Users": {
-    "ServiceUser": {
+    "BirminghamServiceUser": {
       "Username": "birmingham@aptemus.com",
       "TbServiceCode": "TBS0019"
+    },
+    "LeedsServiceUser":  {
+      "Username": "kamala@aptemus.com",
+      "TbServiceCode": "TBS0106"
     }
   },
   "Environments": {
