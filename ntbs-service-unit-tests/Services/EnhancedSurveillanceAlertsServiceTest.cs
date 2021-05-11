@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using System.Threading.Tasks;
+using Moq;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
@@ -74,25 +75,30 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Theory]
-        [InlineData("M. bovis", null, null, null, null, true, false)]
-        [InlineData("M. bovis", null, null, null, Status.Yes, true, false)]
-        [InlineData("M. bovis", null, null, Status.Yes, null, true, false)]
-        [InlineData("M. bovis", null, Status.Yes, null, null, true, false)]
-        [InlineData("M. bovis", Status.Yes, null, null, null, true, false)]
-        [InlineData("M. bovis", Status.No, Status.No, Status.No, null, true, false)]
-        [InlineData("M. bovis", Status.No, Status.No, null, Status.No, true, false)]
-        [InlineData("M. bovis", Status.No, null, Status.No, Status.No, true, false)]
-        [InlineData("M. bovis", null, Status.No, Status.No, Status.No, true, false)]
-        [InlineData("M. bovis", Status.No, Status.No, Status.No, Status.No, false, true)]
-        [InlineData("M. bovis", Status.Yes, Status.No, Status.Unknown, Status.No, false, true)]
-        [InlineData("M. bovis", Status.Yes, Status.Yes, Status.Yes, Status.Yes, false, true)]
-        [InlineData("M. bovis", Status.Unknown, Status.Unknown, Status.Unknown, Status.Unknown, false, true)]
-        [InlineData("Non M. bovis", null, null, null, null, false, true)]
-        [InlineData("Non M. bovis", null, Status.No, Status.Unknown, Status.Yes, true, false)]
-        [InlineData("Non M. bovis", Status.Yes, Status.Yes, Status.Yes, Status.Yes, false, true)]
-        [InlineData("Non M. bovis", Status.No, Status.No, Status.No, Status.No, false, true)]
-        [InlineData("Non M. bovis", Status.Unknown, Status.Unknown, Status.Unknown, Status.Unknown, false, true)]
-        public void CreateOrDismissMBovisAlert(string drugSpecies,
+        [InlineData("M. bovis", false, null, null, null, null, true, false)]
+        [InlineData("M. bovis", true, null, null, null, null, false, true)]
+        [InlineData("M. bovis", false, null, null, null, Status.Yes, true, false)]
+        [InlineData("M. bovis", false, null, null, Status.Yes, null, true, false)]
+        [InlineData("M. bovis", false, null, Status.Yes, null, null, true, false)]
+        [InlineData("M. bovis", false, Status.Yes, null, null, null, true, false)]
+        [InlineData("M. bovis", false, Status.No, Status.No, Status.No, null, true, false)]
+        [InlineData("M. bovis", false, Status.No, Status.No, null, Status.No, true, false)]
+        [InlineData("M. bovis", false, Status.No, null, Status.No, Status.No, true, false)]
+        [InlineData("M. bovis", false, null, Status.No, Status.No, Status.No, true, false)]
+        [InlineData("M. bovis", true, null, Status.No, Status.No, Status.No, false, true)]
+        [InlineData("M. bovis", false, Status.No, Status.No, Status.No, Status.No, false, true)]
+        [InlineData("M. bovis", false, Status.Yes, Status.No, Status.Unknown, Status.No, false, true)]
+        [InlineData("M. bovis", false, Status.Yes, Status.Yes, Status.Yes, Status.Yes, false, true)]
+        [InlineData("M. bovis", false, Status.Unknown, Status.Unknown, Status.Unknown, Status.Unknown, false, true)]
+        [InlineData("Non M. bovis", false, null, null, null, null, false, true)]
+        [InlineData("Non M. bovis", true, null, null, null, null, false, true)]
+        [InlineData("Non M. bovis", false, null, Status.No, Status.Unknown, Status.Yes, true, false)]
+        [InlineData("Non M. bovis", true, null, Status.No, Status.Unknown, Status.Yes, false, true)]
+        [InlineData("Non M. bovis", false, Status.Yes, Status.Yes, Status.Yes, Status.Yes, false, true)]
+        [InlineData("Non M. bovis", false, Status.No, Status.No, Status.No, Status.No, false, true)]
+        [InlineData("Non M. bovis", false, Status.Unknown, Status.Unknown, Status.Unknown, Status.Unknown, false, true)]
+        public async Task CreateOrDismissMBovisAlert(string drugSpecies,
+            bool notificationClosed,
             Status? hasExposureToKnownCases,
             Status? hasUnpasteurisedMilkConsumption,
             Status? hasOccupationExposure,
@@ -104,6 +110,7 @@ namespace ntbs_service_unit_tests.Services
             var notification = new Notification
             {
                 NotificationId = 1,
+                NotificationStatus = notificationClosed ? NotificationStatus.Closed : NotificationStatus.Notified,
                 DrugResistanceProfile = new DrugResistanceProfile
                 {
                     Species = drugSpecies,
@@ -119,7 +126,7 @@ namespace ntbs_service_unit_tests.Services
             };
 
             // Act
-            EnhancedSurveillanceAlertsService.CreateOrDismissMBovisAlert(notification);
+            await EnhancedSurveillanceAlertsService.CreateOrDismissMBovisAlert(notification);
 
             // Assert
             var numberOfCallsToCreate = shouldCreateAlert ? Times.Once() : Times.Never();

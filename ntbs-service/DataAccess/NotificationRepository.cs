@@ -118,6 +118,7 @@ namespace ntbs_service.DataAccess
                     n => new NotificationForDrugResistanceImport
                     {
                         NotificationId = n.NotificationId,
+                        NotificationStatus = n.NotificationStatus,
                         DrugResistanceProfile = n.DrugResistanceProfile,
                         TreatmentRegimen = n.ClinicalDetails.TreatmentRegimen,
                         ExposureToKnownMdrCaseStatus = n.MDRDetails.ExposureToKnownCaseStatus,
