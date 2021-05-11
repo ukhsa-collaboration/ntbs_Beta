@@ -35,7 +35,6 @@ namespace load_test_data_generation
         {
             var options = new DbContextOptionsBuilder<NtbsContext>();
             options.UseSqlServer(connectionString);
-            options.EnableSensitiveDataLogging();
             return new NtbsContext(options.Options);
         }
     }

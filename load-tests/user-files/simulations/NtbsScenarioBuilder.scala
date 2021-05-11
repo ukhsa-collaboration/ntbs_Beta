@@ -5,26 +5,65 @@ import io.gatling.core.structure. { StructureBuilder, ChainBuilder }
 import io.gatling.http.check.HttpCheck
 import io.gatling.http.request.builder.HttpRequestBuilder
 
+class CreateNotificationScenarioBuilder(
+    pageName: String,
+    baseUrl: String,
+    protected val createUrl: String,
+    filters: List[(String, String)] = List.empty[(String, String)],
+    validations: List[(String, String)] = List.empty[(String, String)],
+    formParams: Map[String, String] = Map.empty[String, String]
+) extends CreateOrEditScenarioBuilder(
+    pageName,
+    baseUrl,
+    createUrl,
+    List(
+        css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken"),
+        currentLocationRegex("https://ntbs-load-test.e32846b1ddf0432eb63f.northeurope.aksapp.io/Notifications/(.*)/Edit/PatientDetails").saveAs("notificationId")),
+    filters,
+    validations,
+    formParams)
+
 class EditScenarioBuilder(
+    pageName: String,
+    baseUrl: String,
+    filters: List[(String, String)] = List.empty[(String, String)],
+    validations: List[(String, String)] = List.empty[(String, String)],
+    formParams: Map[String, String] = Map.empty[String, String]
+) extends CreateOrEditScenarioBuilder(
+    pageName,
+    baseUrl,
+    baseUrl,
+    List(css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken")),
+    filters,
+    validations,
+    formParams)
+
+abstract class CreateOrEditScenarioBuilder(
     protected val pageName: String,
     protected val baseUrl: String,
-    protected val filters: List[(String, String)] = List.empty[(String, String)],
-    protected val validations: List[(String, String)] = List.empty[(String, String)],
-    protected val formParams: Map[String, String] = Map.empty[String, String]
+    protected val initialUrl: String,
+    protected val initialChecks: List[HttpCheck],
+    protected var filters: List[(String, String)] = List.empty[(String, String)],
+    protected var validations: List[(String, String)] = List.empty[(String, String)],
+    protected var formParams: Map[String, String] = Map.empty[String, String]
 ) extends NtbsScenarioBuilder {
-    private val additionalGetChecks: List[HttpCheck] = List(css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken"))
+    def withFilters(_filters: List[(String, String)]): CreateOrEditScenarioBuilder = {
+        filters = _filters
+        this
+    }
 
-    def withFilters(_filters: List[(String, String)]): EditScenarioBuilder =
-        new EditScenarioBuilder(pageName, baseUrl, _filters, validations, formParams)
+    def withValidations(_validations: List[(String, String)]): CreateOrEditScenarioBuilder = {
+        validations = _validations
+        this
+    }
 
-    def withValidations(_validations: List[(String, String)]): EditScenarioBuilder =
-        new EditScenarioBuilder(pageName, baseUrl, filters, _validations, formParams)
-
-    def withFormParams(_formParams: Map[String, String]): EditScenarioBuilder =
-        new EditScenarioBuilder(pageName, baseUrl, filters, validations, _formParams)
+    def withFormParams(_formParams: Map[String, String]): CreateOrEditScenarioBuilder = {
+        formParams = _formParams
+        this
+    }
 
     def build(): StructureBuilder[ChainBuilder]  = {
-        var action: StructureBuilder[ChainBuilder]  = exec(getRequest(s"${pageName}_page", baseUrl, additionalGetChecks)).pause(1)
+        var action: StructureBuilder[ChainBuilder]  = exec(getRequest(s"${pageName}_page", initialUrl, initialChecks)).pause(1)
 
         for ((endpoint, queryString) <- filters) {
             action = action.exec(getRequest(s"${pageName}_filter", s"${baseUrl}/${endpoint}?${queryString}"))
@@ -40,6 +79,44 @@ class EditScenarioBuilder(
                     s"${baseUrl}?isBeingSubmitted=False",
                     formParams + ("__RequestVerificationToken" -> "${requestVerificationToken}")))
             .pause(2)
+    }
+}
+
+class SearchScenarioBuilder(private val id: String = "", private val familyName: String = "") extends NtbsScenarioBuilder {
+    def build(): StructureBuilder[ChainBuilder] = {
+        exec(getRequest("search_page", "/Search"))
+            .pause(2)
+            .exec(getRequest("perform_search", s"/Search?SearchParameters.IdFilter=${id}&SearchParameters.FamilyName=${familyName}&SearchParameters.PartialDob.Day=&SearchParameters.PartialDob.Month=&SearchParameters.PartialDob.Year=&SearchParameters.Postcode=&SearchParameters.PartialNotificationDate.Day=&SearchParameters.PartialNotificationDate.Month=&SearchParameters.PartialNotificationDate.Year=&SearchParameters.GivenName=&SearchParameters.SexId=&SearchParameters.TBServiceCode=&SearchParameters.CountryId="))
+            .pause(2)
+    }
+}
+
+class SubmitDraftNotificationBuilder extends NtbsScenarioBuilder {
+    def build(): StructureBuilder[ChainBuilder] = {
+        exec(getRequest(
+                "edit_treatment_events_page",
+                "/Notifications/${notificationId}/Edit/TreatmentEvents",
+                List(css("""input[name="__RequestVerificationToken"]""", "value").saveAs("requestVerificationToken"))))
+            .pause(1)
+            .exec(submitRequest(
+                "submit_draft",
+                "/Notifications/${notificationId}/Edit/TreatmentEvents",
+                Map(
+                    "actionName" -> "Submit",
+                    "NotificationId" -> "${notificationId}",
+                    "__RequestVerificationToken" -> "${requestVerificationToken}")))
+    }
+}
+
+class DashboardScenarioBuilder extends NtbsScenarioBuilder {
+    def build(): StructureBuilder[ChainBuilder] = {
+        exec(getRequest("dashboard", "/")).pause(2)
+    }
+}
+
+class NotificationReadScenarioBuilder extends NtbsScenarioBuilder {
+    def build(): StructureBuilder[ChainBuilder] = {
+        exec(getRequest("notification_read", "/Notifications/${notificationId}/")).pause(2)
     }
 }
 
