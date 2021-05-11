@@ -107,6 +107,18 @@ namespace ntbs_service.Models.Entities
             ClinicalDetails.IsPostMortem != true || (TreatmentEvents != null && TreatmentEvents.Any(x =>
                 x.TreatmentEventTypeIsOutcome && x.TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.Died));
 
+        public bool ShouldBeClosed()
+        {
+            var lastTreatmentEvent = TreatmentEvents.OrderByDescending(t => t.EventDate)
+                .ThenBy(t => t.TreatmentEventTypeIsOutcome)
+                .FirstOrDefault();
+
+            return lastTreatmentEvent != null
+                && lastTreatmentEvent.TreatmentEventTypeIsOutcome
+                && lastTreatmentEvent.TreatmentOutcome?.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment
+                && lastTreatmentEvent.EventDate < DateTime.Today.AddYears(-1);
+        }
+
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
 }
