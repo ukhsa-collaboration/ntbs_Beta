@@ -2,8 +2,9 @@ Feature: Notification editing
   Happy and error paths for notification creation
   Notification deletion
 
-  Background: Create new notification
-    Given I have logged in as ServiceUser
+  Background: Log in and navigate to notification
+    Given I navigate to the app
+    Given I have logged in as BirminghamServiceUser
     Given I am on seeded 'TO_BE_EDITED' notification overview page
 
   Scenario: Edit notification patient details fields

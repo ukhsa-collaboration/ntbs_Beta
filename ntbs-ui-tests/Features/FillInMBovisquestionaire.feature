@@ -1,10 +1,11 @@
 Feature: M. bovis
 
-  Background: Create new notification
-    Given I have logged in as ServiceUser
+  Background: Log in and navigate to notification
+    Given I navigate to the app
+    Given I have logged in as BirminghamServiceUser
+    Given I am on seeded 'M_BOVIS' notification overview page
 
   Scenario: Fill in M. bovis exposure to known cases page
-    Given I am on seeded 'M_BOVIS' notification overview page
     When I go to edit the 'MBovisExposureToKnownCases' section
     Then I should be on the ExposureToKnownCases page
     When I select radio value 'has-exposure-yes'
@@ -16,7 +17,6 @@ Feature: M. bovis
     Then I should be on the ExposureToKnownCases page
     
   Scenario: Fill in M. bovis consumption of unpasteurised milk page
-    Given I am on seeded 'M_BOVIS' notification overview page
     When I go to edit the 'MBovisUnpasteurisedMilkConsumptions' section
     Then I should be on the UnpasteurisedMilkConsumptions page
     When I select radio value 'has-milk-consumption-yes'
@@ -27,7 +27,6 @@ Feature: M. bovis
     Then I should be on the UnpasteurisedMilkConsumptions page
     
   Scenario: Fill in M. bovis occupation exposure page
-    Given I am on seeded 'M_BOVIS' notification overview page
     When I go to edit the 'MBovisOccupationExposures' section
     Then I should be on the OccupationExposures page
     When I select radio value 'has-exposure-yes'
@@ -38,7 +37,6 @@ Feature: M. bovis
     Then I should be on the OccupationExposures page
     
   Scenario: Fill in M. bovis animal exposure page
-    Given I am on seeded 'M_BOVIS' notification overview page
     When I go to edit the 'MBovisAnimalExposures' section
     Then I should be on the AnimalExposures page
     When I select radio value 'has-exposure-yes'

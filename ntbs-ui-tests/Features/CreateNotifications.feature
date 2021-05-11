@@ -3,7 +3,8 @@ Feature: Notification creation
   Notification deletion
 
   Background: Create new notification
-    Given I have logged in as ServiceUser
+    Given I navigate to the app
+    Given I have logged in as BirminghamServiceUser
     Given I am on the Search page
     When I enter 1 into 'SearchParameters_IdFilter'
     And I click on the 'search-button' button

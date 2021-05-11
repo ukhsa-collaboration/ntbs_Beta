@@ -42,6 +42,20 @@ namespace ntbs_ui_tests.Helpers
                     }
                 },
                 {
+                    "TO_TRANSFER",
+                    new Notification
+                    {
+                        NotificationStatus = NotificationStatus.Notified,
+                        NotificationSites = new List<NotificationSite>
+                        {
+                            new NotificationSite
+                            {
+                                SiteId = (int)SiteId.PULMONARY
+                            }
+                        }
+                    }
+                },
+                {
                     "M_BOVIS",
                     new Notification
                     {
