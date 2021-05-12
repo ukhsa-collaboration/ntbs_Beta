@@ -103,7 +103,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Contains("Date of birth must not be before 01/01/1900", resultDocument.GetError("dob"));
             resultDocument.AssertErrorSummaryMessage("PatientDetails-NhsNumber", "nhs-number", "NHS number needs to be 10 digits long");
             resultDocument.AssertErrorSummaryMessage("PatientDetails-Address", "address", "Address can only contain letters, numbers and the symbols ' - . , /");
-            resultDocument.AssertErrorSummaryMessage("PatientDetails-LocalPatientId", "local-patient-id", "Invalid character found in Local Patient Id");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-LocalPatientId", "local-patient-id", "Invalid character found in Local patient ID");
         }
 
         [Fact]
