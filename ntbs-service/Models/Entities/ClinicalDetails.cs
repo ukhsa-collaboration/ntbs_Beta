@@ -91,7 +91,7 @@ namespace ntbs_service.Models.Entities
         public DotStatus? DotStatus { get; set; }
         public Status? EnhancedCaseManagementStatus { get; set; }
 
-        [Display(Name = "Enhanced Case Management Level")]
+        [Display(Name = "Enhanced case management level")]
         public byte EnhancedCaseManagementLevel { get; set; }
 
         [Display(Name = "Home visit carried out?")]

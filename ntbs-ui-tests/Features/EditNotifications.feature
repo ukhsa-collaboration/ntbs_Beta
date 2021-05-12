@@ -5,7 +5,7 @@ Feature: Notification editing
   Background: Log in and navigate to notification
     Given I navigate to the app
     Given I have logged in as BirminghamServiceUser
-    Given I am on seeded 'TO_BE_EDITED' notification overview page
+    Given I am on seeded 'MAXIMUM_DETAILS' notification overview page
 
   Scenario: Edit notification patient details fields
     When I go to edit the 'PatientDetails' section

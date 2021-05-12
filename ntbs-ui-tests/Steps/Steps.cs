@@ -74,6 +74,12 @@ namespace ntbs_ui_tests.Steps
             Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}/{pageName}");
         }
 
+        [Given(@"I am on the Homepage")]
+        public void GivenIAmOnTheHomepage()
+        {
+            Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}");
+        }
+
         [Given(@"I am on seeded '(.*)' notification overview page")]
         public void GivenIAmOnANotificationPage(string notificationName)
         {
@@ -351,6 +357,25 @@ namespace ntbs_ui_tests.Steps
             Assert.Contains($"{title}:\r\n{value}", transferInformationElements.Select(t => t.Text));
         }
 
+        [Then(@"I can see the correct titles for the '(.*)' table")]
+        public void ThenICanSeeCorrectTitlesForTable(string tableId)
+        {
+            var tableColumnTitles = FindElementById(tableId).FindElement(By.TagName("thead"))
+                .FindElements(By.TagName("th")).Select(title => title.Text).ToArray();
+            var expectedTitles = GetExpectedColumnsTitlesForTable(tableId);
+            Assert.Equal(tableColumnTitles, expectedTitles);
+        }
+
+        [Then(@"I can see the correct labels for the '(.*)' overview section")]
+        public void ThenICanSeeTheCorrectLabelsForOverviewSection(string section)
+        {
+            var sectionId = GetSectionIdFromSection(section);
+            var expectedLabels = GetExpectedLabels(section);
+            var actualLabels = FindElementById(sectionId).FindElements(By.ClassName("notification-details-label"))
+                .Select(label => label.Text).ToArray();
+            Assert.Equal(expectedLabels, actualLabels);
+        }
+
         #endregion
 
         private IWebElement FindElementById(string elementId)
@@ -408,6 +433,53 @@ namespace ntbs_ui_tests.Steps
             var idString = match.Groups[1].Value;
             Assert.True(match.Success, $"Url I am on instead: {Browser.Url}");
             return int.Parse(idString);
+        }
+
+        private string[] GetExpectedColumnsTitlesForTable(string tableId)
+        {
+            return tableId switch
+            {
+                "alerts-table" => new[] {"NTBS Id", "Alert date", "Alert type", "Case Manager\r\nTB Service", "Dismiss"},
+                "draft-notifications-table" => new [] {"NTBS Id", "Name", "Date created", "TB Service", "Case Manager"},
+                "recent-notifications-table" => new [] {"NTBS Id", "Name", "Date notified", "TB Service", "Case Manager"}
+            };
+        }
+
+        private string[] GetExpectedLabels(string tableId)
+        {
+            return tableId switch
+            {
+                "PatientDetails" => new[] {"Name", "Sex", "NHS number", "Occupation", "Notification date",
+                    "Date of birth", "Age at notification", "Address", "Postcode", "Local authority", "Residence PHEC",
+                    "Ethnic group", "Birth country", "UK entry year", "Treatment PHEC", "Legacy IDs", "Local patient ID"},
+                "HospitalDetails" => new [] {"TB service", "Hospital", "Case Manager", "Consultant"},
+                "ClinicalDetails" => new [] { "Sites of disease", "Patient has symptoms", "Symptom onset date",
+                    "Symptom onset to treatment start", "Presentation to any health service date",
+                    "Symptom onset to health service presentation", "Healthcare setting", "Presentation to TB service date",
+                    "Health service to TB service presentation", "Diagnosis date", "TB service presentation to diagnosis",
+                    "Treatment date", "Diagnosis to treatment start", "Postmortem diagnosis", "Home visit",
+                    "HIV test offered", "DOT offered", "BCG vaccination", "Enhanced case management",
+                    "Planned treatment regimen", "Notes"},
+                "ContactTracing" => new [] {"Number of contacts identified for screening",
+                    "Number of contacts screened and found to have latent TB", "Number of contacts screened for TB",
+                    "Number of contacts that have started treatment for latent TB",
+                    "Number of contacts screened and found to have active TB",
+                    "Number of contacts that have completed treatment for latent TB"},
+                "SocialRiskFactors" => new [] {"History of drug misuse", "Time periods", "History of homelessness",
+                    "Time periods", "History of imprisonment", "Time periods", "History of smoking", "Time periods",
+                    "Is the patient’s ability to self-administer treatment affected by alcohol misuse or abuse?",
+                    "Is the patient’s ability to self-administer treatment affected by mental health illness?",
+                    "Is the patient an asylum seeker?", "Is the patient an immigration removal centre detainee?"},
+                "Travel" => new [] {
+                    "Patient has travelled to one or more high incidence countries", "Total countries travelled to",
+                    "Total number of months travelled", "Country 1", "Country 2", "Country 3",
+                    "Patient has had visitors from one or more high incidence countries", "Total visitor countries",
+                    "Total number of months of visits", "Country 1", "Country 2", "Country 3"},
+                "Comorbidities" => new [] {"Diabetes", "Hepatitis B", "Hepatitis C", "Chronic liver disease",
+                    "Chronic renal disease", "Immunosuppression", "Type", "Other immunosuppression"},
+                "PreviousHistory" => new [] {
+                    "Previous TB occurrence", "Year of previous diagnosis", "Previously treated", "Country of treatment"}
+            };
         }
     }
 }

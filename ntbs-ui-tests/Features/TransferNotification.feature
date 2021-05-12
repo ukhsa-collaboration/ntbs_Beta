@@ -3,7 +3,7 @@ Feature: Transfer notification
   Background: Create a transfer request
     Given I navigate to the app
     And I have logged in as BirminghamServiceUser
-    And I am on seeded 'TO_TRANSFER' notification overview page
+    And I am on seeded 'MINIMAL_DETAILS' notification overview page
     Then I can see the value 'Birmingham & Solihull' for the field 'tb-service' in the 'HospitalDetails' overview section
 
     When I expand manage notification section
@@ -11,7 +11,7 @@ Feature: Transfer notification
     And I enter Yorkshire and Humber into 'PhecCode'
     And I wait
     And I enter LCHC (Leeds Community Healthcare NHS Trust) into 'TransferRequest_TbServiceCode'
-    And I enter Birmingham User into 'TransferRequest_CaseManagerId'
+    And I enter Kamala Jones into 'TransferRequest_CaseManagerId'
     And I check 'transfer-radio-Other'
     And I enter Patient likes travel into 'TransferRequest_OtherReasonDescription'
     And I enter I hope your service is doing well into 'TransferRequest_TransferRequestNote'
@@ -23,7 +23,7 @@ Feature: Transfer notification
     
     Then I can see the value Yorkshire and Humber for element with id 'transfer-phec'
     Then I can see the value LCHC (Leeds Community Healthcare NHS Trust) for element with id 'transfer-tb-service'
-    Then I can see the value Birmingham User for element with id 'transfer-case-manager'
+    Then I can see the value Kamala Jones for element with id 'transfer-case-manager'
     
   Scenario: Accept transfer of notification between services
     When I log out
