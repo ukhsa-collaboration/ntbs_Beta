@@ -150,3 +150,8 @@ body:not(.js-enabled) {
 .breadcrumb-trail-background {
     background-color: $breadcrumb-trail-background;
 }
+
+.live-data-warning-banner {
+    background-color: $live-data-warning-background;
+    border-bottom: none;
+}

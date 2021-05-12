@@ -16,6 +16,7 @@
         public const string DbConnectionStringMigration = "migration";
         public const string DbConnectionStringSpecimenMatching = "specimenMatching";
         public const string ExternalLinks = "ExternalLinks";
+        public const string EnvironmentDescription = "EnvironmentDescription";
 
         public const int SqlServerDefaultCommandTimeOut = 600;
     }
