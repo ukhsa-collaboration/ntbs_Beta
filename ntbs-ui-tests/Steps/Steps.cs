@@ -88,15 +88,15 @@ namespace ntbs_ui_tests.Steps
             }
         }
 
+        #endregion
+
+        #region Act
+
         [When(@"I navigate to the url of the current notification")]
         public void WhenINavigateToCurrentNotificationUrl()
         {
             Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}/Notifications/{TestContext.AddedNotificationIds.Single()}");
         }
-
-        #endregion
-
-        #region Act
         
         [When(@"I click '(.*)' on the navigation bar")]
         public void ClickOnTheNavigationBar(string label)
@@ -229,6 +229,12 @@ namespace ntbs_ui_tests.Steps
 
         #region Assert
 
+        [Then(@"I can see the value (.*) for element with id '(.*)'")]
+        public void ThenICanSeeValueForId(string value, string elementId)
+        {
+            Assert.Contains(value, FindElementById(elementId).Text);
+        }
+
         [Then(@"I should see the Notification")]
         public void ThenIShouldSeeTheNotification()
         {
@@ -329,6 +335,20 @@ namespace ntbs_ui_tests.Steps
         {
             var alerts = FindElementsByXpath("//*[contains(@id, 'alert-')]");
             Assert.NotNull(alerts.SingleOrDefault(a => a.Text.Contains(alertTitle)));
+        }
+
+        [Then(@"I can see '(.*)' as the rejection note")]
+        public void ThenICanSeeRejectionNote(string rejectionNote)
+        {
+            var noteOnPage = Browser.FindElement(By.ClassName("rejection-note"));
+            Assert.Contains(rejectionNote, noteOnPage.Text);
+        }
+
+        [Then(@"I can see the value (.*) for '(.*)' transfer information")]
+        public void ThenICanSeeTransferInformationValue(string value, string title)
+        {
+            var transferInformationElements = Browser.FindElements(By.ClassName("transfer-request-information"));
+            Assert.Contains($"{title}:\r\n{value}", transferInformationElements.Select(t => t.Text));
         }
 
         #endregion
