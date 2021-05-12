@@ -28,21 +28,7 @@ namespace ntbs_ui_tests.Helpers
             new Dictionary<string, Notification>
             {
                 {
-                    "TO_BE_DENOTIFIED",
-                    new Notification
-                    {
-                        NotificationStatus = NotificationStatus.Notified,
-                        NotificationSites = new List<NotificationSite>
-                        {
-                            new NotificationSite
-                            {
-                                SiteId = (int)SiteId.PULMONARY
-                            }
-                        }
-                    }
-                },
-                {
-                    "TO_TRANSFER",
+                    "MINIMAL_DETAILS",
                     new Notification
                     {
                         NotificationStatus = NotificationStatus.Notified,
@@ -71,7 +57,7 @@ namespace ntbs_ui_tests.Helpers
                     }
                 },
                 {
-                    "TO_BE_EDITED",
+                    "MAXIMUM_DETAILS",
                     new Notification
                     {
                         PatientDetails = new PatientDetails
