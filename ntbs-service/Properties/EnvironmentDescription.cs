@@ -4,5 +4,6 @@
     {
         public bool ContainsLiveData { get; set; } = false;
         public string DisplayName { get; set; } = "Unknown environment";
+        public string EnvironmentName { get; set; }
     }
 }

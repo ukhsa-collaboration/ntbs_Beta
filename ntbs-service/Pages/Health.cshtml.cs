@@ -12,6 +12,8 @@ namespace ntbs_service.Pages
         {
             Release = configuration.GetValue<string>(Constants.Release);
 
+            EnvironmentName = configuration.GetValue<string>(Constants.EnvironmentName);
+
             AuditEnabled = configuration.GetValue<bool>(Constants.AuditEnabledConfigValue);
 
             // Note the value negation, since we're turning mocked => enabled
@@ -30,6 +32,7 @@ namespace ntbs_service.Pages
         }
 
         public string Release { get; }
+        public string EnvironmentName { get; }
         public bool AuditEnabled { get; }
         public bool ClusterMatchingEnabled { get; }
         public bool ReferenceLabResultsEnabled { get; }
