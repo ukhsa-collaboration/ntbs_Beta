@@ -33,6 +33,7 @@ namespace ntbs_ui_tests.Hooks
     public class EnvironmentConfig
     {
         public string ConnectionString { get; set; }
+        public string MigrationConnectionString { get; set; }
         public string RootUri { get; set; }
     }
 
