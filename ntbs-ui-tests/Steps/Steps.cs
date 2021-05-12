@@ -403,7 +403,7 @@ namespace ntbs_ui_tests.Steps
 
         private int GetNotificationIdAndAssertMatchFromUrl()
         {
-            var urlRegex = new Regex(@".*/Notifications/(\d+)/.*$");
+            var urlRegex = new Regex(@".*/Notifications/(\d+).*$");
             var match = urlRegex.Match(Browser.Url);
             var idString = match.Groups[1].Value;
             Assert.True(match.Success, $"Url I am on instead: {Browser.Url}");

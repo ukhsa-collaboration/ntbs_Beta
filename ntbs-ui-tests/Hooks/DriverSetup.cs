@@ -29,7 +29,7 @@ namespace ntbs_ui_tests.Hooks
         }
 
         [BeforeScenario]
-        public void BeforeScenario()
+        public async void BeforeScenario()
         {
             var opts = new ChromeOptions();
             opts.AddArgument("--no-sandbox"); // Necessary to avoid `unknown error: DevToolsActivePort file doesn't exist` when running on docker
@@ -41,6 +41,7 @@ namespace ntbs_ui_tests.Hooks
             Browser = new RemoteWebDriver(opts);
             Browser.Manage().Timeouts().ImplicitWait = settings.ImplicitWait;
             objectContainer.RegisterInstanceAs(Browser);
+            await CleanUpMigratedNotification();
         }
 
         [AfterScenario]
@@ -55,6 +56,33 @@ namespace ntbs_ui_tests.Hooks
                 await connection.ExecuteAsync(deleteNotifications, new { ids = testContext.AddedNotificationIds.ToArray() });
             }
             Browser.Quit();
+            await CleanUpMigratedNotification();
+        }
+
+        private async Task CleanUpMigratedNotification()
+        {
+            using (var connection = new SqlConnection(settings.EnvironmentConfig.ConnectionString))
+            {
+                connection.Open();
+                var deleteNotification = "DELETE FROM Notification WHERE ETSID = '189045'";
+                await connection.ExecuteAsync(deleteNotification);
+                connection.Close();
+            }
+            using (var connection = new SqlConnection(settings.EnvironmentConfig.MigrationConnectionString))
+            {
+                var importedNotificationTableName = GetImportedNotificationTableName();
+                connection.Open();
+                var deleteImportedNotification = $"DELETE FROM {importedNotificationTableName} WHERE LegacyId = '189045'";
+                await connection.ExecuteAsync(deleteImportedNotification);
+            }
+        }
+
+        private string GetImportedNotificationTableName()
+        {
+            var importedTablePrefix = settings.EnvironmentUnderTest == "local"
+                ? "Dev"
+                : char.ToUpper(settings.EnvironmentUnderTest[0]) + settings.EnvironmentUnderTest.Substring(1);
+            return $"{importedTablePrefix}ImportedNotifications";
         }
     }
 }
