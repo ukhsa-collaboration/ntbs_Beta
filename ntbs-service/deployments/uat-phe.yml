@@ -132,6 +132,12 @@ spec:
               value: "true"
             - name: Hangfire__WorkerCount
               value: "3"
+            - name: EnvironmentDescription__ContainsLiveData
+              value: "false"
+            - name: EnvironmentDescription__DisplayName
+              value: "verification"
+            - name: EnvironmentDescription__EnvironmentName
+              value: "phe-uat"
           volumeMounts:
             - mountPath: /krbtab
               name: krb-tab
