@@ -196,6 +196,19 @@ namespace ntbs_service.Services
                 yield break;
             }
 
+            // Adding treatment started information creates both clinical details treatment event updates. We want to
+            // show both, as the change is done on the clinical details page but seen on the treatment events section
+            if(group.Count == 2
+               && group.Any(log => log.EntityType == nameof(TreatmentEvent))
+               && group.Any(log => log.EntityType == nameof(ClinicalDetails)))
+            {
+                foreach (var log in group)
+                {
+                    yield return log;
+                }
+                yield break;
+            }
+
             // We want this check at the end, since some of the group checks above may have a single member but still
             // require manual intervention (e.g. notification sites)
             if (group.Count == 1)
