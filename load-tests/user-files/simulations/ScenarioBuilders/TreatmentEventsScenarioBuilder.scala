@@ -1,10 +1,10 @@
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
-import io.gatling.core.structure.{ StructureBuilder, ChainBuilder }
+import io.gatling.core.structure.ChainBuilder
 
 object TreatmentEventsScenarioBuilder {
-    def buildEditTreatmentEvents(): StructureBuilder[ChainBuilder] = {
+    def buildEditTreatmentEvents(): ChainBuilder = {
         EditScenarioBuilder.getBuilder("edit_treatment_events", "/Notifications/${notificationId}/Edit/TreatmentEvents")
             .withFormParams(Map(
                 "NotificationId" -> "${notificationId}",
@@ -12,7 +12,7 @@ object TreatmentEventsScenarioBuilder {
             .build()
     }
 
-    def buildAddTreatmentEvent(): StructureBuilder[ChainBuilder] = {
+    def buildAddTreatmentEvent(): ChainBuilder = {
         EditScenarioBuilder.getBuilder("add_treatment_event", "/Notifications/${notificationId}/Edit/TreatmentEvent/New")
             .withValidations(List(
                 "ValidateTreatmentEventDate" -> """{"day":"05","month":"05","year":"2021","key":"EventDate"}""",

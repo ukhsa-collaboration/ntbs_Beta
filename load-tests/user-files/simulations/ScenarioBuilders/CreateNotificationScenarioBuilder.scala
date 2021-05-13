@@ -1,10 +1,10 @@
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
-import io.gatling.core.structure.{ StructureBuilder, ChainBuilder }
+import io.gatling.core.structure.ChainBuilder
 
 object CreateNotificationScenarioBuilder {
-    def build(): StructureBuilder[ChainBuilder] = {
+    def build(): ChainBuilder = {
         new CreateOrEditScenarioBuilder(
             "create_patient_details",
             "/Notifications/${notificationId}/Edit/PatientDetails",
@@ -12,11 +12,11 @@ object CreateNotificationScenarioBuilder {
             List(
                 css("""input[name="__RequestVerificationToken"]""", "value")
                     .saveAs("requestVerificationToken"),
-                currentLocationRegex("https://ntbs-load-test.e32846b1ddf0432eb63f.northeurope.aksapp.io/Notifications/(.*)/Edit/PatientDetails")
+                currentLocationRegex(s"${Config.urlUnderTest}/Notifications/(.*)/Edit/PatientDetails")
                     .saveAs("notificationId")))
         .withValidations(List(
             "ValidatePatientDetailsProperty" -> """{"value":"9111222333","shouldValidateFull":false,"key":"NhsNumber","NhsNumber":"9111222333"}""",
-            "NhsNumberDuplicates" -> """{"notificationId":"${notificationId}","nhsNumber":"9111222333"}""",
+            "NhsNumberDuplicates" -> """{"notificationId":"${notificationId}","nhsNumber":"${nhsNumber}"}""",
             "ValidatePatientDetailsProperty" -> """{"value":"Test","shouldValidateFull":false,"key":"GivenName","GivenName":"Test"}""",
             "ValidatePatientDetailsProperty" -> """{"value":"Testerson","shouldValidateFull":false,"key":"FamilyName","FamilyName":"Testerson"}""",
             "ValidatePatientDetailsDate" -> """{"day":"01","month":"02","year":"1933","key":"Dob"}""",
@@ -29,7 +29,7 @@ object CreateNotificationScenarioBuilder {
         .withFormParams(Map(
             "NotificationId" -> "${notificationId}",
             "PatientDetails.NhsNumberNotKnown" -> "false",
-            "PatientDetails.NhsNumber" -> "9111222333",
+            "PatientDetails.NhsNumber" -> "${nhsNumber}",
             "PatientDetails.GivenName" -> "Test",
             "PatientDetails.FamilyName" -> "Testerson",
             "FormattedDob.Day" -> "01",

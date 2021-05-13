@@ -1,10 +1,10 @@
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
-import io.gatling.core.structure.{ StructureBuilder, ChainBuilder }
+import io.gatling.core.structure.ChainBuilder
 
 object SubmitDraftNotificationScenarioBuilder {
-    def build(): StructureBuilder[ChainBuilder] = {
+    def build(): ChainBuilder = {
         exec(NtbsRequestBuilder.getRequest(
                 "edit_treatment_events_page",
                 "/Notifications/${notificationId}/Edit/TreatmentEvents",

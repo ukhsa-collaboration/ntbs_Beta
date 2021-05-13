@@ -1,10 +1,10 @@
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
-import io.gatling.core.structure.{ StructureBuilder, ChainBuilder }
+import io.gatling.core.structure.ChainBuilder
 
 object SocialContextAddressesScenarioBuilder {
-    def buildEditSocialContextAddresses(): StructureBuilder[ChainBuilder] = {
+    def buildEditSocialContextAddresses(): ChainBuilder = {
         EditScenarioBuilder.getBuilder("edit_social_context_addresses", "/Notifications/${notificationId}/Edit/SocialContextAddresses")
             .withFormParams(Map(
                 "NotificationId" -> "${notificationId}",
@@ -12,7 +12,7 @@ object SocialContextAddressesScenarioBuilder {
             .build()
     }
 
-    def buildAddSocialContextAddress(): StructureBuilder[ChainBuilder] = {
+    def buildAddSocialContextAddress(): ChainBuilder = {
         EditScenarioBuilder.getBuilder("add_social_context_address", "/Notifications/${notificationId}/Edit/SocialContextAddress/New")
             .withValidations(List(
                 "ValidateSocialContextProperty" -> """{"value":"124 Fake Street","shouldValidateFull":false,"key":"Address","Address":"124 Fake Street"}""",

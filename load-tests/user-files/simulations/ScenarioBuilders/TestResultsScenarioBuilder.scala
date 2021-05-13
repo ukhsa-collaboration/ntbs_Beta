@@ -1,10 +1,10 @@
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
-import io.gatling.core.structure.{ StructureBuilder, ChainBuilder }
+import io.gatling.core.structure.ChainBuilder
 
 object TestResultsScenarioBuilder {
-    def buildEditTestResults(): StructureBuilder[ChainBuilder] = {
+    def buildEditTestResults(): ChainBuilder = {
         EditScenarioBuilder.getBuilder("edit_test_results", "/Notifications/${notificationId}/Edit/TestResults")
             .withValidations(List(
                 "ValidateTestDataProperty" -> """{"value":"true","shouldValidateFull":false,"key":"HasTestCarriedOut","HasTestCarriedOut":"true"}"""))
@@ -16,7 +16,7 @@ object TestResultsScenarioBuilder {
             .build()
     }
 
-    def buildAddTestResult(): StructureBuilder[ChainBuilder] = {
+    def buildAddTestResult(): ChainBuilder = {
         EditScenarioBuilder.getBuilder("add_test_result", "/Notifications/${notificationId}/Edit/ManualTestResult/New")
             .withFilters(List(
                 "FilteredSampleTypesForManualTestType" -> "value=4"))

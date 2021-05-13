@@ -1,10 +1,10 @@
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
-import io.gatling.core.structure.{ StructureBuilder, ChainBuilder }
+import io.gatling.core.structure.ChainBuilder
 
 object EditClinicalDetailsScenarioBuilder {
-    def build(): StructureBuilder[ChainBuilder] = {
+    def build(): ChainBuilder = {
         EditScenarioBuilder.getBuilder("edit_clinical_details", "/Notifications/${notificationId}/Edit/ClinicalDetails")
             .withFilters(List(
                 "ValidateNotificationSites" -> "valueList%5B0%5D=PULMONARY&shouldValidateFull=False",

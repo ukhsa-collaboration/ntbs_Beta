@@ -1,10 +1,10 @@
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
-import io.gatling.core.structure.{ StructureBuilder, ChainBuilder }
+import io.gatling.core.structure.ChainBuilder
 
 object EditSocialRiskFactorsScenarioBuilder {
-    def build(): StructureBuilder[ChainBuilder] = {
+    def build(): ChainBuilder = {
         EditScenarioBuilder.getBuilder("edit_social_risk_factors", "/Notifications/${notificationId}/Edit/SocialRiskFactors")
             .withFormParams(Map(
                 "NotificationId" -> "${notificationId}",

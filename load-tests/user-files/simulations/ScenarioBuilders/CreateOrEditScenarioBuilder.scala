@@ -1,6 +1,6 @@
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import io.gatling.core.structure.{ StructureBuilder, ChainBuilder }
+import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.check.HttpCheck
 
 class CreateOrEditScenarioBuilder(
@@ -27,8 +27,8 @@ class CreateOrEditScenarioBuilder(
         this
     }
 
-    def build(): StructureBuilder[ChainBuilder]  = {
-        var action: StructureBuilder[ChainBuilder]  = exec(NtbsRequestBuilder.getRequest(s"${pageName}_page", initialUrl, initialChecks)).pause(1)
+    def build(): ChainBuilder  = {
+        var action: ChainBuilder  = exec(NtbsRequestBuilder.getRequest(s"${pageName}_page", initialUrl, initialChecks)).pause(1)
 
         for ((endpoint, queryString) <- filters) {
             action = action.exec(NtbsRequestBuilder.getRequest(s"${pageName}_filter", s"${baseUrl}/${endpoint}?${queryString}"))

@@ -1,10 +1,10 @@
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
-import io.gatling.core.structure.{ StructureBuilder, ChainBuilder }
+import io.gatling.core.structure.ChainBuilder
 
 object EditComorbiditiesScenarioBuilder {
-    def build(): StructureBuilder[ChainBuilder] = {
+    def build(): ChainBuilder = {
         EditScenarioBuilder.getBuilder("edit_comorbidities", "/Notifications/${notificationId}/Edit/Comorbidities")
             .withValidations(List(
                 "ValidateImmunosuppression" -> """{"status":"No","hasBioTherapy":false,"hasTransplantation":false,"hasOther":false,"otherDescription":""}"""))

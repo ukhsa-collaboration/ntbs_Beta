@@ -8,14 +8,16 @@ import io.gatling.jdbc.Predef._
 class NtbsLoadTest extends Simulation {
 
     val httpProtocol = http
-        .baseUrl("https://ntbs-load-test.e32846b1ddf0432eb63f.northeurope.aksapp.io")
-        .inferHtmlResources(WhiteList("""https://ntbs-load-test.e32846b1ddf0432eb63f.northeurope.aksapp.io/.*"""), BlackList())
+        .baseUrl(Config.urlUnderTest)
+        .inferHtmlResources(WhiteList(s"""${Config.urlUnderTest}/.*"""), BlackList())
 
     val notificationFeeder = Iterator.continually(Map("notificationId" -> (300001 + Random.nextInt(10000))))
+    val nhsNumberFeeder = Iterator.continually(Map("nhsNumber" -> (9000000001L + Random.nextInt(999999999))))
 
     val dashboard = DashboardScenarioBuilder.build()
-    val searchByFamilyName = SearchScenarioBuilder.build(familyName = "Test")
-    val searchById = SearchScenarioBuilder.build(id = "${notificationId}")
+    val searchByFamilyName = SearchScenarioBuilder.buildFamilyNameSearch("Test")
+    val searchById = SearchScenarioBuilder.buildIdSearch("${notificationId}")
+    val searchByYear = SearchScenarioBuilder.buildYearSearch("1960")
     val notificationRead = ReadNotificationScenarioBuilder.build()
 
     val createNotificationWithPatientDetails = CreateNotificationScenarioBuilder.build()
@@ -39,6 +41,7 @@ class NtbsLoadTest extends Simulation {
     val subitDraftNotification = SubmitDraftNotificationScenarioBuilder.build()
 
     val createFullScenario = scenario("Create")
+        .feed(nhsNumberFeeder)
         .exec(
             searchByFamilyName,
             createNotificationWithPatientDetails,
@@ -66,7 +69,7 @@ class NtbsLoadTest extends Simulation {
         .feed(notificationFeeder)
         .exec(
             dashboard,
-            searchById,
+            roundRobinSwitch(searchById, searchByFamilyName, searchByYear),
             notificationRead)
 
     val addOutcomeScenario = scenario("AddOutcome")

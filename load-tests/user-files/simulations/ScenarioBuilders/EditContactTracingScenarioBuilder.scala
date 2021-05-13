@@ -1,10 +1,10 @@
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
-import io.gatling.core.structure.{ StructureBuilder, ChainBuilder }
+import io.gatling.core.structure.ChainBuilder
 
 object EditContactTracingScenarioBuilder {
-    def build(): StructureBuilder[ChainBuilder] = {
+    def build(): ChainBuilder = {
         EditScenarioBuilder.getBuilder("edit_contact_tracing", "/Notifications/${notificationId}/Edit/ContactTracing")
             .withValidations(List(
                 "ValidateContactTracing" -> """{"adultsIdentified":4,"childrenIdentified":null,"adultsScreened":null,"childrenScreened":null,"adultsLatentTb":null,"childrenLatentTb":null,"adultsActiveTb":null,"childrenActiveTb":null,"adultsStartedTreatment":null,"childrenStartedTreatment":null,"adultsFinishedTreatment":null,"childrenFinishedTreatment":null}""",
