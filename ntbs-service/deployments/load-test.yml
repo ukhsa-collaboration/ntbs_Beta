@@ -74,6 +74,13 @@ spec:
             value: "false"
           - name: EnvironmentDescription__EnvironmentName
             value: "azure-load-test"
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+          requests:
+            cpu: 500m
+            memory: 1Gi
       imagePullSecrets:
       - name: registry-password
 ---

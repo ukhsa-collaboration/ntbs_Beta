@@ -32,6 +32,9 @@ spec:
           image: "ntbscontainerregistry.azurecr.io/ntbs-service:live"
           imagePullPolicy: Always
           resources:
+            limits:
+              memory: 2Gi
+              cpu: 1000m # Given in milicores, this is 1 core
             requests:
               memory: 2Gi
               cpu: 1000m # Given in milicores, this is 1 core
