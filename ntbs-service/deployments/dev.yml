@@ -89,6 +89,12 @@ spec:
               value: "true"
             - name: Hangfire__WorkerCount
               value: "3"
+            - name: EnvironmentDescription__ContainsLiveData
+              value: "false"
+            - name: EnvironmentDescription__DisplayName
+              value: "development"
+            - name: EnvironmentDescription__EnvironmentName
+              value: "phe-dev"
       imagePullSecrets:
         - name: registery-password
         - name: default-dockercfg-bs7wj

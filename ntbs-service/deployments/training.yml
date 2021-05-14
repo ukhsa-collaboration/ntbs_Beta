@@ -85,6 +85,10 @@ spec:
             value: "Training"
           - name: Sentry__Environment
             value: "training"
+          - name: EnvironmentDescription__DisplayName
+            value: "training"
+          - name: EnvironmentDescription__EnvironmentName
+            value: "azure-training"
       imagePullSecrets:
       - name: registry-password
 ---
