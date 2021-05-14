@@ -34,6 +34,7 @@ namespace ntbs_ui_tests.Hooks
     {
         public string ConnectionString { get; set; }
         public string MigrationConnectionString { get; set; }
+        public string ImportedNotificationTableName { get; set; }
         public string RootUri { get; set; }
     }
 

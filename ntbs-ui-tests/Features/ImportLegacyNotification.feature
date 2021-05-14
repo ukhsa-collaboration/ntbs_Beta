@@ -1,6 +1,6 @@
 Feature: Import legacy notification
 
-  Scenario: Create a transfer request
+  Scenario: Import legacy notification
     Given I navigate to the app
     And I have logged in as BirminghamServiceUser
     And I am on the Search page
