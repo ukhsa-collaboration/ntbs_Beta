@@ -7,6 +7,7 @@ namespace ntbs_service.Models.Projections
     public interface INotificationForDrugResistanceImport
     {
         int NotificationId { get; }
+        NotificationStatus NotificationStatus { get; }
         DrugResistanceProfile DrugResistanceProfile { get; }
         bool IsMdr { get; }
         bool IsMBovis { get; }
@@ -17,6 +18,7 @@ namespace ntbs_service.Models.Projections
     public class NotificationForDrugResistanceImport : INotificationForDrugResistanceImport
     {
         public int NotificationId { get; set; }
+        public NotificationStatus NotificationStatus { get; set; }
         public DrugResistanceProfile DrugResistanceProfile { get; set; }
         public TreatmentRegimen? TreatmentRegimen { get; set; }
         public Status? ExposureToKnownMdrCaseStatus { get; set; }

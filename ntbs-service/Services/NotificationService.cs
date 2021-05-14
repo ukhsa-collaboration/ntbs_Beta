@@ -384,7 +384,7 @@ namespace ntbs_service.Services
         {
             var defaultTbService = await _userService.GetDefaultTbService(user);
             var caseManagerId = await GetDefaultCaseManagerId(user, defaultTbService?.Code);
-            
+
             var notification = new Notification
             {
                 CreationDate = DateTime.Now,
@@ -511,10 +511,11 @@ namespace ntbs_service.Services
             {
                 _context.SetValues(notification.DenotificationDetails, denotificationDetails);
             }
-
             notification.NotificationStatus = NotificationStatus.Denotified;
 
             await _notificationRepository.SaveChangesAsync(NotificationAuditType.Denotified);
+
+            await _alertService.DismissAllOpenAlertsForNotification(notificationId);
 
             Log.Debug($"{notificationId} denotified, removing lab result matches");
             var success = await _specimenService.UnmatchAllSpecimensForNotification(notificationId, auditUsername);
@@ -532,7 +533,10 @@ namespace ntbs_service.Services
             notification.NotificationStatus = NotificationStatus.Deleted;
 
             await _notificationRepository.SaveChangesAsync(NotificationAuditType.Deleted);
+
+            await _alertService.DismissAllOpenAlertsForNotification(notificationId);
         }
+
 
         public async Task CloseInactiveNotifications()
         {
@@ -540,6 +544,7 @@ namespace ntbs_service.Services
             foreach (var notification in notificationsToSetClosed)
             {
                 notification.NotificationStatus = NotificationStatus.Closed;
+                await _alertService.DismissAllOpenAlertsForNotification(notification.NotificationId);
             }
             await _notificationRepository.SaveChangesAsync(NotificationAuditType.Closed, AuditService.AuditUserSystem);
         }

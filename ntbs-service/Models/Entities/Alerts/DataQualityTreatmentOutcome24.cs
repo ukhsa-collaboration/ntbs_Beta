@@ -16,8 +16,10 @@ namespace ntbs_service.Models.Entities.Alerts
         public static readonly Func<Notification, bool> NotificationInRangeQualifies =
             n => TreatmentOutcomesHelper.IsTreatmentOutcomeMissingAtXYears(n, 2);
 
-        public static readonly Func<Notification, bool> NotificationQualifies = n =>
-            NotificationInQualifyingDateRangeExpression.Compile()(n) && NotificationInRangeQualifies(n);
+        public static readonly Func<Notification, bool> NotificationQualifies =
+            n => n.NotificationStatus == NotificationStatus.Notified
+                 && NotificationInQualifyingDateRangeExpression.Compile()(n)
+                 && NotificationInRangeQualifies(n);
 
         public override string Action => "Please provide an outcome with appropriate date";
 

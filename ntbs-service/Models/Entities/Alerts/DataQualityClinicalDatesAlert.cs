@@ -8,11 +8,12 @@ namespace ntbs_service.Models.Entities.Alerts
     public class DataQualityClinicalDatesAlert : Alert
     {
         public static readonly Expression<Func<Notification, bool>> NotificationQualifiesExpression =
-            n => n.ClinicalDetails.SymptomStartDate > n.ClinicalDetails.TreatmentStartDate
-                 || n.ClinicalDetails.SymptomStartDate > n.ClinicalDetails.FirstPresentationDate
-                 || n.ClinicalDetails.FirstPresentationDate > n.ClinicalDetails.TBServicePresentationDate
-                 || n.ClinicalDetails.TBServicePresentationDate > n.ClinicalDetails.DiagnosisDate
-                 || n.ClinicalDetails.DiagnosisDate > n.ClinicalDetails.TreatmentStartDate;
+            n => n.NotificationStatus == NotificationStatus.Notified
+                 && (n.ClinicalDetails.SymptomStartDate > n.ClinicalDetails.TreatmentStartDate
+                     || n.ClinicalDetails.SymptomStartDate > n.ClinicalDetails.FirstPresentationDate
+                     || n.ClinicalDetails.FirstPresentationDate > n.ClinicalDetails.TBServicePresentationDate
+                     || n.ClinicalDetails.TBServicePresentationDate > n.ClinicalDetails.DiagnosisDate
+                     || n.ClinicalDetails.DiagnosisDate > n.ClinicalDetails.TreatmentStartDate);
 
         public static readonly Func<Notification, bool> NotificationQualifies =
             NotificationQualifiesExpression.Compile();

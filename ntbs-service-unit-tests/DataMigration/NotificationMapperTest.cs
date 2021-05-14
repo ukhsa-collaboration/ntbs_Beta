@@ -143,9 +143,12 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Null(notification.SocialRiskFactors.RiskFactorHomelessness.InPastFiveYears);
             Assert.Null(notification.SocialRiskFactors.RiskFactorHomelessness.MoreThanFiveYearsAgo);
             Assert.Equal(Status.Yes, notification.SocialRiskFactors.RiskFactorImprisonment.Status);
-            Assert.Equal(false, notification.SocialRiskFactors.RiskFactorImprisonment.IsCurrent);
-            Assert.Equal(true, notification.SocialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
-            Assert.Equal(false, notification.SocialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
+            Assert.False(notification.SocialRiskFactors.RiskFactorImprisonment.IsCurrent);
+            Assert.True(notification.SocialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
+            Assert.False(notification.SocialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
+
+            Assert.False(notification.ShouldBeClosed());
+            Assert.Equal(NotificationStatus.Notified, notification.NotificationStatus);
 
             Assert.Empty(validationErrors);
         }
@@ -252,8 +255,10 @@ namespace ntbs_service_unit_tests.DataMigration
                 .Single();
 
             // Assert
-            Assert.Equal(1, notification.TreatmentEvents.Count);
-            Assert.Equal(true, notification.ClinicalDetails.IsPostMortem);
+            Assert.Single(notification.TreatmentEvents);
+            Assert.True(notification.ClinicalDetails.IsPostMortem);
+            Assert.True(notification.ShouldBeClosed());
+            Assert.Equal(NotificationStatus.Closed, notification.NotificationStatus);
             // For post mortem cases we *only* want to import the single death event so outcomes reporting is correct
             Assert.Collection(notification.TreatmentEvents,
                 te => Assert.Equal(TreatmentOutcomeType.Died, te.TreatmentOutcome.TreatmentOutcomeType));
