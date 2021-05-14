@@ -239,11 +239,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 {
                     SubTypes = filteredTreatmentOutcomes
                         .Where(n => n.TreatmentOutcomeSubType != null)
-                        .Select(n => new OptionValue
-                        {
-                            Value = ((int?)n.TreatmentOutcomeSubType).ToString(),
-                            Text = n.TreatmentOutcomeSubType?.GetDisplayName()
-                        })
+                        .Select(n => OptionValue.FromEnum(n.TreatmentOutcomeSubType))
                 });
         }
     }
