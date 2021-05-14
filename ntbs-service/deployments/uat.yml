@@ -85,6 +85,8 @@ spec:
             value: "Uat"
           - name: Sentry__Environment
             value: "uat"
+          - name: EnvironmentDescription__EnvironmentName
+            value: "azure-uat"
       imagePullSecrets:
       - name: registry-password
 ---

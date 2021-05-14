@@ -9,7 +9,8 @@ namespace ntbs_service.Models.Entities.Alerts
     public class DataQualityClusterAlert : Alert
     {
         public static readonly Expression<Func<Notification, bool>> NotificationQualifiesExpression =
-            n => n.ClusterId != null
+            n => n.NotificationStatus == NotificationStatus.Notified
+                 && n.ClusterId != null
                  && !n.SocialContextAddresses.Any()
                  && !n.SocialContextVenues.Any();
 

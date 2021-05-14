@@ -15,7 +15,7 @@ namespace load_test_data_generation.Notifications
         private static readonly DateTime StartOf1920 = new DateTime(1920, 01, 01, 00, 00, 00);
         // The notifications we're generating are all from 2015 onwards, so this ensures no patient
         // was born after they got TB!
-        private static readonly DateTime EndOf2014 = new DateTime(2020, 12, 31, 23, 59, 59);
+        private static readonly DateTime EndOf2014 = new DateTime(2014, 12, 31, 23, 59, 59);
 
         private List<Country> countries;
         private List<Ethnicity> ethnicities;

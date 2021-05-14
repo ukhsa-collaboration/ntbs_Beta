@@ -94,6 +94,8 @@ spec:
             value: "Test"
           - name: Sentry__Environment
             value: "test"
+          - name: EnvironmentDescription__EnvironmentName
+            value: "azure-test"
       imagePullSecrets:
       - name: registry-password
 ---

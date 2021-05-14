@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Moq;
@@ -103,6 +104,89 @@ namespace ntbs_service_unit_tests.Services
             Assert.Equal(AlertStatus.Open, alert.AlertStatus);
             Assert.Equal(1, alert.NotificationId);
             Assert.Equal("1", alert.SpecimenId);
+        }
+
+        [Fact]
+        public async Task DismissAllOpenAlerts_DismissesOpenAlerts()
+        {
+            // Arrange
+            const int notificationId = 1;
+            var alert1 = new DataQualityTreatmentOutcome12 { AlertId = 101, AlertStatus = AlertStatus.Open };
+            var alert2 = new DataQualityClinicalDatesAlert { AlertId = 102, AlertStatus = AlertStatus.Open };
+            var alerts = new List<Alert> { alert1, alert2 };
+
+            _mockAlertRepository
+                .Setup(r => r.GetAllOpenAlertsByNotificationId(notificationId))
+                .Returns(Task.FromResult(alerts));
+
+            // Act
+            await _alertService.DismissAllOpenAlertsForNotification(notificationId);
+
+            // Assert
+            AssertAlertClosedRecently(alert1);
+            AssertAlertClosedRecently(alert2);
+            _mockAlertRepository.Verify(r => r.SaveAlertChangesAsync(NotificationAuditType.Edited), Times.Once);
+        }
+
+        [Theory]
+        [InlineData(NotificationStatus.Closed, true)]
+        [InlineData(NotificationStatus.Deleted, true)]
+        [InlineData(NotificationStatus.Denotified, true)]
+        [InlineData(NotificationStatus.Draft, false)]
+        [InlineData(NotificationStatus.Notified, false)]
+        public async Task DismissAllOpenAlerts_DismissesDuplicateNotificationAlert(
+            NotificationStatus duplicateNotificationStatus, bool shouldDismissAlert)
+        {
+            // Arrange
+            const int notificationId = 1;
+            var duplicateNotification = new Notification
+            {
+                NotificationId = 2,
+                NotificationStatus = duplicateNotificationStatus
+            };
+
+            var alert1 = new DataQualityPotentialDuplicateAlert
+            {
+                AlertId = 101,
+                AlertStatus = AlertStatus.Open,
+                DuplicateId = duplicateNotification.NotificationId
+            };
+            var alerts = new List<Alert> { alert1 };
+
+            _mockAlertRepository
+                .Setup(s => s.GetAllOpenAlertsByNotificationId(notificationId))
+                .Returns(Task.FromResult(alerts));
+
+            _mockNotificationRepository
+                .Setup(r => r.GetNotificationForAlertCreationAsync(duplicateNotification.NotificationId))
+                .Returns(Task.FromResult(duplicateNotification));
+
+            // Act
+            await _alertService.DismissAllOpenAlertsForNotification(notificationId);
+
+            // Assert
+            if (shouldDismissAlert)
+            {
+                AssertAlertClosedRecently(alert1);
+            }
+            else
+            {
+                AssertAlertNotClosed(alert1);
+            }
+            _mockAlertRepository.Verify(r => r.SaveAlertChangesAsync(NotificationAuditType.Edited), Times.Once);
+        }
+
+        private void AssertAlertClosedRecently(Alert alert)
+        {
+            Assert.Equal(AlertStatus.Closed, alert.AlertStatus);
+            Assert.NotNull(alert.ClosureDate);
+            Assert.Equal(DateTime.Now, alert.ClosureDate.Value, TimeSpan.FromSeconds(30));
+        }
+
+        private void AssertAlertNotClosed(Alert alert)
+        {
+            Assert.Equal(AlertStatus.Open, alert.AlertStatus);
+            Assert.Null(alert.ClosureDate);
         }
     }
 }

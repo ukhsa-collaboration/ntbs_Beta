@@ -72,6 +72,8 @@ spec:
             value: "load-test"
           - name: ScheduledJobsConfig__UserSyncEnabled
             value: "false"
+          - name: EnvironmentDescription__EnvironmentName
+            value: "azure-load-test"
       imagePullSecrets:
       - name: registry-password
 ---

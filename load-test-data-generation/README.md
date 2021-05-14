@@ -16,4 +16,7 @@ The application has the following config settings, which can be found in [testSe
 
 ## Running the application
 
-To run the console app navigate to the `load-test-data-generation` directory and run `dotnet run`.
+To run the console app, either debug using Visual Studio, or build the project and run the executable directly.
+
+Unfortunately, using `dotnet run` does not work at present, as the working directory is not the output directory,
+meaning that files needed to build the database context are not in the expected location.

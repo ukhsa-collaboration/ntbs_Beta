@@ -195,6 +195,11 @@ namespace ntbs_service.DataMigration
                     notificationMBovisOccupationExposures,
                     notificationMBovisUnpasteurisedMilkConsumption);
 
+                if (notification.ShouldBeClosed())
+                {
+                    notification.NotificationStatus = NotificationStatus.Closed;
+                }
+
                 notificationsToReturn.Add(notification);
             }
 

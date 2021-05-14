@@ -85,6 +85,8 @@ spec:
             value: "Int"
           - name: Sentry__Environment
             value: "int"
+          - name: EnvironmentDescription__EnvironmentName
+            value: "azure-int"
       imagePullSecrets:
       - name: registry-password
 ---

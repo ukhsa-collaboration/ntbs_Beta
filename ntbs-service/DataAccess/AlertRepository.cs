@@ -13,6 +13,7 @@ namespace ntbs_service.DataAccess
         Task<Alert> GetOpenAlertByIdAsync(int? alertId);
         Task<T> GetAlertByNotificationIdAndTypeAsync<T>(int notificationId) where T : Alert;
         Task<T> GetOpenAlertByNotificationId<T>(int notificationId) where T : Alert;
+        Task<List<Alert>> GetAllOpenAlertsByNotificationId(int notificationId);
 
         Task<DataQualityPotentialDuplicateAlert> GetDuplicateAlertByNotificationIdAndDuplicateId(int notificationId,
             int duplicateId);
@@ -57,6 +58,13 @@ namespace ntbs_service.DataAccess
                 .Where(a => a.NotificationId == notificationId)
                 .OfType<T>()
                 .SingleOrDefaultAsync();
+        }
+
+        public async Task<List<Alert>> GetAllOpenAlertsByNotificationId(int notificationId)
+        {
+            return await GetBaseOpenAlertIQueryable()
+                .Where(a => a.NotificationId == notificationId)
+                .ToListAsync();
         }
 
         public async Task<DataQualityPotentialDuplicateAlert> GetDuplicateAlertByNotificationIdAndDuplicateId(int notificationId,
