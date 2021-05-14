@@ -26,12 +26,14 @@ namespace ntbs_service.Services
         private const double MaxTimeBetweenEventsInTheSameGroupInSecond = 1.5;
         private readonly IAuditService _auditService;
         private readonly IUserRepository _userRepository;
+        private readonly ILogService _logService;
         private Dictionary<string, string> UsernameDictionary { get; set; }
 
-        public NotificationChangesService(IAuditService auditService, IUserRepository userRepository)
+        public NotificationChangesService(IAuditService auditService, IUserRepository userRepository, ILogService logService)
         {
             _auditService = auditService;
             _userRepository = userRepository;
+            _logService = logService;
         }
 
         public async Task<IEnumerable<NotificationHistoryListItemModel>> GetChangesList(int notificationId)
@@ -66,7 +68,7 @@ namespace ntbs_service.Services
         /// event. As we implement more detailed options for the events, it will need to do more to combine the data
         /// from the multiple events, rather than just picking a "recognizable" one to act as the summary for the group. 
         /// </summary>
-        private static IEnumerable<AuditLog> GetCanonicalLogs(List<AuditLog> group)
+        private IEnumerable<AuditLog> GetCanonicalLogs(List<AuditLog> group)
         {
             // The initial creation (as well as import) has a record for each sub-model
             // - we only want to mark creation with a single log
@@ -222,7 +224,7 @@ namespace ntbs_service.Services
                 Log.Debug($"Log in group: {log}");
                 yield return log;
             }
-            Log.Warning("Could not figure out canonical history item for group of logs.");
+            _logService.LogWarning("Could not figure out canonical history item for group of logs.");
         }
 
         private static IEnumerable<AuditLog> SkipDraftEdits(IReadOnlyCollection<AuditLog> auditLogs)

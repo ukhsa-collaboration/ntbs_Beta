@@ -23,10 +23,11 @@ namespace ntbs_service_unit_tests.Services
         private readonly NotificationChangesService _changesService;
         private readonly Mock<IAuditService> _auditServiceMock = new Mock<IAuditService>();
         private readonly Mock<IUserRepository> _userRepositoryMock = new Mock<IUserRepository>();
+        private readonly Mock<ILogService> _logServiceMock = new Mock<ILogService>();
 
         public NotificationChangesServiceTest()
         {
-            _changesService = new NotificationChangesService(_auditServiceMock.Object, _userRepositoryMock.Object);
+            _changesService = new NotificationChangesService(_auditServiceMock.Object, _userRepositoryMock.Object, _logServiceMock.Object);
         }
 
         [Fact]
@@ -81,6 +82,7 @@ namespace ntbs_service_unit_tests.Services
                 c => Assert.Equal("23 Jun 2020, 09:44 John Johnson submitted Notification", c),
                 c => Assert.Equal("23 Jun 2020, 09:41 John Johnson created Draft", c)
             );
+            _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -101,6 +103,7 @@ namespace ntbs_service_unit_tests.Services
                 c => Assert.Equal("30 Jun 2020, 16:47 John Johnson updated Previous History", c),
                 c => Assert.Equal("25 Jun 2020, 09:15 John Johnson imported Notification", c)
             );
+            _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -134,6 +137,7 @@ namespace ntbs_service_unit_tests.Services
             c => Assert.Equal("03 Mar 2020, 16:35 John Johnson submitted Notification", c),
             c => Assert.Equal("13 Feb 2020, 15:35 John Johnson created Draft", c)
             );
+            _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -163,6 +167,28 @@ namespace ntbs_service_unit_tests.Services
             c => Assert.Equal("01 Jul 2020, 11:45 John Johnson submitted Notification", c),
             c => Assert.Equal("01 Jul 2020, 11:40 John Johnson created Draft", c)
             );
+            _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        // This came from a "real" notification that was logging warnings on the changes page
+        public async Task LogsFromAChangeInTreatmentStatusOnly_DoesNotResultInWarning()
+        {
+            var auditLogs = GetAuditLogs("auditLogsForNotification5");
+            _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(5))
+                .ReturnsAsync(auditLogs);
+            _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
+                .ReturnsAsync(new Dictionary<string, string> { { "Developer@ntbs.phe.com", "John Johnson" } });
+
+            // Act
+            var changes = (await _changesService.GetChangesList(5)).ToList();
+
+            Assert.Collection(PrintInOrder(changes),
+                c => Assert.Equal("25 Apr 2021, 14:05 John Johnson updated Treatment event", c),
+                c => Assert.Equal("25 Apr 2021, 14:05 John Johnson updated Clinical Details", c),
+                c => Assert.Equal("01 Jul 2020, 11:45 John Johnson submitted Notification", c),
+                c => Assert.Equal("01 Jul 2020, 11:40 John Johnson created Draft", c));
+            _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
         }
 
         private static List<AuditLog> GetAuditLogs(string filename)
