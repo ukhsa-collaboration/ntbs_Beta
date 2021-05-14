@@ -226,6 +226,7 @@ namespace ntbs_service
             services.AddScoped<IReportingLinksService, ReportingLinksService>();
             services.AddScoped<ITreatmentEventMapper, TreatmentEventMapper>();
             services.AddScoped<IUserHelper, UserHelper>();
+            services.AddScoped<ILogService, LogService>();
 
             AddAuditService(services, auditDbConnectionString);
             AddReferenceLabResultServices(services);
