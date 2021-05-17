@@ -185,7 +185,7 @@ namespace ntbs_service_unit_tests.Services
 
             Assert.Collection(PrintInOrder(changes),
                 c => Assert.Equal("25 Apr 2021, 14:05 John Johnson updated Treatment event", c),
-                c => Assert.Equal("25 Apr 2021, 14:05 John Johnson updated Clinical Details", c),
+                c => Assert.Equal("25 Apr 2021, 14:05 John Johnson updated Clinical details", c),
                 c => Assert.Equal("01 Jul 2020, 11:45 John Johnson submitted Notification", c),
                 c => Assert.Equal("01 Jul 2020, 11:40 John Johnson created Draft", c));
             _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
