@@ -694,7 +694,7 @@ namespace ntbs_service.DataAccess
                     .WithMany(e => e.MBovisExposureToKnownCases)
                     .HasForeignKey(e => e.NotificationId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired(false); ;
+                    .IsRequired(false);
             });
 
             modelBuilder.Entity<MBovisUnpasteurisedMilkConsumption>(entity =>
@@ -809,6 +809,8 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.TreatmentEventType)
                     .HasConversion(treatmentEventTypeEnumConverter)
                     .HasMaxLength(EnumMaxLength);
+                entity.Property(e => e.Note)
+                    .HasMaxLength(1000);
                 entity.HasOne(e => e.CaseManager)
                     .WithMany()
                     .HasForeignKey(e => e.CaseManagerId)
