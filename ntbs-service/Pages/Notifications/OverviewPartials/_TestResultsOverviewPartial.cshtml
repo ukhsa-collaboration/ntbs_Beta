@@ -5,9 +5,10 @@
 @{
     var testData = Model.Notification.TestData;
     var sectionSubPath = NotificationSubPaths.EditTestResults;
+    var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath);
 }
 
-<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
+<div class="notification-overview-type-and-edit-container" id="@sectionId-title">
     <h3 class="notification-details-type"> Test results </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
@@ -18,7 +19,7 @@
     }
 </div>
 
-<div class="notification-overview-details-container">
+<div class="notification-overview-details-container" id="@sectionId">
     @if (Model.CultureAndResistance != null)
     {
         <nhs-grid-row>
@@ -30,57 +31,57 @@
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.CulturePositive) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.CulturePositive </dd>
+                <dd class="cell-min-height" id="@sectionId-culture-positive"> @Model.CultureAndResistance.CulturePositive </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Species) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.Species </dd>
+                <dd class="cell-min-height" id="@sectionId-species"> @Model.CultureAndResistance.Species </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.DrugResistanceProfile)</dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.DrugResistanceProfile </dd>
+                <dd class="cell-min-height" id="@sectionId-drp"> @Model.CultureAndResistance.DrugResistanceProfile </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.EarliestSpecimenDate) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.FormattedEarliestSpecimenDate </dd>
+                <dd class="cell-min-height" id="@sectionId-earliest-specimen-date"> @Model.CultureAndResistance.FormattedEarliestSpecimenDate </dd>
             </nhs-grid-column>
         </nhs-grid-row>
 
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Isoniazid) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.Isoniazid </dd>
+                <dd class="cell-min-height" id="@sectionId-isoniazid"> @Model.CultureAndResistance.Isoniazid </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Rifampicin) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.Rifampicin </dd>
+                <dd class="cell-min-height" id="@sectionId-rifampicin"> @Model.CultureAndResistance.Rifampicin </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Pyrazinamide) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.Pyrazinamide </dd>
+                <dd class="cell-min-height" id="@sectionId-pyrazinamide"> @Model.CultureAndResistance.Pyrazinamide </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Ethambutol) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.Ethambutol </dd>
+                <dd class="cell-min-height" id="@sectionId-ethambutol"> @Model.CultureAndResistance.Ethambutol </dd>
             </nhs-grid-column>
             <nhs-grid-row>
 
             </nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Aminoglycoside) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.Aminoglycoside </dd>
+                <dd class="cell-min-height" id="@sectionId-aminoglycoside"> @Model.CultureAndResistance.Aminoglycoside </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Quinolone) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.Quinolone </dd>
+                <dd class="cell-min-height" id="@sectionId-quinolone"> @Model.CultureAndResistance.Quinolone </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.MDR) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.MDR </dd>
+                <dd class="cell-min-height" id="@sectionId-mdr"> @Model.CultureAndResistance.MDR </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.XDR) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.XDR </dd>
+                <dd class="cell-min-height" id="@sectionId-xdr"> @Model.CultureAndResistance.XDR </dd>
             </nhs-grid-column>
         </nhs-grid-row>
         <br/>
@@ -95,7 +96,7 @@
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> @Html.DisplayNameFor(m => m.Notification.TestData.HasTestCarriedOut)? </div>
-            <div class="cell-min-height"> @testData.HasTestCarriedOut.FormatYesNo() </div>
+            <div class="cell-min-height" id="@sectionId-test-carried-out"> @testData.HasTestCarriedOut.FormatYesNo() </div>
         </nhs-grid-column>
     </nhs-grid-row>
 

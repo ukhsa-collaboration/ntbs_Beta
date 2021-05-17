@@ -4,9 +4,10 @@
 
 @{
     var sectionSubPath = NotificationSubPaths.EditMDRDetails;
+    var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath);
 }
 
-<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
+<div class="notification-overview-type-and-edit-container" id="@sectionId-title">
     <h3 class="notification-details-type"> MDR Details </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
@@ -16,25 +17,25 @@
         </a>
     }
 </div>
-<div class="notification-overview-details-container">
+<div class="notification-overview-details-container" id="@sectionId">
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Exposure to known TB case </div>
-            <div class="cell-min-height"> @Model.Notification.MDRDetails.ExposureToKnownCaseStatus </div>
+            <div class="cell-min-height" id="@sectionId-known-case-exposure"> @Model.Notification.MDRDetails.ExposureToKnownCaseStatus </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Relationship to case </div>
-            <div class="cell-min-height"> @Model.Notification.MDRDetails.RelationshipToCase </div>
+            <div class="cell-min-height" id="@sectionId-relationship-to-case"> @Model.Notification.MDRDetails.RelationshipToCase </div>
         </nhs-grid-column>
         
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> @Html.DisplayNameFor(x => x.Notification.MDRDetails.CountryId) </div>
-            <div class="cell-min-height"> @Model.Notification.MDRDetails.MDRCaseCountryName </div>
+            <div class="cell-min-height" id="@sectionId-country-name"> @Model.Notification.MDRDetails.MDRCaseCountryName </div>
         </nhs-grid-column>
         
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> @Html.DisplayNameFor(x => x.Notification.MDRDetails.RelatedNotificationId) </div>
-            <div class="cell-min-height">
+            <div class="cell-min-height" id="@sectionId-related-notification-id">
                 @if (Model.Notification.MDRDetails.IsCountryUK && Model.Notification.MDRDetails.NotifiedToPheStatus == Status.Yes)
                 {
                      @Model.Notification.MDRDetails.RelatedNotificationId

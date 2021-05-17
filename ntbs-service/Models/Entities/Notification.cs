@@ -87,9 +87,9 @@ namespace ntbs_service.Models.Entities
         public virtual TestData TestData { get; set; }
         public virtual MBovisDetails MBovisDetails { get; set; }
         public virtual ICollection<Alert> Alerts { get; set; }
-        [Display(Name = "Social Context - Venues")]
+        [Display(Name = "Social context - venues")]
         public virtual ICollection<SocialContextVenue> SocialContextVenues { get; set; }
-        [Display(Name = "Social Context - Addresses")]
+        [Display(Name = "Social context - addresses")]
         public virtual ICollection<SocialContextAddress> SocialContextAddresses { get; set; }
         [Display(Name = "Treatment events")]
         public virtual ICollection<TreatmentEvent> TreatmentEvents { get; set; }

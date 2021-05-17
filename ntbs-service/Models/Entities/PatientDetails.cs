@@ -35,7 +35,7 @@ namespace ntbs_service.Models.Entities
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
-        [Display(Name = "Local Patient Id")]
+        [Display(Name = "Local patient ID")]
         public string LocalPatientId { get; set; }
 
         [Display(Name = "Date of birth")]

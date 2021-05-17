@@ -78,7 +78,7 @@ namespace ntbs_integration_tests.ContactDetailsPages
                 result.EnsureSuccessStatusCode();
 
                 resultDocument.AssertErrorMessage("job-title",
-                    string.Format(ValidationMessages.InvalidCharacter, "Job Title"));
+                    string.Format(ValidationMessages.InvalidCharacter, "Job title"));
                 resultDocument.AssertErrorMessage("phone-primary",
                     string.Format(ValidationMessages.InvalidCharacter, "Phone number #1"));
                 resultDocument.AssertErrorMessage("phone-secondary",

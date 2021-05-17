@@ -4,9 +4,10 @@
 
 @{
     var sectionSubPath = NotificationSubPaths.EditPreviousHistory;
+    var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath);
 }
 
-<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
+<div class="notification-overview-type-and-edit-container" id="@sectionId-title">
     <h3 class="notification-details-type"> Other history of TB </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
@@ -16,25 +17,25 @@
         </a>
     }
 </div>
-<div class="notification-overview-details-container">
+<div class="notification-overview-details-container" id="@sectionId">
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label">
                 @Html.DisplayNameFor(m => m.Notification.PreviousTbHistory.PreviouslyHadTb)
             </div>
-            <div class="cell-min-height"> @Model.Notification.PreviousTbHistory.PreviouslyHadTb </div>
+            <div class="cell-min-height" id="@sectionId-had-tb"> @Model.Notification.PreviousTbHistory.PreviouslyHadTb </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label">
                 @Html.DisplayNameFor(m => m.Notification.PreviousTbHistory.PreviousTbDiagnosisYear)
             </div>
-            <div class="cell-min-height"> @Model.Notification.PreviousTbHistory.PreviousTbDiagnosisYear </div>
+            <div class="cell-min-height" id="@sectionId-diagnosis-year"> @Model.Notification.PreviousTbHistory.PreviousTbDiagnosisYear </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> 
                 @Html.DisplayNameFor(m => m.Notification.PreviousTbHistory.PreviouslyTreated)
             </div>
-            <div class="cell-min-height">
+            <div class="cell-min-height" id="@sectionId-treated">
                  @Model.Notification.PreviousTbHistory.PreviouslyTreated
             </div>
         </nhs-grid-column>
@@ -42,7 +43,7 @@
             <div class="notification-details-label">
                 @Html.DisplayNameFor(m => m.Notification.PreviousTbHistory.PreviousTreatmentCountryId)
             </div>
-            <div class="cell-min-height"> @Model.Notification.PreviousTbHistory.PreviousTreatmentCountryName </div>
+            <div class="cell-min-height" id="@sectionId-treatment-country"> @Model.Notification.PreviousTbHistory.PreviousTreatmentCountryName </div>
         </nhs-grid-column>
     </nhs-grid-row>
 </div>
