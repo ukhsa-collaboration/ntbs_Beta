@@ -23,14 +23,14 @@
             <div class="cell-min-height"> @Model.Notification.SitesOfDiseaseList </div>
         </nhs-grid-column>
     </nhs-grid-row>
-    
+
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Patient has symptoms </div>
             <div class="cell-min-height"> @Model.Notification.ClinicalDetails.IsSymptomaticYesNo </div>
         </nhs-grid-column>
     </nhs-grid-row>
-    
+
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Symptom onset date </div>
@@ -41,7 +41,7 @@
             <div class="cell-min-height"> @Model.Notification.ClinicalDetails.DaysFromOnsetToTreatment </div>
         </nhs-grid-column>
     </nhs-grid-row>
-    
+
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Presentation to any health service date </div>
@@ -81,7 +81,7 @@
 
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> Treatment date </div>
+            <div class="notification-details-label"> Treatment start date </div>
             <div class="cell-min-height"> @Model.Notification.ClinicalDetails.FormattedTreatmentStartDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
