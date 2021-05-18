@@ -4,12 +4,14 @@ using EFAuditer;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Services;
 
 namespace ntbs_service.DataMigration
 {
     public interface INotificationImportRepository
     {
         Task<List<Notification>> AddLinkedNotificationsAsync(List<Notification> notifications);
+        void AddSystemUserToAudits();
     }
 
     public class NotificationImportRepository : INotificationImportRepository
@@ -19,6 +21,11 @@ namespace ntbs_service.DataMigration
         public NotificationImportRepository(NtbsContext context)
         {
             _context = context;
+        }
+
+        public void AddSystemUserToAudits()
+        {
+            _context.AddAuditCustomField(CustomFields.AppUser, AuditService.AuditUserSystem);
         }
 
         public async Task<List<Notification>> AddLinkedNotificationsAsync(List<Notification> notifications)
