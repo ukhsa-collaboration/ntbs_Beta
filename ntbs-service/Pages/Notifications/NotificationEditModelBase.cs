@@ -22,9 +22,10 @@ namespace ntbs_service.Pages.Notifications
         protected NotificationEditModelBase(
             INotificationService service,
             IAuthorizationService authorizationService,
+            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             IAlertRepository alertRepository)
-            : base(service, authorizationService, notificationRepository)
+            : base(service, authorizationService, userHelper, notificationRepository)
         {
             ValidationService = new ValidationService(this);
             _alertRepository = alertRepository;

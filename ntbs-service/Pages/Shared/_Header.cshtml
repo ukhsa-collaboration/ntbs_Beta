@@ -6,6 +6,9 @@
 @inject ntbs.IUserService UserService
 @inject ntbs.IReportingLinksService ReportingLinksService
 
+@using ntbs_helpers = ntbs_service.Helpers
+@inject ntbs_helpers.IUserHelper UserHelper
+
 @using Microsoft.Extensions.Configuration
 @using ntbs_service.Properties
 @inject IConfiguration Configuration
@@ -66,11 +69,14 @@
                             Search
                         </a>
                     </li>
-                    <li class="govuk-header__navigation-item header-navigation-link">
-                        <a class="govuk-header__link header-navigation-list-item" href="/LabResults">
-                            Lab results
-                        </a>
-                    </li>
+                    @if (!UserHelper.CurrentUserIsReadOnly(Context))
+                    {
+                        <li class="govuk-header__navigation-item header-navigation-link">
+                            <a class="govuk-header__link header-navigation-list-item" href="/LabResults">
+                                Lab results
+                            </a>
+                        </li>
+                    }
                     <li class="govuk-header__navigation-item header-navigation-link">
                         @if (string.IsNullOrEmpty(ReportingLinksService.GetReportingPageUrl()))
                         {
@@ -123,7 +129,7 @@
                             <ul ref="navigation-submenu" v-if="showMenu" class="nav-submenu-list">
                                 <li class="header-navigation-link nav-submenu-list-item">
                                     <a class="govuk-header__link header-navigation-list-item" href="/ContactDetails">
-                                        Edit personal details
+                                        View personal details
                                     </a>
                                 </li>
                                 <li class="header-navigation-link nav-submenu-list-item">

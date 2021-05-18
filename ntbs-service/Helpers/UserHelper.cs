@@ -8,6 +8,7 @@ namespace ntbs_service.Helpers
     public interface IUserHelper
     {
         bool CurrentUserMatchesUsernameOrIsAdmin(HttpContext context, string username);
+        bool CurrentUserIsReadOnly(HttpContext context);
     }
     
     public class UserHelper : IUserHelper
@@ -28,6 +29,11 @@ namespace ntbs_service.Helpers
         public bool CurrentUserMatchesUsernameOrIsAdmin(HttpContext context, string username)
         {
             return context.User.Username() == username || context.User.IsInRole(_adOptions.AdminUserGroup);
+        }
+
+        public bool CurrentUserIsReadOnly(HttpContext context)
+        {
+            return context.User.IsInRole(_adOptions.ReadOnlyUserGroup);
         }
     }
 }

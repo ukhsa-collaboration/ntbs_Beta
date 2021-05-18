@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications
 {
+    [Authorize(Policy = "NonReadOnly")]
     public class CreateModel : PageModel
     {
         private readonly INotificationService notificationService;

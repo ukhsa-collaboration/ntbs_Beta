@@ -28,11 +28,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         protected SocialContextBaseModel(
             INotificationService service,
             IAuthorizationService authorizationService,
+            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             IItemRepository<T> socialContextRepository,
             IAlertService alertService,
             IAlertRepository alertRepository)
-            : base(service, authorizationService, notificationRepository, alertRepository)
+            : base(service, authorizationService, userHelper, notificationRepository, alertRepository)
         {
             _socialContextRepository = socialContextRepository;
             _alertService = alertService;

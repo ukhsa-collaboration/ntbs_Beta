@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
@@ -32,9 +31,10 @@ namespace ntbs_service.Pages.Notifications
             INotificationService service,
             IAuthorizationService authorizationService,
             IAlertService alertService,
+            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             ICultureAndResistanceService cultureAndResistanceService,
-            IAuditService auditService) : base(service, authorizationService, notificationRepository)
+            IAuditService auditService) : base(service, authorizationService, userHelper, notificationRepository)
         {
             _alertService = alertService;
             _cultureAndResistanceService = cultureAndResistanceService;

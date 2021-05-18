@@ -34,8 +34,9 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ComorbiditiesModel(
             INotificationService service,
             IAuthorizationService authorizationService,
+            IUserHelper userHelper,
             INotificationRepository notificationRepository,
-            IAlertRepository alertRepository) : base(service, authorizationService, notificationRepository, alertRepository)
+            IAlertRepository alertRepository) : base(service, authorizationService, userHelper, notificationRepository, alertRepository)
         {
             CurrentPage = NotificationSubPaths.EditComorbidities;
         }

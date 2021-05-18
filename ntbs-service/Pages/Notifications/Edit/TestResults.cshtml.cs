@@ -18,10 +18,11 @@ namespace ntbs_service.Pages.Notifications.Edit
         public TestResultsModel(
             INotificationService notificationService,
             IAuthorizationService authorizationService,
+            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             IAlertRepository alertRepository,
             ICultureAndResistanceService cultureAndResistanceService,
-            ISpecimenService specimenService) : base(notificationService, authorizationService, notificationRepository, alertRepository)
+            ISpecimenService specimenService) : base(notificationService, authorizationService, userHelper, notificationRepository, alertRepository)
         {
             _cultureAndResistanceService = cultureAndResistanceService;
             _specimenService = specimenService;

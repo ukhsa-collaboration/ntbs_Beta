@@ -33,11 +33,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         public ManualTestResultPage(
             INotificationService notificationService,
             IAuthorizationService authorizationService,
+            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             IItemRepository<ManualTestResult> testResultsRepository,
             IAlertRepository alertRepository)
-            : base(notificationService, authorizationService, notificationRepository, alertRepository)
+            : base(notificationService, authorizationService, userHelper, notificationRepository, alertRepository)
         {
             _referenceDataRepository = referenceDataRepository;
             _testResultsRepository = testResultsRepository;

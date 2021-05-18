@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -158,6 +159,10 @@ namespace ntbs_service
                 options.AddPolicy("AdminOnly", policy =>
                 {
                     policy.RequireRole(GetAdminRoleName());
+                });
+                options.AddPolicy("NonReadOnly", policy =>
+                {
+                    policy.RequireAssertion(context => !context.User.IsInRole(GetReadOnlyRoleName()));
                 });
             });
             SetupHangfire(services);
@@ -422,6 +427,7 @@ namespace ntbs_service
                                             context.Options.ClaimsIssuer),
                                         new Claim(ClaimTypes.Role, adOptions.BaseUserGroup, ClaimValueTypes.String),
 
+                                        //new Claim(ClaimTypes.Role, adOptions.ReadOnlyUserGroup, ClaimValueTypes.String),
                                         new Claim(ClaimTypes.Role, groupAdmin, ClaimValueTypes.String),
                                         new Claim(ClaimTypes.Role, groupDev, ClaimValueTypes.String)
                                     };
@@ -643,6 +649,12 @@ namespace ntbs_service
         {
             var adConfig = Configuration.GetSection("AdOptions");
             return adConfig["AdminUserGroup"];
+        }
+
+        private string GetReadOnlyRoleName()
+        {
+            var adConfig = Configuration.GetSection("AdOptions");
+            return adConfig["ReadOnlyUserGroup"];
         }
     }
 }

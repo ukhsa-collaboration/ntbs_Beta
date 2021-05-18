@@ -41,11 +41,12 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ClinicalDetailsModel(
             INotificationService service,
             IAuthorizationService authorizationService,
+            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             IAlertRepository alertRepository,
             IReferenceDataRepository referenceDataRepository,
             IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService)
-            : base(service, authorizationService, notificationRepository, alertRepository)
+            : base(service, authorizationService, userHelper, notificationRepository, alertRepository)
         {
             _referenceDataRepository = referenceDataRepository;
             _enhancedSurveillanceAlertsService = enhancedSurveillanceAlertsService;

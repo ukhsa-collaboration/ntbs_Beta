@@ -17,9 +17,10 @@ namespace ntbs_service.Pages.Notifications.Edit
         public MBovisExposureToKnownCasesModel(
             INotificationService notificationService,
             IAuthorizationService authorizationService,
+            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService,
-            IAlertRepository alertRepository) : base(notificationService, authorizationService,
+            IAlertRepository alertRepository) : base(notificationService, authorizationService, userHelper,
                 notificationRepository, alertRepository)
         {
             CurrentPage = NotificationSubPaths.EditMBovisExposureToKnownCases;

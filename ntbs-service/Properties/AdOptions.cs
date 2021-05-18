@@ -13,6 +13,9 @@
         /** Group that contains admin users only, used for authorizing access protected pages of the app */
         public string AdminUserGroup { get; set; }
 
+        /** Group that contains read-only users only, used for approving pre-migrated data in certain environments */
+        public string ReadOnlyUserGroup { get; set; }
+
         /** Only used in development mode, allows developers to set their group membership via properties */
         public string DevGroup { get; set; }
 

@@ -42,12 +42,13 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         public TreatmentEventModel(
             INotificationService service,
             IAuthorizationService authorizationService,
+            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             ITreatmentEventRepository treatmentEventRepository,
             IAlertRepository alertRepository,
             IAlertService alertService)
-            : base(service, authorizationService, notificationRepository, alertRepository)
+            : base(service, authorizationService, userHelper, notificationRepository, alertRepository)
         {
             _referenceDataRepository = referenceDataRepository;
             _treatmentEventRepository = treatmentEventRepository;

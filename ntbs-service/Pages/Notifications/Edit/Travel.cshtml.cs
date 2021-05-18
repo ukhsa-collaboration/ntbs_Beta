@@ -23,9 +23,10 @@ namespace ntbs_service.Pages.Notifications.Edit
         public TravelModel(
             INotificationService service,
             IAuthorizationService authorizationService,
+            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             IAlertRepository alertRepository,
-            IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository, alertRepository)
+            IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, userHelper, notificationRepository, alertRepository)
         {
             HighTbIncidenceCountries = new SelectList(
                 referenceDataRepository.GetAllHighTbIncidenceCountriesAsync().Result,

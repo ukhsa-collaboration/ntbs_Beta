@@ -2,6 +2,7 @@
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -12,9 +13,11 @@ using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 using ntbs_service.Services;
+using IAuthorizationService = ntbs_service.Services.IAuthorizationService;
 
 namespace ntbs_service.Pages.LabResults
 {
+    [Authorize(Policy = "NonReadOnly")]
     public class IndexModel : PageModel
     {
         public static readonly int ManualNotificationIdValue = -1;

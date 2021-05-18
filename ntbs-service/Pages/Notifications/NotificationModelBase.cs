@@ -20,15 +20,18 @@ namespace ntbs_service.Pages.Notifications
         protected INotificationService Service;
         protected IAuthorizationService _authorizationService;
         protected INotificationRepository NotificationRepository;
+        protected IUserHelper _userHelper;
 
         protected NotificationModelBase(
             INotificationService service,
             IAuthorizationService authorizationService,
+            IUserHelper userHelper, 
             INotificationRepository notificationRepository = null)
         {
             Service = service;
             _authorizationService = authorizationService;
             NotificationRepository = notificationRepository;
+            _userHelper = userHelper;
         }
         public int NumberOfLinkedNotifications { get; set; }
         public int? LatestLinkedNotificationId { get; private set; }
@@ -51,8 +54,8 @@ namespace ntbs_service.Pages.Notifications
         protected async Task AuthorizeAndSetBannerAsync()
         {
             var (permissionLevel, reason) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
-            PermissionLevel = permissionLevel;
-            PermissionReason = reason;
+            PermissionLevel = _userHelper.CurrentUserIsReadOnly(HttpContext) ? PermissionLevel.ReadOnly : permissionLevel;
+            PermissionReason = _userHelper.CurrentUserIsReadOnly(HttpContext) ? "You are a read-only user" : reason;
             NotificationBannerModel = new NotificationBannerModel(Notification, PermissionLevel != PermissionLevel.Edit);
         }
 

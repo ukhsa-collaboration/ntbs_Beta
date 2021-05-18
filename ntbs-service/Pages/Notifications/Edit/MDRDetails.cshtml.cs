@@ -22,11 +22,13 @@ namespace ntbs_service.Pages.Notifications.Edit
         public MDRDetailsModel(
             INotificationService service,
             IAuthorizationService authorizationService,
+            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService,
             IAlertRepository alertRepository) : base(service,
             authorizationService,
+            userHelper,
             notificationRepository,
             alertRepository)
         {

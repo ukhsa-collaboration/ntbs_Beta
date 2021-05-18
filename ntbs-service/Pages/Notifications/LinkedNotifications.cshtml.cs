@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +16,8 @@ namespace ntbs_service.Pages.Notifications
         public LinkedNotificationsModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
+            IUserHelper userHelper,
+            INotificationRepository notificationRepository) : base(service, authorizationService, userHelper, notificationRepository)
         {
         }
 
