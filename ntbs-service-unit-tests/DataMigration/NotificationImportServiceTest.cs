@@ -22,7 +22,6 @@ namespace ntbs_service_unit_tests.DataMigration
         private readonly Mock<INotificationRepository> _notificationRepository = new Mock<INotificationRepository>();
         private readonly Mock<IImportLogger> _logger = new Mock<IImportLogger>();
         private readonly Mock<Sentry.IHub> _sentryHub = new Mock<Sentry.IHub>();
-        private readonly Mock<IMigrationRepository> _migrationRepository = new Mock<IMigrationRepository>();
         private readonly Mock<ISpecimenImportService> _specimenImportService = new Mock<ISpecimenImportService>();
         private readonly Mock<IImportValidator> _importValidator = new Mock<IImportValidator>();
         private readonly Mock<IClusterImportService> _clusterImportService = new Mock<IClusterImportService>();
@@ -53,7 +52,6 @@ namespace ntbs_service_unit_tests.DataMigration
                 _notificationImportRepository.Object,
                 _logger.Object,
                 _sentryHub.Object,
-                _migrationRepository.Object,
                 _migratedNotificationsMarker.Object,
                 _specimenImportService.Object,
                 _importValidator.Object,

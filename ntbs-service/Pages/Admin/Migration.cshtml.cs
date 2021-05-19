@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
+using Hangfire.Server;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -85,7 +86,7 @@ namespace ntbs_service.Pages.Admin
             foreach (var idBatch in SplitList(legacyIds))
             {
                 BackgroundJob.Enqueue<INotificationImportService>(x =>
-                    x.ImportByLegacyIdsAsync(null, RequestId, idBatch));
+                    x.BulkImportByLegacyIdsAsync(null, RequestId, idBatch));
             }
         }
 
@@ -96,7 +97,7 @@ namespace ntbs_service.Pages.Admin
             foreach (var idBatch in SplitList(notificationIds))
             {
                 BackgroundJob.Enqueue<INotificationImportService>(x =>
-                    x.ImportByLegacyIdsAsync(null, RequestId, idBatch));
+                    x.BulkImportByLegacyIdsAsync(null, RequestId, idBatch));
             }
         }
 
@@ -123,7 +124,7 @@ namespace ntbs_service.Pages.Admin
                 }
 
                 BackgroundJob.Enqueue<INotificationImportService>(x =>
-                    x.ImportByDateAsync(null, RequestId, start, end));
+                    x.BulkImportByDateAsync(null, RequestId, start, end));
             }
         }
 

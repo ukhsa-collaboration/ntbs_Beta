@@ -17,6 +17,10 @@ namespace ntbs_service.DataMigration
     {
         [ExpirationTimeTwoWeeks]
         Task<IList<ImportResult>> ImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> legacyIds);
+
+        [ExpirationTimeTwoWeeks]
+        Task<IList<ImportResult>> BulkImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> legacyIds);
+
         /// <summary>
         /// Import notifications (and their linked ones) with notification dates in range [rangeStartDate, rangeEndDate)
         /// </summary>
@@ -27,6 +31,9 @@ namespace ntbs_service.DataMigration
         /// <returns></returns>
         [ExpirationTimeTwoWeeks]
         Task<IList<ImportResult>> ImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate);
+
+        [ExpirationTimeTwoWeeks]
+        Task<IList<ImportResult>> BulkImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate);
     }
 
     public class NotificationImportService : INotificationImportService
@@ -48,7 +55,6 @@ namespace ntbs_service.DataMigration
                              INotificationImportRepository notificationImportRepository,
                              IImportLogger logger,
                              IHub sentryHub,
-                             IMigrationRepository migrationRepository,
                              IMigratedNotificationsMarker migratedNotificationsMarker,
                              ISpecimenImportService specimenImportService,
                              IImportValidator importValidator,
@@ -88,6 +94,12 @@ namespace ntbs_service.DataMigration
             return importResults;
         }
 
+        public async Task<IList<ImportResult>> BulkImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate)
+        {
+            _notificationImportRepository.AddSystemUserToAudits();
+            return await ImportByDateAsync(context, requestId, rangeStartDate, rangeEndDate);
+        }
+
         public async Task<IList<ImportResult>> ImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> legacyIds)
         {
             _logger.LogInformation(context, requestId, "Request to import by Id started");
@@ -98,6 +110,12 @@ namespace ntbs_service.DataMigration
 
             _logger.LogInformation(context, requestId, "Request to import by Id finished");
             return importResults;
+        }
+
+        public async Task<IList<ImportResult>> BulkImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> legacyIds)
+        {
+            _notificationImportRepository.AddSystemUserToAudits();
+            return await ImportByLegacyIdsAsync(context, requestId, legacyIds);
         }
 
         private async Task<List<ImportResult>> ImportNotificationGroupsAsync(PerformContext context, string requestId, IEnumerable<IList<Notification>> notificationsGroups)
