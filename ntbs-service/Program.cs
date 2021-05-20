@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.AspNetCore;
@@ -14,7 +14,7 @@ namespace ntbs_service
 {
     public class Program
     {
-        public static async Task<int> Main(string[] args)
+        public static int Main(string[] args)
         {
             SetUpLogger();
             try
@@ -27,7 +27,6 @@ namespace ntbs_service
                     MigrateAppDb(services);
                     MigrateAuditDb(services);
                     MigrateKeysDb(services);
-                    await CreateMigrationDbTablesAsync(services);
                 }
 
                 Log.Information("Starting web host");
@@ -114,12 +113,6 @@ namespace ntbs_service
                 Log.Error(ex, "An error occurred migrating the keys db.");
                 throw;
             }
-        }
-
-        private static async Task CreateMigrationDbTablesAsync(IServiceProvider services)
-        {
-            var notificationImportHelper = services.GetRequiredService<INotificationImportHelper>();
-            await notificationImportHelper.CreateTableIfNotExists();
         }
     }
 }

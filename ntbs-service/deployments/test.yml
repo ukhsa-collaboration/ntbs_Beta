@@ -90,7 +90,7 @@ spec:
             value: "https://app.powerbi.com/Redirect?action=OpenApp&appId=e3e5baa2-50f6-42c8-ae97-7c1bd720a204&ctid=dde2b1dd-a61c-4a89-9734-382c1f37630e"
           - name: ExternalLinks__ClusterReport
             value: "https://app.powerbi.com/groups/me/apps/e3e5baa2-50f6-42c8-ae97-7c1bd720a204/reports/c6fdd4ef-211f-4ae5-90e3-243fb341a3b4/ReportSection?ctid=dde2b1dd-a61c-4a89-9734-382c1f37630e&filter=Cluster%2FClusterId%20eq '<CLUSTER_ID>'"
-          - name: MigrationConfig__TablePrefix
+          - name: MigrationConfig__NtbsEnvironment
             value: "Test"
           - name: Sentry__Environment
             value: "test"

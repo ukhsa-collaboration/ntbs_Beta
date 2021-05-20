@@ -1,9 +1,6 @@
-using System;
-using System.Data.SqlClient;
-using System.Threading.Tasks;
-using Dapper;
+﻿using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using ntbs_service.DataAccess;
 using ntbs_service.Properties;
@@ -21,13 +18,11 @@ namespace ntbs_service.DataMigration
     /// and import attempts.
     ///
     /// But, as the different environments import data independently, we need a separate store of this information for
-    /// each of them. So, we use separate tables - the down side is, this table's name must be dynamic, so each
-    /// environment has its own one. This helper attempts to shield the rest of the codebase from this complexity, by
-    /// being the only class that understands it and exposing ready to consume SQL strings.  
+    /// each of them. This helper attempts to shield the rest of the codebase from this complexity, by
+    /// being the only class that understands it and exposing ready to consume SQL strings.
     /// </summary>
     public interface INotificationImportHelper
     {
-        Task CreateTableIfNotExists();
         string InsertImportedNotificationQuery { get; }
         string BulkInsertImportedNotificationsQuery { get; }
         string SelectImportedNotificationWhereIdEquals(string idSelector);
@@ -35,20 +30,16 @@ namespace ntbs_service.DataMigration
 
     public class NotificationImportHelper : INotificationImportHelper
     {
-        private readonly string _connectionString;
-        /// <summary>
-        /// Dapper does not support dynamic table names as parameters therefore we are using string interpolation
-        /// to build these SQL queries.
-        /// This is relatively safe as the parameter is passed from environment variable rather that user input
-        /// </summary>
-        private readonly string _importedNotificationsTableName;
         private readonly string _ntbsDb;
+        private readonly string _ntbsEnvironment;
 
-        public NotificationImportHelper(IConfiguration configuration, IOptions<MigrationConfig> migrationConfig, NtbsContext ntbsContext)
+        public NotificationImportHelper(IOptions<MigrationConfig> migrationConfig, NtbsContext ntbsContext)
         {
-            _connectionString = configuration.GetConnectionString("migration");
-            var tablePrefix = migrationConfig.Value.TablePrefix;
-            _importedNotificationsTableName = $"{tablePrefix}ImportedNotifications";
+            var ntbsEnvironment = migrationConfig.Value.NtbsEnvironment;
+            // We only allow alphanumeric values in the environment name, as a basic guard against SQL injection.
+            // (In practice it's hard to imagine a scenario where a malicious actor is able to set environment variables
+            // for our app, and yet unable to mutate the database directly, however, it's prudent to put this in).
+            _ntbsEnvironment = string.Concat(ntbsEnvironment.Where(char.IsLetterOrDigit));
 
             // The BulkInsertImportedNotificationsQueryTemplate query needs the name of the app
             // database - see its doc for more info
@@ -64,18 +55,9 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        public async Task CreateTableIfNotExists()
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                await connection.QueryAsync(CreateTableQuery);
-            }
-        }
-
         public string InsertImportedNotificationQuery => $@"
-            INSERT INTO {_importedNotificationsTableName} (LegacyId, ImportedAt)
-            VALUES (@LegacyId, @ImportedAt);
+            INSERT INTO ImportedNotifications (LegacyId, ImportedAt, NtbsEnvironment)
+            VALUES (@LegacyId, @ImportedAt, '{_ntbsEnvironment}');
         ";
 
         /// <summary>
@@ -96,25 +78,18 @@ namespace ntbs_service.DataMigration
 	            FROM [{_ntbsDb}]..Notification 
 	            WHERE LTBRID IS NOT NULL
             )
-            INSERT INTO {_importedNotificationsTableName}
-	            SELECT LegacyId, GETDATE() FROM ntbsNotifications
+            INSERT INTO ImportedNotifications
+	            SELECT LegacyId, GETDATE(), '{_ntbsEnvironment}' FROM ntbsNotifications
 	            WHERE NOT EXISTS (
-                    SELECT 1 FROM {_importedNotificationsTableName}
-                    WHERE {_importedNotificationsTableName}.LegacyId = ntbsNotifications.LegacyId
+                    SELECT 1 FROM ImportedNotifications
+                    WHERE ImportedNotifications.LegacyId = ntbsNotifications.LegacyId
                 )
         ";
 
         public string SelectImportedNotificationWhereIdEquals(string idSelector) => $@"
             SELECT *
-            FROM {_importedNotificationsTableName} impNtfc
-            WHERE impNtfc.LegacyId = {idSelector}";
-
-
-        private string CreateTableQuery => $@"
-            IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{_importedNotificationsTableName}'))
-            CREATE TABLE {_importedNotificationsTableName} (
-                LegacyId varchar(255) NOT NULL PRIMARY KEY,
-                ImportedAt datetime NOT NULL
-            )";
+            FROM ImportedNotifications impNtfc
+            WHERE impNtfc.LegacyId = {idSelector}
+                AND impNtfc.NtbsEnvironment = '{_ntbsEnvironment}'";
     }
 }

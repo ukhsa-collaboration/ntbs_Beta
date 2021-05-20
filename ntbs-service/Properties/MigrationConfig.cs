@@ -4,6 +4,6 @@
     {
         public int DateRangeJobIntervalInDays { get; set; }
         public int ByIdsJobBatchSize { get; set; }
-        public string TablePrefix { get; set; }
+        public string NtbsEnvironment { get; set; }
     }
 }
