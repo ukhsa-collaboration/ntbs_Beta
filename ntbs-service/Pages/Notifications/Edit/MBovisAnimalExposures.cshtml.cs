@@ -17,10 +17,9 @@ namespace ntbs_service.Pages.Notifications.Edit
         public MBovisAnimalExposuresModel(
             INotificationService notificationService,
             IAuthorizationService authorizationService,
-            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService,
-            IAlertRepository alertRepository) : base(notificationService, authorizationService, userHelper,
+            IAlertRepository alertRepository) : base(notificationService, authorizationService,
                 notificationRepository, alertRepository)
         {
             CurrentPage = NotificationSubPaths.EditMBovisAnimalExposures;

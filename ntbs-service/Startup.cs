@@ -160,10 +160,6 @@ namespace ntbs_service
                 {
                     policy.RequireRole(GetAdminRoleName());
                 });
-                options.AddPolicy("NonReadOnly", policy =>
-                {
-                    policy.RequireAssertion(context => !context.User.IsInRole(GetReadOnlyRoleName()));
-                });
             });
             SetupHangfire(services);
 
@@ -649,12 +645,6 @@ namespace ntbs_service
         {
             var adConfig = Configuration.GetSection("AdOptions");
             return adConfig["AdminUserGroup"];
-        }
-
-        private string GetReadOnlyRoleName()
-        {
-            var adConfig = Configuration.GetSection("AdOptions");
-            return adConfig["ReadOnlyUserGroup"];
         }
     }
 }

@@ -17,7 +17,6 @@ using IAuthorizationService = ntbs_service.Services.IAuthorizationService;
 
 namespace ntbs_service.Pages.LabResults
 {
-    [Authorize(Policy = "NonReadOnly")]
     public class IndexModel : PageModel
     {
         public static readonly int ManualNotificationIdValue = -1;
@@ -48,9 +47,14 @@ namespace ntbs_service.Pages.LabResults
         public IDictionary<string, SpecimenPotentialMatchSelection> PotentialMatchSelections { get; set; } =
             new Dictionary<string, SpecimenPotentialMatchSelection>();
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            if ((await _userService.GetUser(HttpContext.User)).IsReadOnly)
+            {
+                return RedirectToPage("./Notifications/UnauthorizedWarning");
+            }
             await PreparePageForGetAsync();
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()

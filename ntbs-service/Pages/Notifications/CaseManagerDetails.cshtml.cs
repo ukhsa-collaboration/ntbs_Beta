@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
-using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;
@@ -23,9 +22,8 @@ namespace ntbs_service.Pages.Notifications
             IAuthorizationService authorizationService,
             IUserRepository userRepository,
             IReferenceDataRepository referenceDataRepository,
-            IUserHelper userHelper,
             INotificationRepository notificationRepository)
-            : base(service, authorizationService, userHelper, notificationRepository)
+            : base(service, authorizationService, notificationRepository)
         {
             _userRepository = userRepository;
             _referenceDataRepository = referenceDataRepository;

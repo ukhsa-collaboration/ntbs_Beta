@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
-using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Services;
 
@@ -20,13 +19,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         public SocialContextVenueModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             IItemRepository<SocialContextVenue> socialContextVenueRepository,
             IAlertService alertService,
             IAlertRepository alertRepository)
-            : base(service, authorizationService, userHelper, notificationRepository, socialContextVenueRepository, alertService, alertRepository)
+            : base(service, authorizationService, notificationRepository, socialContextVenueRepository, alertService, alertRepository)
         {
             _referenceDataRepository = referenceDataRepository;
         }

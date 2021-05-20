@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
-using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Services;
 
@@ -15,12 +14,11 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         public SocialContextAddressModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             IItemRepository<SocialContextAddress> socialContextAddressRepository,
             IAlertService alertService,
             IAlertRepository alertRepository)
-            : base(service, authorizationService, userHelper, notificationRepository, socialContextAddressRepository, alertService, alertRepository)
+            : base(service, authorizationService, notificationRepository, socialContextAddressRepository, alertService, alertRepository)
         {
         }
 

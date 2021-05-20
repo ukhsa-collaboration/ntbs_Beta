@@ -22,10 +22,9 @@ namespace ntbs_service.Pages.Notifications
         protected NotificationEditModelBase(
             INotificationService service,
             IAuthorizationService authorizationService,
-            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             IAlertRepository alertRepository)
-            : base(service, authorizationService, userHelper, notificationRepository)
+            : base(service, authorizationService, notificationRepository)
         {
             ValidationService = new ValidationService(this);
             _alertRepository = alertRepository;
@@ -57,6 +56,13 @@ namespace ntbs_service.Pages.Notifications
             }
 
             await AuthorizeAndSetBannerAsync();
+            if (PermissionLevel == PermissionLevel.ReadOnly)
+            {
+                return Notification.NotificationStatus == NotificationStatus.Draft
+                    ? RedirectToPage("/Index")
+                    : RedirectToPage("/Notifications/Overview", new {NotificationId});
+            }
+            
             if (PermissionLevel != PermissionLevel.Edit)
             {
                 return RedirectForNotified();

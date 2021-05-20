@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Properties;
 
 namespace ntbs_service.DataAccess
 {
@@ -22,9 +24,11 @@ namespace ntbs_service.DataAccess
     public class UserRepository : IUserRepository
     {
         private readonly NtbsContext _context;
+        private readonly AdOptions _adOptions;
 
-        public UserRepository(NtbsContext context)
+        public UserRepository(NtbsContext context, IOptionsMonitor<AdOptions> adOptions)
         {
+            _adOptions = adOptions.CurrentValue;
             _context = context;
         }
 
@@ -40,6 +44,7 @@ namespace ntbs_service.DataAccess
         {
             var existingUser = await GetUserQueryable()
                 .SingleOrDefaultAsync(u => u.Username == user.Username);
+            user.IsReadOnly = user.AdGroups?.Contains(_adOptions.ReadOnlyUserGroup) ?? false;
 
             if (existingUser != null)
             {
@@ -127,6 +132,7 @@ namespace ntbs_service.DataAccess
             existingUser.AdGroups = newUser.AdGroups;
             existingUser.IsActive = newUser.IsActive;
             existingUser.IsCaseManager = newUser.IsCaseManager;
+            existingUser.IsReadOnly = newUser.IsReadOnly;
             SyncCaseManagerTbServices(existingUser, tbServices);
             await _context.SaveChangesAsync();
         }

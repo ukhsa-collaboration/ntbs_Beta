@@ -101,7 +101,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public void Get_ReturnsRedirectToOverview_ForPheUserWithMatchingPostcodePermission()
+        public void Get_ReturnsRedirectToIndex_ForDraftForPheUserWithMatchingPostcodePermission()
         {
             // Arrange
             using (var client = Factory.WithUserAuth(TestUser.PheUserWithPermittedPhecCode)
@@ -117,7 +117,7 @@ namespace ntbs_integration_tests.NotificationPages
                    // Assert
                    Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
 
-                   response.AssertRedirectTo($"/Notifications/{Utilities.DRAFT_ID}");
+                   response.AssertRedirectTo("/");
                });
             }
         }

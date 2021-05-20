@@ -40,10 +40,9 @@ namespace ntbs_service.Pages.Alerts
             IAlertService alertService,
             IAlertRepository alertRepository,
             IAuthorizationService authorizationService,
-            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository)
-            : base(notificationService, authorizationService, userHelper, notificationRepository)
+            : base(notificationService, authorizationService, notificationRepository)
         {
             _alertService = alertService;
             _alertRepository = alertRepository;

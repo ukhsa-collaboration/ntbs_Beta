@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
-using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
@@ -24,8 +23,7 @@ namespace ntbs_service.Pages.Notifications
         public DeleteModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            IUserHelper userHelper,
-            INotificationRepository notificationRepository) : base(service, authorizationService, userHelper, notificationRepository)
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
         {
             ValidationService = new ValidationService(this);
         }

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -24,7 +23,6 @@ namespace ntbs_service.Pages.Search
         private readonly ILegacySearchService _legacySearchService;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IUserService _userService;
-        private readonly IUserHelper _userHelper;
 
         public ValidationService ValidationService;
 
@@ -46,8 +44,7 @@ namespace ntbs_service.Pages.Search
             IAuthorizationService authorizationService,
             IReferenceDataRepository referenceDataRepository,
             ILegacySearchService legacySearchService,
-            IUserService userService,
-            IUserHelper userHelper)
+            IUserService userService)
         {
             _authorizationService = authorizationService;
             _searchService = searchService;
@@ -55,7 +52,6 @@ namespace ntbs_service.Pages.Search
             _legacySearchService = legacySearchService;
             _referenceDataRepository = referenceDataRepository;
             _userService = userService;
-            _userHelper = userHelper;
 
             ValidationService = new ValidationService(this);
 
@@ -283,9 +279,9 @@ namespace ntbs_service.Pages.Search
             return searchParameterDictionary;
         }
 
-        public bool userIsReadOnly()
+        public async Task<bool> userIsReadOnly()
         {
-            return _userHelper.CurrentUserIsReadOnly(HttpContext);
+            return (await _userService.GetUser(HttpContext.User)).IsReadOnly;
         }
     }
 }

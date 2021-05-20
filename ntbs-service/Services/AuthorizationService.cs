@@ -57,14 +57,16 @@ namespace ntbs_service.Services
             IEnumerable<NotificationBannerModel> notificationBanners,
             ClaimsPrincipal user)
         {
-            async Task SetPadlockForBannerAsync(ClaimsPrincipal u, NotificationBannerModel bannerModel)
+            async Task SetPadlockAndLinkForBannerAsync(ClaimsPrincipal u, NotificationBannerModel bannerModel)
             {
                 bannerModel.ShowPadlock = !(await CanEditBannerModelAsync(u, bannerModel));
+                bannerModel.ShowLink = !(await _userService.GetUser(u)).IsReadOnly
+                                       || bannerModel.NotificationStatus != NotificationStatus.Draft;
             }
 
             foreach (var n in notificationBanners)
             {
-                await SetPadlockForBannerAsync(user, n);
+                await SetPadlockAndLinkForBannerAsync(user, n);
             }
         }
 
@@ -79,7 +81,9 @@ namespace ntbs_service.Services
 
             if (_userPermissionsFilter.Type == UserType.NationalTeam)
             {
-                return (PermissionLevel.Edit,
+                return (await _userService.GetUser(user)).IsReadOnly
+                    ? (PermissionLevel.ReadOnly, Messages.NoEditPermission)
+                    : (PermissionLevel.Edit,
                         // National team members are allowed to modify even closed notifications, but it is useful
                         // for them to be able to tell when they are closed.
                         notification.NotificationStatus == NotificationStatus.Closed ? Messages.Closed : null);
@@ -87,9 +91,11 @@ namespace ntbs_service.Services
 
             if (UserHasDirectRelationToNotification(notification))
             {
-                return notification.NotificationStatus == NotificationStatus.Closed
-                    ? (PermissionLevel.ReadOnly, Messages.ClosedNoEdit)
-                    : (PermissionLevel.Edit, null);
+                return (await _userService.GetUser(user)).IsReadOnly
+                    ? (PermissionLevel.ReadOnly, Messages.NoEditPermission)
+                    : notification.NotificationStatus == NotificationStatus.Closed
+                        ? (PermissionLevel.ReadOnly, Messages.ClosedNoEdit)
+                        : (PermissionLevel.Edit, null);
             }
 
             if (UserBelongsToResidencePhecOfNotification(notification)

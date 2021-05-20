@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
@@ -20,18 +19,15 @@ namespace ntbs_service.Pages.Notifications
         protected INotificationService Service;
         protected IAuthorizationService _authorizationService;
         protected INotificationRepository NotificationRepository;
-        protected IUserHelper _userHelper;
 
         protected NotificationModelBase(
             INotificationService service,
             IAuthorizationService authorizationService,
-            IUserHelper userHelper, 
             INotificationRepository notificationRepository = null)
         {
             Service = service;
             _authorizationService = authorizationService;
             NotificationRepository = notificationRepository;
-            _userHelper = userHelper;
         }
         public int NumberOfLinkedNotifications { get; set; }
         public int? LatestLinkedNotificationId { get; private set; }
@@ -54,8 +50,8 @@ namespace ntbs_service.Pages.Notifications
         protected async Task AuthorizeAndSetBannerAsync()
         {
             var (permissionLevel, reason) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
-            PermissionLevel = _userHelper.CurrentUserIsReadOnly(HttpContext) ? PermissionLevel.ReadOnly : permissionLevel;
-            PermissionReason = _userHelper.CurrentUserIsReadOnly(HttpContext) ? "You are a read-only user" : reason;
+            PermissionLevel = permissionLevel;
+            PermissionReason = reason;
             NotificationBannerModel = new NotificationBannerModel(Notification, PermissionLevel != PermissionLevel.Edit);
         }
 

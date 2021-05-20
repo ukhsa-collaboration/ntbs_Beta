@@ -6,9 +6,6 @@
 @inject ntbs.IUserService UserService
 @inject ntbs.IReportingLinksService ReportingLinksService
 
-@using ntbs_helpers = ntbs_service.Helpers
-@inject ntbs_helpers.IUserHelper UserHelper
-
 @using Microsoft.Extensions.Configuration
 @using ntbs_service.Properties
 @inject IConfiguration Configuration
@@ -69,7 +66,7 @@
                             Search
                         </a>
                     </li>
-                    @if (!UserHelper.CurrentUserIsReadOnly(Context))
+                    @if (!(await UserService.GetUser(Context.User)).IsReadOnly)
                     {
                         <li class="govuk-header__navigation-item header-navigation-link">
                             <a class="govuk-header__link header-navigation-list-item" href="/LabResults">

@@ -23,8 +23,7 @@ namespace ntbs_service.Pages.Notifications
         public DenotifyModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            IUserHelper userHelper,
-            INotificationRepository notificationRepository) : base(service, authorizationService, userHelper, notificationRepository)
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
         {
             ValidationService = new ValidationService(this);
 

@@ -8,7 +8,7 @@
 
 <nhs-width-container container-width="Standard">
     <h1>Dashboard</h1>
-    @if (Model.userIsReadOnly())
+    @if (await Model.userIsReadOnly())
     {
         <a href="/Search" role="button" draggable="false" class="nhsuk-button ntbsuk-button--primary">
             Search notification

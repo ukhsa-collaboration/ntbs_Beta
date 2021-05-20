@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
-using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 using ntbs_service.TagHelpers;
@@ -20,10 +19,9 @@ namespace ntbs_service.Pages.Notifications
         public NotificationChangesModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            IUserHelper userHelper,
             INotificationRepository notificationRepository,
             INotificationChangesService notificationChangesService)
-            : base(service, authorizationService, userHelper, notificationRepository)
+            : base(service, authorizationService, notificationRepository)
         {
             _notificationChangesService = notificationChangesService;
         }

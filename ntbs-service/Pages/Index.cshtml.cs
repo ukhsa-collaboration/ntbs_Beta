@@ -20,21 +20,18 @@ namespace ntbs_service.Pages
         private readonly IAuthorizationService _authorizationService;
         private readonly IUserService _userService;
         private readonly IHomepageKpiService _homepageKpiService;
-        private readonly IUserHelper _userHelper;
 
         public IndexModel(INotificationRepository notificationRepository,
             IAlertRepository alertRepository,
             IAuthorizationService authorizationService,
             IUserService userService,
-            IHomepageKpiService homepageKpiService,
-            IUserHelper userHelper)
+            IHomepageKpiService homepageKpiService)
         {
             _notificationRepository = notificationRepository;
             _authorizationService = authorizationService;
             _alertRepository = alertRepository;
             _userService = userService;
             _homepageKpiService = homepageKpiService;
-            _userHelper = userHelper;
         }
 
         public IList<AlertWithTbServiceForDisplay> Alerts { get; set; }
@@ -91,9 +88,9 @@ namespace ntbs_service.Pages
             Alerts = await _authorizationService.FilterAlertsForUserAsync(User, alertsForTbServices);
         }
 
-        public bool userIsReadOnly()
+        public async Task<bool> userIsReadOnly()
         {
-            return _userHelper.CurrentUserIsReadOnly(HttpContext);
+            return (await _userService.GetUser(HttpContext.User)).IsReadOnly;
         }
     }
 }

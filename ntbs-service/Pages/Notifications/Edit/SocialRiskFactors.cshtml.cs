@@ -15,9 +15,8 @@ namespace ntbs_service.Pages.Notifications.Edit
         public SocialRiskFactorsModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            IUserHelper userHelper,
             INotificationRepository notificationRepository,
-            IAlertRepository alertRepository) : base(service, authorizationService, userHelper, notificationRepository, alertRepository)
+            IAlertRepository alertRepository) : base(service, authorizationService, notificationRepository, alertRepository)
         {
             CurrentPage = NotificationSubPaths.EditSocialRiskFactors;
         }

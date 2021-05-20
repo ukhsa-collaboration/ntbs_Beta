@@ -252,7 +252,7 @@
                 <br/>
                 Draft notifications are displayed before submitted records.
             </p>
-            @if (!Model.userIsReadOnly())
+            @if (!await Model.userIsReadOnly())
             {
                 <div class="create-notification-button-container">
                     <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button create-notification-button--right ntbsuk-button--primary" id="create-button">
@@ -284,7 +284,7 @@
                                     previous-link-text="@Model.SearchResults.PreviousPageText" previous-url="@Model.PreviousPageUrl"></nhs-pagination>
                 </ul>
             </nav>
-            @if(Model.SearchResults?.Count > 3 && !Model.userIsReadOnly())
+            @if(Model.SearchResults?.Count > 3 && !await Model.userIsReadOnly())
             {
                 <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button ntbsuk-button--primary">
                     Create Notification

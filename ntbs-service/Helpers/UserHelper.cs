@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using ntbs_service.Models.Entities;
 using ntbs_service.Properties;
 
 namespace ntbs_service.Helpers
@@ -8,7 +7,6 @@ namespace ntbs_service.Helpers
     public interface IUserHelper
     {
         bool CurrentUserMatchesUsernameOrIsAdmin(HttpContext context, string username);
-        bool CurrentUserIsReadOnly(HttpContext context);
     }
     
     public class UserHelper : IUserHelper
@@ -29,11 +27,6 @@ namespace ntbs_service.Helpers
         public bool CurrentUserMatchesUsernameOrIsAdmin(HttpContext context, string username)
         {
             return context.User.Username() == username || context.User.IsInRole(_adOptions.AdminUserGroup);
-        }
-
-        public bool CurrentUserIsReadOnly(HttpContext context)
-        {
-            return context.User.IsInRole(_adOptions.ReadOnlyUserGroup);
         }
     }
 }
