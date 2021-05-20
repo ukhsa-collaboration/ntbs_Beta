@@ -77,7 +77,7 @@ namespace ntbs_service.DataAccess
             return GetNotificationsWithBasicInformationIQueryable()
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified
                             || n.NotificationStatus == NotificationStatus.Closed)
-                .OrderByDescending(n => n.SubmissionDate);
+                .OrderByDescending(n => n.NotificationDate);
         }
 
         public IQueryable<Notification> GetDraftNotificationsIQueryable()
