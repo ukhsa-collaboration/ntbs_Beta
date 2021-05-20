@@ -21,11 +21,13 @@ namespace ntbs_service_unit_tests.DataMigration
         private readonly IImportValidator _importValidator;
         private readonly Mock<IReferenceDataRepository> _referenceDataRepositoryMock =
             new Mock<IReferenceDataRepository>();
+        private readonly Mock<IImportLogger> _importLoggerMock = new Mock<IImportLogger>();
+
+        private const int RunId = 12345;
 
         public ImportValidatorTest()
         {
-            var importLogger = new ImportLogger();
-            _importValidator = new ImportValidator(importLogger, _referenceDataRepositoryMock.Object);
+            _importValidator = new ImportValidator(_importLoggerMock.Object, _referenceDataRepositoryMock.Object);
         }
 
         [Fact]
@@ -54,7 +56,7 @@ namespace ntbs_service_unit_tests.DataMigration
             };
 
             // Act
-            var validationResults = await _importValidator.CleanAndValidateNotification(null, "test-request-V", notification);
+            var validationResults = await _importValidator.CleanAndValidateNotification(null, RunId, notification);
 
             // Assert
             var errorMessages = validationResults.Select(r => r.ErrorMessage).ToList();
@@ -99,7 +101,7 @@ namespace ntbs_service_unit_tests.DataMigration
             };
 
             // Act
-            var validationResults = await _importValidator.CleanAndValidateNotification(null, "test-request-V", notification);
+            var validationResults = await _importValidator.CleanAndValidateNotification(null, RunId, notification);
 
             // Assert
             var errorMessages = validationResults.Select(r => r.ErrorMessage).ToList();
@@ -132,7 +134,7 @@ namespace ntbs_service_unit_tests.DataMigration
             };
 
             // Act
-            var validationResults = await _importValidator.CleanAndValidateNotification(null, "test-request-V", notification);
+            var validationResults = await _importValidator.CleanAndValidateNotification(null, RunId, notification);
 
             // Assert
             var errorMessages = validationResults.Select(r => r.ErrorMessage).ToList();
@@ -157,7 +159,7 @@ namespace ntbs_service_unit_tests.DataMigration
             };
 
             // Act
-            var validationResults = await _importValidator.CleanAndValidateNotification(null, "test-request-V", notification);
+            var validationResults = await _importValidator.CleanAndValidateNotification(null, RunId, notification);
 
             // Assert
             var errorMessages = validationResults.Select(r => r.ErrorMessage).ToList();

@@ -27,9 +27,9 @@ namespace ntbs_service.DataMigration
     public interface INotificationMapper
     {
         Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
-            string requestId, List<string> notificationId);
+            int runId, List<string> notificationId);
         Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
-            string requestId, DateTime rangeStartDate, DateTime endStartDate);
+            int runId, DateTime rangeStartDate, DateTime endStartDate);
     }
 
     public class NotificationMapper : INotificationMapper
@@ -63,28 +63,28 @@ namespace ntbs_service.DataMigration
         }
 
         public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
-            string requestId, DateTime rangeStartDate, DateTime endStartDate)
+            int runId, DateTime rangeStartDate, DateTime endStartDate)
         {
             var groupedIds = await _migrationRepository.GetGroupedNotificationIdsByDate(rangeStartDate, endStartDate);
 
-            return await GetGroupedResultsAsNotificationAsync(groupedIds, context, requestId);
+            return await GetGroupedResultsAsNotificationAsync(groupedIds, context, runId);
         }
 
         public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
-            string requestId, List<string> notificationIds)
+            int runId, List<string> notificationIds)
         {
             var groupedIds = await _migrationRepository.GetGroupedNotificationIdsById(notificationIds);
 
-            return await GetGroupedResultsAsNotificationAsync(groupedIds, context, requestId);
+            return await GetGroupedResultsAsNotificationAsync(groupedIds, context, runId);
         }
 
-        private async Task<IEnumerable<IList<Notification>>> GetGroupedResultsAsNotificationAsync(IEnumerable<IGrouping<string, string>> groupedIds, PerformContext context, string requestId)
+        private async Task<IEnumerable<IList<Notification>>> GetGroupedResultsAsNotificationAsync(IEnumerable<IGrouping<string, string>> groupedIds, PerformContext context, int runId)
         {
             var resultList = new List<IList<Notification>>();
             foreach (var group in groupedIds)
             {
                 var legacyIds = group.ToList();
-                _logger.LogInformation(context, requestId, $"Fetching data for legacy notifications {string.Join(", ", legacyIds)}");
+                _logger.LogInformation(context, runId, $"Fetching data for legacy notifications {string.Join(", ", legacyIds)}");
                 var legacyNotifications = _migrationRepository.GetNotificationsById(legacyIds);
                 var sitesOfDisease = _migrationRepository.GetNotificationSites(legacyIds);
                 var manualTestResults = _migrationRepository.GetManualTestResults(legacyIds);

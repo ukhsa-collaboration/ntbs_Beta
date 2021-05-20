@@ -19,7 +19,7 @@ namespace ntbs_service_unit_tests.DataMigration
         private readonly ImportResult _importResult = new ImportResult("John Doe");
 
         private readonly PerformContext _performContext = null;
-        private readonly string _requestId = "request1";
+        private readonly int _runId = 12345;
 
         public SpecimenImportTest()
         {
@@ -44,7 +44,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 .Returns(Task.FromResult(true));
 
             // Act
-            await _specimenImportService.ImportReferenceLabResultsAsync(_performContext, _requestId, notifications,
+            await _specimenImportService.ImportReferenceLabResultsAsync(_performContext, _runId, notifications,
                 _importResult);
 
             // Assert
@@ -76,7 +76,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 .Returns(Task.FromResult(false));
 
             // Act
-            await _specimenImportService.ImportReferenceLabResultsAsync(_performContext, _requestId, notifications,
+            await _specimenImportService.ImportReferenceLabResultsAsync(_performContext, _runId, notifications,
                 _importResult);
 
             // Assert

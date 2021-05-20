@@ -42,7 +42,7 @@ namespace ntbs_service_unit_tests.DataMigration
             new Mock<ICaseManagerImportService>();
 
         private readonly PerformContext _performContext = null;
-        private readonly string _requestId = "request1";
+        private readonly int _runId = 12345;
 
         public NotificationImportServiceTest()
         {
@@ -61,7 +61,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 _caseManagerImportService.Object);
 
             _importValidator
-                .Setup(iv => iv.CleanAndValidateNotification(_performContext, _requestId, It.IsAny<Notification>()))
+                .Setup(iv => iv.CleanAndValidateNotification(_performContext, _runId, It.IsAny<Notification>()))
                 .Returns(Task.FromResult(new List<ValidationResult>()));
 
             _notificationImportRepository
@@ -83,12 +83,12 @@ namespace ntbs_service_unit_tests.DataMigration
             var notificationList = new List<IList<Notification>> { new[] { notification1 }, new[] { notification2 } };
 
             _notificationMapper.Setup(nm =>
-                    nm.GetNotificationsGroupedByPatient(_performContext, _requestId, rangeStartDate, rangeEndDate))
+                    nm.GetNotificationsGroupedByPatient(_performContext, _runId, rangeStartDate, rangeEndDate))
                 .Returns(Task.FromResult(notificationList.AsEnumerable()));
 
             // Act
             var importResults =
-                await _notificationImportService.ImportByDateAsync(_performContext, _requestId, rangeStartDate, rangeEndDate);
+                await _notificationImportService.ImportByDateAsync(_performContext, _runId, rangeStartDate, rangeEndDate);
 
             // Assert
             VerifyNotificationImportServicesAreCalled(notification1, Times.Once());
@@ -110,12 +110,12 @@ namespace ntbs_service_unit_tests.DataMigration
             var notificationList = new List<IList<Notification>> { new[] { notification1 }, new[] { notification2 } };
 
             _notificationMapper.Setup(nm =>
-                    nm.GetNotificationsGroupedByPatient(_performContext, _requestId, legacyIds))
+                    nm.GetNotificationsGroupedByPatient(_performContext, _runId, legacyIds))
                 .Returns(Task.FromResult(notificationList.AsEnumerable()));
 
             // Act
             var importResults =
-                await _notificationImportService.ImportByLegacyIdsAsync(_performContext, _requestId, legacyIds);
+                await _notificationImportService.ImportByLegacyIdsAsync(_performContext, _runId, legacyIds);
 
             // Assert
             VerifyNotificationImportServicesAreCalled(notification1, Times.Once());
@@ -137,12 +137,12 @@ namespace ntbs_service_unit_tests.DataMigration
             var notificationList = new List<IList<Notification>> { new[] { notification1, notification2 } };
 
             _notificationMapper.Setup(nm =>
-                    nm.GetNotificationsGroupedByPatient(_performContext, _requestId, legacyIds))
+                    nm.GetNotificationsGroupedByPatient(_performContext, _runId, legacyIds))
                 .Returns(Task.FromResult(notificationList.AsEnumerable()));
 
             // Act
             var importResults =
-                await _notificationImportService.ImportByLegacyIdsAsync(_performContext, _requestId, legacyIds);
+                await _notificationImportService.ImportByLegacyIdsAsync(_performContext, _runId, legacyIds);
 
             // Assert
             VerifyInitialImportServicesAreCalled(notification1, Times.Once());
@@ -172,7 +172,7 @@ namespace ntbs_service_unit_tests.DataMigration
             const string existingId = "2";
 
             _notificationMapper.Setup(nm =>
-                    nm.GetNotificationsGroupedByPatient(_performContext, _requestId, legacyIds))
+                    nm.GetNotificationsGroupedByPatient(_performContext, _runId, legacyIds))
                 .Returns(Task.FromResult(notificationList.AsEnumerable()));
 
             _notificationRepository.Setup(nr => nr.NotificationWithLegacyIdExistsAsync(existingId))
@@ -180,7 +180,7 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Act
             var importResults =
-                await _notificationImportService.ImportByLegacyIdsAsync(_performContext, _requestId, legacyIds);
+                await _notificationImportService.ImportByLegacyIdsAsync(_performContext, _runId, legacyIds);
 
             // Assert
             VerifyNotificationImportServicesAreCalled(notification1, Times.Once());
@@ -204,16 +204,16 @@ namespace ntbs_service_unit_tests.DataMigration
             };
 
             _notificationMapper.Setup(nm =>
-                    nm.GetNotificationsGroupedByPatient(_performContext, _requestId, legacyIds))
+                    nm.GetNotificationsGroupedByPatient(_performContext, _runId, legacyIds))
                 .Returns(Task.FromResult(notificationList.AsEnumerable()));
 
             _importValidator
-                .Setup(iv => iv.CleanAndValidateNotification(_performContext, _requestId, invalidNotification2))
+                .Setup(iv => iv.CleanAndValidateNotification(_performContext, _runId, invalidNotification2))
                 .Returns(Task.FromResult(new List<ValidationResult> { new ValidationResult("Validator error") }));
 
             // Act
             var importResults =
-                await _notificationImportService.ImportByLegacyIdsAsync(_performContext, _requestId, legacyIds);
+                await _notificationImportService.ImportByLegacyIdsAsync(_performContext, _runId, legacyIds);
 
             // Assert
             VerifyNotificationImportServicesAreCalled(notification1, Times.Once());
@@ -241,9 +241,9 @@ namespace ntbs_service_unit_tests.DataMigration
         private void VerifyInitialImportServicesAreCalled(Notification notification, Times times)
         {
             _caseManagerImportService.Verify(s =>
-                s.ImportOrUpdateUserFromNotification(notification, _performContext, _requestId), times);
+                s.ImportOrUpdateUserFromNotification(notification, _performContext, _runId), times);
             _importValidator
-                .Verify(s => s.CleanAndValidateNotification(_performContext, _requestId, notification), times);
+                .Verify(s => s.CleanAndValidateNotification(_performContext, _runId, notification), times);
         }
 
         private void VerifyCommittingImportServicesAreCalled(IList<Notification> notifications, Times times)
@@ -256,7 +256,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 s.MarkNotificationsAsImportedAsync(It.Is(matchesNotificationList)), times);
             _specimenImportService.Verify(s => s.ImportReferenceLabResultsAsync(
                     _performContext,
-                    _requestId,
+                    _runId,
                     It.Is(matchesNotificationList),
                     It.IsAny<ImportResult>()),
                 times);
