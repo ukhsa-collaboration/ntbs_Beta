@@ -156,10 +156,11 @@ namespace ntbs_service.DataMigration
             if (notificationsGroupsToImport.Any())
             {
                 // Validate and Import valid notifications
-                importResults = notificationsGroupsToImport
-                    .Select(notificationsGroup => ValidateAndImportNotificationGroupAsync(context, runId, notificationsGroup))
-                    .Select(t => t.Result)
-                    .ToList();
+                foreach (var notificationsGroup in notificationsGroupsToImport)
+                {
+                    importResults.Add(await ValidateAndImportNotificationGroupAsync(context, runId,
+                        notificationsGroup));
+                }
             }
 
             return importResults;
