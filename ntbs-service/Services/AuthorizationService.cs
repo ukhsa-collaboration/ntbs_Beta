@@ -60,8 +60,7 @@ namespace ntbs_service.Services
             async Task SetPadlockAndLinkForBannerAsync(ClaimsPrincipal u, NotificationBannerModel bannerModel)
             {
                 bannerModel.ShowPadlock = !(await CanEditBannerModelAsync(u, bannerModel));
-                bannerModel.ShowLink = !(await _userService.GetUser(u)).IsReadOnly
-                                       || bannerModel.NotificationStatus != NotificationStatus.Draft;
+                bannerModel.ShowLink = !(await UserIsReadOnlyAndNotificationIsDraftOrLegacy(u, bannerModel));
             }
 
             foreach (var n in notificationBanners)
@@ -219,6 +218,12 @@ namespace ntbs_service.Services
         private async Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
         {
             return await _userService.GetUserPermissionsFilterAsync(user);
+        }
+
+        private async Task<bool> UserIsReadOnlyAndNotificationIsDraftOrLegacy(ClaimsPrincipal user, NotificationBannerModel bannerModel)
+        {
+            return (await _userService.GetUser(user)).IsReadOnly &&
+                   (bannerModel.NotificationStatus == NotificationStatus.Draft || bannerModel.Source != "ntbs");
         }
     }
 }

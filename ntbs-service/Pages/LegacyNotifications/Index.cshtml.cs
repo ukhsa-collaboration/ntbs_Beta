@@ -18,6 +18,7 @@ namespace ntbs_service.Pages.LegacyNotifications
         private readonly INotificationImportService _notificationImportService;
         private readonly INotificationImportRepository _notificationImportRepository;
         private readonly INotificationRepository _notificationRepository;
+        private readonly IUserService _userService;
 
         public NotificationBannerModel NotificationBannerModel { get; set; }
 
@@ -30,16 +31,22 @@ namespace ntbs_service.Pages.LegacyNotifications
         public Index(ILegacySearchService legacySearchService,
             INotificationImportService notificationImportService,
             INotificationImportRepository notificationImportRepository,
-            INotificationRepository notificationRepository)
+            INotificationRepository notificationRepository,
+            IUserService userService)
         {
             _legacySearchService = legacySearchService;
             _notificationImportService = notificationImportService;
             _notificationImportRepository = notificationImportRepository;
             _notificationRepository = notificationRepository;
+            _userService = userService;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
+            if ((await _userService.GetUser(User)).IsReadOnly)
+            {
+                return RedirectToPage("../Account/AccessDenied");
+            }
             ViewData["Breadcrumbs"] = new List<Breadcrumb>
             {
                 HttpContext.Session.GetTopLevelBreadcrumb(),
