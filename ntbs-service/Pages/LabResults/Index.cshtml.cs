@@ -51,7 +51,7 @@ namespace ntbs_service.Pages.LabResults
         {
             if ((await _userService.GetUser(HttpContext.User)).IsReadOnly)
             {
-                return RedirectToPage("./Notifications/UnauthorizedWarning");
+                return RedirectToPage("../Account/AccessDenied");
             }
             await PreparePageForGetAsync();
             return Page();

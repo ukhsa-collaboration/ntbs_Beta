@@ -21,7 +21,7 @@ namespace ntbs_service.Pages.Notifications
         {
             if ((await _userService.GetUser(HttpContext.User)).IsReadOnly)
             {
-                return RedirectToPage("UnauthorizedWarning");
+                return RedirectToPage("../Account/AccessDenied");
             }
             var notification = await _notificationService.CreateNewNotificationForUserAsync(User);
 

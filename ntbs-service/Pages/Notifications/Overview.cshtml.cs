@@ -16,7 +16,6 @@ namespace ntbs_service.Pages.Notifications
         private readonly IAlertService _alertService;
         private readonly ICultureAndResistanceService _cultureAndResistanceService;
         private readonly IAuditService _auditService;
-        private readonly IUserService _userService;
 
         public CultureAndResistance CultureAndResistance { get; set; }
         public List<TreatmentPeriod> TreatmentPeriods { get; set; }
@@ -35,12 +34,11 @@ namespace ntbs_service.Pages.Notifications
             INotificationRepository notificationRepository,
             IUserService userService,
             ICultureAndResistanceService cultureAndResistanceService,
-            IAuditService auditService) : base(service, authorizationService, notificationRepository)
+            IAuditService auditService) : base(service, authorizationService, notificationRepository, userService)
         {
             _alertService = alertService;
             _cultureAndResistanceService = cultureAndResistanceService;
             _auditService = auditService;
-            _userService = userService;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -96,7 +94,7 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task<IActionResult> OnPostCreateLinkAsync()
         {
-            if ((await _userService.GetUser(User)).IsReadOnly)
+            if (await userIsReadOnly())
             {
                 return Page();
             }
