@@ -73,7 +73,7 @@ spec:
                 key: authority
           - name: AzureAdOptions__Enabled
             value: "true"
-          - name: MigrationConfig__TablePrefix
+          - name: MigrationConfig__NtbsEnvironment
             value: "Uat"
           - name: Sentry__Environment
             value: "uat"
