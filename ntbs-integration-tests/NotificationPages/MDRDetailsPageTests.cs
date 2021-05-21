@@ -50,7 +50,7 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
                 ["MDRDetails.ExposureToKnownCaseStatus"] = "Yes",
-                ["MDRDetails.RelationshipToCase"] = "123",
+                ["MDRDetails.RelationshipToCase"] = "Some\r\nvalue",
                 ["MDRDetails.CountryId"] = "1",
             };
 
@@ -61,7 +61,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorSummaryMessage("MDRDetails-RelationshipToCase", "relationship-description", "Relationship of the current case to the contact can only contain letters and the symbols ' - . ,");
+            resultDocument.AssertErrorSummaryMessage("MDRDetails-RelationshipToCase", "relationship-description", "Invalid character found in Relationship of the current case to the contact");
         }
 
         [Fact]
@@ -159,31 +159,6 @@ namespace ntbs_integration_tests.NotificationPages
             reloadedDocument.AssertInputRadioValue("notified-no", false);
             reloadedDocument.AssertInputTextValue("MDRDetails_RelatedNotificationId", "");
             reloadedDocument.AssertInputSelectValue("MDRDetails_CountryId", "1");
-        }
-
-        [Fact]
-        public async Task ValidateMDRDetailsProperty_ReturnsErrorIfDescriptionContainsNumbers()
-        {
-            // Arrange
-            var initialPage = await Client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
-            var initialDocument = await GetDocumentAsync(initialPage);
-            var request = new InputValidationModel()
-            {
-                Key = "RelationshipToCase",
-                Value = "hello 123"
-            };
-
-            // Act
-            
-            var response = await Client.SendVerificationPostAsync(
-                initialPage,
-                initialDocument,
-                GetHandlerPath(null, "ValidateMDRDetailsProperty", Utilities.NOTIFIED_ID),
-                request);
-
-            // Assert
-            var result = await response.Content.ReadAsStringAsync();
-            Assert.Equal("Relationship of the current case to the contact can only contain letters and the symbols ' - . ,", result);
         }
 
         [Fact]
