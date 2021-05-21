@@ -51,7 +51,7 @@ namespace ntbs_service.Pages.LabResults
         {
             if ((await _userService.GetUser(HttpContext.User)).IsReadOnly)
             {
-                return RedirectToPage("../Account/AccessDenied");
+                return RedirectToPage(RouteHelper.AccessDeniedPath);
             }
             await PreparePageForGetAsync();
             return Page();

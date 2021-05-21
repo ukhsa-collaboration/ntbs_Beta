@@ -7,6 +7,7 @@ namespace ntbs_service.Helpers
     {
         private static string NotificationBasePath => "/Notifications/{0}/{1}";
         public static string GetLegacyNotificationPath(string legacyNotificationId) => $"/LegacyNotifications/{legacyNotificationId}";
+        public static string AccessDeniedPath => "/Account/AccessDenied";
 
         public static string GetSubmittingNotificationPath(int notificationId, string subPath)
         {

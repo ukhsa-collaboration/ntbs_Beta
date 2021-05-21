@@ -279,7 +279,7 @@ namespace ntbs_service.Pages.Search
             return searchParameterDictionary;
         }
 
-        public async Task<bool> userIsReadOnly()
+        public async Task<bool> UserIsReadOnly()
         {
             return (await _userService.GetUser(HttpContext.User)).IsReadOnly;
         }

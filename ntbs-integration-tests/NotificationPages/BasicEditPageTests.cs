@@ -101,7 +101,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public void Get_ReturnsRedirectToIndex_ForDraftForPheUserWithMatchingPostcodePermission()
+        public void Get_ReturnsRedirectToOverview_ForPheUserWithMatchingPostcodePermission()
         {
             // Arrange
             using (var client = Factory.WithUserAuth(TestUser.PheUserWithPermittedPhecCode)
@@ -114,11 +114,50 @@ namespace ntbs_integration_tests.NotificationPages
                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
                    _output.WriteLine("Testing subpath {0}", subPath);
-                   // Assert
-                   Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
 
-                   response.AssertRedirectTo("/");
+                   // Assert
+                   response.AssertRedirectTo($"/Notifications/{Utilities.DRAFT_ID}");
                });
+            }
+        }
+
+        [Fact]
+        public void Get_ReturnsRedirectToOverview_ForDraftForReadOnlyUser()
+        {
+            // Arrange
+            using (var client = Factory.WithUserAuth(TestUser.ReadOnlyUser)
+                .CreateClientWithoutRedirects())
+            {
+                EditSubPaths.ForEach(subPath =>
+                {
+                    // ActAccessToDisposedClosure
+                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
+
+                    _output.WriteLine("Testing subpath {0}", subPath);
+
+                    // Assert
+                    response.AssertRedirectTo($"/Notifications/{Utilities.DRAFT_ID}");
+                });
+            }
+        }
+
+        [Fact]
+        public void Get_ReturnsRedirectToOverview_ForNotifiedForReadOnlyUser()
+        {
+            // Arrange
+            using (var client = Factory.WithUserAuth(TestUser.ReadOnlyUser)
+                .CreateClientWithoutRedirects())
+            {
+                EditSubPaths.ForEach(subPath =>
+                {
+                    // ActAccessToDisposedClosure
+                    var response = client.GetAsync(GetPathForId(subPath, Utilities.NOTIFIED_ID)).Result;
+
+                    _output.WriteLine("Testing subpath {0}", subPath);
+                   
+                    // Assert
+                    response.AssertRedirectTo($"/Notifications/{Utilities.NOTIFIED_ID}");
+                });
             }
         }
 

@@ -97,7 +97,7 @@ namespace ntbs_service.Pages.Notifications
             return StatusCode((int)HttpStatusCode.Forbidden);
         }
 
-        public async Task<bool> userIsReadOnly()
+        public async Task<bool> UserIsReadOnly()
         {
             return (await _userService.GetUser(User)).IsReadOnly;
         }

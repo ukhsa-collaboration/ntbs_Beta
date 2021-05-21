@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
+using ntbs_integration_tests.TestServices;
 using ntbs_service;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
@@ -46,6 +47,22 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             Assert.NotNull(patientEditPage.GetElementById("draft-alert-details"));
+        }
+
+        [Fact]
+        public async Task Get_ReturnsRedirectToOverview_ForReadOnlyUser()
+        {
+            // Arrange
+            const int id = Utilities.DRAFT_NOTIFICATION_WITH_DRAFT_ALERT;
+            using (var client = Factory.WithUserAuth(TestUser.ReadOnlyUser)
+                .CreateClientWithoutRedirects())
+            {
+                // Act
+                var response = await client.GetAsync(RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditPatientDetails));
+
+                // Assert
+                response.AssertRedirectTo($"/Notifications/{id}");
+            }
         }
     }
 }

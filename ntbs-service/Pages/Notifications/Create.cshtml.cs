@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ntbs_service.Helpers;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications
@@ -19,9 +20,9 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task<IActionResult> OnGetAsync()
         {
-            if ((await _userService.GetUser(HttpContext.User)).IsReadOnly)
+            if ((await _userService.GetUser(User)).IsReadOnly)
             {
-                return RedirectToPage("../Account/AccessDenied");
+                return RedirectToPage(RouteHelper.AccessDeniedPath);
             }
             var notification = await _notificationService.CreateNewNotificationForUserAsync(User);
 

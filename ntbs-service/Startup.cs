@@ -423,7 +423,6 @@ namespace ntbs_service
                                             context.Options.ClaimsIssuer),
                                         new Claim(ClaimTypes.Role, adOptions.BaseUserGroup, ClaimValueTypes.String),
 
-                                        //new Claim(ClaimTypes.Role, adOptions.ReadOnlyUserGroup, ClaimValueTypes.String),
                                         new Claim(ClaimTypes.Role, groupAdmin, ClaimValueTypes.String),
                                         new Claim(ClaimTypes.Role, groupDev, ClaimValueTypes.String)
                                     };

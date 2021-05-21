@@ -14,7 +14,7 @@ namespace ntbs_service.Services
     public interface IAuthorizationService
     {
         Task<(PermissionLevel permissionLevel, string reason)> GetPermissionLevelAsync(
-            ClaimsPrincipal user,
+            ClaimsPrincipal contextUser,
             Notification notification);
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
@@ -38,6 +38,11 @@ namespace ntbs_service.Services
 
         public async Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert)
         {
+            if ((await _userService.GetUser(user)).IsReadOnly)
+            {
+                return false;
+            }
+
             var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code).ToList();
             if (alert is TransferAlert transferAlert)
             {
@@ -70,17 +75,19 @@ namespace ntbs_service.Services
         }
 
         public async Task<(PermissionLevel permissionLevel, string reason)> GetPermissionLevelAsync(
-            ClaimsPrincipal user,
+            ClaimsPrincipal contextUser,
             Notification notification)
         {
             if (_userPermissionsFilter == null)
             {
-                _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
+                _userPermissionsFilter = await GetUserPermissionsFilterAsync(contextUser);
             }
+
+            var user = (await _userService.GetUser(contextUser));
 
             if (_userPermissionsFilter.Type == UserType.NationalTeam)
             {
-                return (await _userService.GetUser(user)).IsReadOnly
+                return user.IsReadOnly
                     ? (PermissionLevel.ReadOnly, Messages.NoEditPermission)
                     : (PermissionLevel.Edit,
                         // National team members are allowed to modify even closed notifications, but it is useful
@@ -90,7 +97,7 @@ namespace ntbs_service.Services
 
             if (UserHasDirectRelationToNotification(notification))
             {
-                return (await _userService.GetUser(user)).IsReadOnly
+                return user.IsReadOnly
                     ? (PermissionLevel.ReadOnly, Messages.NoEditPermission)
                     : notification.NotificationStatus == NotificationStatus.Closed
                         ? (PermissionLevel.ReadOnly, Messages.ClosedNoEdit)

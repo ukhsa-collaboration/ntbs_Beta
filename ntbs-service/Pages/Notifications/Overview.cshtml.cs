@@ -55,7 +55,8 @@ namespace ntbs_service.Pages.Notifications
             await GetLinkedNotificationsAsync();
             await GetAlertsAsync();
             await AuthorizeAndSetBannerAsync();
-            if (PermissionLevel == PermissionLevel.None)
+            if (PermissionLevel == PermissionLevel.None ||
+                (PermissionLevel == PermissionLevel.ReadOnly && Notification.NotificationStatus == NotificationStatus.Draft))
             {
                 return Partial("./UnauthorizedWarning", this);
             }
@@ -94,7 +95,7 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task<IActionResult> OnPostCreateLinkAsync()
         {
-            if (await userIsReadOnly())
+            if (await UserIsReadOnly())
             {
                 return Page();
             }

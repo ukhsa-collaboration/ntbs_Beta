@@ -45,7 +45,7 @@ namespace ntbs_service.Pages.LegacyNotifications
         {
             if ((await _userService.GetUser(User)).IsReadOnly)
             {
-                return RedirectToPage("../Account/AccessDenied");
+                return RedirectToPage(RouteHelper.AccessDeniedPath);
             }
             ViewData["Breadcrumbs"] = new List<Breadcrumb>
             {

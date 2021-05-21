@@ -13,6 +13,7 @@ namespace ntbs_integration_tests.Helpers
         // as defined by the seed data in tbservice.csv. Otherwise, they still won't have access to the
         // TB Services.
         IEnumerable<string> TbServiceCodes { get; }
+        bool IsReadOnly { get; }
     }
 
     // Tech debt: Some of the AD groups which are hardcoded here should actually be taken from config.
@@ -24,6 +25,7 @@ namespace ntbs_integration_tests.Helpers
         public UserType Type { get; }
         public IEnumerable<string> AdGroups { get; }
         public IEnumerable<string> TbServiceCodes { get; }
+        public bool IsReadOnly { get; }
 
         private TestUser(
             int id,
@@ -31,7 +33,8 @@ namespace ntbs_integration_tests.Helpers
             string displayName,
             UserType type,
             IEnumerable<string> adGroups,
-            IEnumerable<string> tbServiceCodes = null)
+            IEnumerable<string> tbServiceCodes = null,
+            bool isReadOnly = false)
         {
             Id = id;
             Username = username;
@@ -39,6 +42,7 @@ namespace ntbs_integration_tests.Helpers
             Type = type;
             AdGroups = adGroups;
             TbServiceCodes = tbServiceCodes ?? new List<string>();
+            IsReadOnly = isReadOnly;
         }
 
         public static IEnumerable<TestUser> GetAll() => new[]
@@ -49,7 +53,8 @@ namespace ntbs_integration_tests.Helpers
             NationalTeamUser,
             AbingdonCaseManager,
             AbingdonCaseManager2,
-            Developer
+            Developer,
+            ReadOnlyUser
         };
 
         public static TestUser NhsUserForAbingdonAndPermitted = new TestUser(
@@ -107,5 +112,13 @@ namespace ntbs_integration_tests.Helpers
             "BaseTestCase BaseTestManager",
             UserType.NationalTeam,
             new[] { "Global.NIS.NTBS.NTS" });
+
+        public static TestUser ReadOnlyUser = new TestUser(
+            7892,
+            "ReadOnly@ntbs.phe.com",
+            "ReadOnly UserGroup",
+            UserType.NhsUser,
+            new[] { "Global.NIS.NTBS.Read_Only_User" },
+            isReadOnly: true);
     }
 }
