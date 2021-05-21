@@ -1,0 +1,24 @@
+name: run load tests
+
+on:
+  push:
+    branches: [ NTBS-2320-Automate-load-tests ]
+
+jobs:
+  run-load-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: load-tests/gradle
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Run load tests
+        run: bash gradlew gatlingRun-NtbsLoadTest
+      - name: Archive results
+        uses: actions/upload-artifact@v2
+        with:
+          name: load-test-results
+          path: load-tests/gradle/build/reports/gatling/**
