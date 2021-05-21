@@ -91,6 +91,8 @@ spec:
               value: "3"
             - name: EnvironmentDescription__ContainsLiveData
               value: "false"
+            - name: EnvironmentDescription__IsLiveSystem
+              value: "false"
             - name: EnvironmentDescription__DisplayName
               value: "development"
             - name: EnvironmentDescription__EnvironmentName

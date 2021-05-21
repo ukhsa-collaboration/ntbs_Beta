@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    @if (!environmentDescription.ContainsLiveData)
+    @if (!environmentDescription.IsLiveSystem)
     {
         <div class="govuk-phase-banner live-data-warning-banner">
             <div class="govuk-width-container">
@@ -42,7 +42,9 @@
                         @environmentDescription.DisplayName
                     </strong>
                     <span class="govuk-phase-banner__text">
-                        The data on this site is synthetic and is for @environmentDescription.DisplayName purposes only.
+                        The data on this site is
+                        @(environmentDescription.ContainsLiveData ? "a copy of the live data" : "synthetic")
+                        and is for @environmentDescription.DisplayName purposes only.
                         Please do not enter real patient data.
                     </span>
                 </p>
