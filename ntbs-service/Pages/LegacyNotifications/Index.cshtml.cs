@@ -16,6 +16,7 @@ namespace ntbs_service.Pages.LegacyNotifications
     {
         private readonly ILegacySearchService _legacySearchService;
         private readonly INotificationImportService _notificationImportService;
+        private readonly INotificationImportRepository _notificationImportRepository;
         private readonly INotificationRepository _notificationRepository;
 
         public NotificationBannerModel NotificationBannerModel { get; set; }
@@ -23,15 +24,17 @@ namespace ntbs_service.Pages.LegacyNotifications
         [BindProperty(SupportsGet = true)]
         public string LegacyNotificationId { get; set; }
 
-        public string RequestId { get; set; }
+        public int RunId { get; set; }
         public ImportResult LegacyImportResult { get; set; }
 
         public Index(ILegacySearchService legacySearchService,
             INotificationImportService notificationImportService,
+            INotificationImportRepository notificationImportRepository,
             INotificationRepository notificationRepository)
         {
             _legacySearchService = legacySearchService;
             _notificationImportService = notificationImportService;
+            _notificationImportRepository = notificationImportRepository;
             _notificationRepository = notificationRepository;
         }
 
@@ -47,9 +50,11 @@ namespace ntbs_service.Pages.LegacyNotifications
 
         public async Task<IActionResult> OnPostAsync()
         {
-            RequestId = HttpContext.TraceIdentifier;
             var idsList = new List<string> { LegacyNotificationId };
-            LegacyImportResult = (await _notificationImportService.ImportByLegacyIdsAsync(null, RequestId, idsList)).FirstOrDefault();
+            var migrationRun = await _notificationImportRepository.CreateLegacyImportMigrationRun(idsList);
+            RunId = migrationRun.LegacyImportMigrationRunId;
+            LegacyImportResult =
+                (await _notificationImportService.ImportByLegacyIdsAsync(null, RunId, idsList)).FirstOrDefault();
 
             if (LegacyImportResult != null && LegacyImportResult.IsValid)
             {

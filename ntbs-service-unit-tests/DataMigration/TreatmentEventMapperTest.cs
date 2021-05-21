@@ -32,8 +32,9 @@ namespace ntbs_service_unit_tests.DataMigration
                 .Returns((string username) => Task.FromResult(_usernameToLegacyUserDict[username]));
             migrationRepo.Setup(repo => repo.GetLegacyUserHospitalsByUsername(It.IsAny<string>()))
                 .ReturnsAsync((string username) => new List<MigrationLegacyUserHospital>());
+            var importLogger = new Mock<IImportLogger>();
             _caseManagerImportService =
-                new CaseManagerImportService(userRepo, _referenceDataRepository, migrationRepo.Object, new ImportLogger());
+                new CaseManagerImportService(userRepo, _referenceDataRepository, migrationRepo.Object, importLogger.Object);
             _treatmentEventMapper = new TreatmentEventMapper(_caseManagerImportService, _referenceDataRepository);
         }
 
@@ -55,7 +56,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 HospitalId = new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7B"),
                 TreatmentEventType = "TransferIn"
             };
-            
+
             // Act
             var mappedEvent = await _treatmentEventMapper.AsTransferEvent(migrationTransferEvent);
 
@@ -82,7 +83,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 TreatmentOutcomeId = 2,
                 Note = "The patient had a specific outcome"
             };
-            
+
             // Act
             var mappedEvent = await _treatmentEventMapper.AsOutcomeEvent(migrationTransferEvent);
 
@@ -109,7 +110,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 TreatmentOutcomeId = 2,
                 Note = "The patient had a specific outcome"
             };
-            
+
             // Act
             var mappedEvent = await _treatmentEventMapper.AsOutcomeEvent(migrationTransferEvent);
 
@@ -121,7 +122,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Null(mappedEvent.TbServiceCode);
             Assert.Null(mappedEvent.CaseManagerId);
         }
-        
+
         private void GivenLegacyUserWithName(string username, string givenName, string familyName)
         {
             _usernameToLegacyUserDict.Add(
