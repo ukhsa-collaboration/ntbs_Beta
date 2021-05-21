@@ -141,45 +141,51 @@ namespace ntbs_service.Services
             var baseGroups = await _graphServiceClient
             .Groups
             .Request()
-            .Filter($"startswith(displayName, '{_adOptions.BaseUserGroup}')")
+            .Filter($"displayName eq '{_adOptions.BaseUserGroup}'")
             .Select("id, displayName, description")
-            .Top(999)
+            .Top(1)
             .GetAsync();
 
             var baseGroup = baseGroups.FirstOrDefault(g => g.DisplayName == _adOptions.BaseUserGroup);
 
             if (baseGroup != null)
             {
+                var usersInRootGroup = await GetUsersInGroup(baseGroup.Id);
+                listOfDirectoryEntries.AddRange(usersInRootGroup);
 
-                var groupMembers = await _graphServiceClient.Groups[baseGroup.Id]
-                    .Members
-                    .Request()
-                    .GetAsync();
-
-                if (groupMembers != null)
+                var groupMembersRequest = _graphServiceClient.Groups[baseGroup.Id].Members.Request();
+                while (groupMembersRequest != null)
                 {
-                    // get users from root group
-                    var usersInRootGroup = await GetUsersInGroup(baseGroup.Id);
-                    listOfDirectoryEntries.AddRange(usersInRootGroup);
+                    var groupMembers = await groupMembersRequest.GetAsync();
 
-                    foreach (var groupMember in groupMembers)
+                    if (groupMembers != null)
                     {
-                        try
+                        // get users from root group
+                        foreach (var groupMember in groupMembers)
                         {
-                            switch (groupMember.ODataType)
+                            try
                             {
-                                case "#microsoft.graph.group":
-                                    var usersInGroup = await GetUsersInGroup(groupMember.Id);
-                                    listOfDirectoryEntries.AddRange(usersInGroup);
-                                    break;
-                                default:
-                                    break;
+                                switch (groupMember.ODataType)
+                                {
+                                    case "#microsoft.graph.group":
+                                        var usersInGroup = await GetUsersInGroup(groupMember.Id);
+                                        listOfDirectoryEntries.AddRange(usersInGroup);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                // ignore
                             }
                         }
-                        catch (Exception)
-                        {
-                            // ignore
-                        }
+
+                        groupMembersRequest = groupMembers.NextPageRequest;
+                    }
+                    else
+                    {
+                        groupMembersRequest = null;
                     }
                 }
             }
@@ -193,40 +199,50 @@ namespace ntbs_service.Services
 
             try
             {
-                var groupMembers = await _graphServiceClient
-                .Groups[groupId]
-                .Members
-                .Request()
-                .Select("id, displayName")
-                .Top(999)
-                .GetAsync();
+                var groupMembersRequest = _graphServiceClient
+                    .Groups[groupId]
+                    .Members
+                    .Request()
+                    .Select("id, displayName");
 
-                if (groupMembers != null)
+                while (groupMembersRequest != null)
                 {
-                    foreach (var groupMember in groupMembers)
-                    {
-                        try
-                        {
-                            switch (groupMember.ODataType)
-                            {
-                                case "#microsoft.graph.user":
-                                    var graphUser = await _graphServiceClient.Users[groupMember.Id]
-                                    .Request()
-                                    .Select("accountenabled, id, displayName, givenName, surname, userPrincipalName, mail")
-                                    .GetAsync();
-                                    listOfUsers.Add(graphUser);
-                                    break;
-                                default:
+                    var groupMembers = await groupMembersRequest.GetAsync();
 
-                                    break;
+                    if (groupMembers != null)
+                    {
+                        foreach (var groupMember in groupMembers)
+                        {
+                            try
+                            {
+                                switch (groupMember.ODataType)
+                                {
+                                    case "#microsoft.graph.user":
+                                        var graphUser = await _graphServiceClient.Users[groupMember.Id]
+                                        .Request()
+                                        .Select("accountenabled, id, displayName, givenName, surname, userPrincipalName, mail")
+                                        .GetAsync();
+                                        listOfUsers.Add(graphUser);
+                                        break;
+                                    default:
+
+                                        break;
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                // ignore
                             }
                         }
-                        catch (Exception)
-                        {
-                            // ignore
-                        }
+
+                        groupMembersRequest = groupMembers.NextPageRequest;
+                    }
+                    else
+                    {
+                        groupMembersRequest = null;
                     }
                 }
+
             }
             catch (Exception)
             {
@@ -250,21 +266,27 @@ namespace ntbs_service.Services
         {
             var groupNames = new List<string>();
 
-            var groupIds = await _graphServiceClient.Users[graphUser.Id]
+            var groupIdsRequest = _graphServiceClient
+                .Users[graphUser.Id]
                 .MemberOf
                 .Request()
-                .Select("id, displayName")
-                .Top(999)
-                .GetAsync();
+                .Select("id, displayName");
 
-            foreach (var groupInfo in groupIds)
+            while (groupIdsRequest != null)
             {
-                var groupName = await ResolveGroupNameFromId(groupInfo.Id);
-                // ensure we do not add any duplicate groups or blank groups
-                if (!string.IsNullOrEmpty(groupName) && IsGroupAnNtbsGroup(groupName) && !groupNames.Any(group => group.Equals(groupName, StringComparison.CurrentCultureIgnoreCase)))
+                var groupIds = await groupIdsRequest.GetAsync();
+
+                foreach (var groupInfo in groupIds)
                 {
-                    groupNames.Add(groupName);
+                    var groupName = await ResolveGroupNameFromId(groupInfo.Id);
+                    // ensure we do not add any duplicate groups or blank groups
+                    if (!string.IsNullOrEmpty(groupName) && IsGroupAnNtbsGroup(groupName) && !groupNames.Any(group => group.Equals(groupName, StringComparison.CurrentCultureIgnoreCase)))
+                    {
+                        groupNames.Add(groupName);
+                    }
                 }
+
+                groupIdsRequest = groupIds.NextPageRequest;
             }
 
             return groupNames;
