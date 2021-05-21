@@ -35,7 +35,7 @@ namespace ntbs_service.DataMigration
 
         public NotificationImportHelper(IOptions<MigrationConfig> migrationConfig, NtbsContext ntbsContext)
         {
-            var ntbsEnvironment = migrationConfig.Value.NtbsEnvironment;
+            var ntbsEnvironment = migrationConfig.Value.NtbsEnvironment ?? string.Empty;
             // We only allow alphanumeric values in the environment name, as a basic guard against SQL injection.
             // (In practice it's hard to imagine a scenario where a malicious actor is able to set environment variables
             // for our app, and yet unable to mutate the database directly, however, it's prudent to put this in).
@@ -49,7 +49,7 @@ namespace ntbs_service.DataMigration
             }
             catch (InvalidOperationException)
             {
-                // In test, we mock out the db, so it's possible to get the db name from the context - nor would calling
+                // In test, we mock out the db, so it's not possible to get the db name from the context - nor would calling
                 // the methods that rely on it make sense.
                 _ntbsDb = "";
             }
