@@ -141,6 +141,8 @@ spec:
               value: "3"
             - name: EnvironmentDescription__ContainsLiveData
               value: "true"
+            - name: EnvironmentDescription__IsLiveSystem
+              value: "true"
             - name: EnvironmentDescription__DisplayName
               value: "live"
             - name: EnvironmentDescription__EnvironmentName

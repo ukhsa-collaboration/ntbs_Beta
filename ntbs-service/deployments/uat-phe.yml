@@ -133,6 +133,8 @@ spec:
             - name: Hangfire__WorkerCount
               value: "3"
             - name: EnvironmentDescription__ContainsLiveData
+              value: "true"
+            - name: EnvironmentDescription__IsLiveSystem
               value: "false"
             - name: EnvironmentDescription__DisplayName
               value: "verification"
