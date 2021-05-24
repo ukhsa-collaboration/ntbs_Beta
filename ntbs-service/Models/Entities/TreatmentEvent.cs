@@ -35,8 +35,8 @@ namespace ntbs_service.Models.Entities
 
         [MaxLength(1000)]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
-            ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
+            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
+            ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string Note { get; set; }
 
         public int NotificationId { get; set; }
