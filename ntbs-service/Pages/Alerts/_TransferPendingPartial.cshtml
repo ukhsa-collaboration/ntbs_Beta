@@ -25,7 +25,7 @@
                 <span asp-for="TransferAlert.TbServiceCode" class="nhsuk-label bold-text">
                     PHEC
                 </span>
-                <div>
+                <div id="transfer-phec">
                     @Model.TransferAlert.TbService?.PHEC?.Name
                 </div>
             </nhs-grid-column>
@@ -34,7 +34,7 @@
                 <span asp-for="TransferAlert.TbServiceCode" class="nhsuk-label bold-text">
                     TB Service
                 </span>
-                <div>
+                <div id="transfer-tb-service">
                     @Model.TransferAlert.TbService?.Name
                 </div>
             </nhs-grid-column>
@@ -43,7 +43,7 @@
                 <span asp-for="TransferAlert.TbServiceCode" class="nhsuk-label bold-text">
                     Case manager
                 </span>
-                <div>
+                <div id="transfer-case-manager">
                     @Model.TransferAlert.CaseManager?.DisplayName
                 </div>
             </nhs-grid-column>

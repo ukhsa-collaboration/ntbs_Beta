@@ -8,7 +8,8 @@ namespace ntbs_service.Models.Entities.Alerts
     public class DataQualityBirthCountryAlert : Alert
     {
         public static readonly Expression<Func<Notification, bool>> NotificationQualifiesExpression =
-            n => n.PatientDetails.CountryId == Countries.UnknownId;
+            n => n.NotificationStatus == NotificationStatus.Notified
+                 && n.PatientDetails.CountryId == Countries.UnknownId;
 
         public static readonly Func<Notification, bool> NotificationQualifies =
             NotificationQualifiesExpression.Compile();

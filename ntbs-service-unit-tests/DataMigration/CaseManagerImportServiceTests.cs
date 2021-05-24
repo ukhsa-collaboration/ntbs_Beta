@@ -15,6 +15,7 @@ namespace ntbs_service_unit_tests.DataMigration
 {
     public class CaseManagerImportServiceTests : IDisposable
     {
+        private const int BATCH_ID = 56789;
         private const string NOTIFICATION_ID = "11111";
         private const string CASE_MANAGER_USERNAME_1 = "TestUser@nhs.net";
         private const string CASE_MANAGER_USERNAME_2 = "MartinUser@nhs.net";
@@ -35,7 +36,9 @@ namespace ntbs_service_unit_tests.DataMigration
             SetupMockMigrationRepo();
             IUserRepository userRepository = new UserRepository(_context);
             IReferenceDataRepository referenceDataRepository = new ReferenceDataRepository(_context);
-            var importLogger = new ImportLogger();
+            Mock<INotificationImportRepository> mockNotificationImportRepository = new Mock<INotificationImportRepository>();
+
+            var importLogger = new ImportLogger(mockNotificationImportRepository.Object);
             _caseManagerImportService = new CaseManagerImportService(userRepository, referenceDataRepository,
                 _migrationRepositoryMock.Object, importLogger);
         }
@@ -54,7 +57,7 @@ namespace ntbs_service_unit_tests.DataMigration
             await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS00TEST", HOSPITAL_GUID_1);
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, "test-request-1");
+            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, BATCH_ID);
 
             // Assert
             var addedUser = _context.User.SingleOrDefault();
@@ -75,7 +78,7 @@ namespace ntbs_service_unit_tests.DataMigration
             await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS11FAKE", HOSPITAL_GUID_1);
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, "test-request-1");
+            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, BATCH_ID);
 
             // Assert
             var addedUser = _context.User.SingleOrDefault();
@@ -97,7 +100,7 @@ namespace ntbs_service_unit_tests.DataMigration
             await GivenUserExistsInNtbsWithName("Jon", "Jonston");
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, "test-request-1");
+            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, BATCH_ID);
 
             // Assert
             var updatedUser = _context.User.Single();

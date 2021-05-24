@@ -66,12 +66,21 @@ spec:
             value: "Global.NIS.NTBS.Service"
           - name: AdOptions__UseDummyAuth
             value: "true"
-          - name: MigrationConfig__TablePrefix
+          - name: MigrationConfig__NtbsEnvironment
             value: "LoadTest"
           - name: Sentry__Environment
             value: "load-test"
           - name: ScheduledJobsConfig__UserSyncEnabled
             value: "false"
+          - name: EnvironmentDescription__EnvironmentName
+            value: "azure-load-test"
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+          requests:
+            cpu: 500m
+            memory: 1Gi
       imagePullSecrets:
       - name: registry-password
 ---

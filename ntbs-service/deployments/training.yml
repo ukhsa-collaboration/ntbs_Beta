@@ -81,10 +81,14 @@ spec:
                 key: authority
           - name: AzureAdOptions__Enabled
             value: "true"
-          - name: MigrationConfig__TablePrefix
+          - name: MigrationConfig__NtbsEnvironment
             value: "Training"
           - name: Sentry__Environment
             value: "training"
+          - name: EnvironmentDescription__DisplayName
+            value: "training"
+          - name: EnvironmentDescription__EnvironmentName
+            value: "azure-training"
       imagePullSecrets:
       - name: registry-password
 ---

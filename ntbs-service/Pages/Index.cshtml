@@ -32,7 +32,7 @@
                     </select>
                 </div>
 
-                <nhs-table class="notifications-table" responsive>
+                <nhs-table class="notifications-table" id="alerts-table" responsive>
                     <nhs-table-head>
                         <nhs-table-item>
                             @Html.DisplayNameFor(model => model.Alerts[0].NotificationId)
@@ -107,7 +107,7 @@
     <nhs-width-container container-width="Standard">
         <h2 class="heading"> Draft notifications </h2>
 
-        <nhs-table class="notifications-table" responsive>
+        <nhs-table class="notifications-table" id="draft-notifications-table" responsive>
             <nhs-table-head>
                 <nhs-table-item>
                     @Html.DisplayNameFor(model => model.DraftNotifications[0].NotificationId)
@@ -155,7 +155,7 @@
 
 <nhs-width-container container-width="Standard">
     <h2 class="heading"> Recent notifications </h2>
-    <nhs-table class="notifications-table" responsive>
+    <nhs-table class="notifications-table" id="recent-notifications-table" responsive>
         <nhs-table-head>
             <nhs-table-item>
                 @Html.DisplayNameFor(model => model.RecentNotifications[0].NotificationId)

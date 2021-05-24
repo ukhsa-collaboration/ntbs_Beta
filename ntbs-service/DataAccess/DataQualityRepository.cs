@@ -298,12 +298,19 @@ AND (N1.[GroupId] <> N2.[GroupId] OR N1.[GroupId] is NULL or N2.[GroupId] is NUL
                             t.duplicate.NotificationDate <
                             DateTime.Now.AddDays(-DataQualityPotentialDuplicateAlert.MinNumberDaysNotifiedForAlert)
                         )
+                        // Check that the notifications are complete and have not been discarded (denotified or deleted)
+                        && (
+                            t.notification.NotificationStatus == NotificationStatus.Notified ||
+                            t.notification.NotificationStatus == NotificationStatus.Closed
+                        )
+                        && (
+                            t.duplicate.NotificationStatus == NotificationStatus.Notified ||
+                            t.duplicate.NotificationStatus == NotificationStatus.Closed
+                        )
                         // Check that notifications are not already linked.
                         &&
                         (
-                            t.notification.NotificationStatus == NotificationStatus.Notified &&
-                            t.duplicate.NotificationStatus == NotificationStatus.Notified &&
-                            (t.notification.GroupId != t.duplicate.GroupId || t.notification.GroupId == null)
+                            t.notification.GroupId != t.duplicate.GroupId || t.notification.GroupId == null
                         )
                     )
                 )

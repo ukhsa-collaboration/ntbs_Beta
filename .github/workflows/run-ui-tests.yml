@@ -31,10 +31,17 @@ jobs:
       - name: Run UI tests
         env:
           EnvironmentUnderTest: ${{ steps.set_environment.outputs.ENVIRONMENT_UNDER_TEST }}
-          Users__ServiceUser__Password: ${{ secrets.UI_TESTS_SERVICE_USER_PASSWORD }}
+          Users__BirminghamServiceUser__Password: ${{ secrets.UI_TESTS_BIRMINGHAM_SERVICE_USER_PASSWORD }}
+          Users__LeedsServiceUser__Password: ${{ secrets.UI_TESTS_LEEDS_SERVICE_USER_PASSWORD }}
           Environments__int__ConnectionString: ${{ secrets.UI_TESTS_INT_CONNECTION_STRING }}
           Environments__test__ConnectionString: ${{ secrets.UI_TESTS_TEST_CONNECTION_STRING }}
           Environments__uat__ConnectionString: ${{ secrets.UI_TESTS_UAT_CONNECTION_STRING }}
+          Environments__int__MigrationConnectionString: ${{ secrets.UI_TESTS_INT_MIGRATION_CONNECTION_STRING }}
+          Environments__test__MigrationConnectionString: ${{ secrets.UI_TESTS_TEST_MIGRATION_CONNECTION_STRING }}
+          Environments__uat__MigrationConnectionString: ${{ secrets.UI_TESTS_UAT_MIGRATION_CONNECTION_STRING }}
+          Environments__int__ImportedNotificationTableName: ${{ secrets.UI_TESTS_INT_IMPORTED_NOTIFICATION_TABLE_NAME }}
+          Environments__test__ImportedNotificationTableName: ${{ secrets.UI_TESTS_TEST_IMPORTED_NOTIFICATION_TABLE_NAME }}
+          Environments__uat__ImportedNotificationTableName: ${{ secrets.UI_TESTS_UAT_IMPORTED_NOTIFICATION_TABLE_NAME }}
         run: |
           sudo selenium-standalone install --drivers.chrome.version=89.0.4389.23
           selenium-standalone start --drivers.chrome.version=89.0.4389.23 > /dev/null 2>&1 &

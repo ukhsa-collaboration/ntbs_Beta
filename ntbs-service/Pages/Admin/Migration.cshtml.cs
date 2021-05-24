@@ -21,10 +21,13 @@ namespace ntbs_service.Pages.Admin
     public class MigrationModel : PageModel
     {
         private readonly MigrationConfig _config;
+        private readonly INotificationImportRepository _notificationImportRepository;
 
-        public MigrationModel(IOptions<MigrationConfig> config)
+        public MigrationModel(IOptions<MigrationConfig> config,
+            INotificationImportRepository notificationImportRepository)
         {
             _config = config.Value;
+            _notificationImportRepository = notificationImportRepository;
             ValidationService = new ValidationService(this);
         }
 
@@ -43,10 +46,13 @@ namespace ntbs_service.Pages.Admin
         [Display(Name = "End Notification Date")]
         public PartialDate NotificationDateRangeEnd { get; set; }
 
+        [BindProperty]
+        public string Description { get; set; }
+
         public bool Triggered { get; private set; }
         public ValidationService ValidationService { get; }
 
-        private string RequestId => HttpContext.TraceIdentifier;
+        public int RunId { get; private set; }
 
 
         public IActionResult OnGetAsync()
@@ -63,7 +69,7 @@ namespace ntbs_service.Pages.Admin
 
             if (NotificationIds != null)
             {
-                TriggerImportFromIdsField();
+                await TriggerImportFromIdsField();
             }
             else if (UploadedFile != null)
             {
@@ -71,7 +77,7 @@ namespace ntbs_service.Pages.Admin
             }
             else if (NotificationDateRangeStart != null)
             {
-                TriggerImportFromDateRange();
+                await TriggerImportFromDateRange();
             }
 
             Triggered = true;
@@ -79,28 +85,37 @@ namespace ntbs_service.Pages.Admin
             return Page();
         }
 
-        private void TriggerImportFromIdsField()
+        private async Task TriggerImportFromIdsField()
         {
             var legacyIds = NotificationIds.Split(',').Select(id => id.Trim()).ToList();
+            var migrationRun =
+                await _notificationImportRepository.CreateLegacyImportMigrationRun(legacyIds, description: Description);
+            RunId = migrationRun.LegacyImportMigrationRunId;
+
             foreach (var idBatch in SplitList(legacyIds))
             {
                 BackgroundJob.Enqueue<INotificationImportService>(x =>
-                    x.ImportByLegacyIdsAsync(null, RequestId, idBatch));
+                    x.BulkImportByLegacyIdsAsync(null, RunId, idBatch));
             }
         }
 
         private async Task TriggerImportFromIdsFile()
         {
             var notificationIds = await GetIdListFromFile(UploadedFile);
+            var migrationRun = await _notificationImportRepository.CreateLegacyImportMigrationRun(
+                notificationIds,
+                UploadedFile.FileName,
+                Description);
+            RunId = migrationRun.LegacyImportMigrationRunId;
 
             foreach (var idBatch in SplitList(notificationIds))
             {
                 BackgroundJob.Enqueue<INotificationImportService>(x =>
-                    x.ImportByLegacyIdsAsync(null, RequestId, idBatch));
+                    x.BulkImportByLegacyIdsAsync(null, RunId, idBatch));
             }
         }
 
-        private void TriggerImportFromDateRange()
+        private async Task TriggerImportFromDateRange()
         {
             NotificationDateRangeStart.TryConvertToDateTimeRange(out var notificationDateRangeStart, out _);
             NotificationDateRangeEnd.TryConvertToDateTimeRange(out var notificationDateRangeEnd, out _);
@@ -109,9 +124,15 @@ namespace ntbs_service.Pages.Admin
                 throw new ArgumentException("Could not parse the start date");
             }
 
+            var rangeStart = notificationDateRangeStart.Value;
+
             var rangeEnd = notificationDateRangeEnd ?? DateTime.Now.AddDays(1);
 
-            for (var batchStart = (DateTime)notificationDateRangeStart;
+            var migrationRun =
+                await _notificationImportRepository.CreateLegacyImportMigrationRun(rangeStart, rangeEnd, Description);
+            RunId = migrationRun.LegacyImportMigrationRunId;
+
+            for (var batchStart = rangeStart;
                 batchStart < rangeEnd;
                 batchStart = batchStart.AddDays(_config.DateRangeJobIntervalInDays))
             {
@@ -123,7 +144,7 @@ namespace ntbs_service.Pages.Admin
                 }
 
                 BackgroundJob.Enqueue<INotificationImportService>(x =>
-                    x.ImportByDateAsync(null, RequestId, start, end));
+                    x.BulkImportByDateAsync(null, RunId, start, end));
             }
         }
 

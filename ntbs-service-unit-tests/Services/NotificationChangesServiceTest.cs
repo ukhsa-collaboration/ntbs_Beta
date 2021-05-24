@@ -23,10 +23,11 @@ namespace ntbs_service_unit_tests.Services
         private readonly NotificationChangesService _changesService;
         private readonly Mock<IAuditService> _auditServiceMock = new Mock<IAuditService>();
         private readonly Mock<IUserRepository> _userRepositoryMock = new Mock<IUserRepository>();
+        private readonly Mock<ILogService> _logServiceMock = new Mock<ILogService>();
 
         public NotificationChangesServiceTest()
         {
-            _changesService = new NotificationChangesService(_auditServiceMock.Object, _userRepositoryMock.Object);
+            _changesService = new NotificationChangesService(_auditServiceMock.Object, _userRepositoryMock.Object, _logServiceMock.Object);
         }
 
         [Fact]
@@ -57,30 +58,31 @@ namespace ntbs_service_unit_tests.Services
                 c => Assert.Equal("24 Jun 2020, 18:13 John Johnson updated M. bovis details", c),
                 c => Assert.Equal("24 Jun 2020, 18:13 John Johnson added M. bovis - exposure to another case", c),
                 c => Assert.Equal("24 Jun 2020, 18:12 John Johnson updated M. bovis details", c),
-                c => Assert.Equal("24 Jun 2020, 18:00 John Johnson updated MDR Details", c),
-                c => Assert.Equal("23 Jun 2020, 11:43 John Johnson updated Social Risk Factors", c),
-                c => Assert.Equal("23 Jun 2020, 11:40 John Johnson updated Social Context Venue", c),
-                c => Assert.Equal("23 Jun 2020, 11:23 John Johnson deleted Social Context Venue", c),
-                c => Assert.Equal("23 Jun 2020, 10:44 John Johnson updated Previous History", c),
-                c => Assert.Equal("23 Jun 2020, 10:44 John Johnson added Social Context Venue", c),
-                c => Assert.Equal("23 Jun 2020, 10:44 John Johnson added Social Context Venue", c),
-                c => Assert.Equal("23 Jun 2020, 10:42 John Johnson added Social Context Address", c),
+                c => Assert.Equal("24 Jun 2020, 18:00 John Johnson updated MDR details", c),
+                c => Assert.Equal("23 Jun 2020, 11:43 John Johnson updated Social risk factors", c),
+                c => Assert.Equal("23 Jun 2020, 11:40 John Johnson updated Social context venue", c),
+                c => Assert.Equal("23 Jun 2020, 11:23 John Johnson deleted Social context venue", c),
+                c => Assert.Equal("23 Jun 2020, 10:44 John Johnson updated Previous history", c),
+                c => Assert.Equal("23 Jun 2020, 10:44 John Johnson added Social context venue", c),
+                c => Assert.Equal("23 Jun 2020, 10:44 John Johnson added Social context venue", c),
+                c => Assert.Equal("23 Jun 2020, 10:42 John Johnson added Social context address", c),
                 c => Assert.Equal("23 Jun 2020, 10:41 John Johnson updated Immunosuppression", c),
                 c => Assert.Equal("23 Jun 2020, 10:41 John Johnson updated Co-morbidities", c),
                 c => Assert.Equal("23 Jun 2020, 10:41 John Johnson updated Visitor details", c),
                 c => Assert.Equal("23 Jun 2020, 10:41 John Johnson updated Travel details", c),
-                c => Assert.Equal("23 Jun 2020, 10:41 John Johnson updated Social Risk Factors", c),
+                c => Assert.Equal("23 Jun 2020, 10:41 John Johnson updated Social risk factors", c),
                 c => Assert.Equal("23 Jun 2020, 10:41 John Johnson added Test result", c),
-                c => Assert.Equal("23 Jun 2020, 10:40 John Johnson updated Test Results", c),
-                c => Assert.Equal("23 Jun 2020, 10:40 John Johnson updated Contact Tracing", c),
+                c => Assert.Equal("23 Jun 2020, 10:40 John Johnson updated Test results", c),
+                c => Assert.Equal("23 Jun 2020, 10:40 John Johnson updated Contact tracing", c),
                 c => Assert.Equal("23 Jun 2020, 10:40 John Johnson added Treatment event", c),
                 c => Assert.Equal("23 Jun 2020, 10:39 John Johnson updated Notification", c),
-                c => Assert.Equal("23 Jun 2020, 10:39 John Johnson updated Clinical Details", c),
+                c => Assert.Equal("23 Jun 2020, 10:39 John Johnson updated Clinical details", c),
                 c => Assert.Equal("23 Jun 2020, 10:39 John Johnson updated Hospital details", c),
                 c => Assert.Equal("23 Jun 2020, 10:39 John Johnson updated Personal details", c),
                 c => Assert.Equal("23 Jun 2020, 09:44 John Johnson submitted Notification", c),
                 c => Assert.Equal("23 Jun 2020, 09:41 John Johnson created Draft", c)
             );
+            _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -98,9 +100,10 @@ namespace ntbs_service_unit_tests.Services
 
             // Assert
             Assert.Collection(PrintInOrder(changes),
-                c => Assert.Equal("30 Jun 2020, 16:47 John Johnson updated Previous History", c),
+                c => Assert.Equal("30 Jun 2020, 16:47 John Johnson updated Previous history", c),
                 c => Assert.Equal("25 Jun 2020, 09:15 John Johnson imported Notification", c)
             );
+            _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -120,20 +123,21 @@ namespace ntbs_service_unit_tests.Services
             Assert.Collection(PrintInOrder(changes),
             c => Assert.Equal("06 Mar 2020, 08:36 NTBS closed Notification", c),
             c => Assert.Equal("05 Mar 2020, 19:15 John Johnson added Treatment event", c),
-            c => Assert.Equal("05 Mar 2020, 11:08 John Johnson updated Clinical Details", c),
-            c => Assert.Equal("05 Mar 2020, 11:07 John Johnson updated Clinical Details", c),
+            c => Assert.Equal("05 Mar 2020, 11:08 John Johnson updated Clinical details", c),
+            c => Assert.Equal("05 Mar 2020, 11:07 John Johnson updated Clinical details", c),
             c => Assert.Equal("05 Mar 2020, 11:03 John Johnson updated Personal details", c),
             c => Assert.Equal("05 Mar 2020, 11:02 John Johnson updated Treatment event", c),
             c => Assert.Equal("05 Mar 2020, 11:01 John Johnson added Treatment event", c),
             c => Assert.Equal("05 Mar 2020, 11:01 John Johnson updated Treatment event", c),
             c => Assert.Equal("05 Mar 2020, 11:00 John Johnson updated Personal details", c),
             c => Assert.Equal("05 Mar 2020, 11:00 John Johnson added Treatment event", c),
-            c => Assert.Equal("05 Mar 2020, 10:59 John Johnson added Social Context Address", c),
+            c => Assert.Equal("05 Mar 2020, 10:59 John Johnson added Social context address", c),
             c => Assert.Equal("05 Mar 2020, 10:57 John Johnson updated Notification", c),
-            c => Assert.Equal("05 Mar 2020, 10:55 John Johnson updated Clinical Details", c),
+            c => Assert.Equal("05 Mar 2020, 10:55 John Johnson updated Clinical details", c),
             c => Assert.Equal("03 Mar 2020, 16:35 John Johnson submitted Notification", c),
             c => Assert.Equal("13 Feb 2020, 15:35 John Johnson created Draft", c)
             );
+            _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -163,6 +167,28 @@ namespace ntbs_service_unit_tests.Services
             c => Assert.Equal("01 Jul 2020, 11:45 John Johnson submitted Notification", c),
             c => Assert.Equal("01 Jul 2020, 11:40 John Johnson created Draft", c)
             );
+            _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        // This came from a "real" notification that was logging warnings on the changes page
+        public async Task LogsFromAChangeInTreatmentStatusOnly_DoesNotResultInWarning()
+        {
+            var auditLogs = GetAuditLogs("auditLogsForNotification5");
+            _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(5))
+                .ReturnsAsync(auditLogs);
+            _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
+                .ReturnsAsync(new Dictionary<string, string> { { "Developer@ntbs.phe.com", "John Johnson" } });
+
+            // Act
+            var changes = (await _changesService.GetChangesList(5)).ToList();
+
+            Assert.Collection(PrintInOrder(changes),
+                c => Assert.Equal("25 Apr 2021, 14:05 John Johnson updated Treatment event", c),
+                c => Assert.Equal("25 Apr 2021, 14:05 John Johnson updated Clinical details", c),
+                c => Assert.Equal("01 Jul 2020, 11:45 John Johnson submitted Notification", c),
+                c => Assert.Equal("01 Jul 2020, 11:40 John Johnson created Draft", c));
+            _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
         }
 
         private static List<AuditLog> GetAuditLogs(string filename)

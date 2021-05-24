@@ -9,7 +9,7 @@
 }
 
 <nhs-width-container container-width="Standard">
-    
+
     @if (Model.LegacyImportResult == null)
     {
         <div class="ondemand-migration-description-container">
@@ -17,7 +17,7 @@
             <p>Import may take a few moments.</p>
             <p>Do you wish to proceed?</p>
             <form method="post">
-                <button class="nhsuk-button">Import</button>
+                <button class="nhsuk-button" id="import-button">Import</button>
             </form>
         </div>
     }
@@ -37,9 +37,12 @@
                 }
             }
         </nhs-error-summary>
-        
+
         <p class="legacy-notification-instructions">What next?</p>
-        <span>Please contact ntbs@phe.gov.uk quoting Legacy notification: @Model.LegacyNotificationId and reference ID: @Model.RequestId </span>
+        <span>
+            Please contact ntbs@phe.gov.uk quoting Legacy notification: @Model.LegacyNotificationId and migration run
+            reference ID: @Model.RunId
+        </span>
     }
-        
+
 </nhs-width-container>

@@ -87,9 +87,9 @@ namespace ntbs_service.Models.Entities
         public virtual TestData TestData { get; set; }
         public virtual MBovisDetails MBovisDetails { get; set; }
         public virtual ICollection<Alert> Alerts { get; set; }
-        [Display(Name = "Social Context - Venues")]
+        [Display(Name = "Social context - venues")]
         public virtual ICollection<SocialContextVenue> SocialContextVenues { get; set; }
-        [Display(Name = "Social Context - Addresses")]
+        [Display(Name = "Social context - addresses")]
         public virtual ICollection<SocialContextAddress> SocialContextAddresses { get; set; }
         [Display(Name = "Treatment events")]
         public virtual ICollection<TreatmentEvent> TreatmentEvents { get; set; }
@@ -106,6 +106,18 @@ namespace ntbs_service.Models.Entities
         public bool HasDeathEventForPostMortemCase =>
             ClinicalDetails.IsPostMortem != true || (TreatmentEvents != null && TreatmentEvents.Any(x =>
                 x.TreatmentEventTypeIsOutcome && x.TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.Died));
+
+        public bool ShouldBeClosed()
+        {
+            var lastTreatmentEvent = TreatmentEvents.OrderByDescending(t => t.EventDate)
+                .ThenBy(t => t.TreatmentEventTypeIsOutcome)
+                .FirstOrDefault();
+
+            return lastTreatmentEvent != null
+                && lastTreatmentEvent.TreatmentEventTypeIsOutcome
+                && lastTreatmentEvent.TreatmentOutcome?.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment
+                && lastTreatmentEvent.EventDate < DateTime.Today.AddYears(-1);
+        }
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }

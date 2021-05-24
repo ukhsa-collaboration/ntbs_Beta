@@ -32,6 +32,9 @@ spec:
           image: "ntbscontainerregistry.azurecr.io/ntbs-service:live"
           imagePullPolicy: Always
           resources:
+            limits:
+              memory: 2Gi
+              cpu: 1000m # Given in milicores, this is 1 core
             requests:
               memory: 2Gi
               cpu: 1000m # Given in milicores, this is 1 core
@@ -120,7 +123,7 @@ spec:
               value: "" # intentionally empty so the app's service account gets used for authentication
             - name: LdapSettings__BaseDomain
               value: "DC=phe,DC=gov,DC=uk"
-            - name: MigrationConfig__TablePrefix
+            - name: MigrationConfig__NtbsEnvironment
               value: "MigrationTrial4"
             - name: ScheduledJobsConfig__UserSyncEnabled
               value: "false"
@@ -136,6 +139,14 @@ spec:
               value: "true"
             - name: Hangfire__WorkerCount
               value: "3"
+            - name: EnvironmentDescription__ContainsLiveData
+              value: "true"
+            - name: EnvironmentDescription__IsLiveSystem
+              value: "true"
+            - name: EnvironmentDescription__DisplayName
+              value: "live"
+            - name: EnvironmentDescription__EnvironmentName
+              value: "phe-live"
           volumeMounts:
             - mountPath: /krbtab
               name: krb-tab

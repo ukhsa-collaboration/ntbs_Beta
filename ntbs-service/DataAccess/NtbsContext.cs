@@ -65,6 +65,9 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<MBovisOccupationExposure> MBovisOccupationExposures { get; set; }
         public virtual DbSet<MBovisAnimalExposure> MBovisAnimalExposure { get; set; }
         public DbSet<NotificationAndDuplicateIds> NotificationAndDuplicateIds { get; set; }
+        public virtual DbSet<LegacyImportMigrationRun> LegacyImportMigrationRun { get; set; }
+        public virtual DbSet<LegacyImportNotificationOutcome> LegacyImportNotificationOutcome { get; set; }
+        public virtual DbSet<LegacyImportNotificationLogMessage> LegacyImportNotificationLogMessage { get; set; }
 
         public DbSet<ReleaseVersion> ReleaseVersion { get; set; }
 
@@ -118,6 +121,7 @@ namespace ntbs_service.DataAccess
             var animalTypeEnumConverter = new EnumToStringConverter<AnimalType>();
             var animalTbStatusEnumConverter = new EnumToStringConverter<AnimalTbStatus>();
             var treatmentRegimentEnumConverter = new EnumToStringConverter<TreatmentRegimen>();
+            var logMessageLevelEnumConverter = new EnumToStringConverter<LogMessageLevel>();
 
             #endregion
 
@@ -694,7 +698,7 @@ namespace ntbs_service.DataAccess
                     .WithMany(e => e.MBovisExposureToKnownCases)
                     .HasForeignKey(e => e.NotificationId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired(false); ;
+                    .IsRequired(false);
             });
 
             modelBuilder.Entity<MBovisUnpasteurisedMilkConsumption>(entity =>
@@ -809,6 +813,8 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.TreatmentEventType)
                     .HasConversion(treatmentEventTypeEnumConverter)
                     .HasMaxLength(EnumMaxLength);
+                entity.Property(e => e.Note)
+                    .HasMaxLength(1000);
                 entity.HasOne(e => e.CaseManager)
                     .WithMany()
                     .HasForeignKey(e => e.CaseManagerId)
@@ -847,6 +853,40 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.SystemName)
                     .IsRequired()
                     .HasMaxLength(64);
+            });
+
+            modelBuilder.Entity<LegacyImportNotificationOutcome>(entity =>
+            {
+                entity.Property(e => e.OldNotificationId)
+                    .HasMaxLength(50)
+                    .IsRequired();
+
+                entity.HasOne<LegacyImportMigrationRun>()
+                    .WithMany(e => e.LegacyImportNotificationOutcomes)
+                    .HasForeignKey(e => e.LegacyImportMigrationRunId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                entity.HasIndex(e => e.LegacyImportMigrationRunId);
+            });
+
+            modelBuilder.Entity<LegacyImportNotificationLogMessage>(entity =>
+            {
+                entity.Property(e => e.OldNotificationId)
+                    .HasMaxLength(50)
+                    .IsRequired();
+
+                entity.Property(e => e.LogMessageLevel)
+                    .HasConversion(logMessageLevelEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+
+                entity.HasOne<LegacyImportMigrationRun>()
+                    .WithMany(e => e.LegacyImportNotificationLogMessages)
+                    .HasForeignKey(e => e.LegacyImportMigrationRunId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                entity.HasIndex(e => e.LegacyImportMigrationRunId);
             });
         }
 

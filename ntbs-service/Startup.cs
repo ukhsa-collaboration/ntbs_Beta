@@ -220,11 +220,13 @@ namespace ntbs_service
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
             services.AddScoped<IUserSearchService, UserSearchService>();
             services.AddScoped<IClusterImportService, ClusterImportService>();
+            services.AddScoped<ISpecimenImportService, SpecimenImportService>();
             services.AddScoped<ICaseManagerImportService, CaseManagerImportService>();
             services.AddScoped<IAdUserService, AdUserService>();
             services.AddScoped<IReportingLinksService, ReportingLinksService>();
             services.AddScoped<ITreatmentEventMapper, TreatmentEventMapper>();
             services.AddScoped<IUserHelper, UserHelper>();
+            services.AddScoped<ILogService, LogService>();
 
             AddAuditService(services, auditDbConnectionString);
             AddReferenceLabResultServices(services);

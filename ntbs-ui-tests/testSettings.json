@@ -1,14 +1,20 @@
 {
   "Users": {
-    "ServiceUser": {
+    "BirminghamServiceUser": {
       "Username": "birmingham@aptemus.com",
       "TbServiceCode": "TBS0019"
+    },
+    "LeedsServiceUser":  {
+      "Username": "kamala@aptemus.com",
+      "TbServiceCode": "TBS0106"
     }
   },
   "Environments": {
     "local": {
       "RootUri": "https://localhost:5001",
-      "ConnectionString": "data source=localhost;initial catalog=ntbsDev;trusted_connection=true;MultipleActiveResultSets=true;"
+      "ConnectionString": "data source=localhost;initial catalog=ntbsDev;trusted_connection=true;MultipleActiveResultSets=true;",
+      "MigrationConnectionString": "data source=localhost;initial catalog=ntbs_migration;trusted_connection=true;MultipleActiveResultSets=true",
+      "ImportedNotificationTableName": "DevImportedNotifications"
     },
     "int": {
       "RootUri": "https://ntbs-int.e32846b1ddf0432eb63f.northeurope.aksapp.io"

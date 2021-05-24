@@ -14,15 +14,17 @@
         @if (Model.Triggered)
         {
             <nhs-inset-text>
-                Job triggered successfully - see the
-                <a href="/Hangfire">Hangfire dashboard</a>
-                to track the created jobs
+                Job triggered successfully with migration run ID @Model.RunId.
+                See the <a href="/Hangfire">Hangfire dashboard</a>
+                to track the created jobs.
             </nhs-inset-text>
         }
 
-        <label nhs-label-type="Standard" asp-for="NotificationIds">Notification Ids</label>
-        <nhs-hint nhs-hint-type="Standard">Enter ids here, or upload a of ids with a single id per line</nhs-hint>
-        <input nhs-input-type="Standard" asp-for="NotificationIds">
+        <label nhs-label-type="Standard" asp-for="NotificationIds">Notification IDs</label>
+        <nhs-hint nhs-hint-type="Standard" id="notificationIds-hint">
+            Enter IDs here, or upload a of ids with a single ID per line
+        </nhs-hint>
+        <input nhs-input-type="Standard" asp-for="NotificationIds" aria-describedby="notificationIds-hint">
         <br/>
 
         <div>
@@ -111,7 +113,14 @@
                 </nhs-form-group>
             </date-input>
         </nhs-fieldset>
+        <br/>
 
+        <label nhs-label-type="Standard" asp-for="Description">Description</label>
+        <nhs-hint nhs-hint-type="Standard" id="description-hint">A description of this import run</nhs-hint>
+        <textarea nhs-textarea-type="Standard" asp-for="Description" rows="5" aria-describedby="description-hint">
+        </textarea>
+
+        <br/>
         <div>
             <button nhs-button-type="Standard" type="submit" value="Import" classes="ntbsuk-button--primary submit-search-button" id="search-button">
                 Import

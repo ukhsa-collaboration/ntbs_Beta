@@ -6,23 +6,18 @@
 @inject ntbs.IUserService UserService
 @inject ntbs.IReportingLinksService ReportingLinksService
 
+@using Microsoft.Extensions.Configuration
+@using ntbs_service.Properties
+@inject IConfiguration Configuration
+
 @{
     var breadcrumbs = ViewData["Breadcrumbs"];
+
+    var environmentDescription = new EnvironmentDescription();
+    Configuration.GetSection(Constants.EnvironmentDescription).Bind(environmentDescription);
 }
 
 <header role="banner" data-module="govuk-header">
-    <div class="govuk-phase-banner">
-        <div class="govuk-width-container">
-            <p class="govuk-phase-banner__content ">
-                <strong class="govuk-tag govuk-phase-banner__content__tag">
-                    beta
-                </strong>
-                <span class="govuk-phase-banner__text">
-                    This service is not yet live - your <a class="govuk-link" href="mailto:ntbs@phe.gov.uk?subject=NTBS%20UAT%20Feedback">feedback</a> will help us to improve it. Please do not enter live data.
-                </span>
-            </p>
-        </div>
-    </div>
     <div class="header-title-and-logo-background">
         <div class="govuk-header__container govuk-width-container no-border">
             <button type="button" role="button" class="govuk-header__menu-button govuk-js-header-toggle header-expand-menu-button" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
@@ -37,6 +32,26 @@
             </div>
         </div>
     </div>
+
+    @if (!environmentDescription.IsLiveSystem)
+    {
+        <div class="govuk-phase-banner live-data-warning-banner">
+            <div class="govuk-width-container">
+                <p class="govuk-phase-banner__content ">
+                    <strong class="govuk-tag govuk-phase-banner__content__tag">
+                        @environmentDescription.DisplayName
+                    </strong>
+                    <span class="govuk-phase-banner__text">
+                        The data on this site is
+                        @(environmentDescription.ContainsLiveData ? "a copy of the live data" : "synthetic")
+                        and is for @environmentDescription.DisplayName purposes only.
+                        Please do not enter real patient data.
+                    </span>
+                </p>
+            </div>
+        </div>
+    }
+
     <div id="header-nav" class="header-navigation-background">
         <div class="govuk-header__container govuk-width-container no-border">
             <nav>
@@ -70,13 +85,13 @@
                             </a>
                         }
                     </li>
-                    
+
                     <navigation-with-submenu inline-template>
                         <li class="nav-with-submenu-header govuk-header__navigation-item header-navigation-link">
                             <a v-on:click="toggleMenu" href="/Help/Menu" class="govuk-header__link header-navigation-list-item nav-with-submenu-header-link">
                                 Help <i class="arrow down"></i>
                             </a>
-                            <ul ref="navigation-submenu" v-if="showMenu" class="nav-submenu-list" >
+                            <ul ref="navigation-submenu" v-if="showMenu" class="nav-submenu-list">
                                 <li class="header-navigation-link nav-submenu-list-item">
                                     <a class="govuk-header__link header-navigation-list-item" href="/Help">
                                         FAQ
@@ -90,7 +105,7 @@
                             </ul>
                         </li>
                     </navigation-with-submenu>
-                    
+
                     @if ((await AuthorizationService.AuthorizeAsync(User, "AdminOnly")).Succeeded)
                     {
                         <li class="govuk-header__navigation-item header-navigation-link">
@@ -99,13 +114,13 @@
                             </a>
                         </li>
                     }
-                    
+
                     <navigation-with-submenu inline-template>
                         <li class="nav-with-submenu-header govuk-header__navigation-item header-navigation-link">
                             <a v-on:click="toggleMenu" href="/ContactDetails/Menu" class="govuk-header__link header-navigation-list-item nav-with-submenu-header-link">
                                 @UserService.GetUserDisplayName(@User) <i class="arrow down"></i>
                             </a>
-                            <ul ref="navigation-submenu" v-if="showMenu" class="nav-submenu-list" >
+                            <ul ref="navigation-submenu" v-if="showMenu" class="nav-submenu-list">
                                 <li class="header-navigation-link nav-submenu-list-item">
                                     <a class="govuk-header__link header-navigation-list-item" href="/ContactDetails">
                                         Edit personal details
@@ -119,13 +134,13 @@
                             </ul>
                         </li>
                     </navigation-with-submenu>
-                    
+
                 </ul>
             </nav>
 
         </div>
     </div>
     <div class="breadcrumb-trail">
-        <partial name="_Breadcrumbs" model=@breadcrumbs/>  
+        <partial name="_Breadcrumbs" model=@breadcrumbs />
     </div>
 </header>

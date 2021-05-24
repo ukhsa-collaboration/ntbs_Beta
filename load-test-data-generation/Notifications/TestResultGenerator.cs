@@ -49,7 +49,7 @@ namespace load_test_data_generation.Notifications
                 .RuleFor(tr => tr.TestDate, f => f.Date.Between(StartOf2015, EndOf2020))
                 .RuleFor(tr => tr.ManualTestTypeId, f => f.PickRandom(testTypes).ManualTestTypeId)
                 .RuleFor(tr => tr.SampleTypeId, GenerateSampleTypeId)
-                .RuleFor(tr => tr.Result, f => f.PickRandom<Result>());
+                .RuleFor(tr => tr.Result, GenerateResult);
 
             return testData.HasTestCarriedOut == true
                 ? Enumerable.Range(0, faker.Random.Int(1, 3)).Select(_ => testResultGenerator.Generate()).ToList()
@@ -62,6 +62,13 @@ namespace load_test_data_generation.Notifications
             return possibleSampleTypes.Any()
                 ? faker.PickRandom(possibleSampleTypes.Select(ttst => ttst.SampleTypeId))
                 : null;
+        }
+
+        private static Result? GenerateResult(Faker faker, ManualTestResult testResult)
+        {
+            var possibleResults = ((Result[])Enum.GetValues(typeof(Result)))
+                .Where(result => result.IsValidForTestType(testResult.ManualTestTypeId.Value));
+            return faker.PickRandom(possibleResults);
         }
     }
 }

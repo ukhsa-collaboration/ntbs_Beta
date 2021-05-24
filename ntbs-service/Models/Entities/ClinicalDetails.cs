@@ -10,7 +10,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    [Display(Name = "Clinical Details")]
+    [Display(Name = "Clinical details")]
     public partial class ClinicalDetails : ModelBase, IOwnedEntityForAuditing
     {
         #region DB Mapped Fields
@@ -91,7 +91,7 @@ namespace ntbs_service.Models.Entities
         public DotStatus? DotStatus { get; set; }
         public Status? EnhancedCaseManagementStatus { get; set; }
 
-        [Display(Name = "Enhanced Case Management Level")]
+        [Display(Name = "Enhanced case management level")]
         public byte EnhancedCaseManagementLevel { get; set; }
 
         [Display(Name = "Home visit carried out?")]
