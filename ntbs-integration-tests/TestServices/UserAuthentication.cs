@@ -51,7 +51,7 @@ namespace ntbs_integration_tests.TestServices
             identity.AddClaim(new Claim(ClaimTypes.Upn, user.Username));
             identity.AddClaim(new Claim(ClaimTypes.Name, user.DisplayName));
             // This is the BaseUserGroup - it would be good to get this from config here
-            identity.AddClaim(new Claim(ClaimTypes.Role, "Global.NIS.NTBS"));
+            identity.AddClaim(new Claim(ClaimTypes.Role, "App.Auth.NIS.NTBS"));
             foreach (var adGroup in user.AdGroups)
             {
                 identity.AddClaim(new Claim(ClaimTypes.Role, adGroup));

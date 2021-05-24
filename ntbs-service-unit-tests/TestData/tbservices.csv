@@ -1,7 +1,7 @@
 Code,Name,PHEC_Code,Service_Ad_Group,IsLegacy
-TBS0001,Abingdon Community Hospital,E45000019,Global.NIS.NTBS.Service_Abingdon,false
-TBS0002,Addenbrooke's Hospital,E45000017,Global.NIS.NTBS.Service_Addenbrooke,false
-TBS0003,Airedale NHS Foundation Trust,E45000010,Global.NIS.NTBS.Service_Airedale,false
-TBS0004,Amersham Hospital,E45000019,Global.NIS.NTBS.Service_Amersham,false
-TBS0005,Andover War Memorial Hospital,E45000019,Global.NIS.NTBS.Service_Andover,false
-TBS0006,Arrowe Park Hospital,E45000018,Global.NIS.NTBS.Service_Arrowe,false
+TBS0001,Abingdon Community Hospital,E45000019,App.Auth.NIS.NTBS.Service_Abingdon,false
+TBS0002,Addenbrooke's Hospital,E45000017,App.Auth.NIS.NTBS.Service_Addenbrooke,false
+TBS0003,Airedale NHS Foundation Trust,E45000010,App.Auth.NIS.NTBS.Service_Airedale,false
+TBS0004,Amersham Hospital,E45000019,App.Auth.NIS.NTBS.Service_Amersham,false
+TBS0005,Andover War Memorial Hospital,E45000019,App.Auth.NIS.NTBS.Service_Andover,false
+TBS0006,Arrowe Park Hospital,E45000018,App.Auth.NIS.NTBS.Service_Arrowe,false

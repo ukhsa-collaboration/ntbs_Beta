@@ -155,7 +155,7 @@ namespace ntbs_service.Services
         // Example of the distinguished name format:
         // "CN=Global.NIS.NTBS.Service_Nottingham,CN=Users,DC=ntbs,DC=phe,DC=com"
         // We are interested in the group names, e.g. Global.NIS.NTBS.Service_Nottingham 
-        private static readonly Regex DistinguishedNameRegex = new Regex("(CN=)(Global.NIS.NTBS[^,]+)(,.*)");
+        private static readonly Regex DistinguishedNameRegex = new Regex("(CN=)(App.Auth.NIS.NTBS[^,]+)(,.*)");
 
         private static List<string> GetAdGroups(IEnumerator distinguishedNames)
         {

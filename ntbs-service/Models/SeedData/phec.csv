@@ -1,13 +1,13 @@
 PHEC_Code,PHEC_Name,Ad_Group
-E45000001,London,Global.NIS.NTBS.LON
-E45000005,West Midlands,Global.NIS.NTBS.WMS
-E45000009,North East,Global.NIS.NTBS.NoE
-E45000010,Yorkshire and Humber,Global.NIS.NTBS.YHR
-E45000016,East Midlands,Global.NIS.NTBS.EMS
-E45000017,East of England,Global.NIS.NTBS.EoE
-E45000018,North West,Global.NIS.NTBS.NoW
-E45000019,South East,Global.NIS.NTBS.SoE
-E45000020,South West,Global.NIS.NTBS.SoW
-PHECNI,Northern Ireland,Global.NIS.NTBS.NI
-PHECSCOT,Scotland,Global.NIS.NTBS.SCOT
-PHECWAL,Wales,Global.NIS.NTBS.WALES
+E45000001,London,App.Auth.NIS.NTBS.LON
+E45000005,West Midlands,App.Auth.NIS.NTBS.WMS
+E45000009,North East,App.Auth.NIS.NTBS.NoE
+E45000010,Yorkshire and Humber,App.Auth.NIS.NTBS.YHR
+E45000016,East Midlands,App.Auth.NIS.NTBS.EMS
+E45000017,East of England,App.Auth.NIS.NTBS.EoE
+E45000018,North West,App.Auth.NIS.NTBS.NoW
+E45000019,South East,App.Auth.NIS.NTBS.SoE
+E45000020,South West,App.Auth.NIS.NTBS.SoW
+PHECNI,Northern Ireland,App.Auth.NIS.NTBS.NI
+PHECSCOT,Scotland,App.Auth.NIS.NTBS.SCOT
+PHECWAL,Wales,App.Auth.NIS.NTBS.WALES

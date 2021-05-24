@@ -51,8 +51,8 @@ namespace ntbs_service_unit_tests.Services
         public async void UserSyncJobImportsUserFromAd()
         {
             // Arrange
-            GivenUserInAdWithUsernameAndTbService("testerson@phe.ntbs.com", "Global.NIS.NTBS.Service_Nottingham");
-            GivenTbServicesExist(new List<TBService>{new TBService{ServiceAdGroup = "Global.NIS.NTBS.Service_Nottingham"}});
+            GivenUserInAdWithUsernameAndTbService("testerson@phe.ntbs.com", "App.Auth.NIS.NTBS.Service_Nottingham");
+            GivenTbServicesExist(new List<TBService>{new TBService{ServiceAdGroup = "App.Auth.NIS.NTBS.Service_Nottingham"}});
             
             // Act
             await _adImportService.RunCaseManagerImportAsync();
@@ -61,14 +61,14 @@ namespace ntbs_service_unit_tests.Services
             var userImported = _context.User.Single();
             Assert.Equal("testerson@phe.ntbs.com", userImported.Username);
             Assert.True(userImported.IsActive);
-            Assert.Contains("Global.NIS.NTBS.Service_Nottingham", userImported.AdGroups);
+            Assert.Contains("App.Auth.NIS.NTBS.Service_Nottingham", userImported.AdGroups);
         }
         
         [Fact]
         public async void UserSyncJobSetsNtbsUserAsLegacyIfNotPresentInAd()
         {
             // Arrange
-            GivenUserExistsInNtbs(new User{Username = "ghost@phe.nhs.uk", IsActive = true, AdGroups = "Global.NIS.NTBS.Service_Leeds"});
+            GivenUserExistsInNtbs(new User{Username = "ghost@phe.nhs.uk", IsActive = true, AdGroups = "App.Auth.NIS.NTBS.Service_Leeds"});
             
             // Act
             await _adImportService.RunCaseManagerImportAsync();
