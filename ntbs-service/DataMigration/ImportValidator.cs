@@ -33,7 +33,7 @@ namespace ntbs_service.DataMigration
             int runId,
             Notification notification)
         {
-            CleanData(notification, context, runId);
+            await CleanData(notification, context, runId);
             return (await GetValidationErrors(context, runId, notification)).ToList();
         }
 
@@ -43,42 +43,42 @@ namespace ntbs_service.DataMigration
         /// As this is a data-lossy action, we want to perform it here (rather than at sql script level), to ensure that
         /// it is recorded in the migration log
         /// </summary>
-        private void CleanData(Notification notification,
+        private async Task CleanData(Notification notification,
             PerformContext context,
             int runId)
         {
             var missingDateResults = notification.TestData.ManualTestResults
                 .Where(result => !result.TestDate.HasValue)
                 .ToList();
-            missingDateResults.ForEach(result =>
+            foreach (var result in missingDateResults)
             {
-                var missingDateMessage = "had test results without a date set. " +
-                                         "The notification will be imported without this test record.";
-                _logger.LogNotificationWarning(context, runId, notification.LegacyId, missingDateMessage);
+                const string missingDateMessage = "had test results without a date set. " +
+                                                  "The notification will be imported without this test record.";
+                await _logger.LogNotificationWarning(context, runId, notification.LegacyId, missingDateMessage);
                 notification.TestData.ManualTestResults.Remove(result);
-            });
+            }
 
             var dateInFutureResults = notification.TestData.ManualTestResults
                 .Where(result => result.TestDate > DateTime.Today)
                 .ToList();
-            dateInFutureResults.ForEach(result =>
+            foreach (var result in dateInFutureResults)
             {
-                var dateInFutureMessage = "had test results with date set in future. " +
-                                          "The notification will be imported without this test record.";
-                _logger.LogNotificationWarning(context, runId, notification.LegacyId, dateInFutureMessage);
+                const string dateInFutureMessage = "had test results with date set in future. " +
+                                                   "The notification will be imported without this test record.";
+                await _logger.LogNotificationWarning(context, runId, notification.LegacyId, dateInFutureMessage);
                 notification.TestData.ManualTestResults.Remove(result);
-            });
+            }
 
             var missingResults = notification.TestData.ManualTestResults
                 .Where(result => result.Result == null)
                 .ToList();
-            missingResults.ForEach(result =>
+            foreach (var result in missingResults)
             {
-                var missingResultMessage = "had test results without a result recorded. " +
-                                           "The notification will be imported without this test record.";
-                _logger.LogNotificationWarning(context, runId, notification.LegacyId, missingResultMessage);
+                const string missingResultMessage = "had test results without a result recorded. " +
+                                                    "The notification will be imported without this test record.";
+                await _logger.LogNotificationWarning(context, runId, notification.LegacyId, missingResultMessage);
                 notification.TestData.ManualTestResults.Remove(result);
-            });
+            }
 
             // After filtering out invalid tests, we might have none left
             if (!notification.TestData.ManualTestResults.Any())
@@ -88,9 +88,9 @@ namespace ntbs_service.DataMigration
 
             if (ValidateObject(notification.ContactTracing).Any())
             {
-                var message = "invalid contact tracing figures. " +
-                              "The notification will be imported without contact tracing data.";
-                _logger.LogNotificationWarning(context, runId, notification.LegacyId, message);
+                const string message = "invalid contact tracing figures. " +
+                                       "The notification will be imported without contact tracing data.";
+                await _logger.LogNotificationWarning(context, runId, notification.LegacyId, message);
                 notification.ContactTracing = new ContactTracing();
             }
         }
