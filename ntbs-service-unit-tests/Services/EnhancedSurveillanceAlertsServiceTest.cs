@@ -36,7 +36,7 @@ namespace ntbs_service_unit_tests.Services
         [InlineData("NonMDR", true, Status.Unknown, false, true)]
         [InlineData("NonMDR", true, Status.No, false, true)]
         [InlineData("NonMDR", true, Status.Yes, false, true)]
-        public void CreateOrDismissMdrAlert(string drugResistance,
+        public async Task CreateOrDismissMdrAlert(string drugResistance,
             bool isMdrPlanned,
             Status? mdrExposureStatus,
             bool shouldCreateAlert,
@@ -62,7 +62,7 @@ namespace ntbs_service_unit_tests.Services
             };
 
             // Act
-            EnhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(notification);
+            await EnhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(notification);
 
             // Assert
             var numberOfCallsToCreate = shouldCreateAlert ? Times.Once() : Times.Never();
