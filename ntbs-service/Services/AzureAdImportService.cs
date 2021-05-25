@@ -1,10 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ntbs_service.DataAccess;
-using ntbs_service.Models.ReferenceEntities;
-using Serilog;
-using User = Sentry.User;
 
 namespace ntbs_service.Services
 {
@@ -26,11 +21,10 @@ namespace ntbs_service.Services
         public async Task RunCaseManagerImportAsync()
         {
             var tbServices = await _referenceDataRepository.GetAllTbServicesAsync();
-            using (var azureAdDirectoryService = _azureAdDirectoryServiceFactory.Create())
-            {
-                var usersInAd = (await azureAdDirectoryService.LookupUsers(tbServices)).ToList();
-                await _adUserService.AddAndUpdateUsers(usersInAd);
-            }
+            var azureAdDirectoryService = _azureAdDirectoryServiceFactory.Create();
+
+            var usersInAd = (await azureAdDirectoryService.LookupUsers(tbServices));
+            await _adUserService.AddAndUpdateUsers(usersInAd);
         }
     }
 }
