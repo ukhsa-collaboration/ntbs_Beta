@@ -23,8 +23,8 @@ namespace ntbs_service_unit_tests.Services
                 new LdapAttribute("displayName", "First surname"),
                 new LdapAttribute("userAccountControl", "512"),
                 new LdapAttribute("memberof",new[] {
-                    "CN=App.Auth.NIS.NTBS.Service_Nottingham,CN=Users,DC=ntbs,DC=phe,DC=com",
-                    "CN=App.Auth.NIS.NTBS.EMS,CN=Users,DC=ntbs,DC=phe,DC=com"
+                    "CN=Global.NIS.NTBS.Service_Nottingham,CN=Users,DC=ntbs,DC=phe,DC=com",
+                    "CN=Global.NIS.NTBS.EMS,CN=Users,DC=ntbs,DC=phe,DC=com"
                 })
             });
             var secondUserPrincipal = new LdapEntry("CN=Second,CN=Users,DC=ntbs,DC=phe,DC=com", new LdapAttributeSet
@@ -35,7 +35,7 @@ namespace ntbs_service_unit_tests.Services
                 new LdapAttribute("displayName", "Second surname"),
                 new LdapAttribute("userAccountControl", "510"),
                 new LdapAttribute("memberof",new[] {
-                    "CN=App.Auth.NIS.NTBS.NTS,CN=Users,DC=ntbs,DC=phe,DC=com",
+                    "CN=Global.NIS.NTBS.NTS,CN=Users,DC=ntbs,DC=phe,DC=com",
                     "CN=RandomOtherGroup,CN=Users,DC=ntbs,DC=phe,DC=com"
                 })
             });
@@ -56,7 +56,7 @@ namespace ntbs_service_unit_tests.Services
             // Act
             var results = adDirectoryService.LookupUsers(new List<TBService>
             {
-                new TBService {ServiceAdGroup = "App.Auth.NIS.NTBS.Service_Nottingham"}
+                new TBService {ServiceAdGroup = "Global.NIS.NTBS.Service_Nottingham"}
             });
             var savedUsers = results.Select(result => result.user).ToList();
 
@@ -70,8 +70,8 @@ namespace ntbs_service_unit_tests.Services
             Assert.Equal("First surname", savedUser.DisplayName);
             Assert.True(savedUser.IsActive);
             Assert.True(savedUser.IsCaseManager);
-            Assert.Contains("App.Auth.NIS.NTBS.Service_Nottingham", savedUser.AdGroups);
-            Assert.Contains("App.Auth.NIS.NTBS.EMS", savedUser.AdGroups);
+            Assert.Contains("Global.NIS.NTBS.Service_Nottingham", savedUser.AdGroups);
+            Assert.Contains("Global.NIS.NTBS.EMS", savedUser.AdGroups);
 
             var savedInactiveUser = savedUsers[1];
             Assert.Equal("Second@phe.ntbs.com", savedInactiveUser.Username);
@@ -80,7 +80,7 @@ namespace ntbs_service_unit_tests.Services
             Assert.Equal("Second surname", savedInactiveUser.DisplayName);
             Assert.False(savedInactiveUser.IsActive);
             Assert.False(savedInactiveUser.IsCaseManager);
-            Assert.Contains("App.Auth.NIS.NTBS.NTS", savedInactiveUser.AdGroups);
+            Assert.Contains("Global.NIS.NTBS.NTS", savedInactiveUser.AdGroups);
         }
     }
 }

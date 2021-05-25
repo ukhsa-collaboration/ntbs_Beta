@@ -15,7 +15,7 @@ namespace ntbs_service_unit_tests.Helpers
                 Code = "TBS0001",
                 Name = "Abingdon Community Hospital",
                 PHECCode = "E45000019",
-                ServiceAdGroup = "App.Auth.NIS.NTBS.Service_Abingdon"
+                ServiceAdGroup = "Global.NIS.NTBS.Service_Abingdon"
             };
             const int expectedCount = 6;
 
