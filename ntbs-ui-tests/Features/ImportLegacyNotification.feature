@@ -20,5 +20,5 @@ Feature: Import legacy notification
     And I can see the value Angola for element with id 'banner-country-of-birth'
     And I can see the value 963 657 7830 for element with id 'banner-nhs-number'
     And I can see the value Male for element with id 'banner-sex'
-    And I can see the value No result for element with id 'banner-drug-resistance'
+    And I can see the value Sensitive to first line for element with id 'banner-drug-resistance'
     And I can see the value Complete for element with id 'banner-treatment-outcome'
