@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Threading.Tasks;
+using System.Linq;
 using EFAuditer;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_service.DataAccess;
-using ntbs_service.DataMigration;
+using ntbs_service.Models;
 using Serilog;
 using Serilog.Events;
 
@@ -77,11 +77,34 @@ namespace ntbs_service
                 var factory = services.GetRequiredService<NtbsContextDesignTimeFactory>();
                 var context = factory.CreateDbContext(new string[] { });
                 context.Database.Migrate();
+                SetCurrentVersionData(context);
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "An error occurred migrating the db.");
                 throw;
+            }
+        }
+
+        private static void SetCurrentVersionData(NtbsContext context)
+        {
+            var currentVersion = context.ReleaseVersion.SingleOrDefault();
+            var hasCurrentVersion = currentVersion != null;
+
+            if (!hasCurrentVersion || currentVersion.Version != VersionInfo.CurrentVersion)
+            {
+                if (hasCurrentVersion)
+                {
+                    context.Remove(currentVersion);
+                }
+
+                var newVersion = new ReleaseVersion
+                {
+                    Version = VersionInfo.CurrentVersion,
+                    Date = VersionInfo.CurrentVersionDate
+                };
+                context.Add(newVersion);
+                context.SaveChanges();
             }
         }
 
