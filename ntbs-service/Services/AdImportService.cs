@@ -30,7 +30,7 @@ namespace ntbs_service.Services
             var tbServices = await _referenceDataRepository.GetAllTbServicesAsync();
             using (var adDirectoryService = _adDirectoryServiceFactory.Create())
             {
-                var usersInAd = adDirectoryService.LookupUsers(tbServices).ToList();
+                var usersInAd = adDirectoryService.LookupUsers(tbServices);
                 await _adUserService.AddAndUpdateUsers(usersInAd);
             }
         }

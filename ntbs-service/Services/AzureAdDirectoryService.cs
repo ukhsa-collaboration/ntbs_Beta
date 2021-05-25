@@ -7,10 +7,11 @@ using Microsoft.Graph;
 using ntbs_service.Helpers;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Properties;
+using Serilog;
 
 namespace ntbs_service.Services
 {
-    public interface IAzureAdDirectoryService : IDisposable
+    public interface IAzureAdDirectoryService
     {
         /// <summary>
         /// Returns NTBS users found in Azure Active Directory directory
@@ -20,7 +21,8 @@ namespace ntbs_service.Services
         ///     - user is an NTBS user object populated with data found in Azure Active Directory
         ///     - tbServicesMatchingGroups are TbService objects that correspond to user's memberships as case manager
         /// </returns>
-        Task<IEnumerable<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)>> LookupUsers(IList<TBService> tbServices);
+        Task<IList<(Models.Entities.User user, IList<TBService> tbServicesMatchingGroups)>>
+            LookupUsers(IList<TBService> tbServices);
 
         Task<IList<Claim>> BuildRoleClaimsForUser(string userPrincipalName);
     }
@@ -38,25 +40,24 @@ namespace ntbs_service.Services
             _adOptions = adOptions;
         }
 
-        public void Dispose()
+        public async Task<IList<(Models.Entities.User user, IList<TBService> tbServicesMatchingGroups)>>
+            LookupUsers(IList<TBService> tbServices)
         {
-
-        }
-
-        public async Task<IEnumerable<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)>> LookupUsers(IList<TBService> tbServices)
-        {
-            IList<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)> userWithTbServiceGroups = new List<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)>();
+            var userWithTbServiceGroups =
+                new List<(Models.Entities.User user, IList<TBService> tbServicesMatchingGroups)>();
             var graphUsers = await GetAllDirectoryEntries();
 
-            // ensure that users are unique
-            graphUsers = graphUsers.GroupBy(u => u.UserPrincipalName).Select(u => u.FirstOrDefault());
+            // Ensure that users are unique
+            var uniqueUsers = graphUsers
+                .GroupBy(user => user.UserPrincipalName)
+                .Select(grouping => grouping.First());
 
-            foreach (var user in graphUsers)
+            var newUsers = await Task.WhenAll(uniqueUsers.Select(async user =>
             {
                 var groupNames = await BuildGroups(user);
-                var buildUserResult = BuildUser(user, tbServices, groupNames);
-                userWithTbServiceGroups.Add(buildUserResult);
-            }
+                return BuildUser(user, tbServices, groupNames);
+            }));
+            userWithTbServiceGroups.AddRange(newUsers);
 
             return userWithTbServiceGroups;
         }
@@ -65,214 +66,152 @@ namespace ntbs_service.Services
         {
             var roleClaims = new List<Claim>();
 
-            try
+            var foundUsers = await _graphServiceClient
+                .Users
+                .Request()
+                .Filter($"UserPrincipalName eq '{userPrincipalName}' or Mail eq '{userPrincipalName}'")
+                .GetAsync();
+            var foundUser = foundUsers.FirstOrDefault();
+
+            if (foundUser == null)
             {
-                var foundUsers = await _graphServiceClient.Users
-                    .Request()
-                    .Filter($"UserPrincipalName eq '{userPrincipalName}' or Mail eq '{userPrincipalName}'")
-                    .GetAsync();
-
-                var foundUser = foundUsers.FirstOrDefault();
-                if (foundUser != null)
-                {
-                    // get groups for user.
-                    var memberOfGroups = await _graphServiceClient
-                        .Users[foundUser.Id]
-                        .TransitiveMemberOf
-                        .Request()
-                        .Top(999)
-                        .GetAsync();
-
-                    foreach (var groupInfo in memberOfGroups)
-                    {
-                        var groupName = await ResolveGroupNameFromId(groupInfo.Id);
-                        // ensure we do not add any duplicate groups or blank groups
-                        if (!string.IsNullOrEmpty(groupName) && IsGroupAnNtbsGroup(groupName) && !roleClaims.Any(group => group.Value.Equals(groupName, StringComparison.CurrentCultureIgnoreCase)))
-                        {
-                            var groupNameClaim = new Claim(ClaimTypes.Role, groupName);
-                            roleClaims.Add(groupNameClaim);
-                        }
-                    }
-                }
+                return roleClaims;
             }
-            catch (Exception)
-            {
 
+            // Get groups for user
+            var groupsAndDirectoryRolesRequest = _graphServiceClient
+                .Users[foundUser.Id]
+                .TransitiveMemberOf
+                .Request();
+
+            while (groupsAndDirectoryRolesRequest != null)
+            {
+                var groupsAndDirectoryRoles = await groupsAndDirectoryRolesRequest.GetAsync();
+
+                var currentRoleClaimNames = roleClaims.Select(claim => claim.Value);
+                var newRoleClaims = groupsAndDirectoryRoles
+                    .OfType<Microsoft.Graph.Group>()
+                    .Select(group => group.DisplayName)
+                    .Where(groupName => IsGroupNameValidAndUnique(groupName, currentRoleClaimNames))
+                    .Select(groupName => new Claim(ClaimTypes.Role, groupName));
+                roleClaims.AddRange(newRoleClaims);
+
+                groupsAndDirectoryRolesRequest = groupsAndDirectoryRoles.NextPageRequest;
             }
 
             return roleClaims;
         }
 
-        private async Task<string> ResolveGroupNameFromId(string id)
+        private async Task<IList<Microsoft.Graph.User>> GetAllDirectoryEntries()
         {
-
-            if (string.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
-            var groupName = "";
-
-            try
-            {
-                var result = await _graphServiceClient.Groups[id]
-                    .Request()
-                    .GetAsync();
-
-                if (result != null)
-                {
-                    groupName = result.DisplayName;
-                }
-
-
-            }
-            catch (Exception)
-            {
-                // ignore exception
-            }
-
-            return groupName;
-        }
-
-        private async Task<IEnumerable<Microsoft.Graph.User>> GetAllDirectoryEntries()
-        {
-            var listOfDirectoryEntries = new List<Microsoft.Graph.User>();
+            var directoryEntries = new List<Microsoft.Graph.User>();
 
             var baseGroups = await _graphServiceClient
-            .Groups
-            .Request()
-            .Filter($"startswith(displayName, '{_adOptions.BaseUserGroup}')")
-            .Select("id, displayName, description")
-            .Top(999)
-            .GetAsync();
+                .Groups
+                .Request()
+                .Filter($"displayName eq '{_adOptions.BaseUserGroup}'")
+                .Select("id, displayName, description")
+                .Top(1)
+                .GetAsync();
 
             var baseGroup = baseGroups.FirstOrDefault(g => g.DisplayName == _adOptions.BaseUserGroup);
 
-            if (baseGroup != null)
+            if (baseGroup == null)
             {
-
-                var groupMembers = await _graphServiceClient.Groups[baseGroup.Id]
-                    .Members
-                    .Request()
-                    .GetAsync();
-
-                if (groupMembers != null)
-                {
-                    // get users from root group
-                    var usersInRootGroup = await GetUsersInGroup(baseGroup.Id);
-                    listOfDirectoryEntries.AddRange(usersInRootGroup);
-
-                    foreach (var groupMember in groupMembers)
-                    {
-                        try
-                        {
-                            switch (groupMember.ODataType)
-                            {
-                                case "#microsoft.graph.group":
-                                    var usersInGroup = await GetUsersInGroup(groupMember.Id);
-                                    listOfDirectoryEntries.AddRange(usersInGroup);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            // ignore
-                        }
-                    }
-                }
+                Log.Error($"Could not find base group {_adOptions.BaseUserGroup} in Azure AD");
+                return directoryEntries;
             }
 
-            return listOfDirectoryEntries.ToArray();
+            var usersInRootGroup = await GetUsersInGroup(baseGroup.Id);
+            directoryEntries.AddRange(usersInRootGroup);
+
+            var groupMembersRequest = _graphServiceClient
+                .Groups[baseGroup.Id]
+                .Members
+                .Request();
+
+            // The request is paginated, so iterate over each page
+            while (groupMembersRequest != null)
+            {
+                var groupMembers = await groupMembersRequest.GetAsync();
+
+                var newDirectoryEntries = (await Task.WhenAll(
+                    groupMembers
+                        .OfType<Microsoft.Graph.Group>()
+                        .Select(group => GetUsersInGroup(group.Id)))
+                    ).SelectMany(entry => entry);
+                directoryEntries.AddRange(newDirectoryEntries);
+
+                groupMembersRequest = groupMembers.NextPageRequest;
+            }
+
+            return directoryEntries;
         }
 
-        private async Task<IEnumerable<Microsoft.Graph.User>> GetUsersInGroup(string groupId)
+        private async Task<IList<Microsoft.Graph.User>> GetUsersInGroup(string groupId)
         {
             var listOfUsers = new List<Microsoft.Graph.User>();
 
-            try
-            {
-                var groupMembers = await _graphServiceClient
+            var groupMembersRequest = _graphServiceClient
                 .Groups[groupId]
                 .Members
                 .Request()
-                .Select("id, displayName")
-                .Top(999)
-                .GetAsync();
+                .Select("id, displayName");
 
-                if (groupMembers != null)
-                {
-                    foreach (var groupMember in groupMembers)
-                    {
-                        try
-                        {
-                            switch (groupMember.ODataType)
-                            {
-                                case "#microsoft.graph.user":
-                                    var graphUser = await _graphServiceClient.Users[groupMember.Id]
-                                    .Request()
-                                    .Select("accountenabled, id, displayName, givenName, surname, userPrincipalName, mail")
-                                    .GetAsync();
-                                    listOfUsers.Add(graphUser);
-                                    break;
-                                default:
-
-                                    break;
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            // ignore
-                        }
-                    }
-                }
-            }
-            catch (Exception)
+            while (groupMembersRequest != null)
             {
-                // ignore
+                var groupMembers = await groupMembersRequest.GetAsync();
+
+                var graphUsers = groupMembers
+                    .OfType<Microsoft.Graph.User>()
+                    .Select(user => _graphServiceClient.Users[user.Id]
+                    .Request()
+                    .Select("accountenabled, id, displayName, givenName, surname, userPrincipalName, mail")
+                    .GetAsync());
+                listOfUsers.AddRange(await Task.WhenAll(graphUsers));
+
+                groupMembersRequest = groupMembers.NextPageRequest;
             }
 
-            return listOfUsers.ToArray();
+            return listOfUsers;
         }
 
-        private bool IsUserExternal(Microsoft.Graph.User user)
-        {
-            return user.UserPrincipalName.Contains("#EXT#");
-        }
-
-        private bool IsGroupAnNtbsGroup(string groupName)
-        {
-            return groupName.StartsWith(_adOptions.BaseUserGroup);
-        }
-
-        private async Task<IEnumerable<string>> BuildGroups(Microsoft.Graph.User graphUser)
+        private async Task<IList<string>> BuildGroups(Microsoft.Graph.User graphUser)
         {
             var groupNames = new List<string>();
 
-            var groupIds = await _graphServiceClient.Users[graphUser.Id]
+            var groupsAndDirectoryRolesRequest = _graphServiceClient
+                .Users[graphUser.Id]
                 .MemberOf
                 .Request()
-                .Select("id, displayName")
-                .Top(999)
-                .GetAsync();
+                .Select("id, displayName");
 
-            foreach (var groupInfo in groupIds)
+            while (groupsAndDirectoryRolesRequest != null)
             {
-                var groupName = await ResolveGroupNameFromId(groupInfo.Id);
-                // ensure we do not add any duplicate groups or blank groups
-                if (!string.IsNullOrEmpty(groupName) && IsGroupAnNtbsGroup(groupName) && !groupNames.Any(group => group.Equals(groupName, StringComparison.CurrentCultureIgnoreCase)))
-                {
-                    groupNames.Add(groupName);
-                }
+                var groupsAndDirectoryRoles = await groupsAndDirectoryRolesRequest.GetAsync();
+
+                var newGroupNames = groupsAndDirectoryRoles
+                    .OfType<Microsoft.Graph.Group>()
+                    .Select(group => group.DisplayName)
+                    .Where(groupName => IsGroupNameValidAndUnique(groupName, groupNames));
+                groupNames.AddRange(newGroupNames);
+
+                groupsAndDirectoryRolesRequest = groupsAndDirectoryRoles.NextPageRequest;
             }
 
             return groupNames;
         }
 
-        private (Models.Entities.User user, List<TBService> tbServicesMatchingGroups) BuildUser(
+        private bool IsGroupNameValidAndUnique(string groupName, IEnumerable<string> groupNames)
+        {
+            return !string.IsNullOrEmpty(groupName)
+                   && groupName.StartsWith(_adOptions.BaseUserGroup)
+                   && !groupNames.Any(group => group.Equals(groupName, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        private (Models.Entities.User user, IList<TBService> tbServicesMatchingGroups) BuildUser(
             Microsoft.Graph.User graphUser,
-            IList<TBService> tbServices,
+            IEnumerable<TBService> tbServices,
             IEnumerable<string> groupNames)
         {
 
@@ -302,6 +241,11 @@ namespace ntbs_service.Services
             };
 
             return (user, tbServicesMatchingGroups);
+        }
+
+        private static bool IsUserExternal(Microsoft.Graph.User user)
+        {
+            return user.UserPrincipalName.Contains("#EXT#");
         }
     }
 }
