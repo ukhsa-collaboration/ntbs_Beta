@@ -39,9 +39,12 @@ jobs:
           Environments__int__MigrationConnectionString: ${{ secrets.UI_TESTS_INT_MIGRATION_CONNECTION_STRING }}
           Environments__test__MigrationConnectionString: ${{ secrets.UI_TESTS_TEST_MIGRATION_CONNECTION_STRING }}
           Environments__uat__MigrationConnectionString: ${{ secrets.UI_TESTS_UAT_MIGRATION_CONNECTION_STRING }}
-          Environments__int__ImportedNotificationTableName: ${{ secrets.UI_TESTS_INT_IMPORTED_NOTIFICATION_TABLE_NAME }}
-          Environments__test__ImportedNotificationTableName: ${{ secrets.UI_TESTS_TEST_IMPORTED_NOTIFICATION_TABLE_NAME }}
-          Environments__uat__ImportedNotificationTableName: ${{ secrets.UI_TESTS_UAT_IMPORTED_NOTIFICATION_TABLE_NAME }}
+          Environments__int__ImportedNotificationNtbsEnvironment: ${{ secrets.UI_TESTS_INT_IMPORTED_NOTIFICATION_NTBS_ENVIRONMENT }}
+          Environments__test__ImportedNotificationNtbsEnvironment: ${{ secrets.UI_TESTS_TEST_IMPORTED_NOTIFICATION_NTBS_ENVIRONMENT }}
+          Environments__uat__ImportedNotificationNtbsEnvironment: ${{ secrets.UI_TESTS_UAT_IMPORTED_NOTIFICATION_NTBS_ENVIRONMENT }}
+          Environments__int__SpecimenConnectionString: ${{ secrets.UI_TESTS_INT_SPECIMEN_CONNECTION_STRING }}
+          Environments__test__SpecimenConnectionString: ${{ secrets.UI_TESTS_TEST_SPECIMEN_CONNECTION_STRING }}
+          Environments__uat__SpecimenConnectionString: ${{ secrets.UI_TESTS_UAT_SPECIMEN_CONNECTION_STRING }}
         run: |
           sudo selenium-standalone install --drivers.chrome.version=89.0.4389.23
           selenium-standalone start --drivers.chrome.version=89.0.4389.23 > /dev/null 2>&1 &

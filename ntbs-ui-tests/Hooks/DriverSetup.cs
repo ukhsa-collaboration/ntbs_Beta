@@ -1,4 +1,5 @@
 ﻿using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 using BoDi;
 using Dapper;
@@ -73,6 +74,13 @@ namespace ntbs_ui_tests.Hooks
 
         private async Task CleanUpMigratedNotification()
         {
+            using (var connection = new SqlConnection(settings.EnvironmentConfig.SpecimenConnectionString))
+            {
+                connection.Open();
+                var deleteSpecimens = "DELETE FROM NotificationSpecimenMatch WHERE ReferenceLaboratoryNumber IN ('M.7148378', 'M.9420326')";
+                await connection.ExecuteAsync(deleteSpecimens);
+                connection.Close();
+            }
             using (var connection = new SqlConnection(settings.EnvironmentConfig.ConnectionString))
             {
                 connection.Open();
@@ -83,7 +91,9 @@ namespace ntbs_ui_tests.Hooks
             using (var connection = new SqlConnection(settings.EnvironmentConfig.MigrationConnectionString))
             {
                 connection.Open();
-                var deleteImportedNotification = $"DELETE FROM {settings.EnvironmentConfig.ImportedNotificationTableName} WHERE LegacyId = '189045'";
+                var deleteImportedNotification =
+                    "DELETE FROM ImportedNotifications WHERE LegacyId = '189045'" +
+                    $"AND NtbsEnvironment LIKE '{settings.EnvironmentConfig.ImportedNotificationNtbsEnvironment}'";
                 await connection.ExecuteAsync(deleteImportedNotification);
             }
         }
