@@ -282,6 +282,7 @@ namespace ntbs_service.DataMigration
         {
             var notification = new Notification
             {
+                LegacySource = rawNotification.Source,
                 ETSID = rawNotification.EtsId,
                 LTBRID = rawNotification.LtbrId,
                 LTBRPatientId = rawNotification.Source == "LTBR" ? rawNotification.GroupId : null,

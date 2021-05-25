@@ -14,7 +14,7 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Date notified")]
         public string FormattedNotificationDate => NotificationDate.ConvertToString();
         public int? AgeAtNotification => GetAgeAtTimeOfNotification();
-        public string LegacyId => !string.IsNullOrWhiteSpace(LTBRID) ? LTBRID : ETSID;
+        public string LegacyId => LegacySource == "LTBR" ? LTBRID : ETSID;
         public bool TransferRequestPending => Alerts?.Any(x => x.AlertType == AlertType.TransferRequest && x.AlertStatus == AlertStatus.Open) == true;
         public bool IsLastLinkedNotificationOverOneYearOld => GetIsLastLinkedNotificationOverOneYearOld();
 
