@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Moq;
 using Novell.Directory.Ldap;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Properties;
 using ntbs_service.Services;
 using Xunit;
 
@@ -16,6 +18,7 @@ namespace ntbs_service_unit_tests.Services
     {
         private readonly AdImportService _adImportService;
         private readonly Mock<IAdDirectoryServiceFactory> _adDirectoryServiceFactoryMock = new Mock<IAdDirectoryServiceFactory>();
+        private readonly Mock<IOptionsMonitor<AdOptions>> _adOptionMock = new Mock<IOptionsMonitor<AdOptions>>();
         private readonly Mock<AdDirectoryService> _adDirectoryServiceMock = new Mock<AdDirectoryService> { CallBase = true };
         private List<LdapEntry> _adUsers;
         private NtbsContext _context;
@@ -27,9 +30,10 @@ namespace ntbs_service_unit_tests.Services
             _adUsers = new List<LdapEntry>();
             var adDirectoryService = SetupMockAdDirectoryService();
             _adDirectoryServiceFactoryMock.Setup(s => s.Create()).Returns(adDirectoryService);
+            _adOptionMock.Setup(s => s.CurrentValue).Returns(new AdOptions{ReadOnlyUserGroup = "TestReadOnly"});
 
             var referenceRepo = new ReferenceDataRepository(_context);
-            var userRepo = new UserRepository(_context);
+            var userRepo = new UserRepository(_context, _adOptionMock.Object);
             var adUserService = new AdUserService(userRepo);
             
             _adImportService = new AdImportService(

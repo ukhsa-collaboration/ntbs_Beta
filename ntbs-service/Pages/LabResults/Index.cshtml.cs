@@ -2,6 +2,7 @@
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -12,6 +13,7 @@ using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 using ntbs_service.Services;
+using IAuthorizationService = ntbs_service.Services.IAuthorizationService;
 
 namespace ntbs_service.Pages.LabResults
 {
@@ -45,9 +47,14 @@ namespace ntbs_service.Pages.LabResults
         public IDictionary<string, SpecimenPotentialMatchSelection> PotentialMatchSelections { get; set; } =
             new Dictionary<string, SpecimenPotentialMatchSelection>();
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            if ((await _userService.GetUser(HttpContext.User)).IsReadOnly)
+            {
+                return RedirectToPage(RouteHelper.AccessDeniedPath);
+            }
             await PreparePageForGetAsync();
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()

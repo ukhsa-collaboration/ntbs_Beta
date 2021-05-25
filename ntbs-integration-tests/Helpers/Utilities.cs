@@ -194,7 +194,8 @@ namespace ntbs_integration_tests.Helpers
                 DisplayName = user.DisplayName,
                 AdGroups = string.Join(',', user.AdGroups),
                 IsActive = true,
-                IsCaseManager = true
+                IsCaseManager = true,
+                IsReadOnly = user.IsReadOnly
             });
         }
 

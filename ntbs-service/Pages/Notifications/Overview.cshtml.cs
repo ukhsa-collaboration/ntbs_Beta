@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
@@ -33,8 +32,9 @@ namespace ntbs_service.Pages.Notifications
             IAuthorizationService authorizationService,
             IAlertService alertService,
             INotificationRepository notificationRepository,
+            IUserService userService,
             ICultureAndResistanceService cultureAndResistanceService,
-            IAuditService auditService) : base(service, authorizationService, notificationRepository)
+            IAuditService auditService) : base(service, authorizationService, notificationRepository, userService)
         {
             _alertService = alertService;
             _cultureAndResistanceService = cultureAndResistanceService;
@@ -55,7 +55,8 @@ namespace ntbs_service.Pages.Notifications
             await GetLinkedNotificationsAsync();
             await GetAlertsAsync();
             await AuthorizeAndSetBannerAsync();
-            if (PermissionLevel == PermissionLevel.None)
+            if (PermissionLevel == PermissionLevel.None ||
+                (PermissionLevel == PermissionLevel.ReadOnly && Notification.NotificationStatus == NotificationStatus.Draft))
             {
                 return Partial("./UnauthorizedWarning", this);
             }
@@ -94,6 +95,10 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task<IActionResult> OnPostCreateLinkAsync()
         {
+            if (await UserIsReadOnly())
+            {
+                return Page();
+            }
             var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             var linkedNotification = await Service.CreateLinkedNotificationAsync(notification, User);
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20210520130629_AddReadOnlyColumnToUser")]
+    partial class AddReadOnlyColumnToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,37 +59,6 @@ namespace ntbs_service.Migrations
                     b.ToTable("Alert");
 
                     b.HasDiscriminator<string>("AlertType");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.LegacyImportNotificationOutcome", b =>
-                {
-                    b.Property<int>("LegacyImportNotificationOutcomeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("LegacyImportMigrationRunId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("NtbsId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OldNotificationId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool?>("SuccessfullyMigrated")
-                        .HasColumnType("bit");
-
-                    b.HasKey("LegacyImportNotificationOutcomeId");
-
-                    b.HasIndex("LegacyImportMigrationRunId");
-
-                    b.ToTable("LegacyImportNotificationOutcome");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.CaseManagerTbService", b =>
@@ -152,69 +123,6 @@ namespace ntbs_service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FrequentlyAskedQuestion");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.LegacyImportMigrationRun", b =>
-                {
-                    b.Property<int>("LegacyImportMigrationRunId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AppRelease")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LegacyIdList")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("RangeEndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("RangeStartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("LegacyImportMigrationRunId");
-
-                    b.ToTable("LegacyImportMigrationRun");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.LegacyImportNotificationLogMessage", b =>
-                {
-                    b.Property<int>("LegacyImportNotificationLogMessageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("LegacyImportMigrationRunId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LogMessageLevel")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OldNotificationId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("LegacyImportNotificationLogMessageId");
-
-                    b.HasIndex("LegacyImportMigrationRunId");
-
-                    b.ToTable("LegacyImportNotificationLogMessage");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.MBovisAnimalExposure", b =>
@@ -24215,15 +24123,6 @@ namespace ntbs_service.Migrations
                     b.Navigation("Notification");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.LegacyImportNotificationOutcome", b =>
-                {
-                    b.HasOne("ntbs_service.Models.Entities.LegacyImportMigrationRun", null)
-                        .WithMany("LegacyImportNotificationOutcomes")
-                        .HasForeignKey("LegacyImportMigrationRunId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ntbs_service.Models.Entities.CaseManagerTbService", b =>
                 {
                     b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
@@ -24246,15 +24145,6 @@ namespace ntbs_service.Migrations
                     b.HasOne("ntbs_service.Models.Entities.Notification", null)
                         .WithOne("DrugResistanceProfile")
                         .HasForeignKey("ntbs_service.Models.Entities.DrugResistanceProfile", "NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.LegacyImportNotificationLogMessage", b =>
-                {
-                    b.HasOne("ntbs_service.Models.Entities.LegacyImportMigrationRun", null)
-                        .WithMany("LegacyImportNotificationLogMessages")
-                        .HasForeignKey("LegacyImportMigrationRunId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -25316,13 +25206,6 @@ namespace ntbs_service.Migrations
                     b.Navigation("CaseManager");
 
                     b.Navigation("TbService");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.LegacyImportMigrationRun", b =>
-                {
-                    b.Navigation("LegacyImportNotificationLogMessages");
-
-                    b.Navigation("LegacyImportNotificationOutcomes");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.MBovisDetails", b =>

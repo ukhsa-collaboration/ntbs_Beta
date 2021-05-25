@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
 using ntbs_service.DataMigration.RawModels;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Properties;
 using Xunit;
 
 namespace ntbs_service_unit_tests.DataMigration
@@ -19,14 +21,15 @@ namespace ntbs_service_unit_tests.DataMigration
         private readonly ICaseManagerImportService _caseManagerImportService;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly NtbsContext _context;
+        private readonly Mock<IOptionsMonitor<AdOptions>> _adOptionMock = new Mock<IOptionsMonitor<AdOptions>>();
         private Dictionary<string, MigrationLegacyUser> _usernameToLegacyUserDict = new Dictionary<string, MigrationLegacyUser>();
-        private Dictionary<string, IEnumerable<MigrationLegacyUserHospital>> _usernameToLegacyUserHospitalDict = new Dictionary<string, IEnumerable<MigrationLegacyUserHospital>>();
 
         public TreatmentEventMapperTest()
         {
             _context = SetupTestContext();
             _referenceDataRepository = new ReferenceDataRepository(_context);
-            var userRepo = new UserRepository(_context);
+            _adOptionMock.Setup(s => s.CurrentValue).Returns(new AdOptions{ReadOnlyUserGroup = "TestReadOnly"});
+            var userRepo = new UserRepository(_context, _adOptionMock.Object);
             var migrationRepo = new Mock<IMigrationRepository>();
             migrationRepo.Setup(mr => mr.GetLegacyUserByUsername(It.IsAny<string>()))
                 .Returns((string username) => Task.FromResult(_usernameToLegacyUserDict[username]));
