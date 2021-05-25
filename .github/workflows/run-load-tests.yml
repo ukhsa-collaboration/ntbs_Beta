@@ -17,8 +17,39 @@ jobs:
           submodules: true
       - name: Run load tests
         run: bash gradlew gatlingRun-NtbsLoadTest
+      - name: Find stats output file
+        run: echo "STATS_FILE=$(find . -name 'stats.js')" >> $GITHUB_ENV
+      - name: Determine job outcome
+        run: node result-parser/result-parser.js $STATS_FILE
       - name: Archive results
         uses: actions/upload-artifact@v2
         with:
           name: load-test-results
           path: load-tests/gradle/build/reports/gatling/**
+
+#      # Notify slack
+#      - name: The job has succeeded
+#        if: ${{ success() }}
+#        uses: rtCamp/action-slack-notify@v2.1.0
+#        env:
+#          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+#          SLACK_CHANNEL: '#dev-ci'
+#          SLACK_USERNAME: github actions
+#          SLACK_COLOR: '#23b828' #green
+#          SLACK_MESSAGE: Docker image for feature branch ${{ github.ref }} is available as ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
+#          SLACK_TITLE: ':green_heart: :computer: Build succeeded'
+#          SLACK_ICON_EMOJI: ':octopus:'
+#          SLACK_FOOTER: ''
+#
+#      - name: The job has failed
+#        if: ${{ failure() }}
+#        uses: rtCamp/action-slack-notify@v2.1.0
+#        env:
+#          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+#          SLACK_CHANNEL: '#dev-ci'
+#          SLACK_USERNAME: github actions
+#          SLACK_COLOR: '#d12121' #red
+#          SLACK_MESSAGE: 'Build of docker image for feature branch failed'
+#          SLACK_TITLE: ':red_circle: :computer: Build failed'
+#          SLACK_ICON_EMOJI: ':octopus:'
+#          SLACK_FOOTER: ''
