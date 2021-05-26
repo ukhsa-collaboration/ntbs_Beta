@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using ntbs_service.Helpers;
+using ntbs_service.Migrations;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Models.Entities
@@ -14,7 +15,22 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Date notified")]
         public string FormattedNotificationDate => NotificationDate.ConvertToString();
         public int? AgeAtNotification => GetAgeAtTimeOfNotification();
-        public string LegacyId => LegacySource == "LTBR" ? LTBRID : ETSID;
+        public string LegacyId
+        {
+            get
+            {
+                switch (LegacySource)
+                {
+                    case "LTBR":
+                        return LTBRID;
+                    case "ETS":
+                        return ETSID;
+                    default:
+                        return LTBRID ?? ETSID;
+                }
+            }
+        }
+
         public bool TransferRequestPending => Alerts?.Any(x => x.AlertType == AlertType.TransferRequest && x.AlertStatus == AlertStatus.Open) == true;
         public bool IsLastLinkedNotificationOverOneYearOld => GetIsLastLinkedNotificationOverOneYearOld();
 
