@@ -1,0 +1,8 @@
+bin/
+lib/
+results/
+target/
+har-files/
+
+# Ignore user files, because real simulation files should be in the gradle directory
+user-files/
