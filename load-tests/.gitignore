@@ -1,7 +1,2 @@
-bin/
-lib/
-results/
-target/
-har-files/
 .metals/
 .vscode/
