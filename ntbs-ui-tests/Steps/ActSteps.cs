@@ -1,13 +1,12 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System;
+using System.Globalization;
+using System.Linq;
 using System.Threading;
-using ntbs_service.Models.Validations;
 using ntbs_ui_tests.Helpers;
 using ntbs_ui_tests.Hooks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using TechTalk.SpecFlow;
-using Xunit;
 
 namespace ntbs_ui_tests.Steps
 {
@@ -136,6 +135,19 @@ namespace ntbs_ui_tests.Steps
             element.SendKeys(Keys.Control + "a");
             element.SendKeys(Keys.Delete);
             element.SendKeys(value + "\t");
+            if (!Settings.IsHeadless)
+            {
+                Thread.Sleep(1000);
+            }
+        }
+
+        [When(@"I enter '(.*)' into date fields with id '(.*)'")]
+        public void WhenIEnterDateIntoFieldWithId(string dateString, string elementId)
+        {
+            var date = DateTime.Parse(dateString, new CultureInfo("en-GB").DateTimeFormat);
+            WhenIEnterValueIntoFieldWithId(date.Day.ToString(), elementId + "_Day");
+            WhenIEnterValueIntoFieldWithId(date.Month.ToString(), elementId + "_Month");
+            WhenIEnterValueIntoFieldWithId(date.Year.ToString(), elementId + "_Year");
             if (!Settings.IsHeadless)
             {
                 Thread.Sleep(1000);
