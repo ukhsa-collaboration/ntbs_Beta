@@ -45,6 +45,8 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<Site> Site { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
         public virtual DbSet<PHEC> PHEC { get; set; }
+        public virtual DbSet<LocalAuthority> LocalAuthority { get; set; }
+        public virtual DbSet<LocalAuthorityToPHEC> LocalAuthorityToPhec { get; set; }
         public virtual DbSet<PostcodeLookup> PostcodeLookup { get; set; }
         public virtual DbSet<Occupation> Occupation { get; set; }
         public virtual DbSet<User> User { get; set; }
@@ -193,14 +195,11 @@ namespace ntbs_service.DataAccess
                     .HasForeignKey(tb => tb.PHECCode);
 
                 entity.ToTable(nameof(TbService), ReferenceDataSchemaName);
-
-                entity.HasData(GetTBServicesList());
             });
 
             modelBuilder.Entity<Hospital>(entity =>
             {
                 entity.ToTable(nameof(Hospital), ReferenceDataSchemaName);
-                entity.HasData(GetHospitalsList());
             });
 
             modelBuilder.Entity<PHEC>(entity =>
@@ -209,8 +208,6 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.Code).ValueGeneratedOnAdd();
 
                 entity.ToTable(nameof(PHEC), ReferenceDataSchemaName);
-
-                entity.HasData(GetPHECList());
             });
 
             modelBuilder.Entity<LocalAuthority>(entity =>
@@ -220,8 +217,6 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.Code).ValueGeneratedOnAdd();
 
                 entity.ToTable(nameof(LocalAuthority), ReferenceDataSchemaName);
-
-                entity.HasData(GetLocalAuthoritiesList());
             });
 
             modelBuilder.Entity<LocalAuthorityToPHEC>(entity =>
@@ -241,8 +236,6 @@ namespace ntbs_service.DataAccess
                     .IsRequired(false);
 
                 entity.ToTable(nameof(LocalAuthorityToPHEC), ReferenceDataSchemaName);
-
-                entity.HasData(GetPHECtoLA());
             });
 
             modelBuilder.Entity<PostcodeLookup>(entity =>
@@ -888,31 +881,6 @@ namespace ntbs_service.DataAccess
 
                 entity.HasIndex(e => e.LegacyImportMigrationRunId);
             });
-        }
-
-        private static List<TBService> GetTBServicesList()
-        {
-            return SeedingHelper.GetTBServices("Models/SeedData/tbservices.csv");
-        }
-
-        private static List<LocalAuthorityToPHEC> GetPHECtoLA()
-        {
-            return SeedingHelper.GetLAtoPHEC("Models/SeedData/LA_to_PHEC.csv");
-        }
-
-        private static List<Hospital> GetHospitalsList()
-        {
-            return SeedingHelper.GetHospitalsList("Models/SeedData/hospitals.csv");
-        }
-
-        private static List<PHEC> GetPHECList()
-        {
-            return SeedingHelper.GetPHECList("Models/SeedData/phec.csv");
-        }
-
-        private static List<LocalAuthority> GetLocalAuthoritiesList()
-        {
-            return SeedingHelper.GetLocalAuthorities("Models/SeedData/LocalAuthorities.csv");
         }
     }
 }

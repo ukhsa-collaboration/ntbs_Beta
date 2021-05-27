@@ -1,0 +1,8 @@
+Code,Name,Service_Ad_Group,PHEC_Code,IsLegacy
+TBS0001,Abingdon Community Hospital,App.Auth.NIS.NTBS.Service_Abingdon,E45000019,false
+TBS0002,Addenbrooke's Hospital,App.Auth.NIS.NTBS.Service_Addenbrooke,E45000017,false
+TBS0008,Ashford Hospital,App.Auth.NIS.NTBS.Service_Ashford,E45000019,false
+TBS0009,Barnet Hospital,App.Auth.NIS.NTBS.Service_Barnet,E45000001,false
+TBS0181,Royal Derby Hospital,App.Auth.NIS.NTBS.Service_Derby,E45000016,false
+TBS0182,Royal Free London TB Service,App.Auth.NIS.NTBS.Service_RoyalFree,E45000001,false
+TBS0429,Fulwood Hall Hospital,App.Auth.NIS.NTBS.Service_Fulwood,E45000018,false

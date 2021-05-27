@@ -30,7 +30,11 @@ This was because in .NET 5 `UseWebpackDevMiddleware` was removed, see [here](htt
 for a discussion of this change.
 
 To setup local copies of all of the dependent databases, follow the instructions in the [ntbs-reporting repository](https://github.com/publichealthengland/ntbs-reporting/blob/master/README.md).
-If you are unable (or don't want) to do this, then you can run the application against an existing environment,
+
+Reference data for the app needs to be seeded by running the job uspUpdateNTBSRefData in the geography database.
+(:warning:**WARNING: if this is not done then reference data will need to be seeded manually**)
+
+If you are unable (or don't want) to run the app locally, then you can run the application against an existing environment,
 but you need to override the connection strings for the `migration`, `specimen matching` and `reporting`
 databases by following the instructions in the "Dev-mode secrets" section below.
 

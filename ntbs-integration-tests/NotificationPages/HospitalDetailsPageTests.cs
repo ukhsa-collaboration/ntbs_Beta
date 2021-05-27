@@ -271,7 +271,7 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
-                ["HospitalDetails.HospitalId"] = Utilities.HOSPITAL_FLEETWOOD_HOSPITAL_ID,
+                ["HospitalDetails.HospitalId"] = Utilities.HOSPITAL_FULWOOD_HALL_HOSPITAL_ID,
                 ["HospitalDetails.TBServiceCode"] = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID,
             };
 
