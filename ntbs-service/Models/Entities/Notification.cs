@@ -40,6 +40,8 @@ namespace ntbs_service.Models.Entities
 
         [Display(Name = "NTBS Id")]
         public int NotificationId { get; set; }
+        [MaxLength(10)]
+        public string LegacySource { get; set; }
         [MaxLength(50)]
         public string ETSID { get; set; }
         // For LTBR records, this contains the first segment of their legacy id, which corresponds to the "patient" entity in LTBR.

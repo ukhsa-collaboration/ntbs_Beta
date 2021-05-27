@@ -113,6 +113,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 await _importValidator.CleanAndValidateNotification(null, runId, notification);
 
             // Assert
+            Assert.Equal("ETS", notification.LegacySource);
             Assert.Equal("130331", notification.ETSID);
             Assert.Equal("130331", notification.LegacyId);
             Assert.Equal(new DateTime(2015, 3, 31), notification.NotificationDate?.Date);
