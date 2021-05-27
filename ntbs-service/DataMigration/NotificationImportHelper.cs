@@ -83,6 +83,7 @@ namespace ntbs_service.DataMigration
 	            WHERE NOT EXISTS (
                     SELECT 1 FROM ImportedNotifications
                     WHERE ImportedNotifications.LegacyId = ntbsNotifications.LegacyId
+                    AND ImportedNotifications.NtbsEnvironment = '{_ntbsEnvironment}'
                 )
         ";
 
