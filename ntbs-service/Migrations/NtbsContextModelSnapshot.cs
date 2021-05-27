@@ -466,6 +466,10 @@ namespace ntbs_service.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("LegacySource")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
                     b.Property<DateTime?>("NotificationDate")
                         .HasColumnType("datetime2");
 
