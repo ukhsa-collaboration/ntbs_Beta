@@ -32,6 +32,21 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
+        public async Task GetCreate_ReturnsRedirectToAccessDenied_ForReadOnlyUser()
+        {
+            // Arrange
+            using (var client = Factory.WithUserAuth(TestUser.ReadOnlyUser)
+                .CreateClientWithoutRedirects())
+            {
+                // Act
+                var response = await client.GetAsync(RouteHelper.GetCreateNotificationPath());
+
+                // Assert
+                response.AssertRedirectTo("/Account/AccessDenied");
+            }
+        }
+
+        [Fact]
         public async Task GetCreate_ReturnsNotification_WithDefaultDrugResistanceProfile()
         {
             // Arrange

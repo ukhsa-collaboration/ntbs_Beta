@@ -709,6 +709,9 @@ namespace ntbs_service.Migrations
                     b.Property<bool>("IsCaseManager")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsReadOnly")
+                        .HasColumnType("bit");
+
                     b.Property<string>("JobTitle")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");

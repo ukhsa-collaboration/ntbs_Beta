@@ -99,13 +99,13 @@ class NtbsLoadTest extends Simulation {
             addSocialContextAddress)
 
     setUp(
-        createFullScenario.inject(constantUsersPerSec(0.0067).during(5.minutes).randomized), // 2 per 5 minutes
-        addOutcomeScenario.inject(constantUsersPerSec(0.0067).during(5.minutes).randomized), // 2 per 5 minutes
-        editContactTracingScenario.inject(constantUsersPerSec(0.0067).during(5.minutes).randomized), // 2 per 5 minutes
-        addTestResultScenario.inject(constantUsersPerSec(0.0067).during(5.minutes).randomized), // 2 per 5 minutes
-        editTravelScenario.inject(constantUsersPerSec(0.0067).during(5.minutes).randomized), // 2 per 5 minutes
-        addSocialContextAddressScenario.inject(constantUsersPerSec(0.0067).during(5.minutes).randomized), // 2 per 5 minutes
-        readRecentScenario.inject(constantUsersPerSec(0.33).during(5.minutes).randomized), // 100 per 5 minutes
-        searchAndReadScenario.inject(constantUsersPerSec(0.33).during(5.minutes).randomized) // 100 per 5 minutes
+        createFullScenario.inject(constantUsersPerSec(0.0067).during(Config.lengthOfTestInMinutes.minutes).randomized), // 2 per 5 minutes
+        addOutcomeScenario.inject(constantUsersPerSec(0.0067).during(Config.lengthOfTestInMinutes.minutes).randomized), // 2 per 5 minutes
+        editContactTracingScenario.inject(constantUsersPerSec(0.0067).during(Config.lengthOfTestInMinutes.minutes).randomized), // 2 per 5 minutes
+        addTestResultScenario.inject(constantUsersPerSec(0.0067).during(Config.lengthOfTestInMinutes.minutes).randomized), // 2 per 5 minutes
+        editTravelScenario.inject(constantUsersPerSec(0.0067).during(Config.lengthOfTestInMinutes.minutes).randomized), // 2 per 5 minutes
+        addSocialContextAddressScenario.inject(constantUsersPerSec(0.0067).during(Config.lengthOfTestInMinutes.minutes).randomized), // 2 per 5 minutes
+        readRecentScenario.inject(constantUsersPerSec(0.33).during(Config.lengthOfTestInMinutes.minutes).randomized), // 100 per 5 minutes
+        searchAndReadScenario.inject(constantUsersPerSec(0.33).during(Config.lengthOfTestInMinutes.minutes).randomized) // 100 per 5 minutes
     ).protocols(httpProtocol)
 }

@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
 using ntbs_service.DataMigration.RawModels;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Properties;
+using ntbs_service.Services;
 using Xunit;
 
 namespace ntbs_service_unit_tests.DataMigration
@@ -25,6 +28,7 @@ namespace ntbs_service_unit_tests.DataMigration
         private readonly NtbsContext _context;
         private readonly CaseManagerImportService _caseManagerImportService;
         private readonly Mock<IMigrationRepository> _migrationRepositoryMock = new Mock<IMigrationRepository>();
+        private readonly Mock<IOptionsMonitor<AdOptions>> _adOptionMock = new Mock<IOptionsMonitor<AdOptions>>();
 
         private Dictionary<string, IEnumerable<MigrationDbNotification>> _idToNotificationDict;
         private Dictionary<string, MigrationLegacyUser> _usernameToLegacyUserDict = new Dictionary<string, MigrationLegacyUser>();
@@ -34,7 +38,8 @@ namespace ntbs_service_unit_tests.DataMigration
         {
             _context = SetupTestContext();
             SetupMockMigrationRepo();
-            IUserRepository userRepository = new UserRepository(_context);
+            _adOptionMock.Setup(s => s.CurrentValue).Returns(new AdOptions{ReadOnlyUserGroup = "TestReadOnly"});
+            IUserRepository userRepository = new UserRepository(_context, _adOptionMock.Object);
             IReferenceDataRepository referenceDataRepository = new ReferenceDataRepository(_context);
             Mock<INotificationImportRepository> mockNotificationImportRepository = new Mock<INotificationImportRepository>();
 
