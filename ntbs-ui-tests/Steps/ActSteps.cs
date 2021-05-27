@@ -112,7 +112,8 @@ namespace ntbs_ui_tests.Steps
         [When(@"I click on the '(.*)' button")]
         public void WhenIClickOn(string elementId)
         {
-            HtmlElementHelper.FindElementById(Browser, elementId).Click();
+            var button = HtmlElementHelper.FindElementById(Browser, elementId);
+            button.Click();
         }
 
         [When(@"I select (.*) from input list '(.*)'")]
@@ -163,7 +164,7 @@ namespace ntbs_ui_tests.Steps
         [When(@"I wait")]
         public void WhenIWait()
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(3000);
         }
     }
 }
