@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       env:
-        description: 'One of `int` `test` or `uat`'
+        description: 'Enter the name of an environment, like `training`  or `test`'
         required: true
         default: 'int'
 
