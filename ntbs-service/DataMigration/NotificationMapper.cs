@@ -285,7 +285,7 @@ namespace ntbs_service.DataMigration
                 LegacySource = rawNotification.Source,
                 ETSID = rawNotification.EtsId,
                 LTBRID = rawNotification.LtbrId,
-                LTBRPatientId = rawNotification.Source == "LTBR" ? rawNotification.GroupId : null,
+                LTBRPatientId = rawNotification.LtbrPatientId,
                 NotificationDate = rawNotification.NotificationDate,
                 CreationDate = DateTime.Now
             };
