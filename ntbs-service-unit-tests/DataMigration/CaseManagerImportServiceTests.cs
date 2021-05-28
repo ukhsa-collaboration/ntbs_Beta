@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
 using ntbs_service.DataMigration.RawModels;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Properties;
+using ntbs_service.Services;
 using Xunit;
 
 namespace ntbs_service_unit_tests.DataMigration
 {
     public class CaseManagerImportServiceTests : IDisposable
     {
+        private const int BATCH_ID = 56789;
         private const string NOTIFICATION_ID = "11111";
         private const string CASE_MANAGER_USERNAME_1 = "TestUser@nhs.net";
         private const string CASE_MANAGER_USERNAME_2 = "MartinUser@nhs.net";
@@ -24,6 +28,7 @@ namespace ntbs_service_unit_tests.DataMigration
         private readonly NtbsContext _context;
         private readonly CaseManagerImportService _caseManagerImportService;
         private readonly Mock<IMigrationRepository> _migrationRepositoryMock = new Mock<IMigrationRepository>();
+        private readonly Mock<IOptionsMonitor<AdOptions>> _adOptionMock = new Mock<IOptionsMonitor<AdOptions>>();
 
         private Dictionary<string, IEnumerable<MigrationDbNotification>> _idToNotificationDict;
         private Dictionary<string, MigrationLegacyUser> _usernameToLegacyUserDict = new Dictionary<string, MigrationLegacyUser>();
@@ -33,9 +38,12 @@ namespace ntbs_service_unit_tests.DataMigration
         {
             _context = SetupTestContext();
             SetupMockMigrationRepo();
-            IUserRepository userRepository = new UserRepository(_context);
+            _adOptionMock.Setup(s => s.CurrentValue).Returns(new AdOptions{ReadOnlyUserGroup = "TestReadOnly"});
+            IUserRepository userRepository = new UserRepository(_context, _adOptionMock.Object);
             IReferenceDataRepository referenceDataRepository = new ReferenceDataRepository(_context);
-            var importLogger = new ImportLogger();
+            Mock<INotificationImportRepository> mockNotificationImportRepository = new Mock<INotificationImportRepository>();
+
+            var importLogger = new ImportLogger(mockNotificationImportRepository.Object);
             _caseManagerImportService = new CaseManagerImportService(userRepository, referenceDataRepository,
                 _migrationRepositoryMock.Object, importLogger);
         }
@@ -54,7 +62,7 @@ namespace ntbs_service_unit_tests.DataMigration
             await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS00TEST", HOSPITAL_GUID_1);
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, "test-request-1");
+            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, BATCH_ID);
 
             // Assert
             var addedUser = _context.User.SingleOrDefault();
@@ -75,7 +83,7 @@ namespace ntbs_service_unit_tests.DataMigration
             await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS11FAKE", HOSPITAL_GUID_1);
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, "test-request-1");
+            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, BATCH_ID);
 
             // Assert
             var addedUser = _context.User.SingleOrDefault();
@@ -97,7 +105,7 @@ namespace ntbs_service_unit_tests.DataMigration
             await GivenUserExistsInNtbsWithName("Jon", "Jonston");
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, "test-request-1");
+            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, BATCH_ID);
 
             // Assert
             var updatedUser = _context.User.Single();
@@ -128,6 +136,7 @@ namespace ntbs_service_unit_tests.DataMigration
             return new Notification
             {
                 IsLegacy = true,
+                LegacySource = "LTBR",
                 LTBRID = NOTIFICATION_ID,
                 HospitalDetails = new HospitalDetails {TBServiceCode = TbServiceCode},
                 TreatmentEvents = new List<TreatmentEvent>()

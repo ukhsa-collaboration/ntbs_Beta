@@ -52,4 +52,9 @@
     </Content>
   </ItemGroup>
 
+
+  <ItemGroup>
+    <PackageReference Include="Lindhart.Analyser.MissingAwaitWarning" Version="2.0.0" />
+  </ItemGroup>
+
 </Project>

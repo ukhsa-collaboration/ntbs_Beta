@@ -14,6 +14,7 @@ namespace ntbs_service.Models.Entities
         public string AdGroups { get; set; }
         public bool IsActive { get; set; }
         public bool IsCaseManager { get; set; }
+        public bool IsReadOnly { get; set; }
 
         [Display(Name = "Job title")]
         [RegularExpression(

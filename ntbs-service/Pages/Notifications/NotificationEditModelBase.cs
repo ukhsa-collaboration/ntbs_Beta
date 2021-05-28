@@ -56,6 +56,11 @@ namespace ntbs_service.Pages.Notifications
             }
 
             await AuthorizeAndSetBannerAsync();
+            if (PermissionLevel == PermissionLevel.ReadOnly)
+            {
+                return RedirectToPage("/Notifications/Overview", new {NotificationId});
+            }
+            
             if (PermissionLevel != PermissionLevel.Edit)
             {
                 return RedirectForNotified();

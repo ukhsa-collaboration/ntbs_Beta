@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    @if (!environmentDescription.ContainsLiveData)
+    @if (!environmentDescription.IsLiveSystem)
     {
         <div class="govuk-phase-banner live-data-warning-banner">
             <div class="govuk-width-container">
@@ -42,7 +42,9 @@
                         @environmentDescription.DisplayName
                     </strong>
                     <span class="govuk-phase-banner__text">
-                        The data on this site is synthetic and is for @environmentDescription.DisplayName purposes only.
+                        The data on this site is
+                        @(environmentDescription.ContainsLiveData ? "a copy of the live data" : "synthetic")
+                        and is for @environmentDescription.DisplayName purposes only.
                         Please do not enter real patient data.
                     </span>
                 </p>
@@ -64,11 +66,14 @@
                             Search
                         </a>
                     </li>
-                    <li class="govuk-header__navigation-item header-navigation-link">
-                        <a class="govuk-header__link header-navigation-list-item" href="/LabResults">
-                            Lab results
-                        </a>
-                    </li>
+                    @if (!(await UserService.GetUser(Context.User)).IsReadOnly)
+                    {
+                        <li class="govuk-header__navigation-item header-navigation-link">
+                            <a class="govuk-header__link header-navigation-list-item" href="/LabResults">
+                                Lab results
+                            </a>
+                        </li>
+                    }
                     <li class="govuk-header__navigation-item header-navigation-link">
                         @if (string.IsNullOrEmpty(ReportingLinksService.GetReportingPageUrl()))
                         {
@@ -121,7 +126,7 @@
                             <ul ref="navigation-submenu" v-if="showMenu" class="nav-submenu-list">
                                 <li class="header-navigation-link nav-submenu-list-item">
                                     <a class="govuk-header__link header-navigation-list-item" href="/ContactDetails">
-                                        Edit personal details
+                                        View personal details
                                     </a>
                                 </li>
                                 <li class="header-navigation-link nav-submenu-list-item">

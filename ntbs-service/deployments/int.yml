@@ -56,14 +56,6 @@ spec:
               secretKeyRef:
                 name: int-connection-strings
                 key: migrationDb
-          - name: AdOptions__BaseUserGroup
-            value: "Global.NIS.NTBS"
-          - name: AdOptions__AdminUserGroup
-            value: "Global.NIS.NTBS.Admin"
-          - name: AdOptions__NationalTeamAdGroup
-            value: "Global.NIS.NTBS.NTS"
-          - name: AdOptions__ServiceGroupAdPrefix
-            value: "Global.NIS.NTBS.Service"
           - name: AzureAdOptions__ClientId
             valueFrom:
               secretKeyRef:
@@ -81,7 +73,7 @@ spec:
                 key: authority
           - name: AzureAdOptions__Enabled
             value: "true"
-          - name: MigrationConfig__TablePrefix
+          - name: MigrationConfig__NtbsEnvironment
             value: "Int"
           - name: Sentry__Environment
             value: "int"

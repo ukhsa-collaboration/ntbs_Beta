@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using ntbs_service.Models.Entities;
 using ntbs_service.Properties;
 
 namespace ntbs_service.Helpers

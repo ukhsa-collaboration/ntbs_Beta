@@ -56,14 +56,6 @@ spec:
               secretKeyRef:
                 name: uat-connection-strings
                 key: migrationDb
-          - name: AdOptions__BaseUserGroup
-            value: "Global.NIS.NTBS"
-          - name: AdOptions__AdminUserGroup
-            value: "Global.NIS.NTBS.Admin"
-          - name: AdOptions__NationalTeamAdGroup
-            value: "Global.NIS.NTBS.NTS"
-          - name: AdOptions__ServiceGroupAdPrefix
-            value: "Global.NIS.NTBS.Service"
           - name: AzureAdOptions__ClientId
             valueFrom:
               secretKeyRef:
@@ -85,7 +77,7 @@ spec:
             value: "https://app.powerbi.com/Redirect?action=OpenApp&appId=5ae64787-d2aa-4beb-8bf8-18340efe12ab&ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666"
           - name: ExternalLinks__ClusterReport
             value: "https://app.powerbi.com/groups/me/apps/5ae64787-d2aa-4beb-8bf8-18340efe12ab/reports/7b0921bd-8e4b-46f3-8e4b-dc9b7e7c982b/ReportSection?ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666&filter=Cluster%2FClusterId%20eq '<CLUSTER_ID>'"
-          - name: MigrationConfig__TablePrefix
+          - name: MigrationConfig__NtbsEnvironment
             value: "Uat"
           - name: Sentry__Environment
             value: "uat"

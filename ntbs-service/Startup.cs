@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -200,7 +201,6 @@ namespace ntbs_service
             services.AddScoped<IDataQualityRepository, DataQualityRepository>();
             services.AddScoped<IDrugResistanceProfileRepository, DrugResistanceProfileRepository>();
             services.AddScoped<IFaqRepository, FaqRepository>();
-            services.AddScoped<IVersionService, VersionService>();
 
             // Services
             services.AddScoped<INotificationService, NotificationService>();

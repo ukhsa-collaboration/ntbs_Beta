@@ -33,10 +33,10 @@ namespace ntbs_service.Models.Entities
         public int? TreatmentOutcomeId { get; set; }
         public virtual TreatmentOutcome TreatmentOutcome { get; set; }
 
-        [MaxLength(150)]
+        [MaxLength(1000)]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
-            ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
+            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
+            ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string Note { get; set; }
 
         public int NotificationId { get; set; }

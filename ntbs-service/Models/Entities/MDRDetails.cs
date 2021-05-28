@@ -17,7 +17,7 @@ namespace ntbs_service.Models.Entities
         public Status? ExposureToKnownCaseStatus { get; set; }
 
         [MaxLength(90)]
-        [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, ErrorMessage = ValidationMessages.InvalidCharacter)]
         [RequiredIf(@"ExposureToKnownCaseStatus == Enums.Status.Yes", ErrorMessage = ValidationMessages.RelationshipToCaseIsRequired)]
         [Display(Name = "Relationship of the current case to the contact")]
         public string RelationshipToCase { get; set; }

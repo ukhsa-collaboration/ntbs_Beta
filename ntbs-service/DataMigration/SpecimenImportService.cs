@@ -9,8 +9,8 @@ namespace ntbs_service.DataMigration
 {
     public interface ISpecimenImportService
     {
-        Task ImportReferenceLabResultsAsync(PerformContext context, string requestId, IList<Notification> notifications,
-            ImportResult importResult);
+        Task ImportReferenceLabResultsAsync(PerformContext context, int runId,
+            IList<Notification> notifications, ImportResult importResult);
     }
 
     public class SpecimenImportService : ISpecimenImportService
@@ -29,7 +29,7 @@ namespace ntbs_service.DataMigration
         /// since the matches are stored externally - we need to know what the generated NTBS ids are beforehand.
         /// </summary>
         public async Task ImportReferenceLabResultsAsync(PerformContext context,
-            string requestId,
+            int runId,
             IList<Notification> notifications,
             ImportResult importResult)
         {
@@ -44,9 +44,9 @@ namespace ntbs_service.DataMigration
                     isMigrating: true);
                 if (!success)
                 {
-                    var error = $"Failed to set the specimen match for Notification: {notificationId}, reference lab number: {referenceLaboratoryNumber}. " +
+                    var error = $"Failed to set the specimen match for reference lab number: {referenceLaboratoryNumber}. " +
                                 $"The notification is already imported, manual intervention needed!";
-                    _logger.LogError(context, requestId, error);
+                    await _logger.LogNotificationError(context, runId, legacyId, error);
                     importResult.AddNotificationError(legacyId, error);
                 }
             }
