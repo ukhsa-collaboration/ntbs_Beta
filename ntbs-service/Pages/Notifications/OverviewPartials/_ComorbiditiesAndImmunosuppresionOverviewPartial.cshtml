@@ -4,9 +4,10 @@
 
 @{
     var sectionSubPath = NotificationSubPaths.EditComorbidities;
+    var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath);
 }
 
-<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
+<div class="notification-overview-type-and-edit-container" id="@sectionId-title">
     <h3 class="notification-details-type"> Co-morbidities and immunosuppression </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
@@ -16,43 +17,43 @@
         </a>
     }
 </div>
-<div class="notification-overview-details-container">
+<div class="notification-overview-details-container" id="@sectionId">
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Diabetes </div>
-            <div class="cell-min-height">@Model.Notification.ComorbidityDetails.DiabetesStatus</div>
+            <div class="cell-min-height" id="@sectionId-diabetes">@Model.Notification.ComorbidityDetails.DiabetesStatus</div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Hepatitis B </div>
-            <div class="cell-min-height">@Model.Notification.ComorbidityDetails.HepatitisBStatus</div>
+            <div class="cell-min-height" id="@sectionId-hepatitis-b">@Model.Notification.ComorbidityDetails.HepatitisBStatus</div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Hepatitis C </div>
-            <div class="cell-min-height">@Model.Notification.ComorbidityDetails.HepatitisCStatus</div>
+            <div class="cell-min-height" id="@sectionId-hepatitis-c">@Model.Notification.ComorbidityDetails.HepatitisCStatus</div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Chronic liver disease </div>
-            <div class="cell-min-height">@Model.Notification.ComorbidityDetails.LiverDiseaseStatus</div>
+            <div class="cell-min-height" id="@sectionId-liver-disease">@Model.Notification.ComorbidityDetails.LiverDiseaseStatus</div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Chronic renal disease </div>
-            <div class="cell-min-height">@Model.Notification.ComorbidityDetails.RenalDiseaseStatus</div>
+            <div class="cell-min-height" id="@sectionId-renal-disease">@Model.Notification.ComorbidityDetails.RenalDiseaseStatus</div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Immunosuppression </div>
-            <div class="cell-min-height">@Model.Notification.ImmunosuppressionDetails.Status</div>
+            <div class="cell-min-height" id="@sectionId-immunosuppression-status">@Model.Notification.ImmunosuppressionDetails.Status</div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Type </div>
-            <div class="cell-min-height">@Model.Notification.ImmunosuppressionDetails.FormattedTypesOfImmunosuppression()</div>
+            <div class="cell-min-height" id="@sectionId-immunosuppression-types">@Model.Notification.ImmunosuppressionDetails.FormattedTypesOfImmunosuppression()</div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneHalf">
             <div class="notification-details-label"> Other immunosuppression </div>
-            <div class="cell-min-height">@Model.Notification.ImmunosuppressionDetails.OtherDescription</div>
+            <div class="cell-min-height" id="@sectionId-immunosuppression-other">@Model.Notification.ImmunosuppressionDetails.OtherDescription</div>
         </nhs-grid-column>
     </nhs-grid-row>
 </div>

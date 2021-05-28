@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
 using ntbs_service.DataMigration.RawModels;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Properties;
 using Xunit;
 
 namespace ntbs_service_unit_tests.DataMigration
@@ -19,21 +21,23 @@ namespace ntbs_service_unit_tests.DataMigration
         private readonly ICaseManagerImportService _caseManagerImportService;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly NtbsContext _context;
+        private readonly Mock<IOptionsMonitor<AdOptions>> _adOptionMock = new Mock<IOptionsMonitor<AdOptions>>();
         private Dictionary<string, MigrationLegacyUser> _usernameToLegacyUserDict = new Dictionary<string, MigrationLegacyUser>();
-        private Dictionary<string, IEnumerable<MigrationLegacyUserHospital>> _usernameToLegacyUserHospitalDict = new Dictionary<string, IEnumerable<MigrationLegacyUserHospital>>();
 
         public TreatmentEventMapperTest()
         {
             _context = SetupTestContext();
             _referenceDataRepository = new ReferenceDataRepository(_context);
-            var userRepo = new UserRepository(_context);
+            _adOptionMock.Setup(s => s.CurrentValue).Returns(new AdOptions{ReadOnlyUserGroup = "TestReadOnly"});
+            var userRepo = new UserRepository(_context, _adOptionMock.Object);
             var migrationRepo = new Mock<IMigrationRepository>();
             migrationRepo.Setup(mr => mr.GetLegacyUserByUsername(It.IsAny<string>()))
                 .Returns((string username) => Task.FromResult(_usernameToLegacyUserDict[username]));
             migrationRepo.Setup(repo => repo.GetLegacyUserHospitalsByUsername(It.IsAny<string>()))
                 .ReturnsAsync((string username) => new List<MigrationLegacyUserHospital>());
+            var importLogger = new Mock<IImportLogger>();
             _caseManagerImportService =
-                new CaseManagerImportService(userRepo, _referenceDataRepository, migrationRepo.Object, new ImportLogger());
+                new CaseManagerImportService(userRepo, _referenceDataRepository, migrationRepo.Object, importLogger.Object);
             _treatmentEventMapper = new TreatmentEventMapper(_caseManagerImportService, _referenceDataRepository);
         }
 
@@ -55,7 +59,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 HospitalId = new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7B"),
                 TreatmentEventType = "TransferIn"
             };
-            
+
             // Act
             var mappedEvent = await _treatmentEventMapper.AsTransferEvent(migrationTransferEvent);
 
@@ -82,7 +86,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 TreatmentOutcomeId = 2,
                 Note = "The patient had a specific outcome"
             };
-            
+
             // Act
             var mappedEvent = await _treatmentEventMapper.AsOutcomeEvent(migrationTransferEvent);
 
@@ -109,7 +113,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 TreatmentOutcomeId = 2,
                 Note = "The patient had a specific outcome"
             };
-            
+
             // Act
             var mappedEvent = await _treatmentEventMapper.AsOutcomeEvent(migrationTransferEvent);
 
@@ -121,7 +125,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Null(mappedEvent.TbServiceCode);
             Assert.Null(mappedEvent.CaseManagerId);
         }
-        
+
         private void GivenLegacyUserWithName(string username, string givenName, string familyName)
         {
             _usernameToLegacyUserDict.Add(

@@ -14,7 +14,7 @@ namespace ntbs_service.DataMigration
     public interface IImportValidator
     {
         Task<List<ValidationResult>> CleanAndValidateNotification(PerformContext context,
-            string requestId,
+            int runId,
             Notification notification);
     }
 
@@ -30,11 +30,11 @@ namespace ntbs_service.DataMigration
         }
 
         public async Task<List<ValidationResult>> CleanAndValidateNotification(PerformContext context,
-            string requestId,
+            int runId,
             Notification notification)
         {
-            CleanData(notification, context, requestId);
-            return (await GetValidationErrors(context, requestId, notification)).ToList();
+            await CleanData(notification, context, runId);
+            return (await GetValidationErrors(context, runId, notification)).ToList();
         }
 
         /// <summary>
@@ -43,42 +43,42 @@ namespace ntbs_service.DataMigration
         /// As this is a data-lossy action, we want to perform it here (rather than at sql script level), to ensure that
         /// it is recorded in the migration log
         /// </summary>
-        private void CleanData(Notification notification,
+        private async Task CleanData(Notification notification,
             PerformContext context,
-            string requestId)
+            int runId)
         {
             var missingDateResults = notification.TestData.ManualTestResults
                 .Where(result => !result.TestDate.HasValue)
                 .ToList();
-            missingDateResults.ForEach(result =>
+            foreach (var result in missingDateResults)
             {
-                var missingDateMessage =
-                    $"Notification {notification.LegacyId} had test results without a date set. The notification will be imported without this test record.";
-                _logger.LogWarning(context, requestId, missingDateMessage);
+                const string missingDateMessage = "had test results without a date set. " +
+                                                  "The notification will be imported without this test record.";
+                await _logger.LogNotificationWarning(context, runId, notification.LegacyId, missingDateMessage);
                 notification.TestData.ManualTestResults.Remove(result);
-            });
+            }
 
             var dateInFutureResults = notification.TestData.ManualTestResults
                 .Where(result => result.TestDate > DateTime.Today)
                 .ToList();
-            dateInFutureResults.ForEach(result =>
+            foreach (var result in dateInFutureResults)
             {
-                var dateInFutureMessage =
-                    $"Notification {notification.LegacyId} had test results with date set in future. The notification will be imported without this test record.";
-                _logger.LogWarning(context, requestId, dateInFutureMessage);
+                const string dateInFutureMessage = "had test results with date set in future. " +
+                                                   "The notification will be imported without this test record.";
+                await _logger.LogNotificationWarning(context, runId, notification.LegacyId, dateInFutureMessage);
                 notification.TestData.ManualTestResults.Remove(result);
-            });
+            }
 
             var missingResults = notification.TestData.ManualTestResults
                 .Where(result => result.Result == null)
                 .ToList();
-            missingResults.ForEach(result =>
+            foreach (var result in missingResults)
             {
-                var missingResultMessage =
-                    $"Notification {notification.LegacyId} had test results without a result recorded. The notification will be imported without this test record.";
-                _logger.LogWarning(context, requestId, missingResultMessage);
+                const string missingResultMessage = "had test results without a result recorded. " +
+                                                    "The notification will be imported without this test record.";
+                await _logger.LogNotificationWarning(context, runId, notification.LegacyId, missingResultMessage);
                 notification.TestData.ManualTestResults.Remove(result);
-            });
+            }
 
             // After filtering out invalid tests, we might have none left
             if (!notification.TestData.ManualTestResults.Any())
@@ -88,15 +88,15 @@ namespace ntbs_service.DataMigration
 
             if (ValidateObject(notification.ContactTracing).Any())
             {
-                var message =
-                    $"Notification {notification.LegacyId} invalid contact tracing figures. The notification will be imported without contact tracing data.";
-                _logger.LogWarning(context, requestId, message);
+                const string message = "invalid contact tracing figures. " +
+                                       "The notification will be imported without contact tracing data.";
+                await _logger.LogNotificationWarning(context, runId, notification.LegacyId, message);
                 notification.ContactTracing = new ContactTracing();
             }
         }
 
         private async Task<IEnumerable<ValidationResult>> GetValidationErrors(PerformContext context,
-            string requestId, Notification notification)
+            int runId, Notification notification)
         {
             var singletonModels = new List<ModelBase>
             {
@@ -130,7 +130,7 @@ namespace ntbs_service.DataMigration
             NotificationHelper.SetShouldValidateFull(notification);
             void SetValidationContext(ModelBase model) => model.SetValidationContext(notification);
             singletonModels.ForEach(SetValidationContext);
-            // patient details has special treatment due to the await-ed results below 
+            // patient details has special treatment due to the await-ed results below
             notification.PatientDetails.SetValidationContext(notification);
             modelCollections.ForEach(collection => collection.ForEach(SetValidationContext));
 
@@ -139,7 +139,7 @@ namespace ntbs_service.DataMigration
             validationsResults.AddRange(ValidateObject(notification));
             singletonModels.Select(ValidateObject)
                 .ForEach(results => validationsResults.AddRange(results));
-            await VerifyCaseManager(context, requestId, notification.HospitalDetails);
+            await VerifyCaseManager(context, runId, notification);
             validationsResults.AddRange(
                 modelCollections.SelectMany(collection => collection.SelectMany(ValidateObject)));
 
@@ -157,17 +157,19 @@ namespace ntbs_service.DataMigration
         }
 
         private async Task VerifyCaseManager(PerformContext context,
-            string requestId, HospitalDetails details)
+            int runId, Notification notification)
         {
-            if (!details.CaseManagerId.HasValue)
+            if (!notification.HospitalDetails.CaseManagerId.HasValue)
             {
                 return;
             }
-            
-            var possibleCaseManager = await _referenceDataRepository.GetUserByIdAsync(details.CaseManagerId.Value);
+
+            var possibleCaseManager =
+                await _referenceDataRepository.GetUserByIdAsync(notification.HospitalDetails.CaseManagerId.Value);
             if (possibleCaseManager != null && !possibleCaseManager.IsCaseManager)
             {
-                _logger.LogWarning(context, requestId, "User set as case manager for notification is not a case manager.");
+                await _logger.LogNotificationWarning(context, runId, notification.LegacyId,
+                    "User set as case manager for notification is not a case manager.");
             }
         }
     }

@@ -14,6 +14,7 @@
     <PackageReference Include="Hangfire.Core" Version="1.7.22" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.7.22" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.22" />
+    <PackageReference Include="Lindhart.Analyser.MissingAwaitWarning" Version="2.0.0" />
     <PackageReference Include="Markdig" Version="0.24.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.WsFederation" Version="5.0.5" />

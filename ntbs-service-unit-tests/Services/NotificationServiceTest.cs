@@ -509,6 +509,7 @@ namespace ntbs_service_unit_tests.Services
                 .Setup(r => r.GetNotificationAsync(existingNotification))
                 .Returns(Task.FromResult(new Notification
                 {
+                    NotificationStatus = NotificationStatus.Notified,
                     SocialContextVenues = new List<SocialContextVenue>(),
                     SocialContextAddresses = new List<SocialContextAddress>()
                 }));

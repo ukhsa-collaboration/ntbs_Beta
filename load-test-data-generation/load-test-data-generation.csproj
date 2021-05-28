@@ -9,11 +9,18 @@
 
   <ItemGroup>
     <PackageReference Include="Bogus" Version="33.0.2" />
+    <PackageReference Include="Lindhart.Analyser.MissingAwaitWarning" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ntbs-service\ntbs-service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="testSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

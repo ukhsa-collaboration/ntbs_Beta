@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
+using ntbs_service.Properties;
 
 namespace ntbs_integration_tests.TestServices
 {
@@ -33,9 +34,11 @@ namespace ntbs_integration_tests.TestServices
         public const string SchemeName = "TestAuth";
 
         private readonly ITestUser user;
+        private readonly AdOptions adOptions;
 
         public UserAuthentication(
             ITestUser user,
+            IOptionsMonitor<AdOptions> adOptions,
             IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
@@ -43,6 +46,7 @@ namespace ntbs_integration_tests.TestServices
             : base(options, logger, encoder, clock)
         {
             this.user = user;
+            this.adOptions = adOptions.CurrentValue;
         }
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -50,8 +54,7 @@ namespace ntbs_integration_tests.TestServices
             var identity = new ClaimsIdentity(SchemeName);
             identity.AddClaim(new Claim(ClaimTypes.Upn, user.Username));
             identity.AddClaim(new Claim(ClaimTypes.Name, user.DisplayName));
-            // This is the BaseUserGroup - it would be good to get this from config here
-            identity.AddClaim(new Claim(ClaimTypes.Role, "Global.NIS.NTBS"));
+            identity.AddClaim(new Claim(ClaimTypes.Role, adOptions.BaseUserGroup));
             foreach (var adGroup in user.AdGroups)
             {
                 identity.AddClaim(new Claim(ClaimTypes.Role, adGroup));

@@ -1,0 +1,13 @@
+Code,Name,AdGroup
+E45000001,London,App.Auth.NIS.NTBS.LON
+E45000005,West Midlands,App.Auth.NIS.NTBS.WMS
+E45000009,North East,App.Auth.NIS.NTBS.NoE
+E45000010,Yorkshire and Humber,App.Auth.NIS.NTBS.YHR
+E45000016,East Midlands,App.Auth.NIS.NTBS.EMS
+E45000017,East of England,App.Auth.NIS.NTBS.EoE
+E45000018,North West,App.Auth.NIS.NTBS.NoW
+E45000019,South East,App.Auth.NIS.NTBS.SoE
+E45000020,South West,App.Auth.NIS.NTBS.SoW
+PHECNI,Northern Ireland,App.Auth.NIS.NTBS.NI
+PHECSCOT,Scotland,App.Auth.NIS.NTBS.SCOT
+PHECWAL,Wales,App.Auth.NIS.NTBS.WALES

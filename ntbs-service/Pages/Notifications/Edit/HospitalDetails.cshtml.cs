@@ -18,7 +18,6 @@ namespace ntbs_service.Pages.Notifications.Edit
     public class HospitalDetailsModel : NotificationEditModelBase
     {
         private readonly NtbsContext _context;
-        private readonly IUserService _userService;
         private readonly IReferenceDataRepository _referenceDataRepository;
 
         public SelectList TbServices { get; set; }

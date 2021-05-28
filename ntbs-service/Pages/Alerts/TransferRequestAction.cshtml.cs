@@ -65,7 +65,7 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnGetAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            TransferAlert = await _alertRepository.GetOpenAlertByNotificationId<TransferAlert>(NotificationId);
+            TransferAlert = await _alertRepository.GetOpenTransferAlertByNotificationId(NotificationId);
             await AuthorizeAndSetBannerAsync();
 
             // Check edit permission of user and redirect if not allowed
@@ -96,7 +96,7 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnPostAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            TransferAlert = await _alertRepository.GetOpenAlertByNotificationId<TransferAlert>(NotificationId);
+            TransferAlert = await _alertRepository.GetOpenTransferAlertByNotificationId(NotificationId);
             await AuthorizeAndSetBannerAsync();
             if (!ModelState.IsValid)
             {

@@ -4,9 +4,10 @@
 
 @{
     var sectionSubPath = NotificationSubPaths.EditHospitalDetails;
+    var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath);
 }
 
-<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
+<div class="notification-overview-type-and-edit-container" id="@sectionId-title">
     <h3 class="notification-details-type"> Hospital Details </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
@@ -17,24 +18,24 @@
     }
 </div>
 
-<div class="notification-overview-details-container">
+<div class="notification-overview-details-container" id="@sectionId">
 
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> TB service </div>
-            <div class="cell-min-height"> @Model.Notification.HospitalDetails.TBServiceName </div>
+            <div class="cell-min-height" id="@sectionId-tb-service"> @Model.Notification.HospitalDetails.TBServiceName </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Hospital </div>
-            <div class="cell-min-height" id="overview-hospital-name"> @Model.Notification.HospitalDetails.HospitalName </div>
+            <div class="cell-min-height" id="@sectionId-hospital-name"> @Model.Notification.HospitalDetails.HospitalName </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Case Manager </div>
-            <div class="cell-min-height">@Model.Notification.HospitalDetails.CaseManagerName</div>
+            <div class="cell-min-height" id="@sectionId-case-manager">@Model.Notification.HospitalDetails.CaseManagerName</div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Consultant </div>
-            <div class="cell-min-height"> @Model.Notification.HospitalDetails.Consultant </div>
+            <div class="cell-min-height" id="@sectionId-consultant"> @Model.Notification.HospitalDetails.Consultant </div>
         </nhs-grid-column>
     </nhs-grid-row>
 
@@ -43,11 +44,11 @@
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Denotification Date </div>
-                <div class="cell-min-height"> @Model.Notification?.DenotificationDetails.FormattedDenotificationDate </div>
+                <div class="cell-min-height" id="@sectionId-denotified-date"> @Model.Notification?.DenotificationDetails.FormattedDenotificationDate </div>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Denotification Reason </div>
-                <div class="cell-min-height" id="overview-denotification-reason"> @Model.Notification?.DenotificationDetails.DenotificationReasonString </div>
+                <div class="cell-min-height" id="@sectionId-denotification-reason"> @Model.Notification?.DenotificationDetails.DenotificationReasonString </div>
             </nhs-grid-column>
         </nhs-grid-row>
     }

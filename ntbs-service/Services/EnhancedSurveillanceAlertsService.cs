@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ntbs_service.Models.Entities.Alerts;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.Projections;
 
 namespace ntbs_service.Services
@@ -21,7 +22,8 @@ namespace ntbs_service.Services
 
         public async Task CreateOrDismissMdrAlert(INotificationForDrugResistanceImport notification)
         {
-            if (notification.IsMdr && !notification.MdrDetailsEntered)
+            if (notification.NotificationStatus != NotificationStatus.Closed &&
+                notification.IsMdr && !notification.MdrDetailsEntered)
             {
                 await CreateMdrAlert(notification);
             }
@@ -33,7 +35,8 @@ namespace ntbs_service.Services
 
         public async Task CreateOrDismissMBovisAlert(INotificationForDrugResistanceImport notification)
         {
-            if (notification.IsMBovis && !notification.IsMBovisQuestionnaireComplete)
+            if (notification.NotificationStatus != NotificationStatus.Closed &&
+                notification.IsMBovis && !notification.IsMBovisQuestionnaireComplete)
             {
                 await CreateMBovisAlert(notification);
             }

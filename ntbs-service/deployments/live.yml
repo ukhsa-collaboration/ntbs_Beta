@@ -32,6 +32,9 @@ spec:
           image: "ntbscontainerregistry.azurecr.io/ntbs-service:live"
           imagePullPolicy: Always
           resources:
+            limits:
+              memory: 2Gi
+              cpu: 1000m # Given in milicores, this is 1 core
             requests:
               memory: 2Gi
               cpu: 1000m # Given in milicores, this is 1 core
@@ -120,7 +123,7 @@ spec:
               value: "" # intentionally empty so the app's service account gets used for authentication
             - name: LdapSettings__BaseDomain
               value: "DC=phe,DC=gov,DC=uk"
-            - name: MigrationConfig__TablePrefix
+            - name: MigrationConfig__NtbsEnvironment
               value: "MigrationTrial4"
             - name: ScheduledJobsConfig__UserSyncEnabled
               value: "false"
@@ -128,6 +131,8 @@ spec:
               value: "false"
             - name: ExternalLinks__ReportingOverview
               value: "https://app.powerbi.com/Redirect?action=OpenApp&appId=70e1af43-d5ca-48f8-b8c3-e146fc470fb7&ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666"
+            - name: ExternalLinks__ClusterReport
+              value: "https://app.powerbi.com/groups/me/apps/70e1af43-d5ca-48f8-b8c3-e146fc470fb/reports/81250fc5-20b2-4bbc-b0ce-4b8ca490be8b/ReportSection?ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666&filter=Cluster%2FClusterId%20eq '<CLUSTER_ID>'"
             - name: Sentry__Environment
               value: live
             - name: KRB5_CLIENT_KTNAME
@@ -136,6 +141,14 @@ spec:
               value: "true"
             - name: Hangfire__WorkerCount
               value: "3"
+            - name: EnvironmentDescription__ContainsLiveData
+              value: "true"
+            - name: EnvironmentDescription__IsLiveSystem
+              value: "true"
+            - name: EnvironmentDescription__DisplayName
+              value: "live"
+            - name: EnvironmentDescription__EnvironmentName
+              value: "phe-live"
           volumeMounts:
             - mountPath: /krbtab
               name: krb-tab

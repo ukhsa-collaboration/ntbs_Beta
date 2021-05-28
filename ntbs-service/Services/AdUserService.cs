@@ -10,25 +10,25 @@ namespace ntbs_service.Services
 {
     public interface IAdUserService
     {
-        Task AddAndUpdateUsers(List<(User user, List<TBService>)> usersInAd);
+        Task AddAndUpdateUsers(IList<(User user, IList<TBService>)> usersInAd);
     }
     public class AdUserService : IAdUserService
     {
         private readonly IUserRepository _userRepository;
-        
+
         public AdUserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
 
-        public async Task AddAndUpdateUsers(List<(User user, List<TBService>)> usersInAd)
+        public async Task AddAndUpdateUsers(IList<(User user, IList<TBService>)> usersInAd)
         {
             foreach (var (user, tbServicesMatchingGroups) in usersInAd)
             {
                 Log.Information($"Updating user {user.Username}");
                 await _userRepository.AddOrUpdateUser(user, tbServicesMatchingGroups);
             }
-                
+
             var ntbsUsersNotInAd = this._userRepository.GetUserQueryable()
                 .Where(user => !usersInAd.Select(u => u.user.Username)
                     .Contains(user.Username)).ToList();

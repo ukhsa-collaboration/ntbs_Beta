@@ -28,14 +28,13 @@ namespace ntbs_service.Services
         public IAzureAdDirectoryService Create()
         {
             var clientApplication = ConfidentialClientApplicationBuilder
-            .Create(_azureAdSettings.ClientId)
-            .WithAuthority(_azureAdSettings.Authority)
-            .WithClientSecret(_azureAdSettings.ClientSecret)
-            .Build();
+                .Create(_azureAdSettings.ClientId)
+                .WithAuthority(_azureAdSettings.Authority)
+                .WithClientSecret(_azureAdSettings.ClientSecret)
+                .Build();
 
-            var scopes = "https://graph.microsoft.com/.default";
+            const string scopes = "https://graph.microsoft.com/.default";
             var authProvider = new ClientCredentialProvider(clientApplication, scopes);
-
 
             _graphServiceClient = new GraphServiceClient(authProvider);
             return new AzureAdDirectoryService(_graphServiceClient, _adSettings);

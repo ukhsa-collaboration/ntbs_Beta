@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
@@ -20,6 +21,7 @@ namespace ntbs_service.Services
         Task DismissAlertAsync(int alertId, string userId);
         Task AutoDismissAlertAsync<T>(Notification notification) where T : Alert;
         Task DismissMatchingAlertAsync<T>(int notificationId, string auditUsername = AuditService.AuditUserSystem) where T : Alert;
+        Task DismissAllOpenAlertsForNotification(int notificationId);
         Task<IList<AlertWithTbServiceForDisplay>> GetAlertsForNotificationAsync(int notificationId, ClaimsPrincipal user);
         Task CreateAlertsForUnmatchedLabResults(IEnumerable<SpecimenMatchPairing> specimenMatchPairings);
     }
@@ -93,6 +95,30 @@ namespace ntbs_service.Services
             {
                 await DismissAlertAsync(alert.AlertId, null);
             }
+        }
+
+        public async Task DismissAllOpenAlertsForNotification(int notificationId)
+        {
+            var alerts = await _alertRepository.GetAllOpenAlertsByNotificationId(notificationId);
+
+            foreach (var alert in alerts)
+            {
+                if (alert is DataQualityPotentialDuplicateAlert duplicateAlert)
+                {
+                    var duplicate =
+                        await _notificationRepository.GetNotificationForAlertCreationAsync(duplicateAlert.DuplicateId);
+
+                    if (duplicate.NotificationStatus.IsOpen())
+                    {
+                        continue;
+                    }
+                }
+
+                alert.ClosureDate = DateTime.Now;
+                alert.AlertStatus = AlertStatus.Closed;
+            }
+
+            await _alertRepository.SaveAlertChangesAsync();
         }
 
         public async Task<bool> AddUniqueAlertAsync<T>(T alert) where T : Alert

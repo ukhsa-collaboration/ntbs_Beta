@@ -13,6 +13,7 @@ namespace ntbs_integration_tests.Helpers
         // as defined by the seed data in tbservice.csv. Otherwise, they still won't have access to the
         // TB Services.
         IEnumerable<string> TbServiceCodes { get; }
+        bool IsReadOnly { get; }
     }
 
     // Tech debt: Some of the AD groups which are hardcoded here should actually be taken from config.
@@ -24,6 +25,7 @@ namespace ntbs_integration_tests.Helpers
         public UserType Type { get; }
         public IEnumerable<string> AdGroups { get; }
         public IEnumerable<string> TbServiceCodes { get; }
+        public bool IsReadOnly { get; }
 
         private TestUser(
             int id,
@@ -31,7 +33,8 @@ namespace ntbs_integration_tests.Helpers
             string displayName,
             UserType type,
             IEnumerable<string> adGroups,
-            IEnumerable<string> tbServiceCodes = null)
+            IEnumerable<string> tbServiceCodes = null,
+            bool isReadOnly = false)
         {
             Id = id;
             Username = username;
@@ -39,6 +42,7 @@ namespace ntbs_integration_tests.Helpers
             Type = type;
             AdGroups = adGroups;
             TbServiceCodes = tbServiceCodes ?? new List<string>();
+            IsReadOnly = isReadOnly;
         }
 
         public static IEnumerable<TestUser> GetAll() => new[]
@@ -49,7 +53,8 @@ namespace ntbs_integration_tests.Helpers
             NationalTeamUser,
             AbingdonCaseManager,
             AbingdonCaseManager2,
-            Developer
+            Developer,
+            ReadOnlyUser
         };
 
         public static TestUser NhsUserForAbingdonAndPermitted = new TestUser(
@@ -57,7 +62,7 @@ namespace ntbs_integration_tests.Helpers
             "abingdon@nhs.uk",
             "Abingdon Permitted",
             UserType.NhsUser,
-            new[] { "Global.NIS.NTBS.Service_Abingdon", "Global.NIS.NTBS.Service_Ashford" },
+            new[] { "App.Auth.NIS.NTBS.Service_Abingdon", "App.Auth.NIS.NTBS.Service_Ashford" },
             tbServiceCodes: new[]
             {
                 Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
@@ -76,21 +81,21 @@ namespace ntbs_integration_tests.Helpers
             "permitted-phec@phe.com",
             "Permitted Phec",
             UserType.PheUser,
-            new[] { "Global.NIS.NTBS.Admin", "Global.NIS.NTBS.SoE" });
+            new[] { "App.Auth.NIS.NTBS.Admin", "App.Auth.NIS.NTBS.SoE" });
 
         public static TestUser NationalTeamUser = new TestUser(
             4567,
             "national-team@ntbs.com",
             "National Team",
             UserType.NationalTeam,
-            new[] { "Global.NIS.NTBS.Admin", "Global.NIS.NTBS.NTS" });
+            new[] { "App.Auth.NIS.NTBS.Admin", "App.Auth.NIS.NTBS.NTS" });
 
         public static TestUser AbingdonCaseManager = new TestUser(
             5678,
             Utilities.CASEMANAGER_ABINGDON_EMAIL,
             "TestCase TestManager",
             UserType.NhsUser,
-            new[] { "Global.NIS.NTBS.Service_Abingdon" },
+            new[] { "App.Auth.NIS.NTBS.Service_Abingdon" },
             tbServiceCodes: new[] { Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID });
 
         public static TestUser AbingdonCaseManager2 = new TestUser(
@@ -98,7 +103,7 @@ namespace ntbs_integration_tests.Helpers
             Utilities.CASEMANAGER_ABINGDON_EMAIL2,
             "TestCase TestManager",
             UserType.NhsUser,
-            new[] { "Global.NIS.NTBS.Service_Abingdon" },
+            new[] { "App.Auth.NIS.NTBS.Service_Abingdon" },
             tbServiceCodes: new[] { Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID });
 
         public static TestUser Developer = new TestUser(
@@ -106,6 +111,14 @@ namespace ntbs_integration_tests.Helpers
             "Developer@ntbs.phe.com",
             "BaseTestCase BaseTestManager",
             UserType.NationalTeam,
-            new[] { "Global.NIS.NTBS.NTS" });
+            new[] { "App.Auth.NIS.NTBS.NTS" });
+
+        public static TestUser ReadOnlyUser = new TestUser(
+            7892,
+            "ReadOnly@ntbs.phe.com",
+            "ReadOnly UserGroup",
+            UserType.NhsUser,
+            new[] { "App.Auth.NIS.NTBS.Read_Only_User" },
+            isReadOnly: true);
     }
 }

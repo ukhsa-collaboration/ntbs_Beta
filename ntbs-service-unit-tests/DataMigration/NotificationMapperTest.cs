@@ -41,6 +41,8 @@ namespace ntbs_service_unit_tests.DataMigration
         private readonly Mock<IPostcodeService> _postcodeService = new Mock<IPostcodeService>();
         private readonly Mock<ICaseManagerImportService> _caseManagerImportService =
             new Mock<ICaseManagerImportService>();
+
+        private readonly Mock<IImportLogger> _importLoggerMock = new Mock<IImportLogger>();
         private readonly ITreatmentEventMapper _treatmentEventMapper;
 
         private Dictionary<Guid, TBService> _hospitalToTbServiceCodeDict;
@@ -68,17 +70,16 @@ namespace ntbs_service_unit_tests.DataMigration
                 .ReturnsAsync((string postcode) => new PostcodeLookup { Postcode = postcode.Replace(" ", "").ToUpper() });
 
             // Needs to happen after the mocking, as the constructor uses a method from reference data repo
-            var importLogger = new ImportLogger();
             _treatmentEventMapper =
                 new TreatmentEventMapper(_caseManagerImportService.Object, _referenceDataRepositoryMock.Object);
             _notificationMapper = new NotificationMapper(
                 _migrationRepository,
                 _referenceDataRepositoryMock.Object,
-                importLogger,
+                _importLoggerMock.Object,
                 _postcodeService.Object,
                 _caseManagerImportService.Object,
                 _treatmentEventMapper);
-            _importValidator = new ImportValidator(importLogger, _referenceDataRepositoryMock.Object);
+            _importValidator = new ImportValidator(_importLoggerMock.Object, _referenceDataRepositoryMock.Object);
         }
 
         // The data for this test is mainly sourced from the test data created for NTBS during the alpha phase
@@ -89,6 +90,7 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyCreates_basicNotification()
         {
             // Arrange
+            const int runId = 12345;
             var legacyIds = new List<string> { "130331" };
             SetupNotificationsInGroups(("130331", "1"));
             const string royalBerkshireCode = "TBS001";
@@ -103,14 +105,15 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Act
             var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    "test-request-1",
+                    runId,
                     legacyIds))
                 .SelectMany(group => group)
                 .Single();
             var validationErrors =
-                await _importValidator.CleanAndValidateNotification(null, "test-request-1", notification);
+                await _importValidator.CleanAndValidateNotification(null, runId, notification);
 
             // Assert
+            Assert.Equal("ETS", notification.LegacySource);
             Assert.Equal("130331", notification.ETSID);
             Assert.Equal("130331", notification.LegacyId);
             Assert.Equal(new DateTime(2015, 3, 31), notification.NotificationDate?.Date);
@@ -143,9 +146,12 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Null(notification.SocialRiskFactors.RiskFactorHomelessness.InPastFiveYears);
             Assert.Null(notification.SocialRiskFactors.RiskFactorHomelessness.MoreThanFiveYearsAgo);
             Assert.Equal(Status.Yes, notification.SocialRiskFactors.RiskFactorImprisonment.Status);
-            Assert.Equal(false, notification.SocialRiskFactors.RiskFactorImprisonment.IsCurrent);
-            Assert.Equal(true, notification.SocialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
-            Assert.Equal(false, notification.SocialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
+            Assert.False(notification.SocialRiskFactors.RiskFactorImprisonment.IsCurrent);
+            Assert.True(notification.SocialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
+            Assert.False(notification.SocialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
+
+            Assert.False(notification.ShouldBeClosed());
+            Assert.Equal(NotificationStatus.Notified, notification.NotificationStatus);
 
             Assert.Empty(validationErrors);
         }
@@ -156,6 +162,7 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyMaps_ContactTracingNumbers()
         {
             // Arrange
+            const int runId = 12345;
             var legacyIds = new List<string> { "235676", "237137", "241256", "242084" };
             SetupNotificationsInGroups(("235676", "2"),
                 ("237137", "3"),
@@ -177,7 +184,7 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Act
             var notifications = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    "test-request-1",
+                    runId,
                     legacyIds))
                 .SelectMany(group => group)
                 .ToList();
@@ -235,6 +242,7 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyCreates_PostMortemNotification()
         {
             // Arrange
+            const int runId = 12345;
             var legacyIds = new List<string> { "132465" };
             SetupNotificationsInGroups(("132465", "6"));
 
@@ -246,14 +254,16 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Act
             var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    "test-request-3",
+                    runId,
                     legacyIds))
                 .SelectMany(group => group)
                 .Single();
 
             // Assert
-            Assert.Equal(1, notification.TreatmentEvents.Count);
-            Assert.Equal(true, notification.ClinicalDetails.IsPostMortem);
+            Assert.Single(notification.TreatmentEvents);
+            Assert.True(notification.ClinicalDetails.IsPostMortem);
+            Assert.True(notification.ShouldBeClosed());
+            Assert.Equal(NotificationStatus.Closed, notification.NotificationStatus);
             // For post mortem cases we *only* want to import the single death event so outcomes reporting is correct
             Assert.Collection(notification.TreatmentEvents,
                 te => Assert.Equal(TreatmentOutcomeType.Died, te.TreatmentOutcome.TreatmentOutcomeType));
@@ -265,6 +275,7 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyMaps_MBovisAnimalAndKnownCaseExposures()
         {
             // Arrange
+            const int runId = 12345;
             var legacyIds = new List<string> { "131686" };
             SetupNotificationsInGroups(("131686", "7"));
 
@@ -276,7 +287,7 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Act
             var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    "test-request-1",
+                    runId,
                     legacyIds))
                 .SelectMany(group => group)
                 .Single();
@@ -319,6 +330,7 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyMaps_MBovisMilkAndOccupationExposures()
         {
             // Arrange
+            const int runId = 12345;
             var legacyIds = new List<string> { "131687" };
             SetupNotificationsInGroups(("131687", "8"));
 
@@ -330,7 +342,7 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Act
             var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    "test-request-1",
+                    runId,
                     legacyIds))
                 .SelectMany(group => group)
                 .Single();
@@ -371,6 +383,7 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyMaps_NotStartedMBovisQuestionnaire()
         {
             // Arrange
+            const int runId = 12345;
             var legacyIds = new List<string> { "237137" };
             SetupNotificationsInGroups(("237137", "9"));
 
@@ -382,7 +395,7 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Act
             var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    "test-request-1",
+                    runId,
                     legacyIds))
                 .SelectMany(group => group)
                 .Single();

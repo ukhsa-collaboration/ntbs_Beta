@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -278,6 +277,11 @@ namespace ntbs_service.Pages.Search
                 }
             }
             return searchParameterDictionary;
+        }
+
+        public async Task<bool> UserIsReadOnly()
+        {
+            return (await _userService.GetUser(HttpContext.User)).IsReadOnly;
         }
     }
 }

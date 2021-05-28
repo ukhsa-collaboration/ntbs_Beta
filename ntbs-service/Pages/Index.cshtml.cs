@@ -87,5 +87,10 @@ namespace ntbs_service.Pages
             var alertsForTbServices = await _alertRepository.GetOpenAlertsByTbServiceCodesAsync(services.Select(tb => tb.Code));
             Alerts = await _authorizationService.FilterAlertsForUserAsync(User, alertsForTbServices);
         }
+
+        public async Task<bool> UserIsReadOnly()
+        {
+            return (await _userService.GetUser(HttpContext.User)).IsReadOnly;
+        }
     }
 }

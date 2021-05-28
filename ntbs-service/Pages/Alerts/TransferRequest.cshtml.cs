@@ -61,7 +61,7 @@ namespace ntbs_service.Pages.Alerts
             }
 
             var pendingTransferAlert =
-                await _alertRepository.GetOpenAlertByNotificationId<TransferAlert>(NotificationId);
+                await _alertRepository.GetOpenTransferAlertByNotificationId(NotificationId);
             if (pendingTransferAlert != null)
             {
                 TransferAlert = pendingTransferAlert;
@@ -132,7 +132,7 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnPostCancelAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            TransferAlert = await _alertRepository.GetOpenAlertByNotificationId<TransferAlert>(NotificationId);
+            TransferAlert = await _alertRepository.GetOpenTransferAlertByNotificationId(NotificationId);
             await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.Username());
 
             NotificationBannerModel = new NotificationBannerModel(Notification);

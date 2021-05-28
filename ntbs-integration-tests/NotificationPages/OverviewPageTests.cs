@@ -291,7 +291,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             var url = GetCurrentPathForId(Utilities.DENOTIFIED_ID);
             var document = await GetDocumentForUrlAsync(url);
-            Assert.Contains("Other - a great reason", document.QuerySelector("#overview-denotification-reason").TextContent);
+            Assert.Contains("Other - a great reason", document.QuerySelector("#overview-hospital-details-denotification-reason").TextContent);
         }
 
         [Fact]
@@ -334,7 +334,7 @@ namespace ntbs_integration_tests.NotificationPages
             }.ForEach(subPath =>
             {
                 var expectedAnchorString = OverviewSubPathToAnchorMap.GetOverviewAnchorId(subPath);
-                Assert.NotNull(document.QuerySelector($"#{expectedAnchorString}"));
+                Assert.NotNull(document.QuerySelector($"#{expectedAnchorString}-title"));
             });
         }
     }

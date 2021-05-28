@@ -290,5 +290,20 @@ namespace ntbs_integration_tests.LabResultsPage
 
             }
         }
+
+        [Fact]
+        public async Task GetCreate_ReturnsRedirectToAccessDenied_ForReadOnlyUser()
+        {
+            // Arrange
+            using (var client = Factory.WithUserAuth(TestUser.ReadOnlyUser)
+                .CreateClientWithoutRedirects())
+            {
+                // Act
+                var response = await client.GetAsync("/LabResults");
+
+                // Assert
+                response.AssertRedirectTo("/Account/AccessDenied");
+            }
+        }
     }
 }

@@ -77,7 +77,7 @@ namespace ntbs_service.DataAccess
             return GetNotificationsWithBasicInformationIQueryable()
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified
                             || n.NotificationStatus == NotificationStatus.Closed)
-                .OrderByDescending(n => n.SubmissionDate);
+                .OrderByDescending(n => n.NotificationDate);
         }
 
         public IQueryable<Notification> GetDraftNotificationsIQueryable()
@@ -118,6 +118,7 @@ namespace ntbs_service.DataAccess
                     n => new NotificationForDrugResistanceImport
                     {
                         NotificationId = n.NotificationId,
+                        NotificationStatus = n.NotificationStatus,
                         DrugResistanceProfile = n.DrugResistanceProfile,
                         TreatmentRegimen = n.ClinicalDetails.TreatmentRegimen,
                         ExposureToKnownMdrCaseStatus = n.MDRDetails.ExposureToKnownCaseStatus,
@@ -300,19 +301,7 @@ namespace ntbs_service.DataAccess
                 .OrderBy(n => n.NotificationId)
                 .AsSplitQuery()
                 .ToListAsync())
-                .Where(n =>
-                {
-                    var lastTreatmentEvent = n.TreatmentEvents.OrderByDescending(t => t.EventDate)
-                        .ThenBy(t => t.TreatmentEventTypeIsOutcome).FirstOrDefault();
-                    if (lastTreatmentEvent != null)
-                    {
-                        return lastTreatmentEvent.TreatmentEventTypeIsOutcome
-                               && lastTreatmentEvent.TreatmentOutcome.TreatmentOutcomeSubType !=
-                               TreatmentOutcomeSubType.StillOnTreatment
-                               && lastTreatmentEvent.EventDate < DateTime.Today.AddYears(-1);
-                    }
-                    return false;
-                });
+                .Where(n => n.ShouldBeClosed());
         }
 
         public async Task<NotificationGroup> GetNotificationGroupAsync(int notificationId)

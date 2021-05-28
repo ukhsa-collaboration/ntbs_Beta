@@ -22,7 +22,7 @@ namespace ntbs_service.Services
         ///     - user is an NTBS user object populated with data found in the external directory
         ///     - tbServicesMatchingGroups are TbService objects that correspond to user's memberships as case manager
         /// </returns>
-        IEnumerable<(User user, List<TBService> tbServicesMatchingGroups)> LookupUsers(IList<TBService> tbServices);
+        IList<(User user, IList<TBService> tbServicesMatchingGroups)> LookupUsers(IList<TBService> tbServices);
     }
 
     public class AdDirectoryService : IAdDirectoryService
@@ -66,7 +66,7 @@ namespace ntbs_service.Services
             _connection?.Dispose();
         }
 
-        public IEnumerable<(User user, List<TBService> tbServicesMatchingGroups)> LookupUsers(
+        public IList<(User user, IList<TBService> tbServicesMatchingGroups)> LookupUsers(
             IList<TBService> tbServices)
         {
             return GetAllDirectoryEntries()
@@ -86,7 +86,7 @@ namespace ntbs_service.Services
                 false,
                 new LdapSearchConstraints { ReferralFollowing = true });
 
-            // We don't want to use LdapSearchResults directly as Enumerable, since it can throw on `Next` 
+            // We don't want to use LdapSearchResults directly as Enumerable, since it can throw on `Next`
             while (searchResults.HasMore())
             {
                 var nextResult = searchResults.Next();
@@ -128,7 +128,7 @@ namespace ntbs_service.Services
                 : $"CN={baseUserGroup},CN=Users,{_settings.BaseDomain}";
         }
 
-        private static (User user, List<TBService> tbServicesMatchingGroups) BuildUser(
+        private static (User user, IList<TBService> tbServicesMatchingGroups) BuildUser(
             LdapEntry searchResult, IList<TBService> tbServices)
         {
             // TODO NTBS-1672 consider storing user guid as the key
@@ -153,9 +153,9 @@ namespace ntbs_service.Services
         }
 
         // Example of the distinguished name format:
-        // "CN=Global.NIS.NTBS.Service_Nottingham,CN=Users,DC=ntbs,DC=phe,DC=com"
-        // We are interested in the group names, e.g. Global.NIS.NTBS.Service_Nottingham 
-        private static readonly Regex DistinguishedNameRegex = new Regex("(CN=)(Global.NIS.NTBS[^,]+)(,.*)");
+        // "CN=App.Auth.NIS.NTBS.Service_Nottingham,CN=Users,DC=ntbs,DC=phe,DC=com"
+        // We are interested in the group names, e.g. App.Auth.NIS.NTBS.Service_Nottingham
+        private static readonly Regex DistinguishedNameRegex = new Regex("(CN=)(App.Auth.NIS.NTBS[^,]+)(,.*)");
 
         private static List<string> GetAdGroups(IEnumerator distinguishedNames)
         {

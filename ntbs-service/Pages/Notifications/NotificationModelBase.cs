@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
@@ -20,15 +19,18 @@ namespace ntbs_service.Pages.Notifications
         protected INotificationService Service;
         protected IAuthorizationService _authorizationService;
         protected INotificationRepository NotificationRepository;
+        protected IUserService _userService;
 
         protected NotificationModelBase(
             INotificationService service,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository = null)
+            INotificationRepository notificationRepository = null,
+            IUserService userService = null)
         {
             Service = service;
             _authorizationService = authorizationService;
             NotificationRepository = notificationRepository;
+            _userService = userService;
         }
         public int NumberOfLinkedNotifications { get; set; }
         public int? LatestLinkedNotificationId { get; private set; }
@@ -93,6 +95,11 @@ namespace ntbs_service.Pages.Notifications
         protected IActionResult ForbiddenResult()
         {
             return StatusCode((int)HttpStatusCode.Forbidden);
+        }
+
+        public async Task<bool> UserIsReadOnly()
+        {
+            return (await _userService.GetUser(User)).IsReadOnly;
         }
 
         private async Task<NotificationGroup> GetNotificationGroupAsync()

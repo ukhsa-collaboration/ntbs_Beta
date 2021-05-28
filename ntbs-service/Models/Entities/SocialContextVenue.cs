@@ -11,7 +11,7 @@ namespace ntbs_service.Models.Entities
         nameof(Postcode),
         nameof(Details),
         ErrorMessage = ValidationMessages.SupplyOneOfTheVenueFields)]
-    [Display(Name = "Social Context Venue")]
+    [Display(Name = "Social context venue")]
     public partial class SocialContextVenue : SocialContextBase
     {
         public int SocialContextVenueId { get; set; }

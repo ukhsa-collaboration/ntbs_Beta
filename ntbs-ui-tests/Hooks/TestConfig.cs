@@ -19,7 +19,7 @@ namespace ntbs_ui_tests.Hooks
         // This allows JS adding an element into a page to do so before Selenium claims it is not there; it reduces
         // the probability of a false-failure due to Selenium and JS on the site racing each other.
         // If you are getting unexpected "element not found" errors, try increasing this timespan.
-        public TimeSpan ImplicitWait => TimeSpan.FromSeconds(5);
+        public TimeSpan ImplicitWait => TimeSpan.FromSeconds(15);
 
         public IDictionary<string, UserConfig> Users { get; set; }
 
@@ -33,7 +33,10 @@ namespace ntbs_ui_tests.Hooks
     public class EnvironmentConfig
     {
         public string ConnectionString { get; set; }
+        public string MigrationConnectionString { get; set; }
+        public string SpecimenConnectionString { get; set; }
         public string RootUri { get; set; }
+        public string ImportedNotificationNtbsEnvironment { get; set; }
     }
 
     public class UserConfig

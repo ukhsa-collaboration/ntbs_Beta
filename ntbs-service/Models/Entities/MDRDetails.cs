@@ -10,14 +10,14 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    [Display(Name = "MDR Details")]
+    [Display(Name = "MDR details")]
     public partial class MDRDetails : ModelBase, IOwnedEntityForAuditing
     {
         [Display(Name = "Has the patient been exposed to a known RR/MDR/XDR case?")]
         public Status? ExposureToKnownCaseStatus { get; set; }
 
         [MaxLength(90)]
-        [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, ErrorMessage = ValidationMessages.InvalidCharacter)]
         [RequiredIf(@"ExposureToKnownCaseStatus == Enums.Status.Yes", ErrorMessage = ValidationMessages.RelationshipToCaseIsRequired)]
         [Display(Name = "Relationship of the current case to the contact")]
         public string RelationshipToCase { get; set; }
