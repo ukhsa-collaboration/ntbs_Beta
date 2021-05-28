@@ -35,6 +35,7 @@ jobs:
       - name: Determine job outcome
         run: node result-parser/result-parser.js $STATS_FILE
       - name: Archive results
+        if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
           name: load-test-results
