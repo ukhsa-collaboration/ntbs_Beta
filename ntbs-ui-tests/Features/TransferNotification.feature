@@ -9,15 +9,17 @@ Feature: Transfer notification
     When I expand manage notification section
     And I click on the 'transfer-button' button
     And I enter Yorkshire and Humber into 'PhecCode'
-    And I wait
     And I enter LCHC (Leeds Community Healthcare NHS Trust) into 'TransferRequest_TbServiceCode'
+    And I wait
     And I enter Kamala Jones into 'TransferRequest_CaseManagerId'
     And I check 'transfer-radio-Other'
     And I enter Patient likes travel into 'TransferRequest_OtherReasonDescription'
     And I enter I hope your service is doing well into 'TransferRequest_TransferRequestNote'
     And I click on the 'confirm-transfer-button' button
+    And I wait
     
   Scenario: Pending transfer page has correct values
+    Then I should see the Notification
     When I expand manage notification section
     And I click on the 'transfer-button' button
     

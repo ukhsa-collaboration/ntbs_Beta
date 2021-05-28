@@ -2,7 +2,7 @@ name: Run UI tests
 
 on:
   schedule:
-    - cron:  '00 8 * * *'
+    - cron:  '00 21 * * *'
   workflow_dispatch:
     inputs:
       env:
