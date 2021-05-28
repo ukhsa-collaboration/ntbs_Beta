@@ -66,24 +66,13 @@ namespace ntbs_ui_tests.Steps
         [Given(@"I have logged in as (.*)")]
         public void GivenIHaveLoggedIn(string userId)
         {
-            try
-            {
-                var user = Settings.Users[userId];
-                user.UserId = GetUserIdFromUsername(user.Username);
-                Browser.FindElement(By.CssSelector("input[type=email]")).SendKeys(user.Username);
-                Browser.FindElement(By.CssSelector("input[type=submit][value=Next]")).Click();
-                Browser.FindElement(By.CssSelector("input[type=password]")).SendKeys(user.Password);
-                Browser.FindElement(By.CssSelector("input[type=submit][value='Sign in']")).Click();
-                TestContext.LoggedInUser = user;
-            }
-            catch
-            {
-                // TODO:Remove this code
-                // This is temporary debugging to help determine why the login is sometimes failing
-                var webElement = (string)((IJavaScriptExecutor)Browser).ExecuteScript("return document.body.innerHTML;");
-                Console.WriteLine(webElement);
-                throw;
-            }
+            var user = Settings.Users[userId];
+            user.UserId = GetUserIdFromUsername(user.Username);
+            Browser.FindElement(By.CssSelector("input[type=email]")).SendKeys(user.Username);
+            Browser.FindElement(By.CssSelector("input[type=submit][value=Next]")).Click();
+            Browser.FindElement(By.CssSelector("input[type=password]")).SendKeys(user.Password);
+            Browser.FindElement(By.CssSelector("input[type=submit][value='Sign in']")).Click();
+            TestContext.LoggedInUser = user;
         }
 
         [Given(@"I choose to log in with a different account")]

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using MockQueryable.Moq;
 using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -23,21 +23,19 @@ namespace ntbs_service_unit_tests.Services
         private readonly AdOptions _options = new AdOptions
         {
             NationalTeamAdGroup = NationalTeam,
-            ServiceGroupAdPrefix = ServicePrefix,
+            ServiceGroupAdPrefix = ServicePrefix
         };
 
-        private readonly Mock<IOptionsMonitor<AdOptions>> _mockOptionsMonitor;
         private readonly Mock<IReferenceDataRepository> _mockReferenceDataRepository;
-        private readonly Mock<IUserRepository> _mockUserRepository;
         private readonly Mock<ClaimsPrincipal> _mockUser;
 
         public UserServiceTest()
         {
             _mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
-            _mockOptionsMonitor = new Mock<IOptionsMonitor<AdOptions>>();
-            _mockUserRepository = new Mock<IUserRepository>();
-            _mockOptionsMonitor.Setup(o => o.CurrentValue).Returns(_options);
-            _service = new UserService(_mockReferenceDataRepository.Object, _mockUserRepository.Object, _mockOptionsMonitor.Object);
+            var mockOptionsMonitor = new Mock<IOptionsMonitor<AdOptions>>();
+            var mockUserRepository = new Mock<IUserRepository>();
+            mockOptionsMonitor.Setup(o => o.CurrentValue).Returns(_options);
+            _service = new UserService(_mockReferenceDataRepository.Object, mockUserRepository.Object, mockOptionsMonitor.Object);
 
             _mockUser = new Mock<ClaimsPrincipal>();
         }
@@ -48,7 +46,6 @@ namespace ntbs_service_unit_tests.Services
             // Arrange
             var claim = new Claim("User", NationalTeam);
             SetupClaimMocking(claim);
-            _mockUser.Setup(u => u.IsInRole(NationalTeam)).Returns(true);
 
             // Act
             var result = await _service.GetUserPermissionsFilterAsync(_mockUser.Object);
@@ -111,7 +108,6 @@ namespace ntbs_service_unit_tests.Services
             // Arrange
             var claim = new Claim("User", NationalTeam);
             SetupClaimMocking(claim);
-            _mockUser.Setup(u => u.IsInRole(NationalTeam)).Returns(true);
 
             // Act
             await _service.GetPhecCodesAsync(_mockUser.Object);
@@ -130,14 +126,11 @@ namespace ntbs_service_unit_tests.Services
             // Act
             await _service.GetPhecCodesAsync(_mockUser.Object);
 
-            // Asser
+            // Assert
             _mockReferenceDataRepository.Verify(x => x.GetPhecCodesMatchingRolesAsync(new List<string> { "PHE" }), Times.Once);
         }
 
-        // TODO: The following tests currently fail with "The provider for the source IQueryable doesn't implement IAsyncQueryProvider".
-        // This isn't trivial to fix; this issue arose when merging as UserService had been refactored, so leaving as is for now.
-
-        [Fact(Skip = "Issues with Async in test")]
+        [Fact]
         public async Task GetDefaultTbService_ReturnsMatchingService_ForNationalUser()
         {
             // Arrange
@@ -146,16 +139,17 @@ namespace ntbs_service_unit_tests.Services
 
             var claim = new Claim("User", NationalTeam);
             SetupClaimMocking(claim);
-            _mockReferenceDataRepository.Setup(c => c.GetDefaultTbServicesForNhsUserQueryable(It.Is<IEnumerable<string>>(l => l.Contains(NationalTeam))))
-                .Returns((new List<TBService> { tbService }).AsQueryable);
+            var mockTbServiceQuery = new List<TBService> { tbService }.AsQueryable().BuildMock();
+            _mockReferenceDataRepository.Setup(c => c.GetTbServicesQueryable())
+                .Returns(mockTbServiceQuery.Object);
             // Act
             var result = await _service.GetDefaultTbService(_mockUser.Object);
 
             // Assert
-            Assert.Null(result);
+            Assert.Equal(tbService, result);
         }
 
-        [Fact(Skip = "Issues with Async in test")]
+        [Fact]
         public async Task GetDefaultTbService_ReturnsMatchingService_ForNhsUser()
         {
             // Arrange
@@ -164,8 +158,9 @@ namespace ntbs_service_unit_tests.Services
 
             var claim = new Claim("User", serviceAdGroup);
             SetupClaimMocking(claim);
+            var mockTbServiceQuery = new List<TBService> { tbService }.AsQueryable().BuildMock();
             _mockReferenceDataRepository.Setup(c => c.GetDefaultTbServicesForNhsUserQueryable(It.Is<IEnumerable<string>>(l => l.Contains(serviceAdGroup))))
-                .Returns((new List<TBService>() { tbService }).AsQueryable);
+                .Returns(mockTbServiceQuery.Object);
 
             // Act
             var result = await _service.GetDefaultTbService(_mockUser.Object);
@@ -174,7 +169,7 @@ namespace ntbs_service_unit_tests.Services
             Assert.Equal(tbService, result);
         }
 
-        [Fact(Skip = "Issues with Async in test")]
+        [Fact]
         public async Task GetDefaultTbService_ReturnsMatchingService_ForPheUser()
         {
             // Arrange
@@ -184,8 +179,9 @@ namespace ntbs_service_unit_tests.Services
 
             var claim = new Claim("User", adGroup);
             SetupClaimMocking(claim);
+            var mockTbServiceQuery = new List<TBService> { tbService }.AsQueryable().BuildMock();
             _mockReferenceDataRepository.Setup(c => c.GetDefaultTbServicesForPheUserQueryable(It.Is<IEnumerable<string>>(l => l.Contains(adGroup))))
-                .Returns((new List<TBService>() { tbService }).AsQueryable);
+                .Returns(mockTbServiceQuery.Object);
 
             // Act
             var result = await _service.GetDefaultTbService(_mockUser.Object);
@@ -198,6 +194,7 @@ namespace ntbs_service_unit_tests.Services
         private void SetupClaimMocking(Claim claim)
         {
             _mockUser.Setup(u => u.FindAll(It.IsAny<Predicate<Claim>>())).Returns(new List<Claim> { claim });
+            _mockUser.Setup(u => u.IsInRole(It.IsAny<string>())).Returns<string>(role => claim.Value == role);
         }
     }
 }
