@@ -131,6 +131,8 @@ spec:
               value: "false"
             - name: ExternalLinks__ReportingOverview
               value: "https://app.powerbi.com/Redirect?action=OpenApp&appId=70e1af43-d5ca-48f8-b8c3-e146fc470fb7&ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666"
+            - name: ExternalLinks__ClusterReport
+              value: "https://app.powerbi.com/groups/me/apps/70e1af43-d5ca-48f8-b8c3-e146fc470fb/reports/81250fc5-20b2-4bbc-b0ce-4b8ca490be8b/ReportSection?ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666&filter=Cluster%2FClusterId%20eq '<CLUSTER_ID>'"
             - name: Sentry__Environment
               value: live
             - name: KRB5_CLIENT_KTNAME

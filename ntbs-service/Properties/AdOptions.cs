@@ -4,7 +4,7 @@
     {
         public string NationalTeamAdGroup { get; set; }
 
-        /** TB service groups are of the format Global.NIS.NTBS.Service_<service-specifc-postfix> */
+        /** TB service groups are of the format App.Auth.NIS.NTBS.Service_<service-specifc-postfix> */
         public string ServiceGroupAdPrefix { get; set; }
 
         /** Group that contains all users of NTBS, used for authorizing access to the app */
