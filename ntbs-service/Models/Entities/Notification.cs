@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Projections;
@@ -111,9 +112,7 @@ namespace ntbs_service.Models.Entities
 
         public bool ShouldBeClosed()
         {
-            var lastTreatmentEvent = TreatmentEvents.OrderByDescending(t => t.EventDate)
-                .ThenBy(t => t.TreatmentEventTypeIsOutcome)
-                .FirstOrDefault();
+            var lastTreatmentEvent = TreatmentEvents.OrderForEpisodes().LastOrDefault();
 
             return lastTreatmentEvent != null
                 && lastTreatmentEvent.TreatmentEventTypeIsOutcome
