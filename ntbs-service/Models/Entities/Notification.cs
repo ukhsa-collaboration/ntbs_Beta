@@ -112,12 +112,12 @@ namespace ntbs_service.Models.Entities
 
         public bool ShouldBeClosed()
         {
-            var lastTreatmentEvent = TreatmentEvents.OrderForEpisodes().LastOrDefault();
+            var mostRecentTreatmentEvent = TreatmentEvents.GetMostRecentTreatmentEvent();
 
-            return lastTreatmentEvent != null
-                && lastTreatmentEvent.TreatmentEventTypeIsOutcome
-                && lastTreatmentEvent.TreatmentOutcome?.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment
-                && lastTreatmentEvent.EventDate < DateTime.Today.AddYears(-1);
+            return mostRecentTreatmentEvent != null
+                && mostRecentTreatmentEvent.TreatmentEventTypeIsOutcome
+                && mostRecentTreatmentEvent.TreatmentOutcome?.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment
+                && mostRecentTreatmentEvent.EventDate < DateTime.Today.AddYears(-1);
         }
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;

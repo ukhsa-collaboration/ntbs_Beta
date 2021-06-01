@@ -62,9 +62,7 @@ namespace ntbs_service.Helpers
 
         public static TreatmentEvent GetMostRecentTreatmentEvent(this IEnumerable<TreatmentEvent> treatmentEvents)
         {
-            return treatmentEvents
-                .OrderByDescending(t => t.EventDate)
-                .FirstOrDefault();
+            return treatmentEvents.OrderForEpisodes().LastOrDefault();
         }
 
         public static bool IsEpisodeEndingTreatmentEvent(this TreatmentEvent treatmentEvent)
