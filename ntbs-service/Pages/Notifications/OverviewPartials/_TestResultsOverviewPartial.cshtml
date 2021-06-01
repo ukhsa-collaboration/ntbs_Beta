@@ -4,17 +4,25 @@
 
 @{
     var testData = Model.Notification.TestData;
-    var sectionSubPath = NotificationSubPaths.EditTestResults;
-    var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath);
+    var sectionEditSubPath = NotificationSubPaths.EditTestResults;
+    var sectionViewSubPath = NotificationSubPaths.ViewTestResults;
+    var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionEditSubPath);
 }
 
 <div class="notification-overview-type-and-edit-container" id="@sectionId-title">
     <h3 class="notification-details-type"> Test results </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
-        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionSubPath)"
+        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionEditSubPath)"
            class="notification-edit-link govuk-link--no-visited-state">
             Edit
+        </a>
+    }
+    else if (Model.PermissionLevel == PermissionLevel.ReadOnly)
+    {
+        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionViewSubPath)"
+           class="notification-edit-link govuk-link--no-visited-state">
+            View
         </a>
     }
 </div>
