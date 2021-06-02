@@ -150,6 +150,15 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.True(notification.SocialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
             Assert.False(notification.SocialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
 
+            Assert.Equal(2, notification.TravelDetails.TotalNumberOfCountries);
+            Assert.Equal(Status.Yes, notification.TravelDetails.HasTravel);
+            Assert.Equal(1, notification.TravelDetails.Country1Id);
+            Assert.Equal(9, notification.TravelDetails.Country2Id);
+            Assert.Null(notification.TravelDetails.Country3Id);
+            Assert.Equal(1, notification.TravelDetails.StayLengthInMonths1);
+            Assert.Equal(3, notification.TravelDetails.StayLengthInMonths2);
+            Assert.Null(notification.TravelDetails.StayLengthInMonths3);
+
             Assert.False(notification.ShouldBeClosed());
             Assert.Equal(NotificationStatus.Notified, notification.NotificationStatus);
 
@@ -410,6 +419,39 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Empty(notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions);
             Assert.Null(notification.MBovisDetails.OccupationExposureStatus);
             Assert.Empty(notification.MBovisDetails.MBovisOccupationExposures);
+        }
+
+        // This test uses test notification 237137, used in correctlyMaps_ContactTracingNumbers
+        [Fact]
+        public async Task correctlyMaps_DuplicateTravelCountries()
+        {
+            // Arrange
+            const int runId = 12345;
+            var legacyIds = new List<string> { "237137" };
+            SetupNotificationsInGroups(("237137", "9"));
+
+            const string leedsGeneralCode = "TBS0106";
+            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
+            {
+                {new Guid("7E9C715D-0248-4D97-8F67-1134FC133588"), new TBService {Code = leedsGeneralCode}},
+            };
+
+            // Act
+            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
+                    runId,
+                    legacyIds))
+                .SelectMany(group => group)
+                .Single();
+
+            // Assert
+            Assert.Equal(3, notification.TravelDetails.TotalNumberOfCountries);
+            Assert.Equal(Status.Yes, notification.TravelDetails.HasTravel);
+            Assert.Equal(169, notification.TravelDetails.Country1Id);
+            Assert.Equal(9, notification.TravelDetails.Country2Id);
+            Assert.Null(notification.TravelDetails.Country3Id);
+            Assert.Equal(5, notification.TravelDetails.StayLengthInMonths1);
+            Assert.Equal(3, notification.TravelDetails.StayLengthInMonths2);
+            Assert.Null(notification.TravelDetails.StayLengthInMonths3);
         }
 
 

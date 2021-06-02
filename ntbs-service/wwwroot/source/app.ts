@@ -12,6 +12,8 @@ import * as Sentry from '@sentry/browser';
 import * as SentryIntegrations from '@sentry/integrations';
 // @ts-ignore
 import Details from '../../node_modules/nhsuk-frontend/packages/components/details/details';
+// @ts-ignore
+import ErrorSummary from '../../node_modules/nhsuk-frontend/packages/components/error-summary/error-summary';
 import '../../node_modules/nhsuk-frontend/packages/polyfills';
 import VueAccessibleModal from 'vue-accessible-modal'
 import cssVars from 'css-vars-ponyfill';
@@ -102,4 +104,5 @@ govUkJsInitAll();
 // Initialize NHS components
 document.addEventListener('DOMContentLoaded', () => {
     Details();
+    ErrorSummary();
 });
