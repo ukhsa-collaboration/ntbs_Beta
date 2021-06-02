@@ -1,6 +1,6 @@
 @model IEnumerable<ntbs_service.Models.Entities.MatchedSpecimen>
 
-@{var showUnmatchLinks = (bool)(ViewData["ShowUnmatchLinks"] ?? true);}
+@{ var showUnmatchLinks = (bool)(ViewData["ShowUnmatchLinks"] ?? false); }
 
 @if (Model.Count() > 0)
 {
