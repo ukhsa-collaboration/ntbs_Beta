@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -65,8 +66,7 @@ namespace ntbs_service.Models
 
         private static string CalculateOutcome(Notification notification)
         {
-            return notification.TreatmentEvents
-                       .GetMostRecentTreatmentEvent()
+            return notification.TreatmentEvents.GetMostRecentTreatmentEvent()
                        ?.TreatmentOutcome
                        ?.TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded";
         }

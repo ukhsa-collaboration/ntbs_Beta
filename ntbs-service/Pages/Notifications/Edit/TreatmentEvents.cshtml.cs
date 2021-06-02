@@ -10,7 +10,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class TreatmentEventsModel : NotificationEditModelBase
     {
-        public ICollection<TreatmentEvent> TreatmentEvents { get; set; }
+        public IEnumerable<TreatmentEvent> TreatmentEvents { get; set; }
 
         public TreatmentEventsModel(
             INotificationService notificationService,
@@ -23,7 +23,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
-            TreatmentEvents = Notification.TreatmentEvents;
+            TreatmentEvents = Notification.TreatmentEvents.OrderForEpisodes();
             await SetNotificationProperties(isBeingSubmitted);
 
             return Page();
