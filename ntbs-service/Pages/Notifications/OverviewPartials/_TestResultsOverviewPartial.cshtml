@@ -14,14 +14,14 @@
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
         <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionEditSubPath)"
-           class="notification-edit-link govuk-link--no-visited-state">
+           class="notification-edit-link govuk-link--no-visited-state" id="@sectionId-edit-link">
             Edit
         </a>
     }
     else if (Model.PermissionLevel == PermissionLevel.ReadOnly)
     {
         <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionViewSubPath)"
-           class="notification-edit-link govuk-link--no-visited-state">
+           class="notification-edit-link govuk-link--no-visited-state" id="@sectionId-view-link">
             View
         </a>
     }

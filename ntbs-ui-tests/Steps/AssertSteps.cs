@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using ntbs_service.Models.Validations;
@@ -158,6 +159,24 @@ namespace ntbs_ui_tests.Steps
             Assert.Contains("Denotified", notificationHeading);
         }
 
+        [Then(@"The '(.*)' link is present in the '(.*)' overview section")]
+        public void ThenLinkIsPresentOnOverviewSection(string linkText, string section)
+        {
+            var sectionId =HtmlElementHelper.GetSectionIdFromSection(section);
+            var linkId = $"{sectionId}-{linkText}-link";
+            Assert.NotNull(HtmlElementHelper.FindElementById(Browser, linkId));
+        }
+
+        [Then(@"The '(.*)' link is not present in the '(.*)' overview section")]
+        public void ThenLinkIsNotPresentOnOverviewSection(string linkText, string section)
+        {
+            SetImplicitWait(TimeSpan.FromSeconds(1));
+            var sectionId = HtmlElementHelper.GetSectionIdFromSection(section);
+            var linkId = $"{sectionId}-{linkText}-link";
+            Assert.Empty(HtmlElementHelper.FindElementsById(Browser, linkId));
+            SetImplicitWait(Settings.ImplicitWait);
+        }
+
         #endregion
 
         #region General checks
@@ -171,8 +190,9 @@ namespace ntbs_ui_tests.Steps
         [Then(@"The element with id '(.*)' is not present")]
         public void ThenICannotSeeTheElement(string elementId)
         {
-            var elements = HtmlElementHelper.FindElementsById(Browser, elementId);
-            Assert.False(elements.Any());
+            SetImplicitWait(TimeSpan.FromSeconds(1));
+            Assert.Empty(HtmlElementHelper.FindElementsById(Browser, elementId));
+            SetImplicitWait(Settings.ImplicitWait);
         }
 
         [Then("A new notification should have been created")]
@@ -202,6 +222,11 @@ namespace ntbs_ui_tests.Steps
                 "draft-notifications-table" => new [] {"NTBS Id", "Name", "Date created", "TB Service", "Case Manager"},
                 "recent-notifications-table" => new [] {"NTBS Id", "Name", "Date notified", "TB Service", "Case Manager"}
             };
+        }
+
+        private void SetImplicitWait(TimeSpan waitTime)
+        {
+            Browser.Manage().Timeouts().ImplicitWait = waitTime;
         }
 
         private string[] GetExpectedLabels(string tableId)
