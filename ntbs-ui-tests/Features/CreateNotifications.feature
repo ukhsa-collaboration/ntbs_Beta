@@ -85,12 +85,12 @@ Feature: Notification creation
     And I wait
     And I select SELLY OAK HOSPITAL for 'HospitalDetails_HospitalId'
     And I enter Dr Lawton into 'HospitalDetails_Consultant'
-    And I enter Birmingham User into 'HospitalDetails_CaseManagerId'
+    And I enter Birmingham UITester into 'HospitalDetails_CaseManagerId'
     When I click on the 'submit-button' button
 
     Then I can see the value 'Birmingham & Solihull' for the field 'tb-service' in the 'HospitalDetails' overview section
     And I can see the value 'SELLY OAK HOSPITAL' for the field 'hospital-name' in the 'HospitalDetails' overview section
-    And I can see the value 'Birmingham User' for the field 'case-manager' in the 'HospitalDetails' overview section
+    And I can see the value 'Birmingham UITester' for the field 'case-manager' in the 'HospitalDetails' overview section
     And I can see the value 'Dr Lawton' for the field 'consultant' in the 'HospitalDetails' overview section
     And I can see the value '01 Jan 2019' for the field 'notification-date' in the 'PatientDetails' overview section
 
@@ -153,7 +153,7 @@ Feature: Notification creation
     And I can see the value 'Yes' for the field 'case-management' in the 'ClinicalDetails' overview section
     And I can see the value 'Standard therapy' for the field 'treatment-regimen' in the 'ClinicalDetails' overview section
     And I can see the value 'Patient has been doing well' for the field 'notes' in the 'ClinicalDetails' overview section
-    
+
   Scenario: Create notification with all test results fields
     When I click 'Test results' on the navigation bar
     Then I should be on the TestResults page
@@ -167,7 +167,7 @@ Feature: Notification creation
     And I enter Negative into 'TestResultForEdit_Result'
     And I click on the 'save-test-result-button' button
     When I click on the 'submit-button' button
-    
+
     Then I can see the value 'Yes' for the field 'test-carried-out' in the 'TestResults' overview section
     And I can see the value 'Bronchial washings' in the 'TestResults' table overview section
     And I can see the value 'Smear' in the 'TestResults' table overview section
@@ -223,7 +223,7 @@ Feature: Notification creation
     And I check 'asylum-seeker-radio-button-No'
     And I check 'immigration-detainee-radio-button-Yes'
     When I click on the 'submit-button' button
-    
+
     Then I can see the value 'Yes' for the field 'drugs' in the 'SocialRiskFactors' overview section
     And I can see the value 'less than 5 years ago' for the field 'drugs-time-period' in the 'SocialRiskFactors' overview section
     And I can see the value 'Unknown' for the field 'homelessness' in the 'SocialRiskFactors' overview section
@@ -342,7 +342,7 @@ Feature: Notification creation
     And I enter 2000 into 'PreviousTbHistory_PreviousTbDiagnosisYear'
     And I check 'previous-treatment-unknown'
     When I click on the 'submit-button' button
-    
+
     Then I can see the value 'Yes' for the field 'had-tb' in the 'PreviousHistory' overview section
     And I can see the value '2000' for the field 'diagnosis-year' in the 'PreviousHistory' overview section
     And I can see the value 'Unknown' for the field 'treated' in the 'PreviousHistory' overview section
@@ -369,7 +369,7 @@ Feature: Notification creation
     And I can see the value '01 Jan 2018 to 31 Jan 2019' for the field '1-dates' in the 'TreatmentEvents' overview section
     And I can see the value 'Treatment outcome - Cured' in the 'TreatmentEvents' table overview section
     And I can see the value 'Multi-drug resistant regimen' in the 'TreatmentEvents' table overview section
-    And I can see the value 'Birmingham User' in the 'TreatmentEvents' table overview section
+    And I can see the value 'Birmingham UITester' in the 'TreatmentEvents' table overview section
 
   Scenario: Create and delete notification draft
     When I click on the 'delete-draft-button' button

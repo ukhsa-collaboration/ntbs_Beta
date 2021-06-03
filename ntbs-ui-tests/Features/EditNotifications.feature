@@ -50,12 +50,12 @@ Feature: Notification editing
     And I wait
     And I select GOOD HOPE HOSPITAL for 'HospitalDetails_HospitalId'
     And I enter Dr Howard Foreman into 'HospitalDetails_Consultant'
-    And I enter Birmingham User into 'HospitalDetails_CaseManagerId'
+    And I enter Birmingham UITester into 'HospitalDetails_CaseManagerId'
     When I click on the 'save-button' button
 
     Then I can see the value 'Birmingham & Solihull' for the field 'tb-service' in the 'HospitalDetails' overview section
     And I can see the value 'GOOD HOPE HOSPITAL' for the field 'hospital-name' in the 'HospitalDetails' overview section
-    And I can see the value 'Birmingham User' for the field 'case-manager' in the 'HospitalDetails' overview section
+    And I can see the value 'Birmingham UITester' for the field 'case-manager' in the 'HospitalDetails' overview section
     And I can see the value 'Dr Howard Foreman' for the field 'consultant' in the 'HospitalDetails' overview section
     And I can see the value '02 Feb 2011' for the field 'notification-date' in the 'PatientDetails' overview section
 
@@ -116,7 +116,7 @@ Feature: Notification editing
     And I can see the value 'No' for the field 'bcg-vaccination' in the 'ClinicalDetails' overview section
     And I can see the value 'Yes' for the field 'case-management' in the 'ClinicalDetails' overview section
     And I can see the value 'Patient has no cool shoes' for the field 'notes' in the 'ClinicalDetails' overview section
-    
+
   Scenario: Edit notification test results fields
     When I go to edit the 'TestResults' section
     Then I should be on the TestResults page
@@ -129,7 +129,7 @@ Feature: Notification editing
     And I enter Negative into 'TestResultForEdit_Result'
     And I click on the 'save-test-result-button' button
     When I click on the 'save-button' button
-    
+
     Then I can see the value 'Yes' for the field 'test-carried-out' in the 'TestResults' overview section
     And I can see the value 'Bone and joint' in the 'TestResults' table overview section
     And I can see the value 'Histology' in the 'TestResults' table overview section
@@ -186,7 +186,7 @@ Feature: Notification editing
     And I check 'asylum-seeker-radio-button-Yes'
     And I check 'immigration-detainee-radio-button-No'
     When I click on the 'save-button' button
-    
+
     Then I can see the value 'No' for the field 'drugs' in the 'SocialRiskFactors' overview section
     And I can see the value 'Yes' for the field 'homelessness' in the 'SocialRiskFactors' overview section
     And I can see the value 'current' for the field 'homelessness-time-period' in the 'SocialRiskFactors' overview section
@@ -294,7 +294,7 @@ Feature: Notification editing
     And I check 'previous-treatment-yes'
     And I enter Angola into 'PreviousTbHistory_PreviousTreatmentCountryId'
     And I click on the 'save-button' button
-    
+
     Then I can see the value 'Yes' for the field 'had-tb' in the 'PreviousHistory' overview section
     And I can see the value '1991' for the field 'diagnosis-year' in the 'PreviousHistory' overview section
     And I can see the value 'Yes' for the field 'treated' in the 'PreviousHistory' overview section
@@ -320,8 +320,8 @@ Feature: Notification editing
     And I can see the value '05 Apr 2012 to 05 Apr 2012' for the field '1-dates' in the 'TreatmentEvents' overview section
     And I can see the value 'Treatment outcome - Lost to follow-up' in the 'TreatmentEvents' table overview section
     And I can see the value 'Patient left UK' in the 'TreatmentEvents' table overview section
-    And I can see the value 'Birmingham User' in the 'TreatmentEvents' table overview section
-    
+    And I can see the value 'Birmingham UITester' in the 'TreatmentEvents' table overview section
+
   Scenario: Edit notification MDR detail fields
     When I go to edit the 'MDRDetails' section
     Then I should be on the MDRDetails page
@@ -329,7 +329,7 @@ Feature: Notification editing
     And I enter Chauffeur into 'MDRDetails_RelationshipToCase'
     And I enter Guyana into 'MDRDetails_CountryId'
     And I click on the 'save-button' button
-    
+
     Then I can see the value 'Yes' for the field 'known-case-exposure' in the 'MDRDetails' overview section
     And I can see the value 'Chauffeur' for the field 'relationship-to-case' in the 'MDRDetails' overview section
     And I can see the value 'Guyana' for the field 'country-name' in the 'MDRDetails' overview section
