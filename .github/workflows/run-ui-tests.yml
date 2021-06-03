@@ -46,8 +46,8 @@ jobs:
           Environments__test__SpecimenConnectionString: ${{ secrets.UI_TESTS_TEST_SPECIMEN_CONNECTION_STRING }}
           Environments__uat__SpecimenConnectionString: ${{ secrets.UI_TESTS_UAT_SPECIMEN_CONNECTION_STRING }}
         run: |
-          sudo selenium-standalone install --drivers.chrome.version=89.0.4389.23
-          selenium-standalone start --drivers.chrome.version=89.0.4389.23 > /dev/null 2>&1 &
+          sudo selenium-standalone install --drivers.chrome.version=91.0.4472.19
+          selenium-standalone start --drivers.chrome.version=91.0.4472.19 > /dev/null 2>&1 &
           PROCESS_ID=$(echo $!)
           echo "Selenium server started in process $PROCESS_ID"
           function stopSeleniumServer()
