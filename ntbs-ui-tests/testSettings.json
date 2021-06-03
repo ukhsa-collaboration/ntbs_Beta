@@ -9,7 +9,7 @@
       "TbServiceCode": "TBS0106"
     },
     "ReadOnlyUser":  {
-      "Username": "read_only@aptemus.com",
+      "Username": "readonly-uitester@aptemus.com",
       "TbServiceCode": "TBS0106"
     }
   },
