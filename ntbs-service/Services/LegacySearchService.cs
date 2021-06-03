@@ -136,7 +136,7 @@ namespace ntbs_service.Services
                 NotificationStatus = NotificationStatus.Legacy,
                 NotificationStatusString = "Legacy",
                 NotificationDate = (result.NotificationDate as DateTime?).ConvertToString(),
-                Source = result.Source,
+                Source = result.PrimarySource,
                 Sex = Sexes.Single(s => s.SexId == result.NtbsSexId).Label,
                 SortByDate = result.NotificationDate,
                 Name = result.FamilyName.ToUpper() + ", " + result.GivenName,
