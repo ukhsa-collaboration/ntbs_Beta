@@ -548,11 +548,11 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.FamilyName).HasMaxLength(64);
                 entity.Property(e => e.GivenName).HasMaxLength(64);
                 entity.Property(e => e.DisplayName).HasMaxLength(256);
-                entity.Property(e => e.JobTitle).HasMaxLength(50);
+                entity.Property(e => e.JobTitle).HasMaxLength(100);
                 entity.Property(e => e.PhoneNumberPrimary).HasMaxLength(100);
                 entity.Property(e => e.PhoneNumberSecondary).HasMaxLength(100);
                 entity.Property(e => e.EmailPrimary).HasMaxLength(100);
-                entity.Property(e => e.EmailSecondary).HasMaxLength(50);
+                entity.Property(e => e.EmailSecondary).HasMaxLength(100);
                 entity.Property(e => e.Notes).HasMaxLength(500);
 
                 entity.HasIndex(e => e.Username).IsUnique();
