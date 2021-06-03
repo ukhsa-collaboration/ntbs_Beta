@@ -226,6 +226,8 @@ namespace ntbs_ui_tests.Steps
 
         private void SetImplicitWait(TimeSpan waitTime)
         {
+            // Steps which check that elements aren't present will wait the full implicit wait time when checking,
+            // this workaround makes sure we aren't slowing the tests down too much
             Browser.Manage().Timeouts().ImplicitWait = waitTime;
         }
 
