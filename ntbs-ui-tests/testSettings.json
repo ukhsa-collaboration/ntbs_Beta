@@ -7,6 +7,10 @@
     "LeedsServiceUser":  {
       "Username": "leeds-uitester@aptemus.com",
       "TbServiceCode": "TBS0106"
+    },
+    "ReadOnlyUser":  {
+      "Username": "readonly-uitester@aptemus.com",
+      "TbServiceCode": "TBS0106"
     }
   },
   "Environments": {

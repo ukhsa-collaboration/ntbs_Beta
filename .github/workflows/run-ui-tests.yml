@@ -33,6 +33,7 @@ jobs:
           EnvironmentUnderTest: ${{ steps.set_environment.outputs.ENVIRONMENT_UNDER_TEST }}
           Users__BirminghamServiceUser__Password: ${{ secrets.UI_TESTS_BIRMINGHAM_SERVICE_USER_PASSWORD }}
           Users__LeedsServiceUser__Password: ${{ secrets.UI_TESTS_LEEDS_SERVICE_USER_PASSWORD }}
+          Users__ReadOnlyUser__Password: ${{ secrets.UI_TESTS_READ_ONLY_USER_PASSWORD }}
           Environments__int__ConnectionString: ${{ secrets.UI_TESTS_INT_CONNECTION_STRING }}
           Environments__test__ConnectionString: ${{ secrets.UI_TESTS_TEST_CONNECTION_STRING }}
           Environments__uat__ConnectionString: ${{ secrets.UI_TESTS_UAT_CONNECTION_STRING }}

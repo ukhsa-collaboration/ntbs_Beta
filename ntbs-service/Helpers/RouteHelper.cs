@@ -65,6 +65,7 @@ namespace ntbs_service.Helpers
     {
         public static string EditClinicalDetails => "Edit/ClinicalDetails";
         public static string EditTestResults => "Edit/TestResults";
+        public static string ViewTestResults => "TestResults";
         public static string EditPatientDetails => "Edit/PatientDetails";
         public static string EditHospitalDetails => "Edit/HospitalDetails";
         public static string EditContactTracing => "Edit/ContactTracing";
