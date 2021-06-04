@@ -6,8 +6,10 @@ using ntbs_service.Models.Validations;
 using ntbs_ui_tests.Helpers;
 using ntbs_ui_tests.Hooks;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using TechTalk.SpecFlow;
 using Xunit;
+using ExpectedConditions = SeleniumExtras.WaitHelpers.ExpectedConditions;
 
 namespace ntbs_ui_tests.Steps
 {
@@ -48,9 +50,15 @@ namespace ntbs_ui_tests.Steps
         [Then(@"I should see the Notification")]
         public void ThenIShouldSeeTheNotification()
         {
-            var urlRegex = new Regex(@".*/Notifications/(\d+)/?(#.+)?$");
-            var match = urlRegex.Match(Browser.Url);
-            Assert.True(match.Success, $"Url I am on instead: {Browser.Url}");
+            const string notificationUrlRegex = @".*/Notifications/(\d+)/?(#.+)?$";
+            try
+            {
+                var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
+                wait.Until(ExpectedConditions.UrlMatches(notificationUrlRegex));
+            }
+            catch (WebDriverTimeoutException) {
+                Assert.Matches(notificationUrlRegex, Browser.Url);
+            }
         }
 
         #endregion
@@ -88,7 +96,7 @@ namespace ntbs_ui_tests.Steps
             var warningElement = HtmlElementHelper.FindElementById(Browser, warningId);
             Assert.Contains(warningMessage, warningElement.Text);
         }
-        
+
         #endregion
 
         #region Transfer pages
@@ -106,7 +114,7 @@ namespace ntbs_ui_tests.Steps
             var transferInformationElements = Browser.FindElements(By.ClassName("transfer-request-information"));
             Assert.Contains(transferInformationElements, t => t.Text.Contains(title) && t.Text.Contains(value));
         }
-        
+
         #endregion
 
         #region Notification overview
@@ -202,7 +210,7 @@ namespace ntbs_ui_tests.Steps
             Assert.DoesNotContain(notificationId, TestContext.AddedNotificationIds);
             TestContext.AddedNotificationIds.Add(notificationId);
         }
-        
+
         #endregion
 
         private int GetNotificationIdAndAssertMatchFromUrl()
