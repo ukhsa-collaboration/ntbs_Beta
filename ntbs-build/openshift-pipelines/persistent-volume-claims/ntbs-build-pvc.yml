@@ -1,0 +1,14 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ntbs-build-pvc
+  namespace: ntbs-build
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: pvc-3413dc10-494a-49c0-915d-f99a7e9fb965
+  storageClassName: standard
+  volumeMode: Filesystem
