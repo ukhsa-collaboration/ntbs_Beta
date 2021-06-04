@@ -26,8 +26,8 @@ jobs:
         env:
           DEFAULT_ENVIRONMENT: int
         run: echo "::set-output name=ENVIRONMENT_UNDER_TEST::${{ github.event.inputs.env || env.DEFAULT_ENVIRONMENT }}"
-      - name: Install Selenium
-        run: sudo npm install -g selenium-standalone
+      - name: Download Selenium
+        run: wget https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar -O selenium-server-standalone.jar
       - name: Run UI tests
         env:
           EnvironmentUnderTest: ${{ steps.set_environment.outputs.ENVIRONMENT_UNDER_TEST }}
@@ -47,8 +47,7 @@ jobs:
           Environments__test__SpecimenConnectionString: ${{ secrets.UI_TESTS_TEST_SPECIMEN_CONNECTION_STRING }}
           Environments__uat__SpecimenConnectionString: ${{ secrets.UI_TESTS_UAT_SPECIMEN_CONNECTION_STRING }}
         run: |
-          sudo selenium-standalone install --drivers.chrome.version=91.0.4472.19
-          selenium-standalone start --drivers.chrome.version=91.0.4472.19 > /dev/null 2>&1 &
+          java -jar selenium-server-standalone.jar > /dev/null 2>&1 &
           PROCESS_ID=$(echo $!)
           echo "Selenium server started in process $PROCESS_ID"
           function stopSeleniumServer()
