@@ -38,10 +38,10 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: AdfsOptions__AdfsUrl
-              value: "https://fs.caduceus.phe.gov.uk"
-            - name: AdfsOptions__Wtrealm
-              value: "https://ntbs-uat.phe.nhs.uk/"
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Staging"
+            - name: AzureAdOptions__Enabled
+              value: "true"
             - name: AzureAdOptions__ClientId
               valueFrom:
                 secretKeyRef:
@@ -57,8 +57,6 @@ spec:
                 secretKeyRef:
                   name: uat-phe-azuread-options
                   key: authority
-            - name: AzureAdOptions__Enabled
-              value: "true"
             - name: ConnectionStrings__ntbsContext
               valueFrom:
                 secretKeyRef:
@@ -95,35 +93,11 @@ spec:
                   name: uat-connection-strings
                   key: reporting
             - name: ExternalLinks__ReportingOverview
-              value: ""
-            - name: HttpBasicAuth__Enabled
-              value: "false"
-            - name: HttpBasicAuth__Username
-              valueFrom:
-                secretKeyRef:
-                  name: uat-http-basic-auth-credentials
-                  key: username
-            - name: HttpBasicAuth__Password
-              valueFrom:
-                secretKeyRef:
-                  name: uat-http-basic-auth-credentials
-                  key: password
-            - name: LdapSettings__AdAddressName
-              value: ""
-            - name: LdapSettings__Port
-              value: "389"
-            - name: LdapSettings__UserIdentifier
-              value: "" # intentionally empty so the app's service account gets used for authentication
-            - name: LdapSettings__Password
-              value: "" # intentionally empty so the app's service account gets used for authentication
-            - name: LdapSettings__BaseDomain
-              value: "DC=phe,DC=gov,DC=uk"
+              value: "https://app.powerbi.com/Redirect?action=OpenApp&appId=5ae64787-d2aa-4beb-8bf8-18340efe12ab&ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666"
+            - name: ExternalLinks__ClusterReport
+              value: "https://app.powerbi.com/groups/me/apps/5ae64787-d2aa-4beb-8bf8-18340efe12ab/reports/7b0921bd-8e4b-46f3-8e4b-dc9b7e7c982b/ReportSection?ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666&filter=Cluster%2FClusterId%20eq '<CLUSTER_ID>'"
             - name: MigrationConfig__NtbsEnvironment
               value: "UatPheMigration"
-            - name: ScheduledJobsConfig__UserSyncEnabled
-              value: "false"
-            - name: ScheduledJobsConfig__MarkImportedNotificationsAsImportedEnabled
-              value: "false"
             - name: Sentry__Environment
               value: uat-phe
             - name: KRB5_CLIENT_KTNAME
@@ -181,7 +155,7 @@ spec:
     insecureEdgeTerminationPolicy: Redirect
   to:
     kind: Service
-    name: coming-soon
+    name: ntbs-uat
   port:
     targetPort: 8080
   wildcardPolicy: None
