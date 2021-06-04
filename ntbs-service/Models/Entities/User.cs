@@ -16,36 +16,42 @@ namespace ntbs_service.Models.Entities
         public bool IsCaseManager { get; set; }
         public bool IsReadOnly { get; set; }
 
+        [MaxLength(100)]
         [Display(Name = "Job title")]
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string JobTitle { get; set; }
 
+        [MaxLength(100)]
         [Display(Name = "Email #1")]
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string EmailPrimary { get; set; }
 
+        [MaxLength(100)]
         [Display(Name = "Email #2")]
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string EmailSecondary { get; set; }
 
+        [MaxLength(100)]
         [Display(Name = "Phone number #1")]
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string PhoneNumberPrimary { get; set; }
 
+        [MaxLength(100)]
         [Display(Name = "Phone number #2")]
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string PhoneNumberSecondary { get; set; }
 
+        [MaxLength(500)]
         [Display(Name = "Notes")]
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
