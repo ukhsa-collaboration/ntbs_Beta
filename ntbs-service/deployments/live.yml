@@ -41,10 +41,10 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: AdfsOptions__AdfsUrl
-              value: "https://fs.caduceus.phe.gov.uk"
-            - name: AdfsOptions__Wtrealm
-              value: "https://ntbs.phe.nhs.uk/"
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+            - name: AzureAdOptions__Enabled
+              value: "true"
             - name: AzureAdOptions__ClientId
               valueFrom:
                 secretKeyRef:
@@ -60,10 +60,6 @@ spec:
                 secretKeyRef:
                   name: uat-phe-azuread-options
                   key: authority
-            - name: AzureAdOptions__Enabled
-              value: "true"
-            - name: AppConfig__AuditingEnabled
-              value: "true"
             - name: ConnectionStrings__ntbsContext
               valueFrom:
                 secretKeyRef:
@@ -100,39 +96,11 @@ spec:
                   name: live-connection-strings
                   key: reporting
             - name: ExternalLinks__ReportingOverview
-              value: ""
-            - name: HttpBasicAuth__Enabled
-              value: "false"
-            - name: HttpBasicAuth__Username
-              valueFrom:
-                secretKeyRef:
-                  name: live-http-basic-auth-credentials
-                  key: username
-            - name: HttpBasicAuth__Password
-              valueFrom:
-                secretKeyRef:
-                  name: live-http-basic-auth-credentials
-                  key: password
-            - name: LdapSettings__AdAddressName
-              value: ""
-            - name: LdapSettings__Port
-              value: "389"
-            - name: LdapSettings__UserIdentifier
-              value: "" # intentionally empty so the app's service account gets used for authentication
-            - name: LdapSettings__Password
-              value: "" # intentionally empty so the app's service account gets used for authentication
-            - name: LdapSettings__BaseDomain
-              value: "DC=phe,DC=gov,DC=uk"
-            - name: MigrationConfig__NtbsEnvironment
-              value: "MigrationTrial4"
-            - name: ScheduledJobsConfig__UserSyncEnabled
-              value: "false"
-            - name: ScheduledJobsConfig__MarkImportedNotificationsAsImportedEnabled
-              value: "false"
-            - name: ExternalLinks__ReportingOverview
               value: "https://app.powerbi.com/Redirect?action=OpenApp&appId=70e1af43-d5ca-48f8-b8c3-e146fc470fb7&ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666"
             - name: ExternalLinks__ClusterReport
               value: "https://app.powerbi.com/groups/me/apps/70e1af43-d5ca-48f8-b8c3-e146fc470fb/reports/81250fc5-20b2-4bbc-b0ce-4b8ca490be8b/ReportSection?ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666&filter=Cluster%2FClusterId%20eq '<CLUSTER_ID>'"
+            - name: MigrationConfig__NtbsEnvironment
+              value: "Live"
             - name: Sentry__Environment
               value: live
             - name: KRB5_CLIENT_KTNAME
@@ -190,7 +158,7 @@ spec:
     insecureEdgeTerminationPolicy: Redirect
   to:
     kind: Service
-    name: coming-soon
+    name: ntbs-live
   port:
     targetPort: 8080
   wildcardPolicy: None
