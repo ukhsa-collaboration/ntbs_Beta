@@ -18,6 +18,7 @@
         public const string StandardStringWithNumbersFormat = "{0} can only contain letters, numbers and the symbols ' - . ,";
         public const string StringWithNumbersAndForwardSlashFormat = "{0} can only contain letters, numbers and the symbols ' - . , /";
         public const string MinTwoCharacters = "Enter at least 2 characters";
+        public const string MaximumTextLength = "Too many characters entered into the {0} field";
         public const string InvalidCharacter = "Invalid character found in {0}";
         public const string NumberFormat = "{0} can only contain digits 0-9";
         public const string NumberHyphenAndSpaceFormat = "{0} can only contain digits 0-9, the symbol - and spaces";
