@@ -77,13 +77,14 @@ const CascadingDropdown = Vue.extend({
         },
         updateSelectList: function (refName: string, values: OptionValue[]) {
             const selectElement = this.getSelectElementInRef(refName);
+            const currentSelectedValue = selectElement.value;
 
             if (values) {
                 const optionInnerHtml = this.generateOptionInnerHtml(values);
                 selectElement.innerHTML = optionInnerHtml;
             }
 
-            selectElement.value = "";
+            this.setSelectToValueOrDefault(selectElement, currentSelectedValue);
         },
         getSelectElementInRef(refName: string) {
             const filterValueContainer = this.$refs[refName];
@@ -101,6 +102,17 @@ const CascadingDropdown = Vue.extend({
             let optionInnerHtml = DEFAULT_SELECT_INNER_HTML;
             values.forEach(item => optionInnerHtml += `<option value="${item.value}">${item.text}</option>`);
             return optionInnerHtml;
+        },
+        setSelectToValueOrDefault: function (selectElement: HTMLSelectElement, targetValue: string) {
+            for (let i = 0; i < selectElement.options.length; i++) {
+                if (selectElement.options[i].value === targetValue) {
+                    selectElement.value = targetValue;
+                    return;
+                }
+            }
+
+            selectElement.value = "";
+            selectElement.dispatchEvent(new Event('change'));
         },
     }
 });
