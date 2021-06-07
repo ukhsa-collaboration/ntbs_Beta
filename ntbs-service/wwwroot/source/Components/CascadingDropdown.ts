@@ -112,6 +112,7 @@ const CascadingDropdown = Vue.extend({
             }
 
             selectElement.value = "";
+            // Incase removing the value will result in other validation or filtering we dispatch a change event
             selectElement.dispatchEvent(new Event('change'));
         },
     }
