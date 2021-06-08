@@ -271,7 +271,6 @@ namespace ntbs_service_unit_tests.DataMigration
             // Assert
             Assert.Single(notification.TreatmentEvents);
             Assert.True(notification.ClinicalDetails.IsPostMortem);
-            Assert.True(notification.ShouldBeClosed());
             Assert.Equal(NotificationStatus.Closed, notification.NotificationStatus);
             // For post mortem cases we *only* want to import the single death event so outcomes reporting is correct
             Assert.Collection(notification.TreatmentEvents,

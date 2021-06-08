@@ -30,21 +30,23 @@ namespace ntbs_service_unit_tests.Models.Entities
             Assert.Equal(expectedLegacyId, notification.LegacyId);
         }
 
-        public static TheoryData<DateTime, DateTime, bool> TestData => new TheoryData<DateTime, DateTime, bool>
+        public static TheoryData<DateTime, DateTime, NotificationStatus, bool> TestData => new TheoryData<DateTime, DateTime, NotificationStatus, bool>
         {
-            { DateTime.Now, new DateTime(2003, 4, 15), false },
-            { new DateTime(2003, 4, 15), new DateTime(2003, 4, 15), true },
-            { new DateTime(2003, 4, 12), new DateTime(2003, 4, 15), false },
-            { new DateTime(2003, 4, 25), new DateTime(2003, 4, 15), true }
+            { DateTime.Now, new DateTime(2003, 4, 15), NotificationStatus.Notified, false },
+            { new DateTime(2003, 4, 15), new DateTime(2003, 4, 15), NotificationStatus.Notified, true },
+            { new DateTime(2003, 4, 12), new DateTime(2003, 4, 15), NotificationStatus.Notified, false },
+            { new DateTime(2003, 4, 25), new DateTime(2003, 4, 15), NotificationStatus.Notified, true },
+            { new DateTime(2003, 4, 25), new DateTime(2003, 4, 15), NotificationStatus.Denotified, false }
         };
 
         [Theory]
         [MemberData(nameof(TestData))]
-        public void NotificationSetsShouldBeClosedCorrectly(DateTime treatmentOutcomeDate, DateTime treatmentOtherDate, bool expectedValue)
+        public void NotificationSetsShouldBeClosedCorrectly(DateTime treatmentOutcomeDate, DateTime treatmentOtherDate, NotificationStatus status, bool expectedValue)
         {
             // Arrange
             var notification = new Notification
             {
+                NotificationStatus = status,
                 TreatmentEvents = new List<TreatmentEvent> {
                     new TreatmentEvent
                     {
