@@ -10,6 +10,7 @@ namespace ntbs_service.DataMigration.RawModels
         public Guid? NtbsHospitalId { get; set; }
         public string EtsId { get; set; }
         public string LtbrId { get; set; }
+        public string LtbrPatientId { get; set; }
         public string GroupId { get; set; }
         public DateTime? NotificationDate { get; set; }
         public int? IsDenotified { get; set; }

@@ -1,0 +1,51 @@
+@page "/Notifications/{NotificationId:int}/TestResults"
+@using ntbs_service.Helpers
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+@model ViewTestResultsModel
+
+@{
+    Layout = "Shared/_NotificationOverviewLayout";
+    var title = NotificationSection.TestResults.ToDisplayString();
+    ViewData["Title"] = $"Notification #{Model.NotificationId} - {title}";
+    ViewData["CurrentPage"] = NotificationSubPaths.ViewTestResults;
+}
+
+<h2> @title </h2>
+
+<partial name="Edit/_LabResults" for="@Model.CultureAndResistance" />
+@{
+    ViewData["ShowUnmatchLinks"] = false;
+}
+<partial name="Edit/_SpecimenDetails" for="@Model.Specimens" />
+
+<div>
+    <h3>Manually-entered test results</h3>
+    @if (Model.TestData.HasTestCarriedOut ?? false)
+    {
+        <nhs-form-group nhs-form-group-type="Standard" id="TestData-HasTestCarriedOut">
+            <nhs-fieldset aria-describedby="test-carried-out-error">
+                <nhs-fieldset-legend nhs-legend-size="Standard">
+                    @Html.DisplayNameFor(m => m.TestData.HasTestCarriedOut)
+                </nhs-fieldset-legend>
+                <nhs-radios nhs-radios-type="Standard">
+                    <nhs-radios-item>
+                        <input nhs-input-type="Radios" asp-for="TestData.HasTestCarriedOut" id="test-carried-out-yes" ref="conditional-true" type="radio" value="true" disabled="true"/>
+                        <label nhs-label-type="Radios" for="test-carried-out-yes">Yes</label>
+                    </nhs-radios-item>
+                    <nhs-radios-item>
+                        <input nhs-input-type="Radios" asp-for="TestData.HasTestCarriedOut" id="test-carried-out-no" type="radio" value="false" disabled="true"/>
+                        <label nhs-label-type="Radios" for="test-carried-out-no">No</label>
+                    </nhs-radios-item>
+                </nhs-radios>
+            </nhs-fieldset>
+        </nhs-form-group>
+    }
+
+    <div>
+        @{
+            ViewData["ShowManualResultsEditLinks"] = false;
+        }
+        <partial name="_ManualTestResultTable" for="TestData.ManualTestResults"/>
+    </div>
+    <nhs-back-link data-ignore-form-leave-checker="true" href="@RouteHelper.GetNotificationOverviewPathWithSectionAnchor(Model.NotificationId, NotificationSubPaths.EditTestResults)">Go back</nhs-back-link>
+</div>

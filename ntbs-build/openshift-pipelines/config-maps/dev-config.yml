@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dev
+  namespace: ntbs-build
+data:
+  deployment.file: dev.yml
+  deployment.name: ntbs-dev

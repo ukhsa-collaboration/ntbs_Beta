@@ -136,6 +136,7 @@ namespace ntbs_service_unit_tests.DataMigration
             return new Notification
             {
                 IsLegacy = true,
+                LegacySource = "LTBR",
                 LTBRID = NOTIFICATION_ID,
                 HospitalDetails = new HospitalDetails {TBServiceCode = TbServiceCode},
                 TreatmentEvents = new List<TreatmentEvent>()

@@ -41,7 +41,7 @@ namespace ntbs_service.DataMigration
 			JOIN MigrationNotificationsView targetNotification 
 				ON targetNotification.GroupId = notificationInGroup.GroupId 
 				OR targetNotification.OldNotificationId = notificationInGroup.OldNotificationId
-			WHERE targetNotification.OldNotificationId IN @Ids OR targetNotification.GroupId IN @Ids
+			WHERE targetNotification.OldNotificationId IN @Ids
             AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("notificationInGroup.OldNotificationId")})";
 
         private string NotificationsIdsWithGroupIdsByDateQuery =>

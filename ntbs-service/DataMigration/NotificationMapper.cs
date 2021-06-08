@@ -282,9 +282,10 @@ namespace ntbs_service.DataMigration
         {
             var notification = new Notification
             {
+                LegacySource = rawNotification.Source,
                 ETSID = rawNotification.EtsId,
                 LTBRID = rawNotification.LtbrId,
-                LTBRPatientId = rawNotification.Source == "LTBR" ? rawNotification.GroupId : null,
+                LTBRPatientId = rawNotification.LtbrPatientId,
                 NotificationDate = rawNotification.NotificationDate,
                 CreationDate = DateTime.Now
             };
@@ -600,6 +601,15 @@ namespace ntbs_service.DataMigration
                         details.StayLengthInMonths3.Value);
                 }
 
+                details.Country3Id = null;
+                details.StayLengthInMonths3 = null;
+            }
+
+            if (details.Country2Id == null && details.Country3Id != null)
+            {
+                // If country 2 was removed, but not 3, then country 3 need to move to 2
+                details.Country2Id = details.Country3Id;
+                details.StayLengthInMonths2 = details.StayLengthInMonths3;
                 details.Country3Id = null;
                 details.StayLengthInMonths3 = null;
             }

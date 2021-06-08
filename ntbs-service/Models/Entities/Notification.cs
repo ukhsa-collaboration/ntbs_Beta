@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Projections;
@@ -40,6 +41,8 @@ namespace ntbs_service.Models.Entities
 
         [Display(Name = "NTBS Id")]
         public int NotificationId { get; set; }
+        [MaxLength(10)]
+        public string LegacySource { get; set; }
         [MaxLength(50)]
         public string ETSID { get; set; }
         // For LTBR records, this contains the first segment of their legacy id, which corresponds to the "patient" entity in LTBR.
@@ -109,14 +112,12 @@ namespace ntbs_service.Models.Entities
 
         public bool ShouldBeClosed()
         {
-            var lastTreatmentEvent = TreatmentEvents.OrderByDescending(t => t.EventDate)
-                .ThenBy(t => t.TreatmentEventTypeIsOutcome)
-                .FirstOrDefault();
+            var mostRecentTreatmentEvent = TreatmentEvents.GetMostRecentTreatmentEvent();
 
-            return lastTreatmentEvent != null
-                && lastTreatmentEvent.TreatmentEventTypeIsOutcome
-                && lastTreatmentEvent.TreatmentOutcome?.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment
-                && lastTreatmentEvent.EventDate < DateTime.Today.AddYears(-1);
+            return mostRecentTreatmentEvent != null
+                && mostRecentTreatmentEvent.TreatmentEventTypeIsOutcome
+                && mostRecentTreatmentEvent.TreatmentOutcome?.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment
+                && mostRecentTreatmentEvent.EventDate < DateTime.Today.AddYears(-1);
         }
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;

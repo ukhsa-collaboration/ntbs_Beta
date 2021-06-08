@@ -1,0 +1,69 @@
+name: run load tests
+
+on:
+  schedule:
+    - cron:  '00 12 * * 0'
+  workflow_dispatch:
+    inputs:
+      duration:
+        description: 'Length of test in minutes'
+        required: true
+        default: '30'
+
+jobs:
+  run-load-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: load-tests/gradle
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Set duration
+        id: set_duration
+        env:
+          DEFAULT_DURATION: 30
+        run: echo "::set-output name=duration_in_minutes::${{ github.event.inputs.duration || env.DEFAULT_DURATION }}"
+      - name: Run load tests
+        env:
+          LOAD_TEST_DURATION_IN_MINUTES: ${{ steps.set_duration.outputs.duration_in_minutes }}
+        run: bash gradlew gatlingRun-NtbsLoadTest
+      - name: Find stats output file
+        run: echo "STATS_FILE=$(find . -name 'stats.js')" >> $GITHUB_ENV
+      - name: Determine job outcome
+        run: node result-parser/result-parser.js $STATS_FILE
+      - name: Archive results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: load-test-results
+          path: load-tests/gradle/build/reports/gatling/**
+
+      # Notify slack
+      - name: The job has succeeded
+        if: ${{ success() }}
+        uses: rtCamp/action-slack-notify@v2.1.0
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: '#dev-ci'
+          SLACK_USERNAME: github actions
+          SLACK_COLOR: '#23b828' #green
+          SLACK_MESSAGE: The load tests have succeeded.
+          SLACK_TITLE: ':green_heart: :computer: Build succeeded'
+          SLACK_ICON_EMOJI: ':octopus:'
+          SLACK_FOOTER: ''
+
+      - name: The job has failed
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@v2.1.0
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: '#dev-ci'
+          SLACK_USERNAME: github actions
+          SLACK_COLOR: '#d12121' #red
+          SLACK_MESSAGE: The load tests have failed. This may indicate that there has been a regression in the application. You can investigate further using the test results, which are an artifact of this action.
+          SLACK_TITLE: ':red_circle: :computer: Build failed'
+          SLACK_ICON_EMOJI: ':octopus:'
+          SLACK_FOOTER: ''

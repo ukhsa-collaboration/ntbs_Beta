@@ -4,14 +4,15 @@
 
 @{
     var sectionSubPath = NotificationSubPaths.EditSocialContextAddresses;
+    var sectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath);
 }
 
-<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)-title">
+<div class="notification-overview-type-and-edit-container" id="@sectionId-title">
     <h3 class="notification-details-type"> Social Context - Addresses </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
         <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionSubPath)"
-           class="notification-edit-link govuk-link--no-visited-state">
+           class="notification-edit-link govuk-link--no-visited-state" id="@sectionId-edit-link">
             Edit
         </a>
     }
@@ -19,7 +20,7 @@
 @if (Model.Notification.SocialContextAddresses.Count > 0)
 {
     <br/>
-    <div class="notification-overview-details-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
+    <div class="notification-overview-details-container" id="@sectionId">
         <partial name="_SocialContextAddressesTable" for="Notification.SocialContextAddresses"/>
     </div>
 }

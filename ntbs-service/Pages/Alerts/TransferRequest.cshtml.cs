@@ -141,7 +141,9 @@ namespace ntbs_service.Pages.Alerts
 
         public async Task<JsonResult> OnGetFilteredTbServiceListsByPhecCode(string value)
         {
-            var filteredTbServices = await _referenceDataRepository.GetTbServicesFromPhecCodeAsync(value);
+            var filteredTbServices = value != null
+                ? await _referenceDataRepository.GetTbServicesFromPhecCodeAsync(value)
+                : await _referenceDataRepository.GetAllTbServicesAsync();
 
             return new JsonResult(
                 new FilteredTransferPageSelectLists
@@ -150,8 +152,7 @@ namespace ntbs_service.Pages.Alerts
                     {
                         Value = n.Code.ToString(),
                         Text = n.Name
-                    }),
-                    CaseManagers = new List<OptionValue>()
+                    })
                 });
         }
 

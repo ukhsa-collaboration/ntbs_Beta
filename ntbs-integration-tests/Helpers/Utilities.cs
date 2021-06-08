@@ -5,6 +5,7 @@ using ntbs_integration_tests.LabResultsPage;
 using ntbs_integration_tests.NotificationPages;
 using ntbs_integration_tests.TransferPage;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
@@ -105,7 +106,7 @@ namespace ntbs_integration_tests.Helpers
 
 
         // These IDs match actual reference data - see app db seeding
-        public const string HOSPITAL_FLEETWOOD_HOSPITAL_ID = "1EE2B39A-428F-44C7-B4BB-000649636591";
+        public const string HOSPITAL_FULWOOD_HALL_HOSPITAL_ID = "51E00361-B228-4E21-8EFD-06EDD9CBB42C";
         public const string HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID = "93FA0A6C-474D-4AE8-AF23-952076F96336";
         public const string HOSPITAL_FAKE_ID = "f9454382-9fbd-4524-8b65-000000000000";
         public const string TBSERVICE_ROYAL_DERBY_HOSPITAL_ID = "TBS0181";
@@ -123,10 +124,17 @@ namespace ntbs_integration_tests.Helpers
 
         public static void SeedDatabase(NtbsContext context)
         {
+            // Reference data
+            context.PHEC.AddRange(ReferenceDataSeedingHelper.GetPHECList());
+            context.TbService.AddRange(ReferenceDataSeedingHelper.GetTBServices());
+            context.Hospital.AddRange(ReferenceDataSeedingHelper.GetHospitalsList());
+            context.LocalAuthority.AddRange(ReferenceDataSeedingHelper.GetLocalAuthorities());
+            context.LocalAuthorityToPhec.AddRange(ReferenceDataSeedingHelper.GetLAtoPHECs());
+            context.PostcodeLookup.AddRange(ReferenceDataSeedingHelper.GetPostcodeLookups());
+            
             // General purpose entities shared between tests
             context.User.AddRange(GetCaseManagers());
             context.Notification.AddRange(GetSeedingNotifications());
-            context.PostcodeLookup.AddRange(GetTestPostcodeLookups());
             context.NotificationGroup.AddRange(GetTestNotificationGroups());
             context.CaseManagerTbService.AddRange(GetCaseManagerTbServicesJoinEntries());
             context.Alert.AddRange(GetSeedingAlerts());
@@ -164,24 +172,6 @@ namespace ntbs_integration_tests.Helpers
             {
                 new NotificationGroup { NotificationGroupId = PATIENT_NOTIFICATION_GROUP_ID },
                 new NotificationGroup { NotificationGroupId = OVERVIEW_NOTIFICATION_GROUP_ID}
-            };
-        }
-
-        // Unlike other reference data, these are not seeded via fluent migrator so we need to add some test postcodes manually
-        private static IEnumerable<PostcodeLookup> GetTestPostcodeLookups()
-        {
-            return new List<PostcodeLookup>
-            {
-                // Matches permitted PHEC_CODE
-                new PostcodeLookup
-                {
-                    Postcode = PERMITTED_POSTCODE, LocalAuthorityCode = "E10000030", CountryCode = "E92000001"
-                },
-                // Matches unpermitted PHEC_CODE
-                new PostcodeLookup
-                {
-                    Postcode = UNPERMITTED_POSTCODE, LocalAuthorityCode = "E09000007", CountryCode = "E92000001"
-                }
             };
         }
 

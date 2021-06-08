@@ -1,11 +1,15 @@
 {
   "Users": {
     "BirminghamServiceUser": {
-      "Username": "birmingham@aptemus.com",
+      "Username": "birmingham-uitester@aptemus.com",
       "TbServiceCode": "TBS0019"
     },
     "LeedsServiceUser":  {
-      "Username": "kamala@aptemus.com",
+      "Username": "leeds-uitester@aptemus.com",
+      "TbServiceCode": "TBS0106"
+    },
+    "ReadOnlyUser":  {
+      "Username": "readonly-uitester@aptemus.com",
       "TbServiceCode": "TBS0106"
     }
   },

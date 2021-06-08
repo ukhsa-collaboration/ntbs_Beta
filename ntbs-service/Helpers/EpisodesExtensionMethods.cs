@@ -62,9 +62,7 @@ namespace ntbs_service.Helpers
 
         public static TreatmentEvent GetMostRecentTreatmentEvent(this IEnumerable<TreatmentEvent> treatmentEvents)
         {
-            return treatmentEvents
-                .OrderByDescending(t => t.EventDate)
-                .FirstOrDefault();
+            return treatmentEvents.OrderForEpisodes().LastOrDefault();
         }
 
         public static bool IsEpisodeEndingTreatmentEvent(this TreatmentEvent treatmentEvent)
@@ -82,7 +80,8 @@ namespace ntbs_service.Helpers
                 .ThenBy(treatmentEvent =>
                 {
                     // We want the order of treatment events that happened on the same day
-                    // to be interpreted deterministically and with "natural" results.
+                    // to be interpreted deterministically and with "natural" results. More info at:
+                    // https://airelogic-nis.atlassian.net/wiki/spaces/R2/pages/599687169/Outcomes+logic
                     switch (treatmentEvent.TreatmentEventType)
                     {
                         case TreatmentEventType.DiagnosisMade:

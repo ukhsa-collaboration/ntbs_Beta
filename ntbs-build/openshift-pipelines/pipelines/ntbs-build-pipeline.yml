@@ -1,0 +1,54 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: ntbs-deploy
+  namespace: ntbs-build
+spec:
+  params:
+    - description: The image tag to deploy
+      name: image_tag
+      type: string
+    - default: live
+      description: The branch from which to take the deployment file
+      name: branch
+      type: string
+  tasks:
+    - name: git-clone
+      params:
+        - name: url
+          value: 'https://github.com/publichealthengland/ntbs_Beta.git'
+        - name: revision
+          value: $(params.branch)
+        - name: submodules
+          value: 'false'
+        - name: depth
+          value: '1'
+        - name: sslVerify
+          value: 'true'
+        - name: deleteExisting
+          value: 'true'
+        - name: verbose
+          value: 'true'
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: apply-deploy-file
+      params:
+        - name: image_tag
+          value: $(params.image_tag)
+      runAfter:
+        - git-clone
+      taskRef:
+        kind: Task
+        name: apply-deploy-file
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+        - name: config
+          workspace: environment
+  workspaces:
+    - name: shared-workspace
+    - name: environment

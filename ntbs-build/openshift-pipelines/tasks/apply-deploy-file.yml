@@ -1,0 +1,36 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: apply-deploy-file
+  namespace: ntbs-build
+spec:
+  params:
+    - description: The image tag to deploy
+      name: image_tag
+      type: string
+  steps:
+    - image: 'quay.io/openshift/origin-cli:latest'
+      name: apply
+      resources: {}
+      script: >
+        deployment_name=$(cat /workspace/config/deployment.name)
+
+        deployment_file=$(cat /workspace/config/deployment.file)
+
+        echo "Applying $deployment_file file"
+
+        oc project ntbs
+
+        oc apply -f ntbs-service/deployments/$deployment_file
+
+        echo "Finished applying $deployment_file file"
+
+        echo "Updating build image to $(inputs.params.image_tag)"
+
+        oc set image deployment/$deployment_name $deployment_name=ntbscontainerregistry.azurecr.io/ntbs-service:$(inputs.params.image_tag)
+
+        echo "Finished updating build image"
+      workingDir: /workspace/output
+  workspaces:
+    - name: output
+    - name: config

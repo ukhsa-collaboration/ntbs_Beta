@@ -1,12 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using ntbs_service.Models.Validations;
 using ntbs_ui_tests.Helpers;
 using ntbs_ui_tests.Hooks;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using TechTalk.SpecFlow;
 using Xunit;
+using ExpectedConditions = SeleniumExtras.WaitHelpers.ExpectedConditions;
 
 namespace ntbs_ui_tests.Steps
 {
@@ -47,9 +50,15 @@ namespace ntbs_ui_tests.Steps
         [Then(@"I should see the Notification")]
         public void ThenIShouldSeeTheNotification()
         {
-            var urlRegex = new Regex(@".*/Notifications/(\d+)/?(#.+)?$");
-            var match = urlRegex.Match(Browser.Url);
-            Assert.True(match.Success, $"Url I am on instead: {Browser.Url}");
+            const string notificationUrlRegex = @".*/Notifications/(\d+)/?(#.+)?$";
+            try
+            {
+                var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
+                wait.Until(ExpectedConditions.UrlMatches(notificationUrlRegex));
+            }
+            catch (WebDriverTimeoutException) {
+                Assert.Matches(notificationUrlRegex, Browser.Url);
+            }
         }
 
         #endregion
@@ -87,7 +96,7 @@ namespace ntbs_ui_tests.Steps
             var warningElement = HtmlElementHelper.FindElementById(Browser, warningId);
             Assert.Contains(warningMessage, warningElement.Text);
         }
-        
+
         #endregion
 
         #region Transfer pages
@@ -105,7 +114,7 @@ namespace ntbs_ui_tests.Steps
             var transferInformationElements = Browser.FindElements(By.ClassName("transfer-request-information"));
             Assert.Contains(transferInformationElements, t => t.Text.Contains(title) && t.Text.Contains(value));
         }
-        
+
         #endregion
 
         #region Notification overview
@@ -158,6 +167,24 @@ namespace ntbs_ui_tests.Steps
             Assert.Contains("Denotified", notificationHeading);
         }
 
+        [Then(@"The '(.*)' link is present in the '(.*)' overview section")]
+        public void ThenLinkIsPresentOnOverviewSection(string linkText, string section)
+        {
+            var sectionId =HtmlElementHelper.GetSectionIdFromSection(section);
+            var linkId = $"{sectionId}-{linkText}-link";
+            Assert.NotNull(HtmlElementHelper.FindElementById(Browser, linkId));
+        }
+
+        [Then(@"The '(.*)' link is not present in the '(.*)' overview section")]
+        public void ThenLinkIsNotPresentOnOverviewSection(string linkText, string section)
+        {
+            SetImplicitWait(TimeSpan.FromSeconds(1));
+            var sectionId = HtmlElementHelper.GetSectionIdFromSection(section);
+            var linkId = $"{sectionId}-{linkText}-link";
+            Assert.Empty(HtmlElementHelper.FindElementsById(Browser, linkId));
+            SetImplicitWait(Settings.ImplicitWait);
+        }
+
         #endregion
 
         #region General checks
@@ -171,8 +198,9 @@ namespace ntbs_ui_tests.Steps
         [Then(@"The element with id '(.*)' is not present")]
         public void ThenICannotSeeTheElement(string elementId)
         {
-            var elements = HtmlElementHelper.FindElementsById(Browser, elementId);
-            Assert.False(elements.Any());
+            SetImplicitWait(TimeSpan.FromSeconds(1));
+            Assert.Empty(HtmlElementHelper.FindElementsById(Browser, elementId));
+            SetImplicitWait(Settings.ImplicitWait);
         }
 
         [Then("A new notification should have been created")]
@@ -182,7 +210,7 @@ namespace ntbs_ui_tests.Steps
             Assert.DoesNotContain(notificationId, TestContext.AddedNotificationIds);
             TestContext.AddedNotificationIds.Add(notificationId);
         }
-        
+
         #endregion
 
         private int GetNotificationIdAndAssertMatchFromUrl()
@@ -202,6 +230,13 @@ namespace ntbs_ui_tests.Steps
                 "draft-notifications-table" => new [] {"NTBS Id", "Name", "Date created", "TB Service", "Case Manager"},
                 "recent-notifications-table" => new [] {"NTBS Id", "Name", "Date notified", "TB Service", "Case Manager"}
             };
+        }
+
+        private void SetImplicitWait(TimeSpan waitTime)
+        {
+            // Steps which check that elements aren't present will wait the full implicit wait time when checking,
+            // this workaround makes sure we aren't slowing the tests down too much
+            Browser.Manage().Timeouts().ImplicitWait = waitTime;
         }
 
         private string[] GetExpectedLabels(string tableId)

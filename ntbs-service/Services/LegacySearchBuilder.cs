@@ -30,7 +30,7 @@ namespace ntbs_service.Services
                 var condition =
                     "n.PrimaryNotificationId = @id OR " +
                     "n.SecondaryNotificationId = @id OR " +
-                    "(n.GroupId = @id AND n.PrimarySource = 'LTBR') OR " +
+                    "n.LtbrPatientId = @id OR " +
                     "dmg.NhsNumber = @id";
                 var idNoWhitespace = id.Replace(" ", "");
                 AppendCondition(condition);
