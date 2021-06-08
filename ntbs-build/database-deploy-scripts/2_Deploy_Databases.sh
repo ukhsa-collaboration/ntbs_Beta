@@ -63,11 +63,18 @@ else
     SQLPACKAGE_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\150\sqlpackage.exe"
 fi
 
+read -p "Please enter the password for the database connection strings (leave empty if using Windows authentication): " -s PASSWORD
+
 deploy_database() {
     echo -e "\nDeploying $1 to database...\n"
     cd "./$1"
     "$MSBUILD_PATH" "$2"
-    "$SQLPACKAGE_PATH" //Action:Publish //Profile:"$3" //SourceFile:"$4"
+    if [[ -z "$PASSWORD" ]]
+    then
+        "$SQLPACKAGE_PATH" -Action:Publish -SourceFile:"$4" -Profile:"$3"
+    else
+        "$SQLPACKAGE_PATH" -Action:Publish -SourceFile:"$4" -Profile:"$3" -TargetPassword:"$PASSWORD"
+    fi
     cd ..
     echo -e "\nSuccessfully deployed $1 to database.\n"
 }
