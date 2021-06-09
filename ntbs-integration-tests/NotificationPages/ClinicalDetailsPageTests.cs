@@ -77,6 +77,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDiagnosisDate.Year"] = "2050",
                 ["ClinicalDetails.DidNotStartTreatment"] = "false",
                 ["FormattedTreatmentDate.Day"] = "1",
+                ["ClinicalDetails.Notes"] = new string('i', 1002),
             };
 
             // Act
@@ -93,6 +94,7 @@ namespace ntbs_integration_tests.NotificationPages
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-TBServicePresentationDate", "tb-service-presentation", "Presentation to TB service must be today or earlier");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-DiagnosisDate", "diagnosis", "Diagnosis date must be today or earlier");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-TreatmentStartDate", "treatment", "Treatment start date does not have a valid date selection");
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-Notes", "notes", "Too many characters entered into the Notes field");
         }
 
         [Fact]

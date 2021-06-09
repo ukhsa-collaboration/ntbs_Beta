@@ -80,7 +80,7 @@ namespace ntbs_service.Models.Entities
         public string TreatmentRegimenOtherDescription { get; set; }
 
         [Display(Name = "Notes")]
-        [MaxLength(1000)]
+        [MaxLength(1000, ErrorMessage = ValidationMessages.MaximumTextLength)]
         [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string Notes { get; set; }
