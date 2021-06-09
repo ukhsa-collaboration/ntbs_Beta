@@ -454,6 +454,39 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Null(notification.TravelDetails.StayLengthInMonths3);
         }
 
+        // This test uses test notification 237138, based on 237137 used in correctlyMaps_ContactTracingNumbers
+        [Fact]
+        public async Task correctlyWarns_WithInvalidPostcode()
+        {
+            // Arrange
+            const int runId = 12345;
+            var legacyIds = new List<string> { "237138" };
+            SetupNotificationsInGroups(("237138", "10"));
+
+            const string leedsGeneralCode = "TBS0106";
+            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
+            {
+                {new Guid("7E9C715D-0248-4D97-8F67-1134FC133588"), new TBService {Code = leedsGeneralCode}},
+            };
+
+            _postcodeService.Setup(service => service.FindPostcodeAsync("BF1"))
+                .Returns(Task.FromResult<PostcodeLookup>(null));
+
+            // Act
+            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
+                    runId,
+                    legacyIds))
+                .SelectMany(group => group)
+                .Single();
+
+            // Assert
+            Assert.Equal("BF1", notification.PatientDetails.Postcode);
+            Assert.Null(notification.PatientDetails.PostcodeToLookup);
+
+            _importLoggerMock.Verify(
+                s => s.LogNotificationWarning(null, runId, "237138", "invalid or unknown postcode"),
+                Times.Once);
+        }
 
         private void SetupNotificationsInGroups(params (string, string)[] legacyIdAndLegacyGroup)
         {
