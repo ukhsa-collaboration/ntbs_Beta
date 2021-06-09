@@ -491,7 +491,7 @@ namespace ntbs_service_unit_tests.DataMigration
         // Data for this has been based on real regression examples, but with care taken to anonymize it
         // This is based on NTBS-2388
         [Fact]
-        public async Task correctlyMaps_DenotifiedStatusIfOtherwiseShouldBeClosed()
+        public async Task correctlyMaps_DenotifiedStatusIfOtherwiseWouldBeClosed()
         {
             // Arrange
             const int runId = 12345;
@@ -513,9 +513,6 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Assert
             Assert.Equal(NotificationStatus.Denotified ,notification.NotificationStatus);
-            // Change status to see if notification otherwise would have been closed
-            notification.NotificationStatus = NotificationStatus.Notified;
-            Assert.True(notification.ShouldBeClosed());
         }
 
         private void SetupNotificationsInGroups(params (string, string)[] legacyIdAndLegacyGroup)
