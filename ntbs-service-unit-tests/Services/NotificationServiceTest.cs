@@ -174,8 +174,8 @@ namespace ntbs_service_unit_tests.Services
 
         public static IEnumerable<object[]> UkBornTestCases()
         {
-            yield return new object[] { new Country() { CountryId = 1, IsoCode = Countries.UkCode }, true };
-            yield return new object[] { new Country() { CountryId = 2, IsoCode = Countries.UnknownCode }, null };
+            yield return new object[] { new Country() { CountryId = Countries.UkId, IsoCode = Countries.UkCode }, true };
+            yield return new object[] { new Country() { CountryId = Countries.UnknownId, IsoCode = Countries.UnknownCode }, false };
             yield return new object[] { new Country() { CountryId = 3, IsoCode = "Other code" }, false };
         }
 
@@ -193,22 +193,6 @@ namespace ntbs_service_unit_tests.Services
 
             // Assert
             Assert.Equal(expectedResult, patient.UkBorn);
-            _mockContext.Verify(context => context.SetValues(notification.PatientDetails, patient));
-            VerifyUpdateDatabaseCalled();
-        }
-
-        [Fact]
-        public async Task UkBorn_IsSetToNullIfCountryNotSet()
-        {
-            // Arrange
-            var notification = new Notification();
-            var patient = new PatientDetails() { UkBorn = true };
-
-            // Act
-            await _notificationService.UpdatePatientDetailsAsync(notification, patient);
-
-            // Assert
-            Assert.Null(patient.UkBorn);
             _mockContext.Verify(context => context.SetValues(notification.PatientDetails, patient));
             VerifyUpdateDatabaseCalled();
         }

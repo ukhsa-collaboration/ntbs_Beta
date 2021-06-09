@@ -97,44 +97,14 @@ namespace ntbs_service.Services
                 patientDetails.Postcode = null;
             }
 
-            await UpdateUkBorn(patientDetails);
             UpdateEntryYearToUk(patientDetails);
 
             await UpdateOccupation(patientDetails);
         }
 
-        private async Task UpdateUkBorn(PatientDetails patient)
-        {
-            if (patient.CountryId == null)
-            {
-                patient.UkBorn = null;
-                return;
-            }
-
-            var country = await _referenceDataRepository.GetCountryByIdAsync(patient.CountryId.Value);
-            if (country == null)
-            {
-                patient.UkBorn = null;
-                return;
-            }
-
-            switch (country.IsoCode)
-            {
-                case Countries.UkCode:
-                    patient.UkBorn = true;
-                    break;
-                case Countries.UnknownCode:
-                    patient.UkBorn = null;
-                    break;
-                default:
-                    patient.UkBorn = false;
-                    break;
-            }
-        }
-
         private static void UpdateEntryYearToUk(PatientDetails patient)
         {
-            if (patient.UkBorn != false)
+            if (patient.UkBorn)
             {
                 patient.YearOfUkEntry = null;
             }

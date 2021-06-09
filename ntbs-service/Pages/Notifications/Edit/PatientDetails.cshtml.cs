@@ -130,7 +130,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             ModelState.ClearValidationState("PatientDetails.Postcode");
             ModelState.ClearValidationState("PatientDetails.NHSNumber");
             ModelState.ClearValidationState("PatientDetails.OccupationOther");
-            if (PatientDetails.UkBorn != false)
+            if (PatientDetails.UkBorn)
             {
                 ModelState.ClearValidationState("PatientDetails.YearOfUkEntry");
             }
