@@ -42,7 +42,6 @@ namespace ntbs_service.Models.Entities
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [ValidDateRange(ValidDates.EarliestBirthDate)]
         public DateTime? Dob { get; set; }
-        public bool? UkBorn { get; set; }
 
         [MaxLength(150)]
         [RegularExpression(

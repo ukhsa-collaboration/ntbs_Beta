@@ -649,7 +649,6 @@ namespace ntbs_service.DataMigration
                 NhsNumberNotKnown = notification.NhsNumberNotKnown == 1 || notification.NhsNumber == null,
                 Dob = notification.DateOfBirth,
                 YearOfUkEntry = notification.UkEntryYear,
-                UkBorn = notification.UkBorn,
                 CountryId = notification.BirthCountryId ?? Countries.UnknownId,
                 LocalPatientId = localPatientId,
                 Postcode = notification.Postcode,

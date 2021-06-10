@@ -38,7 +38,6 @@ namespace load_test_data_generation.Notifications
                 .RuleFor(p => p.NhsNumber, f => f.Random.ReplaceNumbers("9#########"))
                 .RuleFor(p => p.NhsNumberNotKnown, f => false)
                 .RuleFor(p => p.Dob, f => f.Date.Between(StartOf1920, EndOf2014))
-                .RuleFor(p => p.UkBorn, f => true)
                 .RuleFor(p => p.CountryId, f => countries.Single(c => c.IsoCode == Countries.UkCode).CountryId)
                 .RuleFor(p => p.YearOfUkEntry, f => null)
                 // It would be good to use real addresses, but a bit of extra work (there are too many postcodes to choose at random).

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using Xunit;
 
@@ -110,6 +111,20 @@ namespace ntbs_service_unit_tests.Models.Entities
 
             // Assert
             Assert.Equal("NW12 3RT", postcode);
+        }
+
+        [Theory]
+        [InlineData(Countries.UkId, true)]
+        [InlineData(Countries.UnknownId, false)]
+        [InlineData(33, false)]
+        [InlineData(null, false)]
+        public void UkBorn_IsSetToCorrectValueDependentOnBirthCountry(int? countryId, bool? expectedResult)
+        {
+            // Arrange
+            var notification = new Notification {PatientDetails = new PatientDetails() {CountryId = countryId}};
+
+            // Assert
+            Assert.Equal(expectedResult, notification.PatientDetails.UkBorn);
         }
     }
 }
