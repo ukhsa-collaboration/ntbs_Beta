@@ -33,8 +33,7 @@ Feature: Transfer notification
     Given I choose to log in with a different account
     Given I have logged in as LeedsServiceUser
     When I navigate to the url of the current notification
-    Then I can see the value Birmingham & Solihull for element with id 'banner-tb-service'
-    When I take action on the alert with title Transfer request
+    And I take action on the alert with title Transfer request
 
     Then I can see the value Birmingham & Solihull for 'Sending TB service' transfer information
     Then I can see the value Birmingham UITester for 'Sending case manager' transfer information
@@ -54,8 +53,7 @@ Feature: Transfer notification
     Given I choose to log in with a different account
     Given I have logged in as LeedsServiceUser
     When I navigate to the url of the current notification
-    Then I can see the value Birmingham & Solihull for element with id 'banner-tb-service'
-    When I take action on the alert with title Transfer request
+    And I take action on the alert with title Transfer request
 
     And I check 'decline-transfer-input'
     And I enter Do not want this patient here into 'DeclineTransferReason'
