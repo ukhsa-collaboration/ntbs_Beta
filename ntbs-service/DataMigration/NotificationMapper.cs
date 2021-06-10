@@ -299,11 +299,9 @@ namespace ntbs_service.DataMigration
                 notification.NotificationStatus = NotificationStatus.Denotified;
                 notification.DenotificationDetails = new DenotificationDetails
                 {
-                    DateOfDenotification = rawNotification.DenotificationDate ?? DateTime.Now,
-                    Reason = DenotificationReason.Other,
-                    OtherDescription = "Denotified in legacy system, with denotification date " +
-                                       (rawNotification.DenotificationDate?.ToString() ?? "missing")
+                    DateOfDenotification = rawNotification.DenotificationDate ?? DateTime.Now
                 };
+                SetDenotificationReasonAndDescription(rawNotification, notification.DenotificationDetails);
             }
             else
             {
@@ -862,6 +860,20 @@ namespace ntbs_service.DataMigration
             }
 
             return mdr;
+        }
+
+        private void SetDenotificationReasonAndDescription(MigrationDbNotification notification, DenotificationDetails denotificationDetails)
+        {
+            var reasons = (DenotificationReason[])Enum.GetValues(typeof(DenotificationReason));
+            var reason = reasons.Any(r => r.GetDisplayName().ToLower() == notification.DenotificationReason.ToLower())
+                ? reasons.Single(r => r.GetDisplayName().ToLower() == notification.DenotificationReason.ToLower())
+                : DenotificationReason.Other;
+            denotificationDetails.Reason = reason;
+            if (reason == DenotificationReason.Other)
+            {
+                denotificationDetails.OtherDescription = "Denotified in legacy system, with denotification date " + 
+                                                         (notification.DenotificationDate?.ToString() ?? "missing");
+            }
         }
     }
 }
