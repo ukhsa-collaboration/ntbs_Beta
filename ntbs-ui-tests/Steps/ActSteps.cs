@@ -7,6 +7,7 @@ using ntbs_ui_tests.Hooks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using TechTalk.SpecFlow;
+using Xunit;
 
 namespace ntbs_ui_tests.Steps
 {
@@ -30,6 +31,8 @@ namespace ntbs_ui_tests.Steps
         public void WhenINavigateToCurrentNotificationUrl()
         {
             Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}/Notifications/{TestContext.AddedNotificationIds.Single()}");
+            // Verify that the page has loaded
+            Assert.NotNull(Browser.FindElement(By.ClassName("notification-banner-title-text")));
         }
         
         [When(@"I click '(.*)' on the navigation bar")]

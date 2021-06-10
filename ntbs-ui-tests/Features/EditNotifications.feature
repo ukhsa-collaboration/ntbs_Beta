@@ -93,7 +93,7 @@ Feature: Notification editing
     And I check 'dot-status-DotRefused'
     And I check 'enhanced-case-management-yes'
     And I check 'ecm-1'
-    And I enter Patient has no cool shoes into 'ClinicalDetails_Notes'
+    And I enter Patient has no cool shoes into 'notes'
     When I click on the 'save-button' button
 
     Then I can see the value 'Pulmonary, Spine, Cryptic' for the field 'sites' in the 'ClinicalDetails' overview section
