@@ -14,6 +14,7 @@ namespace ntbs_service.DataMigration.RawModels
         public string GroupId { get; set; }
         public DateTime? NotificationDate { get; set; }
         public int? IsDenotified { get; set; }
+        public string DenotificationReason { get; set; }
         public DateTime? DenotificationDate { get; set; }
         public string HivTestStatus { get; set; }
         public string Consultant { get; set; }

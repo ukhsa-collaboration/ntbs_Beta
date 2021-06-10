@@ -506,13 +506,41 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Act
             var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
+                        runId,
+                        legacyIds))
+                    .SelectMany(group => group)
+                    .Single();
+
+                // Assert
+                Assert.Equal(NotificationStatus.Denotified ,notification.NotificationStatus);
+        }
+
+        // Data for this has been based on real examples, but with care taken to anonymize it
+        [Fact]
+        public async Task correctlyMaps_DenotificationValues()
+        {
+            // Arrange
+            const int runId = 12345;
+            var legacyIds = new List<string> { "193300" };
+            SetupNotificationsInGroups(("193300", "11"));
+
+            const string malvernCode = "TBS0656";
+            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
+            {
+                {new Guid("33464912-E5B1-4998-AFCA-083C3AE65A80"), new TBService {Code = malvernCode}},
+            };
+
+            // Act
+            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
                     runId,
                     legacyIds))
                 .SelectMany(group => group)
                 .Single();
 
             // Assert
-            Assert.Equal(NotificationStatus.Denotified ,notification.NotificationStatus);
+            Assert.Equal(NotificationStatus.Denotified, notification.NotificationStatus);
+            Assert.Equal(DenotificationReason.NotTbAtypicalMyco, notification.DenotificationDetails.Reason);
+            Assert.Equal(new DateTime(2019,06,01), notification.DenotificationDetails.DateOfDenotification);
         }
 
         private void SetupNotificationsInGroups(params (string, string)[] legacyIdAndLegacyGroup)
