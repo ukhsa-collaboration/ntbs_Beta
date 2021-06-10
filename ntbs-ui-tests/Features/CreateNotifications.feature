@@ -129,7 +129,7 @@ Feature: Notification creation
     And I check 'enhanced-case-management-yes'
     And I check 'ecm-2'
     And I check 'regimen-standardTherapy'
-    And I enter Patient has been doing well into 'ClinicalDetails_Notes'
+    And I enter Patient has been doing well into 'notes'
     When I click on the 'submit-button' button
 
     Then I can see the value 'Pulmonary' for the field 'sites' in the 'ClinicalDetails' overview section

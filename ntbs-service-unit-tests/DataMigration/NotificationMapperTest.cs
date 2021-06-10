@@ -271,7 +271,6 @@ namespace ntbs_service_unit_tests.DataMigration
             // Assert
             Assert.Single(notification.TreatmentEvents);
             Assert.True(notification.ClinicalDetails.IsPostMortem);
-            Assert.True(notification.ShouldBeClosed());
             Assert.Equal(NotificationStatus.Closed, notification.NotificationStatus);
             // For post mortem cases we *only* want to import the single death event so outcomes reporting is correct
             Assert.Collection(notification.TreatmentEvents,
@@ -454,6 +453,67 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Null(notification.TravelDetails.StayLengthInMonths3);
         }
 
+        // This test uses test notification 237138, based on 237137 used in correctlyMaps_ContactTracingNumbers
+        [Fact]
+        public async Task correctlyWarns_WithInvalidPostcode()
+        {
+            // Arrange
+            const int runId = 12345;
+            var legacyIds = new List<string> { "237138" };
+            SetupNotificationsInGroups(("237138", "10"));
+
+            const string leedsGeneralCode = "TBS0106";
+            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
+            {
+                {new Guid("7E9C715D-0248-4D97-8F67-1134FC133588"), new TBService {Code = leedsGeneralCode}},
+            };
+
+            _postcodeService.Setup(service => service.FindPostcodeAsync("BF1"))
+                .Returns(Task.FromResult<PostcodeLookup>(null));
+            
+            // Act
+            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
+                        runId,
+                        legacyIds))
+                    .SelectMany(group => group)
+                    .Single();
+
+                // Assert
+                Assert.Equal("BF1", notification.PatientDetails.Postcode);
+                Assert.Null(notification.PatientDetails.PostcodeToLookup);
+
+                _importLoggerMock.Verify(
+                    s => s.LogNotificationWarning(null, runId, "237138", "invalid or unknown postcode"),
+                    Times.Once);
+        }
+
+
+        // Data for this has been based on real regression examples, but with care taken to anonymize it
+        // This is based on NTBS-2388
+        [Fact]
+        public async Task correctlyMaps_DenotifiedStatusIfOtherwiseWouldBeClosed()
+        {
+            // Arrange
+            const int runId = 12345;
+            var legacyIds = new List<string> { "249398" };
+            SetupNotificationsInGroups(("249398", "10"));
+
+            const string malvernCode = "TBS0656";
+            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
+            {
+                {new Guid("33464912-E5B1-4998-AFCA-083C3AE65A80"), new TBService {Code = malvernCode}},
+            };
+
+            // Act
+            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
+                    runId,
+                    legacyIds))
+                .SelectMany(group => group)
+                .Single();
+
+            // Assert
+            Assert.Equal(NotificationStatus.Denotified ,notification.NotificationStatus);
+        }
 
         private void SetupNotificationsInGroups(params (string, string)[] legacyIdAndLegacyGroup)
         {

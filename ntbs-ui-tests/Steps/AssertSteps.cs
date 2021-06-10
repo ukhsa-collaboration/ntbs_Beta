@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Microsoft.CodeAnalysis.CodeActions;
 using ntbs_service.Models.Validations;
 using ntbs_ui_tests.Helpers;
 using ntbs_ui_tests.Hooks;
@@ -94,7 +95,13 @@ namespace ntbs_ui_tests.Steps
         public void ThenICanSeeTheWarningForId(string warningMessage, string warningId)
         {
             var warningElement = HtmlElementHelper.FindElementById(Browser, warningId);
-            Assert.Contains(warningMessage, warningElement.Text);
+            try {
+                var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
+                wait.Until(ExpectedConditions.TextToBePresentInElement(warningElement, warningMessage));
+            }
+            catch (WebDriverTimeoutException) {
+                Assert.Contains(warningElement.Text, warningMessage);
+            }
         }
 
         #endregion

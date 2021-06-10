@@ -109,7 +109,9 @@ namespace ntbs_service.DataMigration
                     (await mbovisAnimalExposure).ToList(),
                     (await mbovisExposureToKnownCase).ToList(),
                     (await mbovisOccupationExposures).ToList(),
-                    (await mbovisUnpasteurisedMilkConsumption).ToList()
+                    (await mbovisUnpasteurisedMilkConsumption).ToList(),
+                    context,
+                    runId
                 );
                 resultList.Add(notificationsForGroup);
             }
@@ -127,7 +129,9 @@ namespace ntbs_service.DataMigration
             List<MigrationDbMBovisAnimal> mbovisAnimalExposures,
             List<MigrationDbMBovisKnownCase> mbovisExposureToKnownCase,
             List<MigrationDbMBovisOccupation> mbovisOccupationExposures,
-            List<MigrationDbMBovisMilkConsumption> mbovisUnpasteurisedMilkConsumption)
+            List<MigrationDbMBovisMilkConsumption> mbovisUnpasteurisedMilkConsumption,
+            PerformContext context,
+            int runId)
         {
             var notificationsToReturn = new List<Notification>();
 
@@ -176,7 +180,7 @@ namespace ntbs_service.DataMigration
                     .Select(AsMBovisUnpasteurisedMilkConsumption)
                     .ToList();
 
-                var notification = await AsNotificationAsync(rawNotification);
+                var notification = await AsNotificationAsync(rawNotification, context, runId);
                 notification.NotificationSites = notificationSites;
                 notification.TestData = new TestData
                 {
@@ -278,7 +282,8 @@ namespace ntbs_service.DataMigration
             return mbovisDetails;
         }
 
-        private async Task<Notification> AsNotificationAsync(MigrationDbNotification rawNotification)
+        private async Task<Notification> AsNotificationAsync(MigrationDbNotification rawNotification,
+            PerformContext context, int runId)
         {
             var notification = new Notification
             {
@@ -305,7 +310,10 @@ namespace ntbs_service.DataMigration
                 notification.NotificationStatus = NotificationStatus.Notified;
             }
 
-            notification.PatientDetails = await ExtractPatientDetails(rawNotification);
+            notification.PatientDetails = await ExtractPatientDetails(rawNotification,
+                notification.LegacyId,
+                context,
+                runId);
             notification.ClinicalDetails = ExtractClinicalDetails(rawNotification);
             notification.TravelDetails = ExtractTravelDetails(rawNotification);
             notification.VisitorDetails = ExtractVisitorDetails(rawNotification);
@@ -615,7 +623,8 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        private async Task<PatientDetails> ExtractPatientDetails(MigrationDbNotification notification)
+        private async Task<PatientDetails> ExtractPatientDetails(MigrationDbNotification notification, string legacyId,
+            PerformContext context, int runId)
         {
             var addressLines = new List<string>
             {
@@ -654,6 +663,11 @@ namespace ntbs_service.DataMigration
             details.OccupationOther = RemoveCharactersNotIn(
                 ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
                 notification.OccupationFreetext);
+
+            if (details.Postcode != null && details.PostcodeToLookup == null)
+            {
+                await _logger.LogNotificationWarning(context, runId, legacyId, "invalid or unknown postcode");
+            }
 
             ForceValidNhsNumber(details);
 

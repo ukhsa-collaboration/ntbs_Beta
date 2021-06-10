@@ -114,7 +114,8 @@ namespace ntbs_service.Models.Entities
         {
             var mostRecentTreatmentEvent = TreatmentEvents.GetMostRecentTreatmentEvent();
 
-            return mostRecentTreatmentEvent != null
+            return NotificationStatus == NotificationStatus.Notified
+                && mostRecentTreatmentEvent != null
                 && mostRecentTreatmentEvent.TreatmentEventTypeIsOutcome
                 && mostRecentTreatmentEvent.TreatmentOutcome?.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment
                 && mostRecentTreatmentEvent.EventDate < DateTime.Today.AddYears(-1);
