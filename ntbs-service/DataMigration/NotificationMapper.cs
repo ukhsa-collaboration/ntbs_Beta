@@ -38,6 +38,7 @@ namespace ntbs_service.DataMigration
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IImportLogger _logger;
         private readonly TreatmentOutcome _postMortemOutcomeType;
+        private readonly List<int> _diedOutcomeIds;
         private readonly IPostcodeService _postcodeService;
         private readonly ICaseManagerImportService _caseManagerImportService;
         private readonly ITreatmentEventMapper _treatmentEventMapper;
@@ -56,10 +57,14 @@ namespace ntbs_service.DataMigration
             _caseManagerImportService = caseManagerImportService;
             _treatmentEventMapper = treatmentEventMapper;
 
-            // This is a database-based value, but static from the runtime point of view, so we fetch it once here.
+            // These are database-based values, but static from the runtime point of view, so we fetch them once here
             _postMortemOutcomeType = _referenceDataRepository.GetTreatmentOutcomeForTypeAndSubType(
                 TreatmentOutcomeType.Died,
                 TreatmentOutcomeSubType.Unknown).Result;
+            _diedOutcomeIds = _referenceDataRepository.GetTreatmentOutcomesForType(TreatmentOutcomeType.Died)
+                .Result
+                .Select(outcome => outcome.TreatmentOutcomeId)
+                .ToList();
         }
 
         public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
@@ -215,21 +220,11 @@ namespace ntbs_service.DataMigration
             IEnumerable<TreatmentEvent> notificationTransferEvents,
             IEnumerable<TreatmentEvent> notificationOutcomeEvents)
         {
-
             // For post mortem cases the death event is the ONLY event we want to import so the final outcome is
             // correctly reported.
             if (notification.ClinicalDetails.IsPostMortem == true)
             {
-                return new List<TreatmentEvent>
-                {
-                    new TreatmentEvent
-                    {
-                        EventDate = rawNotification.DeathDate,
-                        TreatmentEventType = TreatmentEventType.TreatmentOutcome,
-                        TreatmentOutcomeId = _postMortemOutcomeType.TreatmentOutcomeId,
-                        TreatmentOutcome = _postMortemOutcomeType
-                    }
-                };
+                return new List<TreatmentEvent> { CreateDerivedDeathEvent(rawNotification) };
             }
 
             var treatmentEvents = new List<TreatmentEvent>();
@@ -240,8 +235,25 @@ namespace ntbs_service.DataMigration
 
             treatmentEvents.AddRange(notificationTransferEvents);
             treatmentEvents.AddRange(notificationOutcomeEvents);
+
+            // If there is a death date but no death treatment event, add one in
+            if (rawNotification.DeathDate != null
+                && !treatmentEvents.Any(e => _diedOutcomeIds.Contains(e.TreatmentOutcomeId ?? 0)))
+            {
+                treatmentEvents.Add(CreateDerivedDeathEvent(rawNotification));
+            }
+
             return treatmentEvents;
         }
+
+        private TreatmentEvent CreateDerivedDeathEvent(MigrationDbNotification rawNotification) =>
+            new TreatmentEvent
+            {
+                EventDate = rawNotification.DeathDate,
+                TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                TreatmentOutcomeId = _postMortemOutcomeType.TreatmentOutcomeId,
+                TreatmentOutcome = _postMortemOutcomeType
+            };
 
         private MBovisDetails ExtractMBovisDetails(ICollection<MBovisAnimalExposure> animalExposures,
             ICollection<MBovisExposureToKnownCase> exposureToKnownCase,
@@ -871,7 +883,7 @@ namespace ntbs_service.DataMigration
             denotificationDetails.Reason = reason;
             if (reason == DenotificationReason.Other)
             {
-                denotificationDetails.OtherDescription = "Denotified in legacy system, with denotification date " + 
+                denotificationDetails.OtherDescription = "Denotified in legacy system, with denotification date " +
                                                          (notification.DenotificationDate?.ToString() ?? "missing");
             }
         }
