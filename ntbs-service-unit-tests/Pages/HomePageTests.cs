@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Moq;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
@@ -118,7 +119,8 @@ namespace ntbs_service_unit_tests.Pages
                 _mockAlertRepository.Object,
                 _mockAuthorizationService.Object,
                 _mockUserService.Object,
-                _mockHomepageKpiService.Object);
+                _mockHomepageKpiService.Object,
+                new Mock<IUserHelper>().Object);
             pageModel.MockOutSession();
 
             // Act
@@ -163,7 +165,8 @@ namespace ntbs_service_unit_tests.Pages
                 _mockAlertRepository.Object,
                 _mockAuthorizationService.Object,
                 _mockUserService.Object,
-                _mockHomepageKpiService.Object);
+                _mockHomepageKpiService.Object,
+                new Mock<IUserHelper>().Object);
             pageModel.MockOutSession();
 
             // Act
@@ -188,7 +191,8 @@ namespace ntbs_service_unit_tests.Pages
                 _mockAlertRepository.Object,
                 _mockAuthorizationService.Object,
                 _mockUserService.Object,
-                _mockHomepageKpiService.Object);
+                _mockHomepageKpiService.Object,
+                new Mock<IUserHelper>().Object);
             pageModel.MockOutSession();
 
             // Act
@@ -211,7 +215,8 @@ namespace ntbs_service_unit_tests.Pages
                 _mockAlertRepository.Object,
                 _mockAuthorizationService.Object,
                 _mockUserService.Object,
-                _mockHomepageKpiService.Object);
+                _mockHomepageKpiService.Object,
+                new Mock<IUserHelper>().Object);
             pageModel.MockOutSession();
 
             // Act
@@ -237,7 +242,8 @@ namespace ntbs_service_unit_tests.Pages
                 _mockAlertRepository.Object,
                 _mockAuthorizationService.Object,
                 _mockUserService.Object,
-                _mockHomepageKpiService.Object);
+                _mockHomepageKpiService.Object,
+                new Mock<IUserHelper>().Object);
             pageModel.MockOutSession();
 
             // Act

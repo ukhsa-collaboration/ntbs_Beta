@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Moq;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -88,7 +89,8 @@ namespace ntbs_service_unit_tests.Pages
                 _mockAuthorizationService.Object,
                 _mockReferenceDataRepository.Object,
                 _mockLegacySearchService.Object,
-                _mockUserService.Object)
+                _mockUserService.Object,
+                new Mock<IUserHelper>().Object)
             {
                 SearchParameters = new SearchParameters(),
                 PageContext = pageContext

@@ -47,7 +47,7 @@ namespace ntbs_service.Pages.ContactDetails
             RegionalMemberships = await this._referenceDataRepository.GetPhecsByAdGroups(ContactDetails.AdGroups);
 
             ViewData["IsEditable"] = _userHelper.CurrentUserMatchesUsernameOrIsAdmin(HttpContext, ContactDetails.Username)
-                && !(await _userService.GetUser(HttpContext.User)).IsReadOnly;
+                && !_userHelper.UserIsReadOnly(User);
 
             ContactDetails.CaseManagerTbServices = ContactDetails?.CaseManagerTbServices
                 .OrderBy(x => x.TbService.PHEC.Name)

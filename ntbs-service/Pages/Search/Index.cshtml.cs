@@ -23,6 +23,7 @@ namespace ntbs_service.Pages.Search
         private readonly ILegacySearchService _legacySearchService;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IUserService _userService;
+        private readonly IUserHelper _userHelper;
 
         public ValidationService ValidationService;
 
@@ -44,7 +45,8 @@ namespace ntbs_service.Pages.Search
             IAuthorizationService authorizationService,
             IReferenceDataRepository referenceDataRepository,
             ILegacySearchService legacySearchService,
-            IUserService userService)
+            IUserService userService,
+            IUserHelper userHelper)
         {
             _authorizationService = authorizationService;
             _searchService = searchService;
@@ -52,6 +54,7 @@ namespace ntbs_service.Pages.Search
             _legacySearchService = legacySearchService;
             _referenceDataRepository = referenceDataRepository;
             _userService = userService;
+            _userHelper = userHelper;
 
             ValidationService = new ValidationService(this);
 
@@ -279,9 +282,9 @@ namespace ntbs_service.Pages.Search
             return searchParameterDictionary;
         }
 
-        public async Task<bool> UserIsReadOnly()
+        public bool UserIsReadOnly()
         {
-            return (await _userService.GetUser(HttpContext.User)).IsReadOnly;
+            return _userHelper.UserIsReadOnly(User);
         }
     }
 }

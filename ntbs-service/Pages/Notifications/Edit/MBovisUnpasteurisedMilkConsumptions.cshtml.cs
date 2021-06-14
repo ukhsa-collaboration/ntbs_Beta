@@ -19,8 +19,14 @@ namespace ntbs_service.Pages.Notifications.Edit
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService,
-            IAlertRepository alertRepository) : base(notificationService, authorizationService,
-                notificationRepository, alertRepository)
+            IAlertRepository alertRepository,
+            IUserHelper userHelper)
+            : base(
+                notificationService,
+                authorizationService,
+                notificationRepository,
+                alertRepository,
+                userHelper)
         {
             CurrentPage = NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions;
             _enhancedSurveillanceAlertsService = enhancedSurveillanceAlertsService;

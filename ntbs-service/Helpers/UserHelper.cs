@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using ntbs_service.Properties;
 
@@ -7,6 +8,7 @@ namespace ntbs_service.Helpers
     public interface IUserHelper
     {
         bool CurrentUserMatchesUsernameOrIsAdmin(HttpContext context, string username);
+        bool UserIsReadOnly(ClaimsPrincipal user);
     }
     
     public class UserHelper : IUserHelper
@@ -27,6 +29,11 @@ namespace ntbs_service.Helpers
         public bool CurrentUserMatchesUsernameOrIsAdmin(HttpContext context, string username)
         {
             return context.User.Username() == username || context.User.IsInRole(_adOptions.AdminUserGroup);
+        }
+
+        public bool UserIsReadOnly(ClaimsPrincipal user)
+        {
+            return user.IsInRole(_adOptions.ReadOnlyUserGroup);
         }
     }
 }

@@ -19,16 +19,19 @@ namespace ntbs_service.Pages.Notifications
         protected INotificationService Service;
         protected IAuthorizationService _authorizationService;
         protected INotificationRepository NotificationRepository;
+        protected IUserHelper _userHelper;
         protected IUserService _userService;
 
         protected NotificationModelBase(
             INotificationService service,
             IAuthorizationService authorizationService,
+            IUserHelper userHelper,
             INotificationRepository notificationRepository = null,
             IUserService userService = null)
         {
             Service = service;
             _authorizationService = authorizationService;
+            _userHelper = userHelper;
             NotificationRepository = notificationRepository;
             _userService = userService;
         }
@@ -97,9 +100,9 @@ namespace ntbs_service.Pages.Notifications
             return StatusCode((int)HttpStatusCode.Forbidden);
         }
 
-        public async Task<bool> UserIsReadOnly()
+        public bool UserIsReadOnly()
         {
-            return (await _userService.GetUser(User)).IsReadOnly;
+            return _userHelper.UserIsReadOnly(User);
         }
 
         private async Task<NotificationGroup> GetNotificationGroupAsync()

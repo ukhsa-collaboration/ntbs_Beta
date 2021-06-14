@@ -7,8 +7,10 @@
 @inject ntbs.IReportingLinksService ReportingLinksService
 
 @using Microsoft.Extensions.Configuration
+@using ntbs_service.Helpers
 @using ntbs_service.Properties
 @inject IConfiguration Configuration
+@inject IUserHelper UserHelper
 
 @{
     var breadcrumbs = ViewData["Breadcrumbs"];
@@ -24,7 +26,7 @@
 
             <div class="govuk-header__logo header-logo-container header-logo">
                 <span class="govuk-header__logotype">
-                    <img src="~/Images/PHE_3268_DIGI_AW-100px.png" alt="Public Health England logo"/>
+                    <img src="~/Images/PHE_3268_DIGI_AW-100px.png" alt="Public Health England logo" />
                 </span>
             </div>
             <div class=" govuk-header__link--service-name header-title">
@@ -66,7 +68,7 @@
                             Search
                         </a>
                     </li>
-                    @if (!(await UserService.GetUser(Context.User)).IsReadOnly)
+                    @if (!UserHelper.UserIsReadOnly(User))
                     {
                         <li class="govuk-header__navigation-item header-navigation-link">
                             <a class="govuk-header__link header-navigation-list-item" href="/LabResults">

@@ -34,7 +34,8 @@ namespace ntbs_service.Pages.Notifications
             INotificationRepository notificationRepository,
             IUserService userService,
             ICultureAndResistanceService cultureAndResistanceService,
-            IAuditService auditService) : base(service, authorizationService, notificationRepository, userService)
+            IAuditService auditService,
+            IUserHelper userHelper) : base(service, authorizationService, userHelper, notificationRepository, userService)
         {
             _alertService = alertService;
             _cultureAndResistanceService = cultureAndResistanceService;
@@ -95,7 +96,7 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task<IActionResult> OnPostCreateLinkAsync()
         {
-            if (await UserIsReadOnly())
+            if (UserIsReadOnly())
             {
                 return Page();
             }

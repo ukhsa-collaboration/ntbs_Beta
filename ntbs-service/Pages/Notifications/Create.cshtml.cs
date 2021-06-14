@@ -10,17 +10,17 @@ namespace ntbs_service.Pages.Notifications
     public class CreateModel : PageModel
     {
         private readonly INotificationService _notificationService;
-        private readonly IUserService _userService;
+        private readonly IUserHelper _userHelper;
 
-        public CreateModel(INotificationService notificationService, IUserService userService)
+        public CreateModel(INotificationService notificationService, IUserHelper userHelper)
         {
             _notificationService = notificationService;
-            _userService = userService;
+            _userHelper = userHelper;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            if ((await _userService.GetUser(User)).IsReadOnly)
+            if (_userHelper.UserIsReadOnly(User))
             {
                 return RedirectToPage(RouteHelper.AccessDeniedPath);
             }
