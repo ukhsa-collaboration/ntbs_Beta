@@ -172,47 +172,6 @@ namespace ntbs_service_unit_tests.Services
             VerifyUpdateDatabaseCalled();
         }
 
-        public static IEnumerable<object[]> UkBornTestCases()
-        {
-            yield return new object[] { new Country() { CountryId = 1, IsoCode = Countries.UkCode }, true };
-            yield return new object[] { new Country() { CountryId = 2, IsoCode = Countries.UnknownCode }, null };
-            yield return new object[] { new Country() { CountryId = 3, IsoCode = "Other code" }, false };
-        }
-
-        [Theory, MemberData(nameof(UkBornTestCases))]
-        public async Task UkBorn_IsSetToCorrectValueDependentOnBirthCountry(Country country, bool? expectedResult)
-        {
-            // Arrange
-            _mockReferenceDataRepository.Setup(rep => rep.GetCountryByIdAsync(country.CountryId))
-                .Returns(Task.FromResult(country));
-            var notification = new Notification();
-            var patient = new PatientDetails() { CountryId = country.CountryId };
-
-            // Act
-            await _notificationService.UpdatePatientDetailsAsync(notification, patient);
-
-            // Assert
-            Assert.Equal(expectedResult, patient.UkBorn);
-            _mockContext.Verify(context => context.SetValues(notification.PatientDetails, patient));
-            VerifyUpdateDatabaseCalled();
-        }
-
-        [Fact]
-        public async Task UkBorn_IsSetToNullIfCountryNotSet()
-        {
-            // Arrange
-            var notification = new Notification();
-            var patient = new PatientDetails() { UkBorn = true };
-
-            // Act
-            await _notificationService.UpdatePatientDetailsAsync(notification, patient);
-
-            // Assert
-            Assert.Null(patient.UkBorn);
-            _mockContext.Verify(context => context.SetValues(notification.PatientDetails, patient));
-            VerifyUpdateDatabaseCalled();
-        }
-
         [Fact]
         public async Task SubmitNotification_ChangesDateAndStatus()
         {

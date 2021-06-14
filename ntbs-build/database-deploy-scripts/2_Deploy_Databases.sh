@@ -17,34 +17,34 @@ specimen_matching_dir="ntbs-specimen-matching"
 specimen_matching_sqlproj=".\source\ntbs-specimen-matching.sqlproj"
 specimen_matching_dacpac=".\source\bin\Debug\ntbs-specimen-matching.dacpac"
 
-read -p "Which environment would you like to deploy to - live, uat, training, int or dev (default uat): " DEPLOY_ENVIRONMENT
+read -p "Which environment would you like to deploy to - live, uat or training (default uat): " DEPLOY_ENVIRONMENT
 DEPLOY_ENVIRONMENT=${DEPLOY_ENVIRONMENT:-uat}
 
 if [[ $DEPLOY_ENVIRONMENT = "live" ]]
 then
-    migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Production\PHE-LIVE ntbs-data-migration.publish.xml"
-    reporting_publish_profile=".\source\Publish Profiles\DELETE\phe-ntbs-live-reporting-DELETE.publish.xml"
-    specimen_matching_publish_profile=".\source\phe-ntbs-live-specimen-matching.publish.xml"
+    migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Production\phe-live-migration.publish.xml"
+    reporting_publish_profile=".\source\Publish Profiles\Production\phe-live-reporting.publish.xml"
+    specimen_matching_publish_profile=".\source\Publish Profiles\Production\phe-live-specimen-matching.publish.xml"
 elif [[ $DEPLOY_ENVIRONMENT = "uat" ]]
 then
-    migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Delete\PHE-UAT ntbs-data-migration.publish.xml"
-    reporting_publish_profile=".\source\Publish Profiles\DELETE\phe-ntbs-uat-reporting-DELETE.publish.xml"
-    specimen_matching_publish_profile=".\source\phe-ntbs-uat-specimen-matching.publish.xml"
+    migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Pre-production\phe-uat-migration.publish.xml"
+    reporting_publish_profile=".\source\Publish Profiles\Pre-production\phe-uat-reporting.publish.xml"
+    specimen_matching_publish_profile=".\source\Publish Profiles\Pre-production\phe-uat-specimen-matching.publish.xml"
 elif [[ $DEPLOY_ENVIRONMENT = "training" ]]
 then
-    migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Delete\DELETE NTBS-TRAINING ntbs-data-migration.publish.xml"
-    reporting_publish_profile=".\source\Publish Profiles\DELETE\azure-ntbs-training-reporting-DELETE.publish.xml"
-    specimen_matching_publish_profile=".\source\azure-ntbs-training-specimen-matching.publish.xml"
+    migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Pre-production\azure-training-migration.publish.xml"
+    reporting_publish_profile=".\source\Publish Profiles\Pre-production\azure-training-reporting.publish.xml"
+    specimen_matching_publish_profile=".\source\Publish Profiles\Pre-production\azure-training-specimen-matching.publish.xml"
 elif [[ $DEPLOY_ENVIRONMENT = "int" ]]
 then
-    migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Delete\DELETE NTBS-DEV ntbs-data-migration.publish.xml"
-    reporting_publish_profile=".\source\Publish Profiles\DELETE\azure-ntbs-int-reporting-DELETE.publish.xml"
-    specimen_matching_publish_profile=".\source\azure-ntbs-int-specimen-matching.publish.xml"
+    migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Pre-production\azure-migration.publish.xml"
+    reporting_publish_profile=".\source\Publish Profiles\Pre-production\azure-int-reporting.publish.xml"
+    specimen_matching_publish_profile=".\source\Publish Profiles\Pre-production\azure-int-specimen-matching.publish.xml"
 elif [[ $DEPLOY_ENVIRONMENT = "dev" ]]
 then
-    migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Delete\DELETE DEV ntbs-data-migration.publish.xml"
-    reporting_publish_profile=".\source\Publish Profiles\DELETE\DEV-reporting-DELETE.publish.xml"
-    specimen_matching_publish_profile=".\source\DEV-specimen-matching.publish.xml"
+    migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Pre-production\DEV-migration.publish.xml"
+    reporting_publish_profile=".\source\Publish Profiles\Pre-production\DEV-reporting.publish.xml"
+    specimen_matching_publish_profile=".\source\Publish Profiles\Pre-production\DEV-specimen-matching.publish.xml"
 else
     echo "Invalid environment entered."
     exit 1

@@ -38,6 +38,7 @@ namespace ntbs_service.DataMigration
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IImportLogger _logger;
         private readonly TreatmentOutcome _postMortemOutcomeType;
+        private readonly List<int> _diedOutcomeIds;
         private readonly IPostcodeService _postcodeService;
         private readonly ICaseManagerImportService _caseManagerImportService;
         private readonly ITreatmentEventMapper _treatmentEventMapper;
@@ -56,10 +57,14 @@ namespace ntbs_service.DataMigration
             _caseManagerImportService = caseManagerImportService;
             _treatmentEventMapper = treatmentEventMapper;
 
-            // This is a database-based value, but static from the runtime point of view, so we fetch it once here.
+            // These are database-based values, but static from the runtime point of view, so we fetch them once here
             _postMortemOutcomeType = _referenceDataRepository.GetTreatmentOutcomeForTypeAndSubType(
                 TreatmentOutcomeType.Died,
                 TreatmentOutcomeSubType.Unknown).Result;
+            _diedOutcomeIds = _referenceDataRepository.GetTreatmentOutcomesForType(TreatmentOutcomeType.Died)
+                .Result
+                .Select(outcome => outcome.TreatmentOutcomeId)
+                .ToList();
         }
 
         public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
@@ -109,7 +114,9 @@ namespace ntbs_service.DataMigration
                     (await mbovisAnimalExposure).ToList(),
                     (await mbovisExposureToKnownCase).ToList(),
                     (await mbovisOccupationExposures).ToList(),
-                    (await mbovisUnpasteurisedMilkConsumption).ToList()
+                    (await mbovisUnpasteurisedMilkConsumption).ToList(),
+                    context,
+                    runId
                 );
                 resultList.Add(notificationsForGroup);
             }
@@ -127,7 +134,9 @@ namespace ntbs_service.DataMigration
             List<MigrationDbMBovisAnimal> mbovisAnimalExposures,
             List<MigrationDbMBovisKnownCase> mbovisExposureToKnownCase,
             List<MigrationDbMBovisOccupation> mbovisOccupationExposures,
-            List<MigrationDbMBovisMilkConsumption> mbovisUnpasteurisedMilkConsumption)
+            List<MigrationDbMBovisMilkConsumption> mbovisUnpasteurisedMilkConsumption,
+            PerformContext context,
+            int runId)
         {
             var notificationsToReturn = new List<Notification>();
 
@@ -176,7 +185,7 @@ namespace ntbs_service.DataMigration
                     .Select(AsMBovisUnpasteurisedMilkConsumption)
                     .ToList();
 
-                var notification = await AsNotificationAsync(rawNotification);
+                var notification = await AsNotificationAsync(rawNotification, context, runId);
                 notification.NotificationSites = notificationSites;
                 notification.TestData = new TestData
                 {
@@ -211,21 +220,11 @@ namespace ntbs_service.DataMigration
             IEnumerable<TreatmentEvent> notificationTransferEvents,
             IEnumerable<TreatmentEvent> notificationOutcomeEvents)
         {
-
             // For post mortem cases the death event is the ONLY event we want to import so the final outcome is
             // correctly reported.
             if (notification.ClinicalDetails.IsPostMortem == true)
             {
-                return new List<TreatmentEvent>
-                {
-                    new TreatmentEvent
-                    {
-                        EventDate = rawNotification.DeathDate,
-                        TreatmentEventType = TreatmentEventType.TreatmentOutcome,
-                        TreatmentOutcomeId = _postMortemOutcomeType.TreatmentOutcomeId,
-                        TreatmentOutcome = _postMortemOutcomeType
-                    }
-                };
+                return new List<TreatmentEvent> { CreateDerivedDeathEvent(rawNotification) };
             }
 
             var treatmentEvents = new List<TreatmentEvent>();
@@ -236,8 +235,25 @@ namespace ntbs_service.DataMigration
 
             treatmentEvents.AddRange(notificationTransferEvents);
             treatmentEvents.AddRange(notificationOutcomeEvents);
+
+            // If there is a death date but no death treatment event, add one in
+            if (rawNotification.DeathDate != null
+                && !treatmentEvents.Any(e => _diedOutcomeIds.Contains(e.TreatmentOutcomeId ?? 0)))
+            {
+                treatmentEvents.Add(CreateDerivedDeathEvent(rawNotification));
+            }
+
             return treatmentEvents;
         }
+
+        private TreatmentEvent CreateDerivedDeathEvent(MigrationDbNotification rawNotification) =>
+            new TreatmentEvent
+            {
+                EventDate = rawNotification.DeathDate,
+                TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                TreatmentOutcomeId = _postMortemOutcomeType.TreatmentOutcomeId,
+                TreatmentOutcome = _postMortemOutcomeType
+            };
 
         private MBovisDetails ExtractMBovisDetails(ICollection<MBovisAnimalExposure> animalExposures,
             ICollection<MBovisExposureToKnownCase> exposureToKnownCase,
@@ -278,7 +294,8 @@ namespace ntbs_service.DataMigration
             return mbovisDetails;
         }
 
-        private async Task<Notification> AsNotificationAsync(MigrationDbNotification rawNotification)
+        private async Task<Notification> AsNotificationAsync(MigrationDbNotification rawNotification,
+            PerformContext context, int runId)
         {
             var notification = new Notification
             {
@@ -294,18 +311,19 @@ namespace ntbs_service.DataMigration
                 notification.NotificationStatus = NotificationStatus.Denotified;
                 notification.DenotificationDetails = new DenotificationDetails
                 {
-                    DateOfDenotification = rawNotification.DenotificationDate ?? DateTime.Now,
-                    Reason = DenotificationReason.Other,
-                    OtherDescription = "Denotified in legacy system, with denotification date " +
-                                       (rawNotification.DenotificationDate?.ToString() ?? "missing")
+                    DateOfDenotification = rawNotification.DenotificationDate ?? DateTime.Now
                 };
+                SetDenotificationReasonAndDescription(rawNotification, notification.DenotificationDetails);
             }
             else
             {
                 notification.NotificationStatus = NotificationStatus.Notified;
             }
 
-            notification.PatientDetails = await ExtractPatientDetails(rawNotification);
+            notification.PatientDetails = await ExtractPatientDetails(rawNotification,
+                notification.LegacyId,
+                context,
+                runId);
             notification.ClinicalDetails = ExtractClinicalDetails(rawNotification);
             notification.TravelDetails = ExtractTravelDetails(rawNotification);
             notification.VisitorDetails = ExtractVisitorDetails(rawNotification);
@@ -615,7 +633,8 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        private async Task<PatientDetails> ExtractPatientDetails(MigrationDbNotification notification)
+        private async Task<PatientDetails> ExtractPatientDetails(MigrationDbNotification notification, string legacyId,
+            PerformContext context, int runId)
         {
             var addressLines = new List<string>
             {
@@ -640,7 +659,6 @@ namespace ntbs_service.DataMigration
                 NhsNumberNotKnown = notification.NhsNumberNotKnown == 1 || notification.NhsNumber == null,
                 Dob = notification.DateOfBirth,
                 YearOfUkEntry = notification.UkEntryYear,
-                UkBorn = notification.UkBorn,
                 CountryId = notification.BirthCountryId ?? Countries.UnknownId,
                 LocalPatientId = localPatientId,
                 Postcode = notification.Postcode,
@@ -655,6 +673,11 @@ namespace ntbs_service.DataMigration
             details.OccupationOther = RemoveCharactersNotIn(
                 ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
                 notification.OccupationFreetext);
+
+            if (details.Postcode != null && details.PostcodeToLookup == null)
+            {
+                await _logger.LogNotificationWarning(context, runId, legacyId, "invalid or unknown postcode");
+            }
 
             ForceValidNhsNumber(details);
 
@@ -849,6 +872,20 @@ namespace ntbs_service.DataMigration
             }
 
             return mdr;
+        }
+
+        private void SetDenotificationReasonAndDescription(MigrationDbNotification notification, DenotificationDetails denotificationDetails)
+        {
+            var reasons = (DenotificationReason[])Enum.GetValues(typeof(DenotificationReason));
+            var reason = reasons.Any(r => r.GetDisplayName().ToLower() == notification.DenotificationReason.ToLower())
+                ? reasons.Single(r => r.GetDisplayName().ToLower() == notification.DenotificationReason.ToLower())
+                : DenotificationReason.Other;
+            denotificationDetails.Reason = reason;
+            if (reason == DenotificationReason.Other)
+            {
+                denotificationDetails.OtherDescription = "Denotified in legacy system, with denotification date " +
+                                                         (notification.DenotificationDate?.ToString() ?? "missing");
+            }
         }
     }
 }
