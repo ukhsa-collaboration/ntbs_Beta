@@ -9,7 +9,7 @@
 <nhs-width-container container-width="Standard">
     <h1>Dashboard</h1>
     <a href="/Search" role="button" draggable="false" class="nhsuk-button ntbsuk-button--primary">
-        @(await Model.UserIsReadOnly() ? "Search notifications" : "Search and create notification")
+        @(Model.UserIsReadOnly() ? "Search notifications" : "Search and create notification")
     </a>
 
     @if (Model.KpiFilter.Any())

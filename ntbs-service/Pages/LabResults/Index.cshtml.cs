@@ -2,7 +2,6 @@
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -25,17 +24,20 @@ namespace ntbs_service.Pages.LabResults
         private readonly INotificationRepository _notificationRepository;
         private readonly ISpecimenService _specimenService;
         private readonly IUserService _userService;
+        private readonly IUserHelper _userHelper;
 
         public IndexModel(
             ISpecimenService specimenService,
             IUserService userService,
             INotificationRepository notificationRepository,
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService,
+            IUserHelper userHelper)
         {
             _specimenService = specimenService;
             _userService = userService;
             _notificationRepository = notificationRepository;
             _authorizationService = authorizationService;
+            _userHelper = userHelper;
             ValidationService = new ValidationService(this);
         }
 
@@ -49,7 +51,7 @@ namespace ntbs_service.Pages.LabResults
 
         public async Task<IActionResult> OnGetAsync()
         {
-            if ((await _userService.GetUser(HttpContext.User)).IsReadOnly)
+            if (_userHelper.UserIsReadOnly(User))
             {
                 return RedirectToPage(RouteHelper.AccessDeniedPath);
             }

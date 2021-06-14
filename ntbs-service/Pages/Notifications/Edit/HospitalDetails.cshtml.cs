@@ -19,6 +19,7 @@ namespace ntbs_service.Pages.Notifications.Edit
     {
         private readonly NtbsContext _context;
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IUserService _userService;
 
         public SelectList TbServices { get; set; }
         public SelectList Hospitals { get; set; }
@@ -37,7 +38,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             IReferenceDataRepository referenceDataRepository,
             IAuthorizationService authorizationService,
             IUserService userService,
-            NtbsContext context) : base(notificationService, authorizationService, notificationRepository, alertRepository)
+            NtbsContext context,
+            IUserHelper userHelper) : base(notificationService, authorizationService, notificationRepository, alertRepository, userHelper)
         {
             _context = context;
             _userService = userService;

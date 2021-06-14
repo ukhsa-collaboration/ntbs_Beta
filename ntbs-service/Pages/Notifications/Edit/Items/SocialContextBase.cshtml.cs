@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
@@ -31,8 +31,9 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             INotificationRepository notificationRepository,
             IItemRepository<T> socialContextRepository,
             IAlertService alertService,
-            IAlertRepository alertRepository)
-            : base(service, authorizationService, notificationRepository, alertRepository)
+            IAlertRepository alertRepository,
+            IUserHelper userHelper)
+            : base(service, authorizationService, notificationRepository, alertRepository, userHelper)
         {
             _socialContextRepository = socialContextRepository;
             _alertService = alertService;
