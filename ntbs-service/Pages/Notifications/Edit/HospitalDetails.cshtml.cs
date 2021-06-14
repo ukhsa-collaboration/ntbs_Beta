@@ -19,6 +19,7 @@ namespace ntbs_service.Pages.Notifications.Edit
     {
         private readonly NtbsContext _context;
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IUserService _userService;
 
         public SelectList TbServices { get; set; }
         public SelectList Hospitals { get; set; }

@@ -32,10 +32,9 @@ namespace ntbs_service.Pages.Notifications
             IAuthorizationService authorizationService,
             IAlertService alertService,
             INotificationRepository notificationRepository,
-            IUserService userService,
             ICultureAndResistanceService cultureAndResistanceService,
             IAuditService auditService,
-            IUserHelper userHelper) : base(service, authorizationService, userHelper, notificationRepository, userService)
+            IUserHelper userHelper) : base(service, authorizationService, userHelper, notificationRepository)
         {
             _alertService = alertService;
             _cultureAndResistanceService = cultureAndResistanceService;

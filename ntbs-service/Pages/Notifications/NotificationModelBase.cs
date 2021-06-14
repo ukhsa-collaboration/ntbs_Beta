@@ -20,20 +20,17 @@ namespace ntbs_service.Pages.Notifications
         protected IAuthorizationService _authorizationService;
         protected INotificationRepository NotificationRepository;
         protected IUserHelper _userHelper;
-        protected IUserService _userService;
 
         protected NotificationModelBase(
             INotificationService service,
             IAuthorizationService authorizationService,
             IUserHelper userHelper,
-            INotificationRepository notificationRepository = null,
-            IUserService userService = null)
+            INotificationRepository notificationRepository = null)
         {
             Service = service;
             _authorizationService = authorizationService;
             _userHelper = userHelper;
             NotificationRepository = notificationRepository;
-            _userService = userService;
         }
         public int NumberOfLinkedNotifications { get; set; }
         public int? LatestLinkedNotificationId { get; private set; }
