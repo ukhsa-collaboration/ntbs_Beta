@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Bogus;
 using load_test_data_generation.Notifications;
@@ -22,8 +21,8 @@ namespace load_test_data_generation
         private static readonly DateTime EndOf2020 = new DateTime(2020, 12, 31, 23, 59, 59);
 
         private readonly Faker<Notification> testNotifications = new Faker<Notification>()
-            .RuleFor(n => n.NotificationStatus, f => NotificationStatus.Notified)
             .RuleFor(n => n.NotificationDate, f => f.Date.Between(StartOf2015, EndOf2020))
+            .RuleFor(n => n.NotificationStatus, f => NotificationStatus.Notified)
             .RuleFor(n => n.SubmissionDate, (f, u) => u.NotificationDate.Value.Add(f.Date.Timespan(TimeSpan.FromDays(2))))
             .RuleFor(n => n.ETSID, f => null)
             .RuleFor(n => n.LTBRID, f => null)
@@ -74,7 +73,17 @@ namespace load_test_data_generation
             notification.TestData = testResultGenerator.GenerateTestData();
             notification.TreatmentEvents = TreatmentEventsGenerator.GenerateTreatmentEvents(notification);
 
+            EnsureConsistentStatus(notification);
+
             return notification;
+        }
+
+        private static void EnsureConsistentStatus(Notification notification)
+        {
+            if (notification.ShouldBeClosed())
+            {
+                notification.NotificationStatus = NotificationStatus.Closed;
+            }
         }
     }
 }
