@@ -9,6 +9,7 @@ using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
 using ntbs_service.Services;
@@ -84,6 +85,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 {
                     services = services.Prepend(Notification.HospitalDetails.TBService);
                 }
+
                 tbServiceCodes = services.Select(s => s.Code).ToList();
                 TbServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
             }
@@ -92,15 +94,25 @@ namespace ntbs_service.Pages.Notifications.Edit
                 tbServiceCodes = new List<string> { Notification.HospitalDetails.TBServiceCode };
             }
 
-            var hospitals = (await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(tbServiceCodes))
-                .Where(h =>
-                    h.IsLegacy == false
-                    || h.HospitalId == Notification.HospitalDetails.Hospital?.HospitalId);
+            var hospitals = await GetActiveOrCurrentHospitalsByTbServiceCodesAsync(tbServiceCodes, Notification);
 
             Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
 
             var caseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(tbServiceCodes);
-            CaseManagers = new SelectList(caseManagers, nameof(Models.Entities.User.Id), nameof(Models.Entities.User.DisplayName));
+            CaseManagers = new SelectList(
+                caseManagers,
+                nameof(Models.Entities.User.Id),
+                nameof(Models.Entities.User.DisplayName));
+        }
+
+        private async Task<IEnumerable<Hospital>> GetActiveOrCurrentHospitalsByTbServiceCodesAsync(
+            IEnumerable<string> tbServices,
+            Notification notification)
+        {
+            return (await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(tbServices))
+                .Where(h =>
+                    h.IsLegacy == false
+                    || h.HospitalId == notification.HospitalDetails.Hospital?.HospitalId);
         }
 
         protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
@@ -175,8 +187,29 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public async Task<JsonResult> OnGetGetFilteredListsByTbService(string value)
         {
-            var filteredHospitalDetailsPageSelectLists =
-                await _referenceDataRepository.GetFilteredHospitalDetailsPageSelectListsByTbService(value);
+            var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            var tbServiceCodeAsList = new List<string> { value };
+
+            var filteredHospitals =
+                await GetActiveOrCurrentHospitalsByTbServiceCodesAsync(tbServiceCodeAsList, notification);
+
+            var filteredCaseManagers =
+                await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(tbServiceCodeAsList);
+
+            var filteredHospitalDetailsPageSelectLists = new FilteredHospitalDetailsPageSelectLists
+            {
+                Hospitals = filteredHospitals.Select(n => new OptionValue
+                {
+                    Value = n.HospitalId.ToString(),
+                    Text = n.Name
+                }),
+                CaseManagers = filteredCaseManagers.Select(n => new OptionValue
+                {
+                    Value = n.Id.ToString(),
+                    Text = n.DisplayName
+                })
+            };
+
             return new JsonResult(filteredHospitalDetailsPageSelectLists);
         }
     }
