@@ -139,10 +139,24 @@ namespace ntbs_service.Services
                                                      || log.EntityType == nameof(TransferRejectedAlert));
             if (transferAlertLog != null)
             {
+                // Rejection creates:
+                //   - TransferAlert - Update
+                //   - TransferRejectedAlert - Insert
+                if (group.Any(log => log.EntityType == nameof(TransferRejectedAlert)))
+                {
+                    var rejectionAlertLog = group.Find(log => log.EntityType == nameof(TransferRejectedAlert));
+                    // but we need to filter out the subsequent closure of the rejection alert!
+                    if (rejectionAlertLog.EventType == "Insert")
+                    {
+                        rejectionAlertLog.ActionString = "rejected";
+                        yield return rejectionAlertLog;
+                    }
+                }
                 // Request creates just the one:
                 //   - TransferAlert - Insert
-                if (transferAlertLog.EventType == "Insert")
+                else if (transferAlertLog.EventType == "Insert")
                 {
+                    transferAlertLog.ActionString = "requested";
                     yield return transferAlertLog;
                 }
                 // Acceptance creates:
@@ -153,19 +167,15 @@ namespace ntbs_service.Services
                 //   - TransferAlert - Update
                 else if (group.Any(log => log.EntityType == nameof(TreatmentEvent)))
                 {
+                    transferAlertLog.ActionString = "accepted";
                     yield return transferAlertLog;
                 }
-                // Rejection creates:
-                //   - TransferAlert - Update
-                //   - TransferRejectedAlert - Insert
+                // Transfer cancellation:
+                //  - TransferAlert - Update
                 else
                 {
-                    var rejectionAlertLog = group.Find(log => log.EntityType == nameof(TransferRejectedAlert));
-                    // but we need to filter out the subsequent closure of the rejection alert!
-                    if (rejectionAlertLog.EventType == "Insert")
-                    {
-                        yield return rejectionAlertLog;
-                    }
+                    transferAlertLog.ActionString = "cancelled";
+                    yield return transferAlertLog;
                 }
 
                 yield break;
@@ -244,14 +254,9 @@ namespace ntbs_service.Services
 
         private static string MapAction(AuditLog log)
         {
-            if (log.EntityType == nameof(TransferAlert))
+            if (log.ActionString != null)
             {
-                return log.EventType == "Insert" ? "requested" : "accepted";
-            }
-
-            if (log.EntityType == nameof(TransferRejectedAlert))
-            {
-                return "rejected";
+                return log.ActionString;
             }
 
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EFAuditer
 {
@@ -14,6 +15,9 @@ namespace EFAuditer
         public string AuditUser { get; set; }
         public string RootEntity { get; set; }
         public string RootId { get; set; }
+
+        [NotMapped]
+        public string ActionString { get; set; }
 
         public AuditLog Clone()
         {
