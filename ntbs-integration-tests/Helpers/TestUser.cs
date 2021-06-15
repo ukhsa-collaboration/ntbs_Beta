@@ -53,6 +53,8 @@ namespace ntbs_integration_tests.Helpers
             NationalTeamUser,
             AbingdonCaseManager,
             AbingdonCaseManager2,
+            GatesheadCaseManager,
+            GatesheadCaseManager2,
             Developer,
             ReadOnlyUser
         };
@@ -105,6 +107,22 @@ namespace ntbs_integration_tests.Helpers
             UserType.NhsUser,
             new[] { "App.Auth.NIS.NTBS.Service_Abingdon" },
             tbServiceCodes: new[] { Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID });
+
+        public static TestUser GatesheadCaseManager = new TestUser(
+            Utilities.CASEMANAGER_GATESHEAD_ID1,
+            Utilities.CASEMANAGER_GATESHEAD_EMAIL1,
+            Utilities.CASEMANAGER_GATESHEAD_DISPLAY_NAME1,
+            UserType.NhsUser,
+            new[] { Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID },
+            tbServiceCodes: new[] { Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID });
+
+        public static TestUser GatesheadCaseManager2 = new TestUser(
+            Utilities.CASEMANAGER_GATESHEAD_ID2,
+            Utilities.CASEMANAGER_GATESHEAD_EMAIL2,
+            Utilities.CASEMANAGER_GATESHEAD_DISPLAY_NAME2,
+            UserType.NhsUser,
+            new[] { "App.Auth.NIS.NTBS.Service_Gateshead" },
+            tbServiceCodes: new[] { Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID });
 
         public static TestUser Developer = new TestUser(
             7890,
