@@ -877,11 +877,10 @@ namespace ntbs_service.DataMigration
         private void SetDenotificationReasonAndDescription(MigrationDbNotification notification, DenotificationDetails denotificationDetails)
         {
             var reasons = (DenotificationReason[])Enum.GetValues(typeof(DenotificationReason));
-            var reason = reasons.Any(r => r.GetDisplayName().ToLower() == notification.DenotificationReason.ToLower())
+            denotificationDetails.Reason = reasons.Any(r => r.GetDisplayName().ToLower() == notification.DenotificationReason?.ToLower())
                 ? reasons.Single(r => r.GetDisplayName().ToLower() == notification.DenotificationReason.ToLower())
                 : DenotificationReason.Other;
-            denotificationDetails.Reason = reason;
-            if (reason == DenotificationReason.Other)
+            if (denotificationDetails.Reason == DenotificationReason.Other)
             {
                 denotificationDetails.OtherDescription = "Denotified in legacy system, with denotification date " +
                                                          (notification.DenotificationDate?.ToString() ?? "missing");
