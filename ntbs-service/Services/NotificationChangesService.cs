@@ -75,8 +75,7 @@ namespace ntbs_service.Services
             if (group.Any(log => GetNotificationAuditType(log) == NotificationAuditType.Added
                                  || GetNotificationAuditType(log) == NotificationAuditType.Imported))
             {
-                yield return group.Find(log => log.EntityType == nameof(Notification));
-                yield break;
+                return new List<AuditLog> {group.Find(log => log.EntityType == nameof(Notification))};
             }
 
             // Clinical details page contains "site" models, which create their own audit entries
@@ -86,38 +85,27 @@ namespace ntbs_service.Services
                 var clinicalDetailsUpdate = group.Find(log => log.EntityType == nameof(ClinicalDetails));
                 if (clinicalDetailsUpdate != null)
                 {
-                    yield return clinicalDetailsUpdate;
+                    return new List<AuditLog> {clinicalDetailsUpdate};
                 }
                 // .. or, if sites are the only edited items, we want to "fake" a clinical details log entry
-                else
-                {
-                    var fakeClinicalDetailsLog = group.First().Clone();
-                    fakeClinicalDetailsLog.EntityType = nameof(ClinicalDetails);
-                    fakeClinicalDetailsLog.EventType = "Update";
-                    yield return fakeClinicalDetailsLog;
-                }
-
-                yield break;
+                var fakeClinicalDetailsLog = group.First().Clone();
+                fakeClinicalDetailsLog.EntityType = nameof(ClinicalDetails);
+                fakeClinicalDetailsLog.EventType = "Update";
+                return new List<AuditLog> {fakeClinicalDetailsLog};
             }
 
             // Comorbidities page contains an Immunosuppression model, which creates its own audit entry
             // These are nicely separate concepts, so we can actually have them be detailed out on their own.
             if (group.Any(log => log.EntityType == nameof(ImmunosuppressionDetails)))
             {
-                foreach (var item in group)
-                {
-                    yield return item;
-                }
-
-                yield break;
+                return group;
             }
 
             // Social risks page contains sub-models, which create their own audit entries
             var socialRisksUpdate = group.Find(log => log.EntityType == nameof(SocialRiskFactors));
             if (socialRisksUpdate != null)
             {
-                yield return socialRisksUpdate;
-                yield break;
+                return new List<AuditLog> {socialRisksUpdate};
             }
 
             // Travel and visitor details get saved together, but it actually makes sense to show them independently
@@ -125,25 +113,37 @@ namespace ntbs_service.Services
                 && group.Any(log => log.EntityType == nameof(TravelDetails))
                 && group.Any(log => log.EntityType == nameof(VisitorDetails)))
             {
-                foreach (var item in group)
-                {
-                    yield return item;
-                }
-
-                yield break;
+                return group;
             }
 
             // Transferring creates a flurry of related events.
             // For each of these events we just want to have a single item in the history view 
-            var transferAlertLog = group.Find(log => log.EntityType == nameof(TransferAlert)
-                                                     || log.EntityType == nameof(TransferRejectedAlert));
+
+            // Rejection creates:
+            //   - TransferAlert - Update
+            //   - TransferRejectedAlert - Insert
+            var transferRejectedAlertLog = group.Find(log => log.EntityType == nameof(TransferRejectedAlert));
+            if (transferRejectedAlertLog != null)
+            {
+                // Only return the log if it relates to the opening of the rejection alert
+                if (transferRejectedAlertLog.EventType == "Insert")
+                {
+                    transferRejectedAlertLog.ActionString = "rejected";
+                    return new List<AuditLog> {transferRejectedAlertLog};
+                }
+                // If the event is the closure of the rejection alert, don't return any logs
+                return new List<AuditLog>();
+            }
+
+            var transferAlertLog = group.Find(log => log.EntityType == nameof(TransferAlert));
             if (transferAlertLog != null)
             {
                 // Request creates just the one:
                 //   - TransferAlert - Insert
                 if (transferAlertLog.EventType == "Insert")
                 {
-                    yield return transferAlertLog;
+                    transferAlertLog.ActionString = "requested";
+                    return new List<AuditLog> {transferAlertLog};
                 }
                 // Acceptance creates:
                 //   - TreatmentEvent - Insert
@@ -151,31 +151,21 @@ namespace ntbs_service.Services
                 //   - PreviousTbService - Insert
                 //   - HospitalDetails - Update
                 //   - TransferAlert - Update
-                else if (group.Any(log => log.EntityType == nameof(TreatmentEvent)))
+                if (group.Any(log => log.EntityType == nameof(TreatmentEvent)))
                 {
-                    yield return transferAlertLog;
+                    transferAlertLog.ActionString = "accepted";
+                    return new List<AuditLog> {transferAlertLog};
                 }
-                // Rejection creates:
-                //   - TransferAlert - Update
-                //   - TransferRejectedAlert - Insert
-                else
-                {
-                    var rejectionAlertLog = group.Find(log => log.EntityType == nameof(TransferRejectedAlert));
-                    // but we need to filter out the subsequent closure of the rejection alert!
-                    if (rejectionAlertLog.EventType == "Insert")
-                    {
-                        yield return rejectionAlertLog;
-                    }
-                }
-
-                yield break;
+                // Transfer cancellation:
+                //  - TransferAlert - Update
+                transferAlertLog.ActionString = "cancelled";
+                return new List<AuditLog> {transferAlertLog};
             }
 
             // Denotification edits the DenotificationDetails, as well as the status on Notification itself.
             if (group.Any(log => GetNotificationAuditType(log) == NotificationAuditType.Denotified))
             {
-                yield return group.Find(log => log.EntityType == nameof(Notification));
-                yield break;
+                return new List<AuditLog> {group.Find(log => log.EntityType == nameof(Notification))};
             }
 
             // Notification submission, as well as changes to notification date
@@ -187,15 +177,7 @@ namespace ntbs_service.Services
             {
                 // There could be hospital details update records here, too, so we yield all but the treatment event
                 // update
-                foreach (var log in group)
-                {
-                    if (log.EntityType != nameof(TreatmentEvent))
-                    {
-                        yield return log;
-                    }
-                }
-
-                yield break;
+                return group.Where(log => log.EntityType != nameof(TreatmentEvent));
             }
 
             // Adding treatment started information creates both clinical details treatment event updates. We want to
@@ -204,27 +186,22 @@ namespace ntbs_service.Services
                && group.Any(log => log.EntityType == nameof(TreatmentEvent))
                && group.Any(log => log.EntityType == nameof(ClinicalDetails)))
             {
-                foreach (var log in group)
-                {
-                    yield return log;
-                }
-                yield break;
+                return group;
             }
 
             // We want this check at the end, since some of the group checks above may have a single member but still
             // require manual intervention (e.g. notification sites)
             if (group.Count == 1)
             {
-                yield return group.First();
-                yield break;
+                return new List<AuditLog> {group.First()};
             }
 
+            _logService.LogWarning("Could not figure out canonical history item for group of logs.");
             foreach (var log in group)
             {
                 Log.Debug($"Log in group: {log}");
-                yield return log;
             }
-            _logService.LogWarning("Could not figure out canonical history item for group of logs.");
+            return group;
         }
 
         private static IEnumerable<AuditLog> SkipDraftEdits(IReadOnlyCollection<AuditLog> auditLogs)
@@ -244,14 +221,9 @@ namespace ntbs_service.Services
 
         private static string MapAction(AuditLog log)
         {
-            if (log.EntityType == nameof(TransferAlert))
+            if (log.ActionString != null)
             {
-                return log.EventType == "Insert" ? "requested" : "accepted";
-            }
-
-            if (log.EntityType == nameof(TransferRejectedAlert))
-            {
-                return "rejected";
+                return log.ActionString;
             }
 
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
