@@ -17,6 +17,7 @@ namespace ntbs_service_unit_tests.Jobs
         private readonly Mock<ISpecimenService> _mockSpecimenService;
         private readonly Mock<IAlertRepository> _mockAlertRepository;
         private readonly Mock<IAlertService> _mockAlertService;
+        private readonly Mock<NtbsContext> _mockContext = new Mock<NtbsContext>();
 
         private readonly UnmatchedLabResultAlertsJob _unmatchedLabResultAlertsJob;
 
@@ -29,7 +30,8 @@ namespace ntbs_service_unit_tests.Jobs
             _unmatchedLabResultAlertsJob = new UnmatchedLabResultAlertsJob(
                 _mockSpecimenService.Object,
                 _mockAlertRepository.Object,
-                _mockAlertService.Object);
+                _mockAlertService.Object,
+                _mockContext.Object);
         }
 
         [Fact]
