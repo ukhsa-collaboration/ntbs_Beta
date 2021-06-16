@@ -122,16 +122,16 @@ namespace ntbs_service.Services
             // Rejection creates:
             //   - TransferAlert - Update
             //   - TransferRejectedAlert - Insert
-            if (group.Any(log => log.EntityType == nameof(TransferRejectedAlert)))
+            var transferRejectedAlertLog = group.Find(log => log.EntityType == nameof(TransferRejectedAlert));
+            if (transferRejectedAlertLog != null)
             {
-                var rejectionAlertLog = group.Find(log => log.EntityType == nameof(TransferRejectedAlert));
-                // but we need to filter out the subsequent closure of the rejection alert!
-                if (rejectionAlertLog.EventType == "Insert")
+                // Only return the log if it relates to the opening of the rejection alert
+                if (transferRejectedAlertLog.EventType == "Insert")
                 {
-                    rejectionAlertLog.ActionString = "rejected";
-                    return new List<AuditLog> {rejectionAlertLog};
+                    transferRejectedAlertLog.ActionString = "rejected";
+                    return new List<AuditLog> {transferRejectedAlertLog};
                 }
-
+                // If the event is the closure of the rejection alert, don't return any logs
                 return new List<AuditLog>();
             }
 
