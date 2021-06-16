@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
@@ -10,7 +11,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class TreatmentEventsModel : NotificationEditModelBase
     {
-        public IEnumerable<TreatmentEvent> TreatmentEvents { get; set; }
+        public IList<TreatmentEvent> TreatmentEvents { get; set; }
 
         public TreatmentEventsModel(
             INotificationService notificationService,
@@ -23,7 +24,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
-            TreatmentEvents = Notification.TreatmentEvents.OrderForEpisodes();
+            TreatmentEvents = Notification.GetTreatmentEventsWithStartingEvent().OrderForEpisodes().ToList();
             await SetNotificationProperties(isBeingSubmitted);
 
             return Page();
