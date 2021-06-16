@@ -30,7 +30,7 @@ Feature: Notification creation
     And I enter 2019 into 'FormattedNotificationDate_Year'
     And I select Birmingham & Solihull for 'HospitalDetails_TBServiceCode'
     And I wait
-    And I select SELLY OAK HOSPITAL for 'HospitalDetails_HospitalId'
+    And I select SOLIHULL HOSPITAL for 'HospitalDetails_HospitalId'
     And I click on the 'save-button' button
     # Mandatory clinical details fields
     When I check 'NotificationSiteMap_PULMONARY_'
@@ -83,13 +83,13 @@ Feature: Notification creation
     And I select Birmingham & Solihull for 'HospitalDetails_TBServiceCode'
       # Wait until javascript has populated the hospital dropdown
     And I wait
-    And I select SELLY OAK HOSPITAL for 'HospitalDetails_HospitalId'
+    And I select SOLIHULL HOSPITAL for 'HospitalDetails_HospitalId'
     And I enter Dr Lawton into 'HospitalDetails_Consultant'
     And I enter Birmingham UITester into 'HospitalDetails_CaseManagerId'
     When I click on the 'submit-button' button
 
     Then I can see the value 'Birmingham & Solihull' for the field 'tb-service' in the 'HospitalDetails' overview section
-    And I can see the value 'SELLY OAK HOSPITAL' for the field 'hospital-name' in the 'HospitalDetails' overview section
+    And I can see the value 'SOLIHULL HOSPITAL' for the field 'hospital-name' in the 'HospitalDetails' overview section
     And I can see the value 'Birmingham UITester' for the field 'case-manager' in the 'HospitalDetails' overview section
     And I can see the value 'Dr Lawton' for the field 'consultant' in the 'HospitalDetails' overview section
     And I can see the value '01 Jan 2019' for the field 'notification-date' in the 'PatientDetails' overview section
