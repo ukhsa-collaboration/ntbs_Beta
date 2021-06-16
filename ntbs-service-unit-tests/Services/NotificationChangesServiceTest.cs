@@ -191,6 +191,27 @@ namespace ntbs_service_unit_tests.Services
             _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
         }
 
+        [Fact]
+        // This came from a "real" notification that was logging warnings on the changes page
+        public async Task LogsFromACancellationOfTransfer_DoesNotResultInWarning()
+        {
+            var auditLogs = GetAuditLogs("auditLogsForNotification6");
+            _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(5))
+                .ReturnsAsync(auditLogs);
+            _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
+                .ReturnsAsync(new Dictionary<string, string> { { "Developer@ntbs.phe.com", "John Johnson" } });
+
+            // Act
+            var changes = (await _changesService.GetChangesList(5)).ToList();
+
+            Assert.Collection(PrintInOrder(changes),
+                c => Assert.Equal("17 May 2021, 15:28 John Johnson cancelled Transfer", c),
+                c => Assert.Equal("17 May 2021, 15:28 John Johnson requested Transfer", c),
+                c => Assert.Equal("01 Jul 2020, 11:45 John Johnson submitted Notification", c),
+                c => Assert.Equal("01 Jul 2020, 11:40 John Johnson created Draft", c));
+            _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
+        }
+
         private static List<AuditLog> GetAuditLogs(string filename)
         {
             return GetRecordsFromCsv($"../../../TestData/{filename}.csv", ParseAuditLog)
