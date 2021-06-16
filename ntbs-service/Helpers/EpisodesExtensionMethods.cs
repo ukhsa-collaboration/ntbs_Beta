@@ -75,7 +75,14 @@ namespace ntbs_service.Helpers
         public static IEnumerable<TreatmentEvent> OrderForEpisodes(this IEnumerable<TreatmentEvent> treatmentEvents)
         {
             return treatmentEvents
-                // ReSharper disable once PossibleInvalidOperationException - we know EventDate is not null
+                // We filter out any treatment events that do not have a date. These events should not
+                // make it into NTBS, so most of the time this will have no impact. The exception is that
+                // when we import a notification there is a period between creating the new notification
+                // and validating it, during which time it may have treatment events without a date. During
+                // this period we need to calculate whether or not the notification should be closed -
+                // excluding the invalid records from this calculation does not matter either, as we know
+                // that the record will fail validation.
+                .Where(t => t.EventDate.HasValue)
                 .OrderBy(t => t.EventDate.Value.Date)
                 .ThenBy(treatmentEvent =>
                 {

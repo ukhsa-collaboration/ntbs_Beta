@@ -220,14 +220,32 @@ namespace ntbs_service.DataMigration
             IEnumerable<TreatmentEvent> notificationTransferEvents,
             IEnumerable<TreatmentEvent> notificationOutcomeEvents)
         {
+            return notification.ClinicalDetails.IsPostMortem == true
+                ? TreatmentEventsForPostMortemNotification(rawNotification)
+                : TreatmentEventsForPreMortemNotification(
+                    notification,
+                    rawNotification,
+                    notificationTransferEvents,
+                    notificationOutcomeEvents);
+        }
+
+        private List<TreatmentEvent> TreatmentEventsForPostMortemNotification(MigrationDbNotification rawNotification)
+        {
             // For post mortem cases the death event is the ONLY event we want to import so the final outcome is
             // correctly reported.
-            if (notification.ClinicalDetails.IsPostMortem == true)
+            return new List<TreatmentEvent>
             {
-                return new List<TreatmentEvent> { CreateDerivedDeathEvent(rawNotification) };
-            }
+                CreateDerivedDeathEvent(rawNotification)
+            };
+        }
 
+        private List<TreatmentEvent> TreatmentEventsForPreMortemNotification(Notification notification,
+            MigrationDbNotification rawNotification,
+            IEnumerable<TreatmentEvent> notificationTransferEvents,
+            IEnumerable<TreatmentEvent> notificationOutcomeEvents)
+        {
             var treatmentEvents = new List<TreatmentEvent>();
+
             if (notification.NotificationStatus != NotificationStatus.Draft)
             {
                 treatmentEvents.Add(NotificationHelper.CreateTreatmentStartEvent(notification));
