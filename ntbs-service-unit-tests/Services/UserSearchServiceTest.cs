@@ -178,6 +178,26 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
+        public async Task OrderAndPaginateQueryableAsync_DoesNotReturnInactiveFamilyNameMatchingUsers()
+        {
+            // Arrange
+            const string searchString = "UserT";
+            var expectedResults = new List<User> { DefaultFamilyNameCaseManagers[2] };
+            var usersToReturn = DefaultFamilyNameCaseManagers;
+            usersToReturn[1].IsActive = false;
+
+            _mockReferenceDataRepository.Setup(r => r.GetAllPhecs()).ReturnsAsync(new List<PHEC>());
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(DefaultFamilyNameCaseManagers);
+
+            // Act
+            var results = await _service.OrderAndPaginateQueryableAsync(searchString, DefaultPaginationParameters);
+
+            // Assert
+            Assert.Equal(1, results.count);
+            Assert.Equal(expectedResults, results.users);
+        }
+
+        [Fact]
         public async Task OrderAndPaginateQueryableAsync_ReturnsRegionMatchingCaseManagersAndUsers()
         {
             // Arrange
@@ -222,6 +242,25 @@ namespace ntbs_service_unit_tests.Services
             // Assert
             Assert.Equal(1, results.count);
             Assert.Equal(expectedResult, results.users[0]);
+        }
+
+        [Fact]
+        public async Task OrderAndPaginateQueryableAsync_DoesNotReturnInactiveDisplayNameMatchingRegionalUsers()
+        {
+            // Arrange
+            const string searchString = "Leslie";
+            var regionalUser = CreateRegionalUser("RegionalAdGroup", "Leslie Knope");
+            regionalUser.IsActive = false;
+
+            _mockReferenceDataRepository.Setup(r => r.GetAllPhecs())
+                .ReturnsAsync(new List<PHEC>{new PHEC{AdGroup = "RegionalAdGroup", Name = "Pawnee"}});
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(new List<User>{regionalUser});
+
+            // Act
+            var results = await _service.OrderAndPaginateQueryableAsync(searchString, DefaultPaginationParameters);
+
+            // Assert
+            Assert.Empty(results.users);
         }
 
         [Fact]
@@ -289,7 +328,8 @@ namespace ntbs_service_unit_tests.Services
                 GivenName = givenName,
                 FamilyName = familyName,
                 CaseManagerTbServices = caseManagerTbServices ?? new List<CaseManagerTbService>(),
-                IsCaseManager = true
+                IsCaseManager = true,
+                IsActive = true
             };
         }
 
@@ -301,7 +341,8 @@ namespace ntbs_service_unit_tests.Services
                 GivenName = "",
                 FamilyName = "",
                 CaseManagerTbServices = new List<CaseManagerTbService>(),
-                AdGroups = regionAdGroup
+                AdGroups = regionAdGroup,
+                IsActive = true
             };
         }
     }
