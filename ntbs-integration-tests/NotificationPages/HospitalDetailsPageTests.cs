@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Newtonsoft.Json;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.FilteredSelectLists;
@@ -22,9 +24,9 @@ namespace ntbs_integration_tests.NotificationPages
 
         public static IList<Notification> GetSeedingNotifications()
         {
-            return new List<Notification>()
+            return new List<Notification>
             {
-                new Notification()
+                new Notification
                 {
                     NotificationId = Utilities.NOTIFIED_WITH_TBSERVICE,
                     NotificationStatus = NotificationStatus.Notified,
@@ -32,6 +34,37 @@ namespace ntbs_integration_tests.NotificationPages
                     {
                         TBServiceCode = "A code",
                         TBService = new TBService() { Name = "A name", Code = "A code"}
+                    }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.DRAFT_WITH_TBSERVICE,
+                    NotificationStatus = NotificationStatus.Draft,
+                    HospitalDetails = new HospitalDetails
+                    {
+                        TBServiceCode = Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID,
+                    }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.NOTIFIED_WITH_ACTIVE_HOSPITAL,
+                    NotificationStatus = NotificationStatus.Notified,
+                    HospitalDetails = new HospitalDetails
+                    {
+                        TBServiceCode = Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID,
+                        HospitalId = Guid.Parse(Utilities.HOSPITAL_SOUTH_TYNESIDE_DISTRICT_HOSPITAL_ID),
+                        CaseManagerId = Utilities.CASEMANAGER_GATESHEAD_ID1,
+                    }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.NOTIFIED_WITH_LEGACY_HOSPITAL,
+                    NotificationStatus = NotificationStatus.Notified,
+                    HospitalDetails = new HospitalDetails
+                    {
+                        TBServiceCode = Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID,
+                        HospitalId = Guid.Parse(Utilities.HOSPITAL_DUNSTON_HILL_HOSPITAL_GATESHEAD_ID),
+                        CaseManagerId = Utilities.CASEMANAGER_GATESHEAD_ID1,
                     }
                 }
             };
@@ -332,22 +365,86 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task GetFilteredListsByTbService_ReturnsExpectedValues()
+        public async Task GetFilteredListsByTbService_ReturnsExpectedValues_ForDraftWithoutHospital()
         {
             // Arrange
             var formData = new Dictionary<string, string>
             {
-                ["value"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                ["value"] = Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID,
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "GetFilteredListsByTbService"));
+            var response = await Client.GetAsync(
+                GetHandlerPath(formData, "GetFilteredListsByTbService", Utilities.DRAFT_WITH_TBSERVICE)
+            );
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
             var filteredLists = JsonConvert.DeserializeObject<FilteredHospitalDetailsPageSelectLists>(result);
-            Assert.Contains(Utilities.CASEMANAGER_ABINGDON_ID.ToString(), filteredLists.CaseManagers.Select(x => x.Value));
-            Assert.Contains(Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID, filteredLists.Hospitals.Select(x => x.Value.ToUpperInvariant()));
+            Assert.NotNull(filteredLists);
+            AssertAreGatesheadCaseManagers(filteredLists.CaseManagers);
+
+            Assert.Collection(filteredLists.Hospitals.OrderBy(selectOption => selectOption.Value),
+                selectOption =>
+                    Assert.Equal(Utilities.HOSPITAL_QUEEN_ELIZABETH_HOSPITAL_GATESHEAD_ID, selectOption.Value.ToUpper()),
+                selectOption =>
+                    Assert.Equal(Utilities.HOSPITAL_SOUTH_TYNESIDE_DISTRICT_HOSPITAL_ID, selectOption.Value.ToUpper()));
+        }
+
+        [Fact]
+        public async Task GetFilteredListsByTbService_ReturnsExpectedValues_ForNotifiedWithActiveHospital()
+        {
+            // Arrange
+            var formData = new Dictionary<string, string>
+            {
+                ["value"] = Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID,
+            };
+
+            // Act
+            var response = await Client.GetAsync(
+                GetHandlerPath(formData, "GetFilteredListsByTbService", Utilities.NOTIFIED_WITH_ACTIVE_HOSPITAL)
+            );
+
+            // Assert
+            var result = await response.Content.ReadAsStringAsync();
+            var filteredLists = JsonConvert.DeserializeObject<FilteredHospitalDetailsPageSelectLists>(result);
+            Assert.NotNull(filteredLists);
+            AssertAreGatesheadCaseManagers(filteredLists.CaseManagers);
+
+            Assert.Collection(filteredLists.Hospitals.OrderBy(selectOption => selectOption.Value),
+                selectOption =>
+                    Assert.Equal(Utilities.HOSPITAL_QUEEN_ELIZABETH_HOSPITAL_GATESHEAD_ID, selectOption.Value.ToUpper()),
+                selectOption =>
+                    Assert.Equal(Utilities.HOSPITAL_SOUTH_TYNESIDE_DISTRICT_HOSPITAL_ID, selectOption.Value.ToUpper()));
+        }
+
+        [Fact]
+        public async Task GetFilteredListsByTbService_ReturnsExpectedValues_ForNotifiedWithLegacyHospital()
+        {
+            // Arrange
+            var formData = new Dictionary<string, string>
+            {
+                ["value"] = Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID,
+            };
+
+            // Act
+            var response = await Client.GetAsync(
+                GetHandlerPath(formData, "GetFilteredListsByTbService", Utilities.NOTIFIED_WITH_LEGACY_HOSPITAL)
+            );
+
+            // Assert
+            var result = await response.Content.ReadAsStringAsync();
+            var filteredLists = JsonConvert.DeserializeObject<FilteredHospitalDetailsPageSelectLists>(result);
+            Assert.NotNull(filteredLists);
+            AssertAreGatesheadCaseManagers(filteredLists.CaseManagers);
+
+            Assert.Collection(filteredLists.Hospitals.OrderBy(selectOption => selectOption.Value),
+                selectOption =>
+                    Assert.Equal(Utilities.HOSPITAL_DUNSTON_HILL_HOSPITAL_GATESHEAD_ID, selectOption.Value.ToUpper()),
+                selectOption =>
+                    Assert.Equal(Utilities.HOSPITAL_QUEEN_ELIZABETH_HOSPITAL_GATESHEAD_ID, selectOption.Value.ToUpper()),
+                selectOption =>
+                    Assert.Equal(Utilities.HOSPITAL_SOUTH_TYNESIDE_DISTRICT_HOSPITAL_ID, selectOption.Value.ToUpper()));
         }
 
         [Fact]
@@ -391,6 +488,19 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var overviewLink = RouteHelper.GetNotificationOverviewPathWithSectionAnchor(id, NotificationSubPath);
             Assert.NotNull(document.QuerySelector($"a[href='{overviewLink}']"));
+        }
+
+        private static void AssertAreGatesheadCaseManagers(IEnumerable<OptionValue> caseManagers)
+        {
+            Assert.Collection(caseManagers.OrderBy(selectOption => selectOption.Value), selectOption =>
+            {
+                Assert.Equal(Utilities.CASEMANAGER_GATESHEAD_DISPLAY_NAME1, selectOption.Text);
+                Assert.Equal(Utilities.CASEMANAGER_GATESHEAD_ID1.ToString(), selectOption.Value);
+            }, selectOption =>
+            {
+                Assert.Equal(Utilities.CASEMANAGER_GATESHEAD_DISPLAY_NAME2, selectOption.Text);
+                Assert.Equal(Utilities.CASEMANAGER_GATESHEAD_ID2.ToString(), selectOption.Value);
+            });
         }
     }
 }
