@@ -31,7 +31,11 @@ namespace ntbs_integration_tests.NotificationPages
         {
             return new List<Alert>
             {
-                new DataQualityDraftAlert { NotificationId = Utilities.DRAFT_NOTIFICATION_WITH_DRAFT_ALERT }
+                new DataQualityDraftAlert
+                {
+                    AlertId = Utilities.DRAFT_DATA_QUALITY_ALERT,
+                    NotificationId = Utilities.DRAFT_NOTIFICATION_WITH_DRAFT_ALERT
+                }
             };
         }
 
