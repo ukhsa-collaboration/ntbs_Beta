@@ -181,20 +181,21 @@ namespace ntbs_service_unit_tests.Services
         public async Task OrderAndPaginateQueryableAsync_DoesNotReturnInactiveFamilyNameMatchingUsers()
         {
             // Arrange
-            const string searchString = "UserT";
-            var expectedResults = new List<User> { DefaultFamilyNameCaseManagers[2] };
-            var usersToReturn = DefaultFamilyNameCaseManagers;
-            usersToReturn[1].IsActive = false;
+            const string searchString = "Glasper";
+            var activeCaseManager = CreateDefaultCaseManager(givenName: "Robert", familyName: "Glasper");
+            var inactiveCaseManager = CreateDefaultCaseManager(givenName: "Robin", familyName: "Glasper");
+            inactiveCaseManager.IsActive = false;
+            var usersToReturn = new List<User> {activeCaseManager, inactiveCaseManager};
 
             _mockReferenceDataRepository.Setup(r => r.GetAllPhecs()).ReturnsAsync(new List<PHEC>());
-            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(DefaultFamilyNameCaseManagers);
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(usersToReturn);
 
             // Act
             var results = await _service.OrderAndPaginateQueryableAsync(searchString, DefaultPaginationParameters);
 
             // Assert
             Assert.Equal(1, results.count);
-            Assert.Equal(expectedResults, results.users);
+            Assert.Equal(activeCaseManager, results.users.Single());
         }
 
         [Fact]
