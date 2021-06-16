@@ -398,8 +398,7 @@ namespace ntbs_service.Services
             }
 
             await _notificationRepository.SaveChangesAsync(
-                NotificationAuditType.SystemEdited,
-                AuditService.AuditUserSystem);
+                NotificationAuditType.SystemEdited);
         }
 
         public async Task UpdateDrugResistanceProfilesAsync(
