@@ -148,9 +148,9 @@ namespace ntbs_service.Pages.Alerts
             Notification.HospitalDetails.TBServiceCode = TransferAlert.TbServiceCode;
             Notification.HospitalDetails.HospitalId = TargetHospitalId;
             Notification.HospitalDetails.CaseManagerId = TargetCaseManagerId;
-            await Service.UpdateHospitalDetailsAsync(Notification, Notification.HospitalDetails);
-            await _treatmentEventRepository.AddAsync(transferOutEvent);
-            await _treatmentEventRepository.AddAsync(transferInEvent);
+            Service.UpdateHospitalDetailsWithoutSave(Notification, Notification.HospitalDetails);
+            _treatmentEventRepository.AddWithoutSave(transferOutEvent);
+            _treatmentEventRepository.AddWithoutSave(transferInEvent);
             await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.Username());
         }
 

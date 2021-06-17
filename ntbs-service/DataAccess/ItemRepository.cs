@@ -9,6 +9,7 @@ namespace ntbs_service.DataAccess
     public interface IItemRepository<T> where T : class
     {
         Task AddAsync(T item);
+        void AddWithoutSave(T item);
         Task UpdateAsync(Notification notification, T item);
         Task DeleteAsync(T item);
     }
@@ -27,6 +28,13 @@ namespace ntbs_service.DataAccess
             var dbSet = GetDbSet();
             dbSet.Add(item);
             await UpdateDatabaseAsync();
+        }
+
+        public void AddWithoutSave(T item)
+        {
+            var dbSet = GetDbSet();
+            dbSet.Add(item);
+            _context.AddAuditCustomField(CustomFields.AuditDetails, NotificationAuditType.Edited);
         }
 
         public async Task UpdateAsync(Notification notification, T item)
