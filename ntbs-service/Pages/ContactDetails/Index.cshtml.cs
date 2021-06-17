@@ -65,7 +65,7 @@ namespace ntbs_service.Pages.ContactDetails
 
         private void PrepareBreadcrumbs()
         {
-            var region = ContactDetails.CaseManagerTbServices.FirstOrDefault()?.TbService.PHEC;
+            var region = RegionalMemberships.FirstOrDefault() ?? ContactDetails.CaseManagerTbServices.FirstOrDefault()?.TbService.PHEC;
             var breadcrumbs = new List<Breadcrumb>
             {
                 new Breadcrumb {Label = "Service Directory", Url = "/ServiceDirectory"}
