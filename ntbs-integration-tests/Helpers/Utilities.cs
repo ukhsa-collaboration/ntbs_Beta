@@ -46,6 +46,9 @@ namespace ntbs_integration_tests.Helpers
         public const int NOTIFICATION_WITH_TREATMENT_EVENTS = 10070;
         public const int NOTIFICATION_FOR_ADD_TREATMENT_OUTCOME = 10071;
         public const int NOTIFICATION_FOR_ADD_TREATMENT_RESTART = 10072;
+        public const int DRAFT_WITH_DIAGNOSIS_DATE = 10073;
+        public const int DRAFT_WITH_TREATMENT_START_DATE = 10074;
+        public const int DRAFT_WITH_NO_START_DATES = 10075;
 
         public const int CLINICAL_NOTIFICATION_EXTRA_PULMONARY_ID = 10080;
 

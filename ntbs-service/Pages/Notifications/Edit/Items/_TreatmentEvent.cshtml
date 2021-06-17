@@ -87,7 +87,7 @@
                                     var hasTreatmentEventTypeError = !Model.IsValid("TreatmentEvent.TreatmentEventType");
                                     var treatmentEventTypeGroupState = hasTreatmentEventTypeError ? Error : Standard;
                                 }
-                                <nhs-form-group nhs-form-group-type="@treatmentEventTypeGroupState" 
+                                <nhs-form-group nhs-form-group-type="@treatmentEventTypeGroupState"
                                                 aria-describedby="treatmentevent-type-error"
                                                 id="TreatmentEvent-TreatmentEventType">
                                     <label nhs-label-type="Standard" for="treatmentevent-type">
@@ -120,7 +120,7 @@
                                             var outcomeTypeGroupState = hasOutcomeTypeError ? Error : Standard;
                                             var outcomeTypeSelectErrorState = hasOutcomeTypeError ? SelectType.Error : SelectType.Standard;
                                         }
-                                        <nhs-form-group nhs-form-group-type="@outcomeTypeGroupState" 
+                                        <nhs-form-group nhs-form-group-type="@outcomeTypeGroupState"
                                                         aria-describedby="treatmentoutcome-type-error"
                                                         id="SelectedTreatmentOutcomeType">
                                             <label nhs-label-type="Standard" for="treatmentoutcome-type">
@@ -149,7 +149,7 @@
                                         var outcomeSubTypeGroupState = hasOutcomeSubTypeError ? Error : Standard;
                                         var outcomeSubTypeSelectErrorState = hasOutcomeSubTypeError ? SelectType.Error : SelectType.Standard;
                                     }
-                                    <nhs-form-group nhs-form-group-type="@outcomeSubTypeGroupState" 
+                                    <nhs-form-group nhs-form-group-type="@outcomeSubTypeGroupState"
                                                     aria-describedby="treatmentoutcome-subtype-error"
                                                     id="SelectedTreatmentOutcomeSubType">
                                         <label nhs-label-type="Standard" for="treatmentoutcome-subtype">
@@ -180,7 +180,7 @@
                         var noteTextAreaType = hasNoteError ? TextAreaType.Error : TextAreaType.Standard;
                     }
                     <validate-input model="TreatmentEvent" property="Note" inline-template>
-                        <nhs-form-group nhs-form-group-type="@noteFormState" 
+                        <nhs-form-group nhs-form-group-type="@noteFormState"
                                         aria-describedby="treatmentevent-note-error"
                                         id="TreatmentEvent-Note">
                             <label nhs-label-type="Standard" for="treatmentevent-note">
@@ -219,12 +219,12 @@
         </form>
     </nhs-width-container>
 </div>
-@if (Model.Notification.TreatmentEvents.Count > 0)
+@if (Model.TreatmentEvents.Count > 0)
 {
     <nhs-width-container container-width="Standard">
         <h2> Treatment events </h2>
 
-        <partial name="_TreatmentEventTable" for="Notification.TreatmentEvents"/>
+        <partial name="_TreatmentEventTable" for="TreatmentEvents"/>
     </nhs-width-container>
 }
 
