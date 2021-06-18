@@ -17,6 +17,7 @@
         public const string StandardStringFormat = "{0} can only contain letters and the symbols ' - . ,";
         public const string StandardStringWithNumbersFormat = "{0} can only contain letters, numbers and the symbols ' - . ,";
         public const string StringWithNumbersAndForwardSlashFormat = "{0} can only contain letters, numbers and the symbols ' - . , /";
+        public const string StringCannotContainTabs = "{0} cannot contain tabs. Use spaces instead";
         public const string MinTwoCharacters = "Enter at least 2 characters";
         public const string MaximumTextLength = "Too many characters entered into the {0} field";
         public const string InvalidCharacter = "Invalid character found in {0}";
