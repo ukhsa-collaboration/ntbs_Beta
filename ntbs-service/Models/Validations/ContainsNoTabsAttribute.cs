@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ntbs_service.Models.Validations
 {
+    [AttributeUsage(AttributeTargets.Property)]
     public class ContainsNoTabsAttribute : ValidationAttribute
     {
         public ContainsNoTabsAttribute()
