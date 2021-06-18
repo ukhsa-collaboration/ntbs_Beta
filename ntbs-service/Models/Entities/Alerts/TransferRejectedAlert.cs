@@ -15,6 +15,7 @@ namespace ntbs_service.Models.Entities.Alerts
         }
 
         [MaxLength(200)]
+        [ContainsNoTabs]
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
