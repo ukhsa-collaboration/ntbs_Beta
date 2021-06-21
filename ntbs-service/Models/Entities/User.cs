@@ -52,6 +52,7 @@ namespace ntbs_service.Models.Entities
         public string PhoneNumberSecondary { get; set; }
 
         [MaxLength(500)]
+        [ContainsNoTabs]
         [Display(Name = "Notes")]
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
