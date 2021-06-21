@@ -19,6 +19,7 @@ namespace ntbs_service.DataAccess
         Task<IList<User>> GetOrderedUsers();
         Task UpdateUserContactDetails(User user);
         Task<Dictionary<string, string>> GetUsernameDictionary();
+        Task<Dictionary<string, int>> GetIdDictionary();
     }
 
     public class UserRepository : IUserRepository
@@ -107,6 +108,14 @@ namespace ntbs_service.DataAccess
             return _context.User.ToDictionaryAsync(
                 user => user.Username,
                 user => user.DisplayName
+            );
+        }
+
+        public Task<Dictionary<string, int>> GetIdDictionary()
+        {
+            return _context.User.ToDictionaryAsync(
+                user => user.Username,
+                user => user.Id
             );
         }
 

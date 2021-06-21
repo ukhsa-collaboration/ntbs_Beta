@@ -28,6 +28,10 @@ namespace ntbs_service_unit_tests.Services
         public NotificationChangesServiceTest()
         {
             _changesService = new NotificationChangesService(_auditServiceMock.Object, _userRepositoryMock.Object, _logServiceMock.Object);
+            _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
+                .ReturnsAsync(new Dictionary<string, string> { { "Developer@ntbs.phe.com", "John Johnson" } });
+            _userRepositoryMock.Setup(repo => repo.GetIdDictionary())
+                .ReturnsAsync(new Dictionary<string, int> { { "Developer@ntbs.phe.com", 1 } });
         }
 
         [Fact]
@@ -37,8 +41,6 @@ namespace ntbs_service_unit_tests.Services
             var auditLogs = GetAuditLogs("auditLogsForNotification1");
             _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(1))
                 .ReturnsAsync(auditLogs);
-            _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
-                .ReturnsAsync(new Dictionary<string, string> { { "Developer@ntbs.phe.com", "John Johnson" } });
 
             // Act
             var changes = (await _changesService.GetChangesList(1)).ToList();
@@ -92,8 +94,6 @@ namespace ntbs_service_unit_tests.Services
             var auditLogs = GetAuditLogs("auditLogsForNotification2");
             _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(2))
                 .ReturnsAsync(auditLogs);
-            _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
-                .ReturnsAsync(new Dictionary<string, string> { { "Developer@ntbs.phe.com", "John Johnson" } });
 
             // Act
             var changes = (await _changesService.GetChangesList(2)).ToList();
@@ -113,8 +113,6 @@ namespace ntbs_service_unit_tests.Services
             var auditLogs = GetAuditLogs("auditLogsForNotification3");
             _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(3))
                 .ReturnsAsync(auditLogs);
-            _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
-                .ReturnsAsync(new Dictionary<string, string> { { "Developer@ntbs.phe.com", "John Johnson" } });
 
             // Act
             var changes = (await _changesService.GetChangesList(3)).ToList();
@@ -148,8 +146,6 @@ namespace ntbs_service_unit_tests.Services
             var auditLogs = GetAuditLogs("auditLogsForNotification4");
             _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(4))
                 .ReturnsAsync(auditLogs);
-            _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
-                .ReturnsAsync(new Dictionary<string, string> { { "Developer@ntbs.phe.com", "John Johnson" } });
 
             // Act
             var changes = (await _changesService.GetChangesList(4)).ToList();
@@ -177,8 +173,6 @@ namespace ntbs_service_unit_tests.Services
             var auditLogs = GetAuditLogs("auditLogsForNotification5");
             _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(5))
                 .ReturnsAsync(auditLogs);
-            _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
-                .ReturnsAsync(new Dictionary<string, string> { { "Developer@ntbs.phe.com", "John Johnson" } });
 
             // Act
             var changes = (await _changesService.GetChangesList(5)).ToList();
@@ -196,13 +190,13 @@ namespace ntbs_service_unit_tests.Services
         public async Task LogsFromACancellationOfTransfer_DoesNotResultInWarning()
         {
             var auditLogs = GetAuditLogs("auditLogsForNotification6");
-            _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(5))
+            _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(6))
                 .ReturnsAsync(auditLogs);
             _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
-                .ReturnsAsync(new Dictionary<string, string> { { "Developer@ntbs.phe.com", "John Johnson" } });
+                .ReturnsAsync(new Dictionary<string, string> {{"Developer@ntbs.phe.com", "John Johnson"}});
 
             // Act
-            var changes = (await _changesService.GetChangesList(5)).ToList();
+            var changes = (await _changesService.GetChangesList(6)).ToList();
 
             Assert.Collection(PrintInOrder(changes),
                 c => Assert.Equal("17 May 2021, 15:28 John Johnson cancelled Transfer", c),
@@ -210,6 +204,32 @@ namespace ntbs_service_unit_tests.Services
                 c => Assert.Equal("01 Jul 2020, 11:45 John Johnson submitted Notification", c),
                 c => Assert.Equal("01 Jul 2020, 11:40 John Johnson created Draft", c));
             _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        // These logs are a copy notification 5, but with varied audit user
+        public async Task GetChangesCorrectlyMapsUserToUserId()
+        {
+            var auditLogs = GetAuditLogs("auditLogsWithDifferentUsers");
+            _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(7))
+                .ReturnsAsync(auditLogs);
+            _userRepositoryMock.Setup(repo => repo.GetIdDictionary())
+                .ReturnsAsync(new Dictionary<string, int>
+                {
+                    { "Developer@ntbs.phe.com", 1 },
+                    { "Developer2@ntbs.phe.com", 222 },
+                    { "Developer4@ntbs.phe.com", 4402 }
+                });
+
+            // Act
+            var changes = (await _changesService.GetChangesList(7)).ToList();
+
+            Assert.Collection(changes.OrderBy(c => c.Date),
+                c => Assert.Equal(1.ToString(), c.UserId),
+                c => Assert.Equal(222.ToString(), c.UserId),
+                c => Assert.Null(c.UserId), // User not in dictionary
+                c => Assert.Equal(4402.ToString(), c.UserId),
+                c => Assert.Null(c.UserId)); // System audit user
         }
 
         private static List<AuditLog> GetAuditLogs(string filename)

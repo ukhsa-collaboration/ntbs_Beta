@@ -28,6 +28,7 @@ namespace ntbs_service.Services
         private readonly IUserRepository _userRepository;
         private readonly ILogService _logService;
         private Dictionary<string, string> UsernameDictionary { get; set; }
+        private Dictionary<string, int> IdDictionary { get; set; }
 
         public NotificationChangesService(IAuditService auditService, IUserRepository userRepository, ILogService logService)
         {
@@ -39,6 +40,7 @@ namespace ntbs_service.Services
         public async Task<IEnumerable<NotificationHistoryListItemModel>> GetChangesList(int notificationId)
         {
             UsernameDictionary = await _userRepository.GetUsernameDictionary();
+            IdDictionary = await _userRepository.GetIdDictionary();
 
             var auditLogs = (await _auditService.GetWriteAuditsForNotification(notificationId))
                 .OrderBy(log => log.AuditDateTime)
@@ -55,7 +57,7 @@ namespace ntbs_service.Services
                 Date = log.AuditDateTime,
                 Subject = MapSubject(log),
                 Username = MapUsername(log),
-                UserId = log.AuditUser == AuditService.AuditUserSystem ? null : log.AuditUser
+                UserId = MapUserId(log)
             });
         }
 
@@ -297,6 +299,13 @@ namespace ntbs_service.Services
             return log.AuditUser == null || log.AuditUser == AuditService.AuditUserSystem
                 ? "NTBS"
                 : UsernameDictionary.GetValueOrDefault(log.AuditUser, log.AuditUser);
+        }
+
+        private string MapUserId(AuditLog log)
+        {
+            return log.AuditUser == AuditService.AuditUserSystem
+                ? null
+                : IdDictionary.TryGetValue(log.AuditUser, out var returnId) ? returnId.ToString() : null;
         }
 
         private static NotificationAuditType GetNotificationAuditType(AuditLog log)
