@@ -398,8 +398,7 @@ namespace ntbs_service.Services
             }
 
             await _notificationRepository.SaveChangesAsync(
-                NotificationAuditType.SystemEdited,
-                AuditService.AuditUserSystem);
+                NotificationAuditType.SystemEdited);
         }
 
         public async Task UpdateDrugResistanceProfilesAsync(
@@ -514,9 +513,9 @@ namespace ntbs_service.Services
             foreach (var notification in notificationsToSetClosed)
             {
                 notification.NotificationStatus = NotificationStatus.Closed;
+                await _notificationRepository.SaveChangesAsync(NotificationAuditType.Closed);
                 await _alertService.DismissAllOpenAlertsForNotification(notification.NotificationId);
             }
-            await _notificationRepository.SaveChangesAsync(NotificationAuditType.Closed, AuditService.AuditUserSystem);
         }
     }
 }

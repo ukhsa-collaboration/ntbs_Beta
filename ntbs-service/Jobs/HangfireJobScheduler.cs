@@ -16,11 +16,7 @@ namespace ntbs_service.Jobs
         private const string GenericStoredProcedureJobId = "generic-stored-procedure-execution";
         private const string GenerateReportingDataJobId = "generate-report-data";
         private const string ReportingDataRefreshJobId = "reporting-data-refresh";
-
         private const string ReportingDataProcessingJobId = "reporting-data-processing";
-
-
-
 
         public static void ScheduleRecurringJobs(ScheduledJobsConfig scheduledJobsConfig)
         {
@@ -117,7 +113,7 @@ namespace ntbs_service.Jobs
 
             if (scheduledJobsConfig.GenerateReportingDataJobEnabled)
             {
-                /// PerformContext context is passed in via Hangfire Server
+                // PerformContext context is passed in via Hangfire Server
                 RecurringJob.AddOrUpdate<GenerateReportingDataJob>(
                     GenerateReportingDataJobId,
                     job => job.Run(null, JobCancellationToken.Null),
@@ -131,7 +127,7 @@ namespace ntbs_service.Jobs
 
             if (scheduledJobsConfig.GenericStoredProcedureJobEnabled)
             {
-                /// PerformContext context is passed in via Hangfire Server
+                // PerformContext context is passed in via Hangfire Server
                 RecurringJob.AddOrUpdate<GenericStoredProcedureJob>(
                     GenericStoredProcedureJobId,
                     job => job.Run(null, JobCancellationToken.Null),
@@ -145,7 +141,7 @@ namespace ntbs_service.Jobs
 
             if (scheduledJobsConfig.ReportingDataRefreshJobEnabled)
             {
-                /// PerformContext context is passed in via Hangfire Server
+                // PerformContext context is passed in via Hangfire Server
                 RecurringJob.AddOrUpdate<ReportingDataRefreshJob>(
                     ReportingDataRefreshJobId,
                     job => job.Run(null, JobCancellationToken.Null),
@@ -159,7 +155,7 @@ namespace ntbs_service.Jobs
 
             if (scheduledJobsConfig.ReportingDataProcessingJobEnabled)
             {
-                /// PerformContext context is passed in via Hangfire Server
+                // PerformContext context is passed in via Hangfire Server
                 RecurringJob.AddOrUpdate<ReportingDataProcessingJob>(
                     ReportingDataProcessingJobId,
                     job => job.Run(null, JobCancellationToken.Null),
