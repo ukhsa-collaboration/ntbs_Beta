@@ -18,6 +18,7 @@ namespace ntbs_service.Models
         public string TbServicePHECCode;
         public string LocationPHECCode;
         public string CaseManager;
+        public bool? CaseManagerIsActive;
         public string NhsNumber;
         public string DateOfBirth;
         public string CountryOfBirth;
@@ -46,6 +47,7 @@ namespace ntbs_service.Models
             TbServicePHECCode = notification.HospitalDetails.TBService?.PHECCode;
             LocationPHECCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
             CaseManager = notification.HospitalDetails.CaseManagerName;
+            CaseManagerIsActive = notification.HospitalDetails.CaseManager?.IsActive;
             CaseManagerId = notification.HospitalDetails.CaseManagerId;
             NhsNumber = notification.PatientDetails.FormattedNhsNumber;
             DateOfBirth = notification.PatientDetails.FormattedDob;
