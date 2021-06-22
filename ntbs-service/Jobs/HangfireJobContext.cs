@@ -8,7 +8,7 @@ namespace ntbs_service.Jobs
     {
         protected HangfireJobContext(NtbsContext auditDbContext)
         {
-            auditDbContext.AddAuditCustomField(CustomFields.AppUser, AuditService.AuditUserSystem);
+            auditDbContext.AddAuditCustomField(CustomFields.OverrideUser, AuditService.AuditUserSystem);
         }
     }
 }
