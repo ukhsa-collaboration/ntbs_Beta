@@ -27,7 +27,7 @@ Feature: Linked notification creation
     # Mandatory hospital details fields
     And I select Birmingham & Solihull for 'HospitalDetails_TBServiceCode'
     And I wait
-    And I select SPIRE PARKWAY HOSPITAL for 'HospitalDetails_HospitalId'
+    And I select HEARTLANDS HOSPITAL for 'HospitalDetails_HospitalId'
     And I click on the 'save-button' button
     # Mandatory clinical details fields
     When I check 'NotificationSiteMap_PULMONARY_'
@@ -48,7 +48,7 @@ Feature: Linked notification creation
     And I click on the 'submit-button' button
     And I expand manage notification section
     And I click on the 'new-linked-notification-button' button
-    
+
     Then A new notification should have been created
 
     When I click on the 'save-button' button
@@ -57,7 +57,7 @@ Feature: Linked notification creation
     And I enter 2020 into 'FormattedNotificationDate_Year'
     And I select Birmingham & Solihull for 'HospitalDetails_TBServiceCode'
     And I wait
-    And I select SPIRE PARKWAY HOSPITAL for 'HospitalDetails_HospitalId'
+    And I select HEARTLANDS HOSPITAL for 'HospitalDetails_HospitalId'
     And I click on the 'save-button' button
     When I check 'NotificationSiteMap_LARYNGEAL_'
     And I enter 10 into 'FormattedDiagnosisDate_Day'
@@ -74,7 +74,7 @@ Feature: Linked notification creation
     And I can see the value 'No fixed abode' for the field 'postcode' in the 'PatientDetails' overview section
     And I can see the value 'White' for the field 'ethnicity' in the 'PatientDetails' overview section
     And I can see the value 'United Kingdom' for the field 'country' in the 'PatientDetails' overview section
-  
+
   Scenario: No option to create linked notification for recent notification
     # Enter notification date within a year
     When I enter 7 into 'FormattedNotificationDate_Day'
@@ -82,5 +82,5 @@ Feature: Linked notification creation
     And I enter 2021 into 'FormattedNotificationDate_Year'
     And I click on the 'submit-button' button
     And I expand manage notification section
-    
+
     Then The element with id 'new-linked-notification-button' is not present

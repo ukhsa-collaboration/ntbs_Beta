@@ -7,7 +7,7 @@ using Serilog;
 
 namespace ntbs_service.Jobs
 {
-    public class UnmatchedLabResultAlertsJob
+    public class UnmatchedLabResultAlertsJob : HangfireJobContext
     {
         private readonly ISpecimenService _specimenService;
         private readonly IAlertRepository _alertRepository;
@@ -16,7 +16,8 @@ namespace ntbs_service.Jobs
         public UnmatchedLabResultAlertsJob(
             ISpecimenService specimenService,
             IAlertRepository alertRepository,
-            IAlertService alertService)
+            IAlertService alertService,
+            NtbsContext ntbsContext) : base(ntbsContext)
         {
             _specimenService = specimenService;
             _alertRepository = alertRepository;

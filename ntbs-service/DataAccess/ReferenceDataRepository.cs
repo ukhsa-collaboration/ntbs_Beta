@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
-using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.DataAccess
@@ -35,7 +34,6 @@ namespace ntbs_service.DataAccess
         Task<User> GetUserByUsernameAsync(string username);
         Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices);
         Task<Hospital> GetHospitalByGuidAsync(Guid guid);
-        Task<FilteredHospitalDetailsPageSelectLists> GetFilteredHospitalDetailsPageSelectListsByTbService(string tbServiceCode);
         Task<IList<User>> GetCaseManagersByTbServiceCodesAsync(IEnumerable<string> tbServiceCodes);
         Task<IList<CaseManagerTbService>> GetCaseManagerTbServicesByUsernameAsync(string username);
         Task<IList<Sex>> GetAllSexesAsync();
@@ -241,28 +239,6 @@ namespace ntbs_service.DataAccess
         public async Task<Hospital> GetHospitalByGuidAsync(Guid guid)
         {
             return await _context.Hospital.SingleOrDefaultAsync(h => h.HospitalId == guid);
-        }
-
-        public async Task<FilteredHospitalDetailsPageSelectLists> GetFilteredHospitalDetailsPageSelectListsByTbService(string tbServiceCode)
-        {
-            var tbServiceCodeAsList = new List<string> { tbServiceCode };
-            var filteredHospitals = await GetHospitalsByTbServiceCodesAsync(tbServiceCodeAsList);
-            var filteredCaseManagers = await GetCaseManagersByTbServiceCodesAsync(tbServiceCodeAsList);
-
-            var filteredHospitalDetailsPageSelectLists = new FilteredHospitalDetailsPageSelectLists
-            {
-                Hospitals = filteredHospitals.Select(n => new OptionValue
-                {
-                    Value = n.HospitalId.ToString(),
-                    Text = n.Name
-                }),
-                CaseManagers = filteredCaseManagers.Select(n => new OptionValue
-                {
-                    Value = n.Id.ToString(),
-                    Text = n.DisplayName
-                })
-            };
-            return filteredHospitalDetailsPageSelectLists;
         }
 
         public async Task<IList<Sex>> GetAllSexesAsync()

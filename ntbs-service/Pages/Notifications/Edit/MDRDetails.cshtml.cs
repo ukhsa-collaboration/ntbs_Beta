@@ -25,10 +25,14 @@ namespace ntbs_service.Pages.Notifications.Edit
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService,
-            IAlertRepository alertRepository) : base(service,
-            authorizationService,
-            notificationRepository,
-            alertRepository)
+            IAlertRepository alertRepository,
+            IUserHelper userHelper)
+            : base(
+                service,
+                authorizationService,
+                notificationRepository,
+                alertRepository,
+                userHelper)
         {
             CurrentPage = NotificationSubPaths.EditMDRDetails;
             _referenceDataRepository = referenceDataRepository;

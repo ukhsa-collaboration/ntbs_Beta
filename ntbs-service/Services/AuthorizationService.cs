@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
@@ -29,16 +30,21 @@ namespace ntbs_service.Services
         private readonly IUserService _userService;
         private UserPermissionsFilter _userPermissionsFilter;
         private readonly INotificationRepository _notificationRepository;
+        private readonly IUserHelper _userHelper;
 
-        public AuthorizationService(IUserService userService, INotificationRepository notificationRepository)
+        public AuthorizationService(
+            IUserService userService,
+            INotificationRepository notificationRepository,
+            IUserHelper userHelper)
         {
             _userService = userService;
             _notificationRepository = notificationRepository;
+            _userHelper = userHelper;
         }
 
         public async Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert)
         {
-            if ((await _userService.GetUser(user)).IsReadOnly)
+            if (_userHelper.UserIsReadOnly(user))
             {
                 return false;
             }
@@ -65,7 +71,7 @@ namespace ntbs_service.Services
             async Task SetPadlockAndLinkForBannerAsync(ClaimsPrincipal u, NotificationBannerModel bannerModel)
             {
                 bannerModel.ShowPadlock = !(await CanEditBannerModelAsync(u, bannerModel));
-                bannerModel.ShowLink = !(await UserIsReadOnlyAndNotificationIsDraftOrLegacy(u, bannerModel));
+                bannerModel.ShowLink = !UserIsReadOnlyAndNotificationIsDraftOrLegacy(u, bannerModel);
             }
 
             foreach (var n in notificationBanners)
@@ -83,11 +89,11 @@ namespace ntbs_service.Services
                 _userPermissionsFilter = await GetUserPermissionsFilterAsync(contextUser);
             }
 
-            var user = (await _userService.GetUser(contextUser));
+            var userIsReadOnly = _userHelper.UserIsReadOnly(contextUser);
 
             if (_userPermissionsFilter.Type == UserType.NationalTeam)
             {
-                return user.IsReadOnly
+                return userIsReadOnly
                     ? (PermissionLevel.ReadOnly, Messages.NoEditPermission)
                     : (PermissionLevel.Edit,
                         // National team members are allowed to modify even closed notifications, but it is useful
@@ -97,7 +103,7 @@ namespace ntbs_service.Services
 
             if (UserHasDirectRelationToNotification(notification))
             {
-                return user.IsReadOnly
+                return userIsReadOnly
                     ? (PermissionLevel.ReadOnly, Messages.NoEditPermission)
                     : notification.NotificationStatus == NotificationStatus.Closed
                         ? (PermissionLevel.ReadOnly, Messages.ClosedNoEdit)
@@ -227,9 +233,9 @@ namespace ntbs_service.Services
             return await _userService.GetUserPermissionsFilterAsync(user);
         }
 
-        private async Task<bool> UserIsReadOnlyAndNotificationIsDraftOrLegacy(ClaimsPrincipal user, NotificationBannerModel bannerModel)
+        private bool UserIsReadOnlyAndNotificationIsDraftOrLegacy(ClaimsPrincipal user, NotificationBannerModel bannerModel)
         {
-            return (await _userService.GetUser(user)).IsReadOnly &&
+            return _userHelper.UserIsReadOnly(user) &&
                    (bannerModel.NotificationStatus == NotificationStatus.Draft || bannerModel.Source != "ntbs");
         }
     }

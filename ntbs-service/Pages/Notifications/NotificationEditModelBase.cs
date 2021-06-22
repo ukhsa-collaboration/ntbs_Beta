@@ -23,8 +23,9 @@ namespace ntbs_service.Pages.Notifications
             INotificationService service,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IAlertRepository alertRepository)
-            : base(service, authorizationService, notificationRepository)
+            IAlertRepository alertRepository,
+            IUserHelper userHelper)
+            : base(service, authorizationService, userHelper, notificationRepository)
         {
             ValidationService = new ValidationService(this);
             _alertRepository = alertRepository;

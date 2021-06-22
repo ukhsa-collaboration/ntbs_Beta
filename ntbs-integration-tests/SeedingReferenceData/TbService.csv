@@ -6,3 +6,4 @@ TBS0009,Barnet Hospital,App.Auth.NIS.NTBS.Service_Barnet,E45000001,false
 TBS0181,Royal Derby Hospital,App.Auth.NIS.NTBS.Service_Derby,E45000016,false
 TBS0182,Royal Free London TB Service,App.Auth.NIS.NTBS.Service_RoyalFree,E45000001,false
 TBS0429,Fulwood Hall Hospital,App.Auth.NIS.NTBS.Service_Fulwood,E45000018,false
+TBS0076,Gateshead and South Tyneside,App.Auth.NIS.NTBS.Service_Gateshead,E45000009,0

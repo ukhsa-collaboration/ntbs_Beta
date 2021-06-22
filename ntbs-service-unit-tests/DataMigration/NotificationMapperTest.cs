@@ -591,7 +591,7 @@ namespace ntbs_service_unit_tests.DataMigration
 
         // Data for this has been based on real examples, but with care taken to anonymize it
         [Fact]
-        public async Task correctlyMaps_DenotificationValues()
+        public async Task correctlyMaps_DenotificationValuesWithDenotificationReason()
         {
             // Arrange
             const int runId = 12345;
@@ -615,6 +615,35 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal(NotificationStatus.Denotified, notification.NotificationStatus);
             Assert.Equal(DenotificationReason.NotTbAtypicalMyco, notification.DenotificationDetails.Reason);
             Assert.Equal(new DateTime(2019,06,01), notification.DenotificationDetails.DateOfDenotification);
+        }
+
+        [Fact]
+        public async Task correctlyMaps_DenotificationValuesWhenNoDenotificationReason()
+        {
+            // Arrange
+            const int runId = 12345;
+            var legacyIds = new List<string> { "193301" };
+            SetupNotificationsInGroups(("193301", "11"));
+
+            const string malvernCode = "TBS0656";
+            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
+            {
+                {new Guid("33464912-E5B1-4998-AFCA-083C3AE65A80"), new TBService {Code = malvernCode}},
+            };
+
+            // Act
+            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
+                    runId,
+                    legacyIds))
+                .SelectMany(group => group)
+                .Single();
+
+            // Assert
+            Assert.Equal(NotificationStatus.Denotified, notification.NotificationStatus);
+            Assert.Equal(new DateTime(2019,06,01), notification.DenotificationDetails.DateOfDenotification);
+            Assert.Equal(DenotificationReason.Other, notification.DenotificationDetails.Reason);
+            Assert.Equal("Denotified in legacy system, with denotification date " + new DateTime(2019,06,01)
+                , notification.DenotificationDetails.OtherDescription);
         }
 
         private void SetupNotificationsInGroups(params (string, string)[] legacyIdAndLegacyGroup)
