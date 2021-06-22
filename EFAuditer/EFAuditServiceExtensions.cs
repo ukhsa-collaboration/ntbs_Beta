@@ -58,7 +58,9 @@ namespace EFAuditer
             audit.EventType = entry.Action;
             audit.AuditDetails = GetCustomKey(ev, CustomFields.AuditDetails);
             audit.AuditDateTime = DateTime.Now;
-            audit.AuditUser = GetCustomKey(ev, CustomFields.AppUser) ?? ev.Environment.UserName;
+            audit.AuditUser = GetCustomKey(ev, CustomFields.OverrideUser)
+                ?? GetCustomKey(ev, CustomFields.AppUser)
+                ?? ev.Environment.UserName;
 
             var serializerSettings = Audit.Core.Configuration.JsonSettings;
             serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());

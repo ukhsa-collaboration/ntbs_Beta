@@ -6,5 +6,6 @@
         public const string AppUser = "AppUser";
         public const string RootEntity = "RootEntity";
         public const string RootId = "RootId";
+        public const string OverrideUser = "OverrideUser";
     }
 }
