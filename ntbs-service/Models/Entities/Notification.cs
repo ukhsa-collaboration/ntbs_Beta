@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using EFAuditer;
@@ -114,11 +115,21 @@ namespace ntbs_service.Models.Entities
         {
             var mostRecentTreatmentEvent = TreatmentEvents.GetMostRecentTreatmentEvent();
 
-            return NotificationStatus == NotificationStatus.Notified
-                && mostRecentTreatmentEvent != null
-                && mostRecentTreatmentEvent.TreatmentEventTypeIsOutcome
-                && mostRecentTreatmentEvent.TreatmentOutcome?.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment
-                && mostRecentTreatmentEvent.EventDate < DateTime.Today.AddYears(-1);
+            if (NotificationStatus == NotificationStatus.Notified
+                && mostRecentTreatmentEvent?.TreatmentOutcomeId != null
+                && mostRecentTreatmentEvent.TreatmentEventTypeIsOutcome)
+            {
+                if (mostRecentTreatmentEvent.TreatmentOutcome == null)
+                {
+                    throw new ApplicationException("ShouldBeClosed cannot be called without loaded outcome events.");
+                }
+
+                return mostRecentTreatmentEvent.TreatmentOutcome != null
+                       && mostRecentTreatmentEvent.TreatmentOutcome.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment
+                       && mostRecentTreatmentEvent.EventDate < DateTime.Today.AddYears(-1);
+            }
+
+            return false;
         }
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;

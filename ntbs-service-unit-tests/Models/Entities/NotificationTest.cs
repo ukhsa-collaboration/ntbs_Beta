@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
@@ -53,6 +54,7 @@ namespace ntbs_service_unit_tests.Models.Entities
                     new TreatmentEvent
                     {
                         TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                        TreatmentOutcomeId = 7,
                         TreatmentOutcome = new TreatmentOutcome{ TreatmentOutcomeSubType = TreatmentOutcomeSubType.TbCausedDeath },
                         EventDate = treatmentOutcomeDate
                     },
@@ -66,6 +68,27 @@ namespace ntbs_service_unit_tests.Models.Entities
 
             // Assert
             Assert.Equal(expectedValue, notification.ShouldBeClosed());
+        }
+
+        [Fact]
+        public void ShouldBeClosedThrowsExceptionWhenOutcomeNotLoaded()
+        {
+            // Arrange
+            var notification = new Notification
+            {
+                NotificationStatus = NotificationStatus.Notified,
+                TreatmentEvents = new List<TreatmentEvent> {
+                    new TreatmentEvent
+                    {
+                        TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                        TreatmentOutcomeId = 7,
+                        EventDate = new DateTime(2003, 4, 15)
+                    }
+                }
+            };
+
+            // Assert
+            Assert.Throws<ApplicationException>(() => notification.ShouldBeClosed());
         }
     }
 }
