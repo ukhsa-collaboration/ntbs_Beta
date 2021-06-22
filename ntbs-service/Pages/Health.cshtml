@@ -129,6 +129,19 @@
                 @Cross
             }
         </div>
+
+        <div>
+            Update table counts:
+            @if (Model.ScheduledJobsConfig.UpdateTableCountsJobEnabled)
+            {
+                @Tick
+                <span>Cron: @Model.ScheduledJobsConfig.UpdateTableCountsJobCron</span>
+            }
+            else
+            {
+                @Cross
+            }
+        </div>
     </div>
 
 </div>

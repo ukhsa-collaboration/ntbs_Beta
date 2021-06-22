@@ -17,6 +17,7 @@ namespace ntbs_service.Jobs
         private const string GenerateReportingDataJobId = "generate-report-data";
         private const string ReportingDataRefreshJobId = "reporting-data-refresh";
         private const string ReportingDataProcessingJobId = "reporting-data-processing";
+        private const string UpdateTableCountsJobId = "update-table-counts";
 
         public static void ScheduleRecurringJobs(ScheduledJobsConfig scheduledJobsConfig)
         {
@@ -165,6 +166,20 @@ namespace ntbs_service.Jobs
             else
             {
                 RecurringJob.RemoveIfExists(ReportingDataProcessingJobId);
+            }
+
+            if (scheduledJobsConfig.UpdateTableCountsJobEnabled)
+            {
+                // PerformContext context is passed in via Hangfire Server
+                RecurringJob.AddOrUpdate<UpdateTableCountsJob>(
+                    UpdateTableCountsJobId,
+                    job => job.Run(null),
+                    scheduledJobsConfig.UpdateTableCountsJobCron,
+                    TimeZoneInfo.Local);
+            }
+            else
+            {
+                RecurringJob.RemoveIfExists(UpdateTableCountsJobId);
             }
         }
     }
