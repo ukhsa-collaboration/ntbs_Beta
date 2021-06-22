@@ -1,17 +1,18 @@
 ﻿using System.Threading.Tasks;
 using Hangfire;
+using ntbs_service.DataAccess;
 using ntbs_service.Services;
 using Serilog;
 
 namespace ntbs_service.Jobs
 {
-    public class DrugResistanceProfileUpdateJob
+    public class DrugResistanceProfileUpdateJob : HangfireJobContext
     {
         private const int MaxNumberOfUpdatesPerRun = 2000;
 
         private readonly IDrugResistanceProfileService _service;
 
-        public DrugResistanceProfileUpdateJob(IDrugResistanceProfileService service)
+        public DrugResistanceProfileUpdateJob(IDrugResistanceProfileService service, NtbsContext ntbsContext) : base(ntbsContext)
         {
             _service = service;
         }

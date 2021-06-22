@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
@@ -18,7 +19,8 @@ namespace ntbs_service.Pages.Notifications
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             ICultureAndResistanceService cultureAndResistanceService,
-            ISpecimenService specimenService) : base(service, authorizationService, notificationRepository)
+            ISpecimenService specimenService,
+            IUserHelper userHelper) : base(service, authorizationService, userHelper, notificationRepository)
         {
             _cultureAndResistanceService = cultureAndResistanceService;
             _specimenService = specimenService;

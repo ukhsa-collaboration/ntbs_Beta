@@ -16,7 +16,8 @@ namespace ntbs_service.Pages.Notifications
         public LinkedNotificationsModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
+            INotificationRepository notificationRepository,
+            IUserHelper userHelper) : base(service, authorizationService, userHelper, notificationRepository)
         {
         }
 

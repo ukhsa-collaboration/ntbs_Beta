@@ -39,7 +39,7 @@ namespace ntbs_service.Models.Entities
         public virtual Country Country { get; set; }
 
         [MaxLength(150)]
-
+        [ContainsNoTabs]
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
             ErrorMessage = ValidationMessages.InvalidCharacter)]

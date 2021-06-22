@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -39,7 +39,7 @@ namespace ntbs_service.DataMigration
 
         public void AddSystemUserToAudits()
         {
-            _context.AddAuditCustomField(CustomFields.AppUser, AuditService.AuditUserSystem);
+            _context.AddAuditCustomField(CustomFields.OverrideUser, AuditService.AuditUserSystem);
         }
 
         public async Task<List<Notification>> AddLinkedNotificationsAsync(List<Notification> notifications)

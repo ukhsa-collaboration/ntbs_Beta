@@ -21,7 +21,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             INotificationRepository notificationRepository,
             IAlertRepository alertRepository,
             ICultureAndResistanceService cultureAndResistanceService,
-            ISpecimenService specimenService) : base(notificationService, authorizationService, notificationRepository, alertRepository)
+            ISpecimenService specimenService,
+            IUserHelper userHelper)
+            : base(notificationService, authorizationService, notificationRepository, alertRepository, userHelper)
         {
             _cultureAndResistanceService = cultureAndResistanceService;
             _specimenService = specimenService;

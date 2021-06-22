@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,6 +9,7 @@ using MoreLinq;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Validations;
 
 namespace ntbs_service.DataMigration
 {
@@ -47,6 +49,8 @@ namespace ntbs_service.DataMigration
             PerformContext context,
             int runId)
         {
+            TrimAndCleanLongFormNotes(notification);
+
             var missingDateResults = notification.TestData.ManualTestResults
                 .Where(result => !result.TestDate.HasValue)
                 .ToList();
@@ -94,6 +98,28 @@ namespace ntbs_service.DataMigration
                 notification.ContactTracing = new ContactTracing();
             }
         }
+
+        private static void TrimAndCleanLongFormNotes(Notification notification)
+        {
+            CleanContainsNoTabsProperties(notification.ClinicalDetails);
+            notification.SocialContextAddresses.ForEach(CleanContainsNoTabsProperties);
+            notification.SocialContextVenues.ForEach(CleanContainsNoTabsProperties);
+            notification.TreatmentEvents.ForEach(CleanContainsNoTabsProperties);
+            notification.MBovisDetails.MBovisExposureToKnownCases.ForEach(CleanContainsNoTabsProperties);
+            notification.MBovisDetails.MBovisOccupationExposures.ForEach(CleanContainsNoTabsProperties);
+            notification.MBovisDetails.MBovisAnimalExposures.ForEach(CleanContainsNoTabsProperties);
+            notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions.ForEach(CleanContainsNoTabsProperties);
+        }
+
+        private static void CleanContainsNoTabsProperties(object entity)
+        {
+            entity?.GetType()
+                .GetProperties()
+                .Where(prop => Attribute.IsDefined(prop, typeof(ContainsNoTabsAttribute)))
+                .ForEach(prop => prop.SetValue(entity, TrimAndCleanString((string)prop.GetValue(entity))));
+        }
+
+        private static string TrimAndCleanString(string s) => s?.Trim().Replace("\t", " ");
 
         private async Task<IEnumerable<ValidationResult>> GetValidationErrors(PerformContext context,
             int runId, Notification notification)

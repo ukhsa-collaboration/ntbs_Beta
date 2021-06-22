@@ -185,6 +185,39 @@ namespace EFAuditer_tests.UnitTests.Services
         }
 
         [Fact]
+        public void AuditAction_UsesOverrideUserInsteadOfAppUserWhenProvided()
+        {
+            // Arrange
+            var ev = new AuditEvent
+            {
+                Environment = new AuditEventEnvironment
+                {
+                    UserName = "Env user"
+                },
+                CustomFields = new Dictionary<string, object>
+                {
+                    {CustomFields.AuditDetails, "Notified"},
+                    {CustomFields.AppUser, "User 1"},
+                    {CustomFields.OverrideUser, "SYSTEM"}
+                }
+            };
+            var entry = new EventEntry
+            {
+                PrimaryKey = new Dictionary<string, object> { { "EntityId", "123" } },
+                EntityType = typeof(Entity),
+                Action = "Update",
+                Table = "EntityTable"
+            };
+            var audit = new AuditLog();
+
+            // Act
+            EFAuditServiceExtensions.AuditAction(ev, entry, audit);
+
+            // Assert
+            Assert.Equal("SYSTEM", audit.AuditUser);
+        }
+
+        [Fact]
         public void AuditActionForIOwnedEntity_SetsUpdateValuesCorrectly()
         {
             // Arrange

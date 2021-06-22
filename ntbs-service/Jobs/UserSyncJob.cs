@@ -1,15 +1,16 @@
 ﻿using System.Threading.Tasks;
 using Hangfire;
+using ntbs_service.DataAccess;
 using ntbs_service.Services;
 using Serilog;
 
 namespace ntbs_service.Jobs
 {
-    public class UserSyncJob
+    public class UserSyncJob : HangfireJobContext
     {
         private readonly IAdImportService _adImportService;
 
-        public UserSyncJob(IAdImportService adImportService)
+        public UserSyncJob(IAdImportService adImportService, NtbsContext ntbsContext) : base(ntbsContext)
         {
             _adImportService = adImportService;
         }

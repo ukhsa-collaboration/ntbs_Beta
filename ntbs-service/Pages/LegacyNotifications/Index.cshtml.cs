@@ -18,7 +18,7 @@ namespace ntbs_service.Pages.LegacyNotifications
         private readonly INotificationImportService _notificationImportService;
         private readonly INotificationImportRepository _notificationImportRepository;
         private readonly INotificationRepository _notificationRepository;
-        private readonly IUserService _userService;
+        private readonly IUserHelper _userHelper;
 
         public NotificationBannerModel NotificationBannerModel { get; set; }
 
@@ -32,18 +32,18 @@ namespace ntbs_service.Pages.LegacyNotifications
             INotificationImportService notificationImportService,
             INotificationImportRepository notificationImportRepository,
             INotificationRepository notificationRepository,
-            IUserService userService)
+            IUserHelper userHelper)
         {
             _legacySearchService = legacySearchService;
             _notificationImportService = notificationImportService;
             _notificationImportRepository = notificationImportRepository;
             _notificationRepository = notificationRepository;
-            _userService = userService;
+            _userHelper = userHelper;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            if ((await _userService.GetUser(User)).IsReadOnly)
+            if (_userHelper.UserIsReadOnly(User))
             {
                 return RedirectToPage(RouteHelper.AccessDeniedPath);
             }

@@ -46,8 +46,9 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             IReferenceDataRepository referenceDataRepository,
             ITreatmentEventRepository treatmentEventRepository,
             IAlertRepository alertRepository,
-            IAlertService alertService)
-            : base(service, authorizationService, notificationRepository, alertRepository)
+            IAlertService alertService,
+            IUserHelper userHelper)
+            : base(service, authorizationService, notificationRepository, alertRepository, userHelper)
         {
             _referenceDataRepository = referenceDataRepository;
             _treatmentEventRepository = treatmentEventRepository;

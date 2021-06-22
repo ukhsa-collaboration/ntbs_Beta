@@ -25,7 +25,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IAlertRepository alertRepository,
-            IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository, alertRepository)
+            IReferenceDataRepository referenceDataRepository,
+            IUserHelper userHelper) : base(service, authorizationService, notificationRepository, alertRepository, userHelper)
         {
             HighTbIncidenceCountries = new SelectList(
                 referenceDataRepository.GetAllHighTbIncidenceCountriesAsync().Result,

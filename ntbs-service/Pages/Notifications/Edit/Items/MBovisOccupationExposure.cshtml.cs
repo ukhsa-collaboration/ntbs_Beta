@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
@@ -29,7 +30,8 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             IItemRepository<MBovisOccupationExposure> mBovisOccupationExposureRepository,
-            IAlertRepository alertRepository) : base(service, authorizationService, notificationRepository, alertRepository)
+            IAlertRepository alertRepository,
+            IUserHelper userHelper) : base(service, authorizationService, notificationRepository, alertRepository, userHelper)
         {
             _referenceDataRepository = referenceDataRepository;
             _mBovisOccupationExposureRepository = mBovisOccupationExposureRepository;

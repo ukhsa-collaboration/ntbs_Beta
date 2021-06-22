@@ -93,6 +93,40 @@ namespace ntbs_integration_tests.ContactDetailsPages
         }
 
         [Fact]
+        public async Task EditDetails_TabInNotes_DisplayErrors()
+        {
+            var user = TestUser.NationalTeamUser;
+            var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Id, ContactDetailsSubPaths.Edit));
+            using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
+            {
+                // Arrange
+                var initialPage = await client.GetAsync(pageRoute);
+                var initialDocument = await GetDocumentAsync(initialPage);
+
+                var formData = new Dictionary<string, string>
+                {
+                    ["ContactDetails.Username"] = user.Username,
+                    ["ContactDetails.JobTitle"] = "Teacher",
+                    ["ContactDetails.PhoneNumberPrimary"] = "0888192311",
+                    ["ContactDetails.PhoneNumberSecondary"] = "0123871623",
+                    ["ContactDetails.EmailPrimary"] = "primary@email",
+                    ["ContactDetails.EmailSecondary"] = "secondary@email",
+                    ["ContactDetails.Notes"] = "Notes\t"
+                };
+
+                // Act
+                var result = await client.SendPostFormWithData(initialDocument, formData, pageRoute);
+
+                // Assert
+                var resultDocument = await GetDocumentAsync(result);
+                result.EnsureSuccessStatusCode();
+
+                resultDocument.AssertErrorMessage("notes",
+                    string.Format(ValidationMessages.StringCannotContainTabs, "Notes"));
+            }
+        }
+
+        [Fact]
         public async Task EditDetails_EditingOtherUser_IsAllowedForAdmin()
         {
             var user = TestUser.NationalTeamUser;

@@ -11,7 +11,7 @@ using Serilog;
 
 namespace ntbs_service.Jobs
 {
-    public class DataQualityAlertsJob
+    public class DataQualityAlertsJob : HangfireJobContext
     {
         private readonly IAlertService _alertService;
         private readonly IDataQualityRepository _dataQualityRepository;
@@ -19,7 +19,8 @@ namespace ntbs_service.Jobs
 
         public DataQualityAlertsJob(
             IAlertService alertService,
-            IDataQualityRepository dataQualityRepository)
+            IDataQualityRepository dataQualityRepository,
+            NtbsContext ntbsContext) : base(ntbsContext)
         {
             _alertService = alertService;
             _dataQualityRepository = dataQualityRepository;

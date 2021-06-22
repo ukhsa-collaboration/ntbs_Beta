@@ -34,6 +34,7 @@ namespace ntbs_service.Models.Entities
         public virtual TreatmentOutcome TreatmentOutcome { get; set; }
 
         [MaxLength(1000)]
+        [ContainsNoTabs]
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
