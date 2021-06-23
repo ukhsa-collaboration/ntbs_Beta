@@ -19,6 +19,7 @@ namespace ntbs_service.Pages.LegacyNotifications
         private readonly INotificationImportRepository _notificationImportRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IUserHelper _userHelper;
+        private readonly IAuthorizationService _authorizationService;
 
         public NotificationBannerModel NotificationBannerModel { get; set; }
 
@@ -32,13 +33,15 @@ namespace ntbs_service.Pages.LegacyNotifications
             INotificationImportService notificationImportService,
             INotificationImportRepository notificationImportRepository,
             INotificationRepository notificationRepository,
-            IUserHelper userHelper)
+            IUserHelper userHelper,
+            IAuthorizationService authorizationService)
         {
             _legacySearchService = legacySearchService;
             _notificationImportService = notificationImportService;
             _notificationImportRepository = notificationImportRepository;
             _notificationRepository = notificationRepository;
             _userHelper = userHelper;
+            _authorizationService = authorizationService;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -87,6 +90,7 @@ namespace ntbs_service.Pages.LegacyNotifications
             }
 
             NotificationBannerModel.ShowLink = false;
+            NotificationBannerModel.ShowPadlock = !await _authorizationService.CanEditBannerModelAsync(User, NotificationBannerModel);
             return Page();
         }
     }
