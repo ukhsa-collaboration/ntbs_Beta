@@ -17,6 +17,7 @@ Feature: Transfer notification
     And I enter I hope your service is doing well into 'TransferRequest_TransferRequestNote'
     And I click on the 'confirm-transfer-button' button
     And I wait
+    Then An alert has been created for the notification with type TransferRequest
 
   Scenario: Pending transfer page has correct values
     Then I should see the Notification
