@@ -115,14 +115,10 @@ namespace ntbs_service.Models.Entities
         {
             var mostRecentTreatmentEvent = TreatmentEvents.GetMostRecentTreatmentEvent();
 
-            if (NotificationStatus == NotificationStatus.Notified
-                && mostRecentTreatmentEvent?.TreatmentOutcomeId != null
-                && mostRecentTreatmentEvent.TreatmentEventTypeIsOutcome)
-            {
-                return NotStillOnTreatmentAndOlderThanOneYear(mostRecentTreatmentEvent);
-            }
-
-            return false;
+            return NotificationStatus == NotificationStatus.Notified 
+                   && mostRecentTreatmentEvent?.TreatmentOutcomeId != null 
+                   && mostRecentTreatmentEvent.TreatmentEventTypeIsOutcome
+                   && NotStillOnTreatmentAndOlderThanOneYear(mostRecentTreatmentEvent);
 
             bool NotStillOnTreatmentAndOlderThanOneYear(TreatmentEvent treatmentEvent)
             {
