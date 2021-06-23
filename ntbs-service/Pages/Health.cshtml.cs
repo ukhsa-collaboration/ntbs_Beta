@@ -29,6 +29,12 @@ namespace ntbs_service.Pages
             ReportingServicesEnabled = !string.IsNullOrEmpty(reportingDbString);
 
             configuration.GetSection("ScheduledJobsConfig").Bind(ScheduledJobsConfig);
+
+            var applicationInsightsOptions = new ApplicationInsightsOptions();
+            var applicationInsightsConfig = configuration.GetSection("ApplicationInsightsOptions");
+            applicationInsightsConfig.Bind(applicationInsightsOptions);
+            ApplicationInsightsEnabled = applicationInsightsOptions.Enabled == true
+                                         && !string.IsNullOrWhiteSpace(applicationInsightsOptions.ConnectionString);
         }
 
         public string Release { get; }
@@ -37,6 +43,7 @@ namespace ntbs_service.Pages
         public bool ClusterMatchingEnabled { get; }
         public bool ReferenceLabResultsEnabled { get; }
         public bool ReportingServicesEnabled { get; }
+        public bool ApplicationInsightsEnabled { get; }
 
         public ScheduledJobsConfig ScheduledJobsConfig { get; } = new ScheduledJobsConfig();
     }
