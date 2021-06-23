@@ -82,6 +82,7 @@ namespace ntbs_service_unit_tests.Models.Entities
                     {
                         TreatmentEventType = TreatmentEventType.TreatmentOutcome,
                         TreatmentOutcomeId = 7,
+                        TreatmentOutcome = null,
                         EventDate = new DateTime(2003, 4, 15)
                     }
                 }

@@ -119,17 +119,21 @@ namespace ntbs_service.Models.Entities
                 && mostRecentTreatmentEvent?.TreatmentOutcomeId != null
                 && mostRecentTreatmentEvent.TreatmentEventTypeIsOutcome)
             {
-                if (mostRecentTreatmentEvent.TreatmentOutcome == null)
+                return NotStillOnTreatmentAndOlderThanOneYear(mostRecentTreatmentEvent);
+            }
+
+            return false;
+
+            bool NotStillOnTreatmentAndOlderThanOneYear(TreatmentEvent treatmentEvent)
+            {
+                if (treatmentEvent.TreatmentOutcome == null)
                 {
                     throw new ApplicationException("ShouldBeClosed cannot be called without loaded outcome events.");
                 }
 
-                return mostRecentTreatmentEvent.TreatmentOutcome != null
-                       && mostRecentTreatmentEvent.TreatmentOutcome.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment
-                       && mostRecentTreatmentEvent.EventDate < DateTime.Today.AddYears(-1);
+                return treatmentEvent.TreatmentOutcome.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment 
+                       && treatmentEvent.EventDate < DateTime.Today.AddYears(-1);
             }
-
-            return false;
         }
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;

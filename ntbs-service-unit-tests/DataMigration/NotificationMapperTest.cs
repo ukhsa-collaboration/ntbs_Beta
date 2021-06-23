@@ -648,7 +648,7 @@ namespace ntbs_service_unit_tests.DataMigration
 
         // Data for this has been taken from an edited test notification, relating to NTBS-2478
         [Fact]
-        public async Task mapperDoesNotCloseNotificationIncorrectly()
+        public async Task whenLastTreatmentEventIsOutcomeStillOnTreatment_DoNotCloseNotificationDuringMapping()
         {
             // Arrange
             const int runId = 12345;
