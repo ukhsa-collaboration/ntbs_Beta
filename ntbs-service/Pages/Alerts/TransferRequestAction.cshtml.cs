@@ -151,7 +151,8 @@ namespace ntbs_service.Pages.Alerts
             Service.UpdateHospitalDetailsWithoutSave(Notification, Notification.HospitalDetails);
             _treatmentEventRepository.AddWithoutSave(transferOutEvent);
             _treatmentEventRepository.AddWithoutSave(transferInEvent);
-            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.Username());
+            await _alertService.DismissAlertWithoutSaveAsync(TransferAlert.AlertId, User.Username());
+            await _treatmentEventRepository.SaveChangesAsync(NotificationAuditType.Edited);
         }
 
         public async Task RejectTransferAndDismissAlertAsync()

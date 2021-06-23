@@ -12,6 +12,7 @@ namespace ntbs_service.DataAccess
         void AddWithoutSave(T item);
         Task UpdateAsync(Notification notification, T item);
         Task DeleteAsync(T item);
+        Task SaveChangesAsync(NotificationAuditType auditDetails);
     }
 
     public abstract class ItemRepository<T> : IItemRepository<T> where T : class
@@ -34,7 +35,6 @@ namespace ntbs_service.DataAccess
         {
             var dbSet = GetDbSet();
             dbSet.Add(item);
-            _context.AddAuditCustomField(CustomFields.AuditDetails, NotificationAuditType.Edited);
         }
 
         public async Task UpdateAsync(Notification notification, T item)
@@ -48,6 +48,12 @@ namespace ntbs_service.DataAccess
         {
             _context.Remove(item);
             await UpdateDatabaseAsync();
+        }
+
+        public async Task SaveChangesAsync(NotificationAuditType auditDetails = NotificationAuditType.Edited)
+        {
+            _context.AddAuditCustomField(CustomFields.AuditDetails, auditDetails);
+            await _context.SaveChangesAsync();
         }
 
         private async Task UpdateDatabaseAsync()
