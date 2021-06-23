@@ -148,6 +148,10 @@ namespace ntbs_service.Pages.Alerts
             Notification.HospitalDetails.TBServiceCode = TransferAlert.TbServiceCode;
             Notification.HospitalDetails.HospitalId = TargetHospitalId;
             Notification.HospitalDetails.CaseManagerId = TargetCaseManagerId;
+            // We want to save all these changes in the same transaction so that we make sure the time between the first
+            // and last audit logs are within the timeframe for them to be grouped together on the changes page. We
+            // experienced an issue where the audits from an acceptance were over this threshold and our app didn't
+            // know how to handle the group. See NTBS-2457
             Service.UpdateHospitalDetailsWithoutSave(Notification, Notification.HospitalDetails);
             _treatmentEventRepository.AddWithoutSave(transferOutEvent);
             _treatmentEventRepository.AddWithoutSave(transferInEvent);
