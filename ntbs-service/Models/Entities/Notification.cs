@@ -73,29 +73,50 @@ namespace ntbs_service.Models.Entities
         #region Navigation Properties
 
         [AssertThat("NotificationSites.Count > 0 || !ShouldValidateFull", ErrorMessage = ValidationMessages.DiseaseSiteIsRequired)]
+        [ValidationChildEnumerable]
         public virtual List<NotificationSite> NotificationSites { get; set; }
+        [ValidationChild]
         public virtual PatientDetails PatientDetails { get; set; }
+        [ValidationChild]
         public virtual ClinicalDetails ClinicalDetails { get; set; }
+        [ValidationChild]
         public virtual HospitalDetails HospitalDetails { get; set; }
+        [ValidationChild]
         public virtual PreviousTbHistory PreviousTbHistory { get; set; }
+        [ValidationChild]
         public virtual ContactTracing ContactTracing { get; set; }
+        [ValidationChild]
         public virtual SocialRiskFactors SocialRiskFactors { get; set; }
+        [ValidationChild]
         public virtual ImmunosuppressionDetails ImmunosuppressionDetails { get; set; }
+        [ValidationChild]
         public virtual TravelDetails TravelDetails { get; set; }
+        [ValidationChild]
         public virtual VisitorDetails VisitorDetails { get; set; }
+        [ValidationChild]
         public virtual DenotificationDetails DenotificationDetails { get; set; }
+        [ValidationChild]
         public virtual ComorbidityDetails ComorbidityDetails { get; set; }
+        [ValidationChild]
         public virtual MDRDetails MDRDetails { get; set; }
+        [ValidationChild]
         public virtual NotificationGroup Group { get; set; }
+        [ValidationChild]
         public virtual TestData TestData { get; set; }
+        [ValidationChild]
         public virtual MBovisDetails MBovisDetails { get; set; }
+        [ValidationChildEnumerable]
         public virtual ICollection<Alert> Alerts { get; set; }
         [Display(Name = "Social context - venues")]
+        [ValidationChildEnumerable]
         public virtual ICollection<SocialContextVenue> SocialContextVenues { get; set; }
         [Display(Name = "Social context - addresses")]
+        [ValidationChildEnumerable]
         public virtual ICollection<SocialContextAddress> SocialContextAddresses { get; set; }
         [Display(Name = "Treatment events")]
+        [ValidationChildEnumerable]
         public virtual ICollection<TreatmentEvent> TreatmentEvents { get; set; }
+        [ValidationChild]
         public virtual DrugResistanceProfile DrugResistanceProfile { get; set; }
         public virtual ICollection<PreviousTbService> PreviousTbServices { get; set; }
 
