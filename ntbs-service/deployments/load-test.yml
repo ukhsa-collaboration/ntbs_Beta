@@ -56,6 +56,11 @@ spec:
               secretKeyRef:
                 name: load-test-connection-strings
                 key: migrationDb
+          - name: ApplicationInsightsOptions__ConnectionString
+            valueFrom:
+              secretKeyRef:
+                name: load-test-connection-strings
+                key: applicationInsights
           - name: AdOptions__UseDummyAuth
             value: "true"
           - name: MigrationConfig__NtbsEnvironment
@@ -72,6 +77,10 @@ spec:
             value: "development"
           - name: EnvironmentDescription__EnvironmentName
             value: "azure-load-test"
+          - name: ApplicationInsightsOptions__Enabled
+            value: "true"
+          - name: ApplicationInsightsOptions__EnableSqlCommandTextInstrumentation
+            value: "true"
         resources:
           limits:
             cpu: 500m
