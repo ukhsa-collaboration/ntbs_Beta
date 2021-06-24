@@ -32,6 +32,9 @@
         public bool ReportingDataProcessingJobEnabled { get; set; }
         public string ReportingDataProcessingJobCron { get; set; }
 
+        public bool UpdateTableCountsJobEnabled { get; set; }
+        public string UpdateTableCountsJobCron { get; set; }
+
         public bool GenericStoredProcedureJobEnabled { get; set; }
         public string GenericStoredProcedureJobCron { get; set; }
         public string GenericStoredProcedureNameToRun { get; set; }

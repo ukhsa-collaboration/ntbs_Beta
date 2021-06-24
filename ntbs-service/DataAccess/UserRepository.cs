@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ntbs_service.Models.Entities;
@@ -59,6 +60,7 @@ namespace ntbs_service.DataAccess
 
         public async Task AddUserLoginEvent(UserLoginEvent userLoginEvent)
         {
+            _context.AddAuditCustomField(CustomFields.AppUser, userLoginEvent.Username);
             await _context.UserLoginEvent.AddAsync(userLoginEvent);
             await _context.SaveChangesAsync();
         }
