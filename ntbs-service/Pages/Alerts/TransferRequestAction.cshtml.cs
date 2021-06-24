@@ -86,7 +86,7 @@ namespace ntbs_service.Pages.Alerts
             Hospitals = new SelectList(hospitals,
                 nameof(Hospital.HospitalId),
                 nameof(Hospital.Name));
-            var caseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(
+            var caseManagers = await _referenceDataRepository.GetActiveCaseManagersByTbServiceCodesAsync(
                 new List<string> { TransferAlert.TbServiceCode });
             CaseManagers = new SelectList(caseManagers,
                 nameof(Models.Entities.User.Id),

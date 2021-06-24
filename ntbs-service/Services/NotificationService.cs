@@ -452,7 +452,7 @@ namespace ntbs_service.Services
         private async Task<int?> GetDefaultCaseManagerId(ClaimsPrincipal user, string tbServiceCode)
         {
             var caseManagersForTbService =
-                await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(new List<string> { tbServiceCode });
+                await _referenceDataRepository.GetActiveCaseManagersByTbServiceCodesAsync(new List<string> { tbServiceCode });
             var username = user.Username();
             var upperUserEmail = username?.ToUpperInvariant();
 

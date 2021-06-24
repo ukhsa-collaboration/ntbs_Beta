@@ -412,7 +412,7 @@ namespace ntbs_service_unit_tests.Services
 
             _mockUserService.Setup(c => c.GetDefaultTbService(mockPrincipal1.Object)).Returns(Task.FromResult(tbService));
             _mockReferenceDataRepository
-                .Setup(c => c.GetCaseManagersByTbServiceCodesAsync(new List<string> { serviceCode }))
+                .Setup(c => c.GetActiveCaseManagersByTbServiceCodesAsync(new List<string> { serviceCode }))
                 .Returns(Task.FromResult((IList<User>)(new List<User> { user1, user2 })));
 
             // Act
