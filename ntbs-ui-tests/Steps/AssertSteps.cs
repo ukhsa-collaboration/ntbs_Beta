@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -158,11 +158,11 @@ namespace ntbs_ui_tests.Steps
                 using (var context = new NtbsContext(options.Options))
                 {
                     var alertType = Enum.Parse<AlertType>(title);
-                    var alert = context.Alert
+                    var matchingAlertsForNotificationInTest = context.Alert
                         .Where(a => a.NotificationId.HasValue
                                     && TestContext.AddedNotificationIds.Contains(a.NotificationId.Value)
                                     && a.AlertType == alertType);
-                    Assert.NotNull(alert);
+                    Assert.NotEmpty(matchingAlertsForNotificationInTest);
                 }
             });
         }
