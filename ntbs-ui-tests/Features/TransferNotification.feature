@@ -16,10 +16,10 @@ Feature: Transfer notification
     And I enter Patient likes travel into 'TransferRequest_OtherReasonDescription'
     And I enter I hope your service is doing well into 'TransferRequest_TransferRequestNote'
     And I click on the 'confirm-transfer-button' button
-    And I wait
+    Then I should see the Notification
+    And An alert has been created for the notification with type TransferRequest
 
   Scenario: Pending transfer page has correct values
-    Then I should see the Notification
     When I expand manage notification section
     And I click on the 'transfer-button' button
 

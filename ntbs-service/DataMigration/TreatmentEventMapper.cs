@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration.RawModels;
@@ -48,6 +49,11 @@ namespace ntbs_service.DataMigration
                 TreatmentOutcomeId = rawEvent.TreatmentOutcomeId,
                 Note = rawEvent.Note
             };
+            if (ev.TreatmentOutcomeId != null)
+            {
+                ev.TreatmentOutcome = Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes()
+                    .Single(oc => oc.TreatmentOutcomeId == ev.TreatmentOutcomeId);
+            }
 
             await TryAddTbServiceAndCaseManagerToTreatmentEvent(ev, rawEvent.NtbsHospitalId, rawEvent.CaseManager);
 

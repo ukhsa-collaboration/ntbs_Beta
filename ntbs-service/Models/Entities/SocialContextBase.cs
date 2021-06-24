@@ -36,6 +36,7 @@ namespace ntbs_service.Models.Entities
         public DateTime? DateTo { get; set; }
 
         [MaxLength(250)]
+        [ContainsNoTabs]
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
             ErrorMessage = ValidationMessages.InvalidCharacter)]

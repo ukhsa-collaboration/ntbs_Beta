@@ -51,7 +51,7 @@
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="bold-label"> Case manager </dt>
                 <dd class="cell-min-height" id="banner-case-manager">
-                     @if (!Model.CaseManagerId.HasValue)
+                     @if (!Model.CaseManagerId.HasValue || Model.CaseManagerIsActive != true)
                      {
                          @Model.CaseManager
                      }

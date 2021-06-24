@@ -98,6 +98,30 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
+        public async Task PostDraft_ReturnsPageWithTabError_IfNotesContainTabs()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.DRAFT_ID);
+            var initialDocument = await GetDocumentForUrlAsync(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
+                ["NotificationSiteMap[PULMONARY]"] = "true",
+                ["ClinicalDetails.Notes"] = "Notes\t",
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+
+            result.EnsureSuccessStatusCode();
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-Notes", "notes", "Notes cannot contain tabs. Use spaces instead");
+        }
+
+        [Fact]
         public async Task PostNotified_ReturnsPageWithAllModelErrors_IfModelNotValid()
         {
             // Arrange

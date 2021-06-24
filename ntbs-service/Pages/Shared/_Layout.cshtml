@@ -5,25 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - NTBS</title>
     <link rel="stylesheet" href="~/dist/main.css" asp-append-version="true">
+    @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
     <div id="app">
         <div>
             @RenderSection("SkipLink", false)
             @* nhs-main-wrapper renders <main id="maincontent"></main> *@
-            <a nhs-anchor-type="SkipLink" href="#maincontent">Skip navigation</a> 
-            
+            <a nhs-anchor-type="SkipLink" href="#maincontent">Skip navigation</a>
+
             <partial name="./_Header.cshtml" />
-            
+
             <nhs-main-wrapper classes="main-wrapper">
                 @RenderBody()
             </nhs-main-wrapper>
 
             <partial name="./_Footer.cshtml" />
-                
+
             <inactivity-checker> </inactivity-checker>
         </div>
-        
+
         <vue-accessible-modal/>
     </div>
 
