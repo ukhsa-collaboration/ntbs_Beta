@@ -19,6 +19,7 @@ namespace ntbs_service.Services
         Task AddUniquePotentialDuplicateAlertAsync(DataQualityPotentialDuplicateAlert alert);
         Task<bool> AddUniqueOpenAlertAsync<T>(T alert) where T : Alert;
         Task DismissAlertAsync(int alertId, string userId);
+        Task DismissAlertWithoutSaveAsync(int alertId, string userId);
         Task AutoDismissAlertAsync<T>(Notification notification) where T : Alert;
         Task DismissMatchingAlertAsync<T>(int notificationId, string auditUsername = AuditService.AuditUserSystem) where T : Alert;
         Task DismissAllOpenAlertsForNotification(int notificationId);
@@ -53,6 +54,18 @@ namespace ntbs_service.Services
                 alert.AlertStatus = AlertStatus.Closed;
 
                 await _alertRepository.SaveAlertChangesAsync();
+            }
+        }
+
+        public async Task DismissAlertWithoutSaveAsync(int alertId, string userId)
+        {
+            var alert = await _alertRepository.GetOpenAlertByIdAsync(alertId);
+
+            if (alert != null)
+            {
+                alert.ClosingUserId = userId;
+                alert.ClosureDate = DateTime.Now;
+                alert.AlertStatus = AlertStatus.Closed;
             }
         }
 
