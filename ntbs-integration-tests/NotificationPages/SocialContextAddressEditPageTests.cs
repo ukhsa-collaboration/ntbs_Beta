@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -7,6 +7,7 @@ using ntbs_service;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -183,7 +184,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             result.AssertValidationErrorResponse();
-            resultDocument.AssertErrorMessage("date-to", "To must be later than date from");
+            resultDocument.AssertErrorMessage("date-to", ValidationMessages.VenueDateToShouldBeLaterThanDateFrom);
         }
 
         [Fact]
@@ -241,7 +242,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert check just response.Content
             var result = await response.Content.ReadAsStringAsync();
-            Assert.Contains("To must be later than date from", result);
+            Assert.Contains(ValidationMessages.VenueDateToShouldBeLaterThanDateFrom, result);
         }
 
         [Fact]
