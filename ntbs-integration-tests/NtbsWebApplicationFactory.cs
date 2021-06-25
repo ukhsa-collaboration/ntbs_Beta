@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using EFAuditer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_integration_tests.Helpers;
 using ntbs_service.DataAccess;
@@ -26,6 +28,19 @@ namespace ntbs_integration_tests
 
             builder.UseSerilog();
             builder.UseEnvironment("CI");
+
+            // Running the tests through XUnit creates many versions of the web app at once. If each one is watching
+            // config files, then we are prone to seeing the error: "System.IO.IOException: The configured user limit (128)
+            // on the number of inotify instances has been reached." (and, indeed, we were seeing this when running the
+            // tests through Github Actions). Here we disable the watching of these config files.
+            // See https://stackoverflow.com/questions/60295562/turn-reloadonchange-off-in-config-source-for-webapplicationfactory
+            builder.ConfigureAppConfiguration(config =>
+            {
+                foreach (var source in config.Sources.OfType<JsonConfigurationSource>())
+                {
+                    source.ReloadOnChange = false;
+                }
+            });
 
             builder.ConfigureServices(services =>
             {
