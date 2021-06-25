@@ -71,7 +71,7 @@ namespace ntbs_service_unit_tests.Models.Entities
         }
 
         [Fact]
-        public void ShouldBeClosedThrowsExceptionWhenOutcomeNotLoaded()
+        public void ShouldBeClosedFalseWhenFetchedOutcomeIsStillOnTreatment()
         {
             // Arrange
             var notification = new Notification
@@ -81,7 +81,7 @@ namespace ntbs_service_unit_tests.Models.Entities
                     new TreatmentEvent
                     {
                         TreatmentEventType = TreatmentEventType.TreatmentOutcome,
-                        TreatmentOutcomeId = 7,
+                        TreatmentOutcomeId = 16,
                         TreatmentOutcome = null,
                         EventDate = new DateTime(2003, 4, 15)
                     }
@@ -89,7 +89,7 @@ namespace ntbs_service_unit_tests.Models.Entities
             };
 
             // Assert
-            Assert.Throws<ApplicationException>(() => notification.ShouldBeClosed());
+            Assert.False(notification.ShouldBeClosed());
         }
     }
 }

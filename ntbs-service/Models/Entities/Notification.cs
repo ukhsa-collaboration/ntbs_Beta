@@ -122,12 +122,11 @@ namespace ntbs_service.Models.Entities
 
             bool NotStillOnTreatmentAndOlderThanOneYear(TreatmentEvent treatmentEvent)
             {
-                if (treatmentEvent.TreatmentOutcome == null)
-                {
-                    throw new ApplicationException("ShouldBeClosed cannot be called without loaded outcome events.");
-                }
+                var treatmentOutcome = treatmentEvent.TreatmentOutcome
+                                       ?? SeedData.TreatmentOutcomes.GetTreatmentOutcomes()
+                                           .Single(oc => oc.TreatmentOutcomeId == treatmentEvent.TreatmentOutcomeId);
 
-                return treatmentEvent.TreatmentOutcome.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment 
+                return treatmentOutcome.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment 
                        && treatmentEvent.EventDate < DateTime.Today.AddYears(-1);
             }
         }
