@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using AngleSharp.Html.Dom;
 using Newtonsoft.Json;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
@@ -314,8 +315,24 @@ namespace ntbs_integration_tests.NotificationPages
             var initialDocument = await GetDocumentForUrlAsync(url);
 
             // Assert
-            var caseManagerDropdown = initialDocument.GetElementById("HospitalDetails_CaseManagerId");
-            Assert.Contains(Utilities.CASEMANAGER_GATESHEAD_INACTIVE_DISPLAY_NAME, caseManagerDropdown.Children.Select(c => c.TextContent));
+            var caseManagerDropdown = (IHtmlSelectElement)initialDocument.GetElementById("HospitalDetails_CaseManagerId");
+            Assert.Contains(Utilities.CASEMANAGER_GATESHEAD_INACTIVE_DISPLAY_NAME, caseManagerDropdown.Options.Select(c => c.Label));
+        }
+
+        [Fact]
+        public async Task OnGetNotifiedWithActiveCaseManager_HasNoInactiveCaseManagerInDropdown()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_WITH_ACTIVE_HOSPITAL;
+            var url = GetCurrentPathForId(id);
+            var initialDocument = await GetDocumentForUrlAsync(url);
+
+            // Assert
+            var caseManagerDropdown = (IHtmlSelectElement)initialDocument.GetElementById("HospitalDetails_CaseManagerId");
+            var caseManagerOptions = caseManagerDropdown.Options
+                .Where(option => !string.IsNullOrEmpty(option.Value))
+                .Select(option => new OptionValue {Text = option.TextContent, Value = option.Value});
+            AssertAreGatesheadCaseManagers(caseManagerOptions);
         }
 
         [Fact]
