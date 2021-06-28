@@ -58,6 +58,17 @@ namespace ntbs_integration_tests.NotificationPages
                 },
                 new Notification
                 {
+                    NotificationId = Utilities.NOTIFIED_WITH_INACTIVE_CASEMANAGER,
+                    NotificationStatus = NotificationStatus.Notified,
+                    HospitalDetails = new HospitalDetails
+                    {
+                        TBServiceCode = Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID,
+                        HospitalId = Guid.Parse(Utilities.HOSPITAL_SOUTH_TYNESIDE_DISTRICT_HOSPITAL_ID),
+                        CaseManagerId = Utilities.CASEMANAGER_GATESHEAD_INACTIVE_ID,
+                    }
+                },
+                new Notification
+                {
                     NotificationId = Utilities.NOTIFIED_WITH_LEGACY_HOSPITAL,
                     NotificationStatus = NotificationStatus.Notified,
                     HospitalDetails = new HospitalDetails
@@ -282,6 +293,46 @@ namespace ntbs_integration_tests.NotificationPages
                 ["HospitalDetails.TBServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["HospitalDetails.Consultant"] = "Consultant",
                 ["HospitalDetails.CaseManagerId"] = Utilities.CASEMANAGER_ABINGDON_ID.ToString(),
+                ["FormattedNotificationDate.Day"] = "1",
+                ["FormattedNotificationDate.Month"] = "1",
+                ["FormattedNotificationDate.Year"] = "2012",
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task OnGetNotifiedWithInactiveCaseManager_HasCaseManagerInDropdown()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_WITH_INACTIVE_CASEMANAGER;
+            var url = GetCurrentPathForId(id);
+            var initialDocument = await GetDocumentForUrlAsync(url);
+
+            // Assert
+            var caseManagerDropdown = initialDocument.GetElementById("HospitalDetails_CaseManagerId");
+            Assert.Contains(Utilities.CASEMANAGER_GATESHEAD_INACTIVE_DISPLAY_NAME, caseManagerDropdown.Children.Select(c => c.TextContent));
+        }
+
+        [Fact]
+        public async Task PostNotified_WithInactiveCaseManager_RedirectToNextPage_IfModelIsValid()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_WITH_INACTIVE_CASEMANAGER;
+            var url = GetCurrentPathForId(id);
+            var initialDocument = await GetDocumentForUrlAsync(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = id.ToString(),
+                ["HospitalDetails.HospitalId"] = Utilities.HOSPITAL_DUNSTON_HILL_HOSPITAL_GATESHEAD_ID,
+                ["HospitalDetails.TBServiceCode"] = Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID,
+                ["HospitalDetails.Consultant"] = "Consultant",
+                ["HospitalDetails.CaseManagerId"] = Utilities.CASEMANAGER_GATESHEAD_INACTIVE_ID.ToString(),
                 ["FormattedNotificationDate.Day"] = "1",
                 ["FormattedNotificationDate.Month"] = "1",
                 ["FormattedNotificationDate.Year"] = "2012",
