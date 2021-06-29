@@ -177,19 +177,61 @@ namespace ntbs_service_unit_tests.DataMigration
             // Arrange
             var notification = new Notification
             {
-                TestData = new TestData { ManualTestResults = new List<ManualTestResult>() },
-                ClinicalDetails = new ClinicalDetails { Notes = " Clinical\t  notes" },
-                SocialContextAddresses = new List<SocialContextAddress>
+                PatientDetails = new PatientDetails
                 {
-                    new SocialContextAddress { Address = "221B Baker St., London", Details = "  Elementary,\tWatson " }
+                    GivenName = " Sher\tlock  ",
+                    FamilyName = "Holm\t es",
+                    LocalPatientId = "  PatientID\t1234 ",
+                    Address = " 123 \t Some Street  ",
+                    Postcode = " NW1\t6XE  ",
+                    OccupationOther = "  Detective \tWork "
                 },
-                SocialContextVenues = new List<SocialContextVenue>
+                ClinicalDetails = new ClinicalDetails
                 {
-                    new SocialContextVenue { Address = "32 Windsor Gardens", Details = "  Peruvian\tbears " }
+                    Notes = " Clinical\t  notes",
+                    HealthcareDescription = " health \t\t care  ",
+                    TreatmentRegimenOtherDescription = " treatment \t regimen "
+                },
+                HospitalDetails = new HospitalDetails {  Consultant = " Dr\tJohn\tDorian  " },
+                ImmunosuppressionDetails = new ImmunosuppressionDetails
+                {
+                    OtherDescription = "  immune  system\tsuppressed "
+                },
+                DenotificationDetails = new DenotificationDetails
+                {
+                    OtherDescription = "  notification was  a\tmistake   "
+                },
+                MDRDetails = new MDRDetails
+                {
+                    RelationshipToCase = "  mystery\tsolving partner   "
+                },
+                TestData = new TestData { ManualTestResults = new List<ManualTestResult>() },
+                NotificationSites = new List<NotificationSite>
+                {
+                    new NotificationSite { SiteDescription = " Hair\tand fingernails  "}
                 },
                 TreatmentEvents = new List<TreatmentEvent>
                 {
                     new TreatmentEvent{ EventDate = new DateTime(1899, 3, 3), Note = " A \tnote   " }
+                },
+                SocialContextAddresses = new List<SocialContextAddress>
+                {
+                    new SocialContextAddress
+                    {
+                        Address = " 221B\tBaker St., London   ",
+                        Details = "  Elementary,\tWatson ",
+                        Postcode = " NW1\t6XE  "
+                    }
+                },
+                SocialContextVenues = new List<SocialContextVenue>
+                {
+                    new SocialContextVenue
+                    {
+                        Address = "  32 Windsor\tGardens ",
+                        Details = "  Peruvian\tbears ",
+                        Name = "      Favourite bear's\thouse   ",
+                        Postcode = "  W9\t3RG "
+                    }
                 },
                 MBovisDetails = new MBovisDetails
                 {
@@ -220,10 +262,36 @@ namespace ntbs_service_unit_tests.DataMigration
             await _importValidator.CleanAndValidateNotification(null, RunId, notification);
 
             // Assert
+            Assert.Equal("Sher lock", notification.PatientDetails.GivenName);
+            Assert.Equal("Holm  es", notification.PatientDetails.FamilyName);
+            Assert.Equal("PatientID 1234", notification.PatientDetails.LocalPatientId);
+            Assert.Equal("123   Some Street", notification.PatientDetails.Address);
+            Assert.Equal("NW1 6XE", notification.PatientDetails.Postcode);
+            Assert.Equal("Detective  Work", notification.PatientDetails.OccupationOther);
+
             Assert.Equal("Clinical   notes", notification.ClinicalDetails.Notes);
-            Assert.Equal("Elementary, Watson", notification.SocialContextAddresses.First().Details);
-            Assert.Equal("Peruvian bears", notification.SocialContextVenues.First().Details);
+            Assert.Equal("health    care", notification.ClinicalDetails.HealthcareDescription);
+            Assert.Equal("treatment   regimen", notification.ClinicalDetails.TreatmentRegimenOtherDescription);
+
+            Assert.Equal("Dr John Dorian", notification.HospitalDetails.Consultant);
+            Assert.Equal("immune  system suppressed", notification.ImmunosuppressionDetails.OtherDescription);
+            Assert.Equal("notification was  a mistake", notification.DenotificationDetails.OtherDescription);
+            Assert.Equal("mystery solving partner", notification.MDRDetails.RelationshipToCase);
+
+            Assert.Equal("Hair and fingernails", notification.NotificationSites.First().SiteDescription);
             Assert.Equal("A  note", notification.TreatmentEvents.First().Note);
+
+            var socialContextAddress = notification.SocialContextAddresses.First();
+            Assert.Equal("221B Baker St., London", socialContextAddress.Address);
+            Assert.Equal("Elementary, Watson", socialContextAddress.Details);
+            Assert.Equal("NW1 6XE", socialContextAddress.Postcode);
+
+            var socialContextVenue = notification.SocialContextVenues.First();
+            Assert.Equal("32 Windsor Gardens", socialContextVenue.Address);
+            Assert.Equal("Peruvian bears", socialContextVenue.Details);
+            Assert.Equal("Favourite bear's house", socialContextVenue.Name);
+            Assert.Equal("W9 3RG", socialContextVenue.Postcode);
+
             Assert.Equal("His sister", notification.MBovisDetails.MBovisExposureToKnownCases.First().OtherDetails);
             Assert.Equal("A friend at work", notification.MBovisDetails.MBovisOccupationExposures.First().OtherDetails);
             Assert.Equal("Cows and  badgers", notification.MBovisDetails.MBovisAnimalExposures.First().OtherDetails);
