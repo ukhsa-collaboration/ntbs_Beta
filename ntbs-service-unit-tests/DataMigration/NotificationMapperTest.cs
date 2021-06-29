@@ -646,6 +646,32 @@ namespace ntbs_service_unit_tests.DataMigration
                 , notification.DenotificationDetails.OtherDescription);
         }
 
+        [Fact]
+        public async Task correctlyMaps_TravelAndVisitorNumbersToNullWhenNoCountriesAddedWithStatusOfYes()
+        {
+            // Arrange
+            const int runId = 12345;
+            var legacyIds = new List<string> { "130991" };
+            SetupNotificationsInGroups(("130991", "12"));
+
+            const string royalBerkshireCode = "TBS001";
+            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
+            {
+                {new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A"), new TBService {Code = royalBerkshireCode}},
+            };
+
+            // Act
+            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
+                    runId,
+                    legacyIds))
+                .SelectMany(group => group)
+                .Single();
+
+            // Assert
+            Assert.Null(notification.TravelDetails.TotalNumberOfCountries);
+            Assert.Null(notification.VisitorDetails.TotalNumberOfCountries);
+        }
+
         private void SetupNotificationsInGroups(params (string, string)[] legacyIdAndLegacyGroup)
         {
             var grouped = new List<(string notificationId, string groupId)>(legacyIdAndLegacyGroup)
