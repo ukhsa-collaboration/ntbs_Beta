@@ -81,6 +81,8 @@ spec:
             value: "true"
           - name: ApplicationInsightsOptions__EnableSqlCommandTextInstrumentation
             value: "true"
+          - name: ApplicationInsightsOptions__EnableProfiler
+            value: "false"
         resources:
           limits:
             cpu: 500m
