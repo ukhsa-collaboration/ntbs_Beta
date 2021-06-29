@@ -26,6 +26,7 @@ namespace ntbs_integration_tests.Helpers
         public IEnumerable<string> AdGroups { get; }
         public IEnumerable<string> TbServiceCodes { get; }
         public bool IsReadOnly { get; }
+        public bool IsActive { get; }
 
         private TestUser(
             int id,
@@ -34,7 +35,8 @@ namespace ntbs_integration_tests.Helpers
             UserType type,
             IEnumerable<string> adGroups,
             IEnumerable<string> tbServiceCodes = null,
-            bool isReadOnly = false)
+            bool isReadOnly = false,
+            bool isActive = true)
         {
             Id = id;
             Username = username;
@@ -43,6 +45,7 @@ namespace ntbs_integration_tests.Helpers
             AdGroups = adGroups;
             TbServiceCodes = tbServiceCodes ?? new List<string>();
             IsReadOnly = isReadOnly;
+            IsActive = isActive;
         }
 
         public static IEnumerable<TestUser> GetAll() => new[]
@@ -55,6 +58,7 @@ namespace ntbs_integration_tests.Helpers
             AbingdonCaseManager2,
             GatesheadCaseManager,
             GatesheadCaseManager2,
+            InactiveGatesheadCaseManager,
             Developer,
             ReadOnlyUser
         };
@@ -123,6 +127,15 @@ namespace ntbs_integration_tests.Helpers
             UserType.NhsUser,
             new[] { "App.Auth.NIS.NTBS.Service_Gateshead" },
             tbServiceCodes: new[] { Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID });
+
+        public static TestUser InactiveGatesheadCaseManager = new TestUser(
+            Utilities.CASEMANAGER_GATESHEAD_INACTIVE_ID,
+            Utilities.CASEMANAGER_GATESHEAD_INACTIVE_EMAIL,
+            Utilities.CASEMANAGER_GATESHEAD_INACTIVE_DISPLAY_NAME,
+            UserType.NhsUser,
+            new[] { "App.Auth.NIS.NTBS.Service_Gateshead" },
+            tbServiceCodes: new[] { Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID },
+            isActive: false);
 
         public static TestUser Developer = new TestUser(
             7890,
