@@ -18,6 +18,7 @@ namespace ntbs_service.Models.Entities
         [AssertThat(nameof(ExposureToKnownCasesStatusIsValid), ErrorMessage = ValidationMessages.HasNoExposureRecords)]
         [Display(Name = "Has the patient been exposed to a known TB case?")]
         public Status? ExposureToKnownCasesStatus { get; set; }
+        [ValidationChildEnumerable]
         public virtual ICollection<MBovisExposureToKnownCase> MBovisExposureToKnownCases { get; set; }
 
         [NotMapped]
@@ -36,6 +37,7 @@ namespace ntbs_service.Models.Entities
         [AssertThat(nameof(UnpasteurisedMilkConsumptionStatusIsValid), ErrorMessage = ValidationMessages.HasNoUnpasteurisedMilkConsumptionRecords)]
         [Display(Name = "Has the patient consumed unpasteurised milk products?")]
         public Status? UnpasteurisedMilkConsumptionStatus { get; set; }
+        [ValidationChildEnumerable]
         public virtual ICollection<MBovisUnpasteurisedMilkConsumption> MBovisUnpasteurisedMilkConsumptions { get; set; }
 
         [NotMapped]
@@ -54,6 +56,7 @@ namespace ntbs_service.Models.Entities
         [AssertThat(nameof(OccupationExposureStatusIsValid), ErrorMessage = ValidationMessages.HasNoOccupationExposureRecords)]
         [Display(Name = "Is there a possible occupational exposure to M. bovis?")]
         public Status? OccupationExposureStatus { get; set; }
+        [ValidationChildEnumerable]
         public virtual ICollection<MBovisOccupationExposure> MBovisOccupationExposures { get; set; }
 
         [NotMapped]
@@ -72,6 +75,7 @@ namespace ntbs_service.Models.Entities
         [AssertThat(nameof(AnimalExposureStatusIsValid), ErrorMessage = ValidationMessages.HasNoAnimalExposureRecords)]
         [Display(Name = "Has the patient been exposed to animals?")]
         public Status? AnimalExposureStatus { get; set; }
+        [ValidationChildEnumerable]
         public virtual ICollection<MBovisAnimalExposure> MBovisAnimalExposures { get; set; }
 
         [NotMapped]

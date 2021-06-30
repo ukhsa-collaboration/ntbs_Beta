@@ -42,7 +42,7 @@ namespace ntbs_service.Models.Entities
             || NotificationId == default
             || ExposureNotificationId.Value != NotificationId;
 
-        [MaxLength(150)]
+        [MaxLength(250)]
         [ContainsNoTabs]
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,

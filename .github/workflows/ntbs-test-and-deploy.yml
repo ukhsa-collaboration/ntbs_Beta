@@ -2,7 +2,7 @@ name: publish to int
 
 on:
   push:
-    branches: [ master, live ]
+    branches: [ master, live, future-work ]
 
 jobs:
   publish-job:
@@ -45,6 +45,7 @@ jobs:
           command: |
             chmod +x ./scripts/release.sh
             ./scripts/release.sh int ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
+
       # Notify slack
       - name: The job has succeeded for master
         if: ${{ success() && github.ref == 'refs/heads/master' }}
@@ -59,15 +60,15 @@ jobs:
           SLACK_ICON_EMOJI: ':octopus:'
           SLACK_FOOTER: ''
 
-      - name: The job has succeeded for live
-        if: ${{ success() && github.ref == 'refs/heads/live' }}
+      - name: The job has succeeded for another branch
+        if: ${{ success() && github.ref != 'refs/heads/master' }}
         uses: rtCamp/action-slack-notify@v2.1.0
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_CHANNEL: '#dev-ci'
           SLACK_USERNAME: github actions
           SLACK_COLOR: '#23b828' #green
-          SLACK_MESSAGE: Docker image for live branch is available as ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
+          SLACK_MESSAGE: Docker image for ${{ github.ref }} is available as ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
           SLACK_TITLE: ':green_heart: :computer: Build succeeded'
           SLACK_ICON_EMOJI: ':octopus:'
           SLACK_FOOTER: ''

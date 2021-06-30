@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using ntbs_service.Helpers;
@@ -45,6 +46,17 @@ namespace ntbs_service.Models.Entities
 
         public bool IsMBovisQuestionnaireComplete =>
             DrugResistanceHelper.IsMBovisQuestionnaireComplete(MBovisDetails);
+
+        public ICollection<TreatmentEvent> GetTreatmentEventsWithStartingEvent()
+        {
+            var treatmentEvents = TreatmentEvents.ToList();
+            if (NotificationStatus == NotificationStatus.Draft && ClinicalDetails.StartingDate != null)
+            {
+                treatmentEvents.Add(NotificationHelper.CreateTreatmentStartEvent(this));
+            }
+
+            return treatmentEvents;
+        }
 
         public override bool? IsLegacy => LTBRID != null || ETSID != null;
 

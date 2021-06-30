@@ -89,6 +89,27 @@ namespace ntbs_integration_tests.NotificationPages
                 {
                     NotificationId = Utilities.NOTIFICATION_FOR_ADD_TREATMENT_OUTCOME,
                     NotificationStatus = NotificationStatus.Notified
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.DRAFT_WITH_DIAGNOSIS_DATE,
+                    NotificationStatus = NotificationStatus.Draft,
+                    ClinicalDetails = new ClinicalDetails { DiagnosisDate = DateTime.Parse("2021-06-01") }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.DRAFT_WITH_TREATMENT_START_DATE,
+                    NotificationStatus = NotificationStatus.Draft,
+                    ClinicalDetails = new ClinicalDetails
+                    {
+                        TreatmentStartDate = DateTime.Parse("2021-05-15"),
+                        DiagnosisDate = DateTime.Parse("2021-06-01")
+                    }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.DRAFT_WITH_NO_START_DATES,
+                    NotificationStatus = NotificationStatus.Draft
                 }
             };
         }
@@ -142,6 +163,45 @@ namespace ntbs_integration_tests.NotificationPages
             // Will not duplicate check for date rendering
             Assert.Contains(TREATMENT_OUTCOME_TYPE.GetDisplayName(), treatmentOutcomeTextContent);
             Assert.Contains(TREATMENT_OUTCOME_SUBTYPE.GetDisplayName(), treatmentOutcomeTextContent);
+        }
+
+        [Theory]
+        [InlineData(Utilities.DRAFT_WITH_DIAGNOSIS_DATE, TreatmentEventType.DiagnosisMade, "01 Jun 2021")]
+        [InlineData(Utilities.DRAFT_WITH_TREATMENT_START_DATE, TreatmentEventType.TreatmentStart, "15 May 2021")]
+        public async Task GetTreatmentEvents_AddsStartingEvent_ForDraftNotification(int notificationId,
+            TreatmentEventType expectedEventType,
+            string expectedDate)
+        {
+            // Arrange
+            var url = GetCurrentPathForId(notificationId);
+
+            // Act
+            var document = await GetDocumentForUrlAsync(url);
+
+            // Assert
+            var treatmentTable = document.QuerySelector("#treatment-events");
+            Assert.NotNull(treatmentTable);
+
+            var treatmentOutcomeRow = treatmentTable.QuerySelector("#treatment-event-0");
+            Assert.NotNull(treatmentOutcomeRow);
+            var treatmentOutcomeTextContent = treatmentOutcomeRow.TextContent;
+            // Will not duplicate check for date rendering
+            Assert.Contains(expectedEventType.GetDisplayName(), treatmentOutcomeTextContent);
+            Assert.Contains(expectedDate, treatmentOutcomeTextContent);
+        }
+
+        [Fact]
+        public async Task GetTreatmentEvents_DoesNotAddStartingEvent_ForDraftWithoutStartingDates()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.DRAFT_WITH_NO_START_DATES);
+
+            // Act
+            var document = await GetDocumentForUrlAsync(url);
+
+            // Assert
+            var treatmentTable = document.QuerySelector("#treatment-events");
+            Assert.Null(treatmentTable);
         }
 
         [Fact]

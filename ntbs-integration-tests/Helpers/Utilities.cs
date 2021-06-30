@@ -38,6 +38,7 @@ namespace ntbs_integration_tests.Helpers
         public const int NOTIFIED_WITH_TBSERVICE = 10041;
         public const int DRAFT_WITH_TBSERVICE = 10042;
         public const int NOTIFIED_WITH_ACTIVE_HOSPITAL = 10043;
+        public const int NOTIFIED_WITH_INACTIVE_CASEMANAGER = 10111;
         public const int NOTIFIED_WITH_LEGACY_HOSPITAL = 10044;
         public const int MDR_DETAILS_EXIST = 10050;
 
@@ -49,6 +50,9 @@ namespace ntbs_integration_tests.Helpers
         public const int NOTIFICATION_WITH_TREATMENT_EVENTS = 10070;
         public const int NOTIFICATION_FOR_ADD_TREATMENT_OUTCOME = 10071;
         public const int NOTIFICATION_FOR_ADD_TREATMENT_RESTART = 10072;
+        public const int DRAFT_WITH_DIAGNOSIS_DATE = 10073;
+        public const int DRAFT_WITH_TREATMENT_START_DATE = 10074;
+        public const int DRAFT_WITH_NO_START_DATES = 10075;
 
         public const int CLINICAL_NOTIFICATION_EXTRA_PULMONARY_ID = 10080;
 
@@ -128,14 +132,17 @@ namespace ntbs_integration_tests.Helpers
         public const string PERMITTED_POSTCODE = "TW153AA";
         public const string UNPERMITTED_POSTCODE = "NW51TL";
         public const string CASEMANAGER_ABINGDON_EMAIL = "pheNtbs_nhsUser2@ntbs.phe.com";
+        public const string CASEMANAGER_ABINGDON_EMAIL2 = "pheNtbs_nhsUser3@ntbs.phe.com";
         public const int CASEMANAGER_ABINGDON_ID = 1234;
-        public const string CASEMANAGER_GATESHEAD_EMAIL1 = "pheNtbs_nhsUser_gateshead1@ntbs.phe.com";
         public const int CASEMANAGER_GATESHEAD_ID1 = 5431;
-        public const string CASEMANAGER_GATESHEAD_EMAIL2 = "pheNtbs_nhsUser_gateshead2@ntbs.phe.com";
+        public const string CASEMANAGER_GATESHEAD_EMAIL1 = "pheNtbs_nhsUser_gateshead1@ntbs.phe.com";
         public const string CASEMANAGER_GATESHEAD_DISPLAY_NAME1 = "Gateshead User 1";
         public const int CASEMANAGER_GATESHEAD_ID2 = 5432;
-        public const string CASEMANAGER_ABINGDON_EMAIL2 = "pheNtbs_nhsUser3@ntbs.phe.com";
+        public const string CASEMANAGER_GATESHEAD_EMAIL2 = "pheNtbs_nhsUser_gateshead2@ntbs.phe.com";
         public const string CASEMANAGER_GATESHEAD_DISPLAY_NAME2 = "Gateshead User 2";
+        public const int CASEMANAGER_GATESHEAD_INACTIVE_ID = 5433;
+        public const string CASEMANAGER_GATESHEAD_INACTIVE_EMAIL = "pheNtbs_nhsUser_gateshead3@ntbs.phe.com";
+        public const string CASEMANAGER_GATESHEAD_INACTIVE_DISPLAY_NAME = "Gateshead Inactive User";
 
         public static void SeedDatabase(NtbsContext context)
         {
@@ -198,9 +205,9 @@ namespace ntbs_integration_tests.Helpers
                 Username = user.Username,
                 DisplayName = user.DisplayName,
                 AdGroups = string.Join(',', user.AdGroups),
-                IsActive = true,
                 IsCaseManager = true,
-                IsReadOnly = user.IsReadOnly
+                IsReadOnly = user.IsReadOnly,
+                IsActive = user.IsActive
             });
         }
 
