@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Microsoft.CodeAnalysis.CodeActions;
+using Microsoft.EntityFrameworkCore;
+using ntbs_service.DataAccess;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 using ntbs_ui_tests.Helpers;
 using ntbs_ui_tests.Hooks;
@@ -33,33 +35,42 @@ namespace ntbs_ui_tests.Steps
         [Then(@"I should be on the (.*) page")]
         public void ThenIShouldBeOnPage(string pageName)
         {
-            // Remove any query string parameters
-            Assert.Equal(pageName, Browser.Url.Split('/').Last().Split('?').First());
-            // Wait for everything to load
-            if (!Settings.IsHeadless)
+            WithErrorLogging(() =>
             {
-                Thread.Sleep(2000);
-            }
+                // Remove any query string parameters
+                Assert.Equal(pageName, Browser.Url.Split('/').Last().Split('?').First());
+                // Wait for everything to load
+                if (!Settings.IsHeadless)
+                {
+                    Thread.Sleep(2000);
+                }
+            });
         }
 
         [Then(@"I should be on the Homepage")]
         public void ThenIShouldBeOnTheHomepage()
         {
-            Assert.Equal($"{Settings.EnvironmentConfig.RootUri}/", Browser.Url);
+            WithErrorLogging(() =>
+            {
+                Assert.Equal($"{Settings.EnvironmentConfig.RootUri}/", Browser.Url);
+            });
         }
 
         [Then(@"I should see the Notification")]
         public void ThenIShouldSeeTheNotification()
         {
-            const string notificationUrlRegex = @".*/Notifications/(\d+)/?(#.+)?$";
-            try
+            WithErrorLogging(() =>
             {
-                var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
-                wait.Until(ExpectedConditions.UrlMatches(notificationUrlRegex));
-            }
-            catch (WebDriverTimeoutException) {
-                Assert.Matches(notificationUrlRegex, Browser.Url);
-            }
+                const string notificationUrlRegex = @".*/Notifications/(\d+)/?(#.+)?$";
+                try
+                {
+                    var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
+                    wait.Until(ExpectedConditions.UrlMatches(notificationUrlRegex));
+                }
+                catch (WebDriverTimeoutException) {
+                    Assert.Matches(notificationUrlRegex, Browser.Url);
+                }
+            });
         }
 
         #endregion
@@ -69,39 +80,48 @@ namespace ntbs_ui_tests.Steps
         [Then(@"I should see all submission error messages")]
         public void ThenIShouldSeeAllSubmissionErrorMessages()
         {
-            var summaryText = Browser.FindElement(By.ClassName("nhsuk-error-summary")).Text;
-            Assert.Contains("Notification date is a mandatory field", summaryText);
-            Assert.Contains("Hospital is a mandatory field", summaryText);
-            Assert.Contains(ValidationMessages.DiseaseSiteIsRequired, summaryText);
-            Assert.Contains("Diagnosis date is a mandatory field", summaryText);
-            Assert.Contains("Date of birth is a mandatory field", summaryText);
-            Assert.Contains("Sex is a mandatory field", summaryText);
-            Assert.Contains("Postcode is a mandatory field", summaryText);
-            Assert.Contains("Birth country is a mandatory field", summaryText);
-            Assert.Contains("Given name is a mandatory field", summaryText);
-            Assert.Contains("NHS number is a mandatory field", summaryText);
-            Assert.Contains("Family name is a mandatory field", summaryText);
-            Assert.Contains("Ethnic group is a mandatory field", summaryText);
+            WithErrorLogging(() =>
+            {
+                var summaryText = Browser.FindElement(By.ClassName("nhsuk-error-summary")).Text;
+                Assert.Contains("Notification date is a mandatory field", summaryText);
+                Assert.Contains("Hospital is a mandatory field", summaryText);
+                Assert.Contains(ValidationMessages.DiseaseSiteIsRequired, summaryText);
+                Assert.Contains("Diagnosis date is a mandatory field", summaryText);
+                Assert.Contains("Date of birth is a mandatory field", summaryText);
+                Assert.Contains("Sex is a mandatory field", summaryText);
+                Assert.Contains("Postcode is a mandatory field", summaryText);
+                Assert.Contains("Birth country is a mandatory field", summaryText);
+                Assert.Contains("Given name is a mandatory field", summaryText);
+                Assert.Contains("NHS number is a mandatory field", summaryText);
+                Assert.Contains("Family name is a mandatory field", summaryText);
+                Assert.Contains("Ethnic group is a mandatory field", summaryText);
+            });
         }
 
         [Then(@"I can see the error '(.*)'")]
         public void ThenICanSeeTheError(string errorMessage)
         {
-            var errorSection = HtmlElementHelper.FindElementByXpath(Browser, "//*[@class='nhsuk-error-summary']");
-            Assert.Contains(errorMessage, errorSection.Text);
+            WithErrorLogging(() =>
+            {
+                var errorSection = HtmlElementHelper.FindElementByXpath(Browser, "//*[@class='nhsuk-error-summary']");
+                Assert.Contains(errorMessage, errorSection.Text);
+            });
         }
 
         [Then(@"I see the warning '(.*)' for '(.*)'")]
         public void ThenICanSeeTheWarningForId(string warningMessage, string warningId)
         {
-            var warningElement = HtmlElementHelper.FindElementById(Browser, warningId);
-            try {
-                var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
-                wait.Until(ExpectedConditions.TextToBePresentInElement(warningElement, warningMessage));
-            }
-            catch (WebDriverTimeoutException) {
-                Assert.Contains(warningElement.Text, warningMessage);
-            }
+            WithErrorLogging(() =>
+            {
+                var warningElement = HtmlElementHelper.FindElementById(Browser, warningId);
+                try {
+                    var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
+                    wait.Until(ExpectedConditions.TextToBePresentInElement(warningElement, warningMessage));
+                }
+                catch (WebDriverTimeoutException) {
+                    Assert.Contains(warningElement.Text, warningMessage);
+                }
+            });
         }
 
         #endregion
@@ -111,15 +131,40 @@ namespace ntbs_ui_tests.Steps
         [Then(@"I can see '(.*)' as the rejection note")]
         public void ThenICanSeeRejectionNote(string rejectionNote)
         {
-            var noteOnPage = Browser.FindElement(By.ClassName("rejection-note"));
-            Assert.Contains(rejectionNote, noteOnPage.Text);
+            WithErrorLogging(() =>
+            {
+                var noteOnPage = Browser.FindElement(By.ClassName("rejection-note"));
+                Assert.Contains(rejectionNote, noteOnPage.Text);
+            });
         }
 
         [Then(@"I can see the value (.*) for '(.*)' transfer information")]
         public void ThenICanSeeTransferInformationValue(string value, string title)
         {
-            var transferInformationElements = Browser.FindElements(By.ClassName("transfer-request-information"));
-            Assert.Contains(transferInformationElements, t => t.Text.Contains(title) && t.Text.Contains(value));
+            WithErrorLogging(() =>
+            {
+                var transferInformationElements = Browser.FindElements(By.ClassName("transfer-request-information"));
+                Assert.Contains(transferInformationElements, t => t.Text.Contains(title) && t.Text.Contains(value));
+            });
+        }
+
+        [Then(@"An alert has been created for the notification with type (.*)")]
+        public void ThenAnAlertHasBeenCreated(string title)
+        {
+            WithErrorLogging(() =>
+            {
+                var options = new DbContextOptionsBuilder<NtbsContext>();
+                options.UseSqlServer(Settings.EnvironmentConfig.ConnectionString);
+                using (var context = new NtbsContext(options.Options))
+                {
+                    var alertType = Enum.Parse<AlertType>(title);
+                    var matchingAlertsForNotificationInTest = context.Alert
+                        .Where(a => a.NotificationId.HasValue
+                                    && TestContext.AddedNotificationIds.Contains(a.NotificationId.Value)
+                                    && a.AlertType == alertType);
+                    Assert.NotEmpty(matchingAlertsForNotificationInTest);
+                }
+            });
         }
 
         #endregion
@@ -129,67 +174,91 @@ namespace ntbs_ui_tests.Steps
         [Then(@"I can see the correct titles for the '(.*)' table")]
         public void ThenICanSeeCorrectTitlesForTable(string tableId)
         {
-            var tableColumnTitles = HtmlElementHelper.FindElementById(Browser, tableId).FindElement(By.TagName("thead"))
-                .FindElements(By.TagName("th")).Select(title => title.Text).ToArray();
-            var expectedTitles = GetExpectedColumnsTitlesForTable(tableId);
-            Assert.Equal(tableColumnTitles.Select(titles => titles.Replace("\n", "").Replace("\r", "")), expectedTitles);
+            WithErrorLogging(() =>
+            {
+                var tableColumnTitles = HtmlElementHelper.FindElementById(Browser, tableId).FindElement(By.TagName("thead"))
+                    .FindElements(By.TagName("th")).Select(title => title.Text).ToArray();
+                var expectedTitles = GetExpectedColumnsTitlesForTable(tableId);
+                Assert.Equal(tableColumnTitles.Select(titles => titles.Replace("\n", "").Replace("\r", "")), expectedTitles);
+            });
         }
 
         [Then(@"I can see the correct labels for the '(.*)' overview section")]
         public void ThenICanSeeTheCorrectLabelsForOverviewSection(string section)
         {
-            var sectionId = HtmlElementHelper.GetSectionIdFromSection(section);
-            var expectedLabels = GetExpectedLabels(section);
-            var actualLabels = HtmlElementHelper.FindElementById(Browser, sectionId).FindElements(By.ClassName("notification-details-label"))
-                .Select(label => label.Text).ToArray();
-            Assert.Equal(expectedLabels, actualLabels);
+            WithErrorLogging(() =>
+            {
+                var sectionId = HtmlElementHelper.GetSectionIdFromSection(section);
+                var expectedLabels = GetExpectedLabels(section);
+                var actualLabels = HtmlElementHelper.FindElementById(Browser, sectionId).FindElements(By.ClassName("notification-details-label"))
+                    .Select(label => label.Text).ToArray();
+                Assert.Equal(expectedLabels, actualLabels);
+            });
         }
 
         [Then(@"A (.*) alert is present on the notification")]
         public void ThenAlertIsPresent(string alertTitle)
         {
-            var alerts = HtmlElementHelper.FindElementsByXpath(Browser, "//*[contains(@id, 'alert-')]");
-            Assert.NotNull(alerts.SingleOrDefault(a => a.Text.Contains(alertTitle)));
+            WithErrorLogging(() =>
+            {
+                var alerts = HtmlElementHelper.FindElementsByXpath(Browser, "//*[contains(@id, 'alert-')]");
+                Assert.NotNull(alerts.SingleOrDefault(a => a.Text.Contains(alertTitle)));
+            });
         }
 
         [Then(@"I can see the value '(.*)' for the field '(.*)' in the '(.*)' overview section")]
         public void ThenICanSeeValueForFieldInTheOverviewSection(string value, string field, string section)
         {
-            var sectionId =HtmlElementHelper.GetSectionIdFromSection(section);
-            var htmlId = $"{sectionId}-{field}";
-            Assert.Contains(value, HtmlElementHelper.FindElementById(Browser, htmlId).Text);
+            WithErrorLogging(() =>
+            {
+                var sectionId =HtmlElementHelper.GetSectionIdFromSection(section);
+                var htmlId = $"{sectionId}-{field}";
+                Assert.Contains(value, HtmlElementHelper.FindElementById(Browser, htmlId).Text);
+            });
         }
 
         [Then(@"I can see the value '(.*)' in the '(.*)' table overview section")]
         public void ThenICanSeeValueInTheOverviewSection(string value, string section)
         {
-            var sectionId =HtmlElementHelper.GetSectionIdFromSection(section);
-            Assert.Contains(value, HtmlElementHelper.FindElementById(Browser, sectionId).Text);
+            WithErrorLogging(() =>
+            {
+                var sectionId =HtmlElementHelper.GetSectionIdFromSection(section);
+                Assert.Contains(value, HtmlElementHelper.FindElementById(Browser, sectionId).Text);
+            });
         }
 
         [Then(@"The notification should be denotified")]
         public void ThenCurrentNotificationShouldBeDenotified()
         {
-            var notificationHeading = Browser.FindElement(By.TagName("h1")).Text;
-            Assert.Contains("Denotified", notificationHeading);
+            WithErrorLogging(() =>
+            {
+                var notificationHeading = Browser.FindElement(By.TagName("h1")).Text;
+                Assert.Contains("Denotified", notificationHeading);
+            });
         }
 
         [Then(@"The '(.*)' link is present in the '(.*)' overview section")]
         public void ThenLinkIsPresentOnOverviewSection(string linkText, string section)
         {
-            var sectionId =HtmlElementHelper.GetSectionIdFromSection(section);
-            var linkId = $"{sectionId}-{linkText}-link";
-            Assert.NotNull(HtmlElementHelper.FindElementById(Browser, linkId));
+            WithErrorLogging(() =>
+            {
+                var sectionId =HtmlElementHelper.GetSectionIdFromSection(section);
+                var linkId = $"{sectionId}-{linkText}-link";
+                Assert.NotNull(HtmlElementHelper.FindElementById(Browser, linkId));
+            });
         }
 
         [Then(@"The '(.*)' link is not present in the '(.*)' overview section")]
         public void ThenLinkIsNotPresentOnOverviewSection(string linkText, string section)
         {
-            SetImplicitWait(TimeSpan.FromSeconds(1));
-            var sectionId = HtmlElementHelper.GetSectionIdFromSection(section);
-            var linkId = $"{sectionId}-{linkText}-link";
-            Assert.Empty(HtmlElementHelper.FindElementsById(Browser, linkId));
-            SetImplicitWait(Settings.ImplicitWait);
+            WithErrorLogging(() =>
+            {
+                SetImplicitWait(TimeSpan.FromSeconds(1));
+                var sectionId = HtmlElementHelper.GetSectionIdFromSection(section);
+                var linkId = $"{sectionId}-{linkText}-link";
+                Assert.Empty(HtmlElementHelper.FindElementsById(Browser, linkId));
+                SetImplicitWait(Settings.ImplicitWait);
+            });
         }
 
         #endregion
@@ -199,26 +268,50 @@ namespace ntbs_ui_tests.Steps
         [Then(@"I can see the value (.*) for element with id '(.*)'")]
         public void ThenICanSeeValueForId(string value, string elementId)
         {
-            Assert.Contains(value, HtmlElementHelper.FindElementById(Browser, elementId).Text);
+            WithErrorLogging(() =>
+            {
+                Assert.Contains(value, HtmlElementHelper.FindElementById(Browser, elementId).Text);
+            });
         }
 
         [Then(@"The element with id '(.*)' is not present")]
         public void ThenICannotSeeTheElement(string elementId)
         {
-            SetImplicitWait(TimeSpan.FromSeconds(1));
-            Assert.Empty(HtmlElementHelper.FindElementsById(Browser, elementId));
-            SetImplicitWait(Settings.ImplicitWait);
+            WithErrorLogging(() =>
+            {
+                SetImplicitWait(TimeSpan.FromSeconds(1));
+                Assert.Empty(HtmlElementHelper.FindElementsById(Browser, elementId));
+                SetImplicitWait(Settings.ImplicitWait);
+            });
         }
 
         [Then("A new notification should have been created")]
         public void ThenNotificationCreated()
         {
-            var notificationId = GetNotificationIdAndAssertMatchFromUrl();
-            Assert.DoesNotContain(notificationId, TestContext.AddedNotificationIds);
-            TestContext.AddedNotificationIds.Add(notificationId);
+            WithErrorLogging(() =>
+            {
+                var notificationId = GetNotificationIdAndAssertMatchFromUrl();
+                Assert.DoesNotContain(notificationId, TestContext.AddedNotificationIds);
+                TestContext.AddedNotificationIds.Add(notificationId);
+            });
         }
 
         #endregion
+
+        private void WithErrorLogging(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch
+            {
+                // This is temporary debugging to help determine why certain tests sometimes fail
+                var webElement = (string)((IJavaScriptExecutor)Browser).ExecuteScript("return document.body.innerHTML;");
+                Console.WriteLine(webElement);
+                throw;
+            }
+        }
 
         private int GetNotificationIdAndAssertMatchFromUrl()
         {

@@ -30,7 +30,7 @@ namespace ntbs_service.Models.Entities
         public DateTime? DateFrom { get; set; }
 
         [AssertThat(nameof(DateToAfterDob), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
-        [AssertThat(@"DateFrom == null || DateTo > DateFrom", ErrorMessage = ValidationMessages.VenueDateToShouldBeLaterThanDateFrom)]
+        [AssertThat(@"DateFrom == null || DateTo >= DateFrom", ErrorMessage = ValidationMessages.VenueDateToShouldBeLaterThanDateFrom)]
         [ValidDateRange(ValidDates.EarliestBirthDate)]
         [Display(Name = "To")]
         public DateTime? DateTo { get; set; }

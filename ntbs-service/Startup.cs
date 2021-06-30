@@ -8,12 +8,15 @@ using EFAuditer;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.SqlServer;
+using Microsoft.ApplicationInsights.AspNetCore;
+using Microsoft.ApplicationInsights.AspNetCore.Extensions;
+using Microsoft.ApplicationInsights.DependencyCollector;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -75,14 +78,17 @@ namespace ntbs_service
             var adConfig = Configuration.GetSection("AdOptions");
             var adfsConfig = Configuration.GetSection("AdfsOptions");
             var azureAdConfig = Configuration.GetSection("AzureAdOptions");
+            var applicationInsightsConfig = Configuration.GetSection("ApplicationInsightsOptions");
 
             var adOptions = new AdOptions();
             var adfsOptions = new AdfsOptions();
             var azureAdOptions = new AzureAdOptions();
+            var applicationInsightsOptions = new ApplicationInsightsOptions();
 
             adConfig.Bind(adOptions);
             adfsConfig.Bind(adfsOptions);
             azureAdConfig.Bind(azureAdOptions);
+            applicationInsightsConfig.Bind(applicationInsightsOptions);
 
             services.Configure<AdOptions>(adConfig);
             services.Configure<AdfsOptions>(adfsConfig);
@@ -227,6 +233,7 @@ namespace ntbs_service
             services.AddScoped<ITreatmentEventMapper, TreatmentEventMapper>();
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<ILogService, LogService>();
+            services.AddScoped<ITableCountsRepository, TableCountsRepository>();
 
             AddAuditService(services, auditDbConnectionString);
             AddReferenceLabResultServices(services);
@@ -234,6 +241,7 @@ namespace ntbs_service
             AddReportingServices(services);
             AddMicrosoftGraphServices(services, azureAdOptions);
             AddAdImportService(services, azureAdOptions);
+            AddApplicationInsightsMonitoring(services, applicationInsightsOptions);
 
         }
 
@@ -470,6 +478,38 @@ namespace ntbs_service
                 services.AddScoped<IAdImportService, AdImportService>();
             }
 
+        }
+
+        private void AddApplicationInsightsMonitoring(IServiceCollection services,
+            ApplicationInsightsOptions applicationInsightsOptions)
+        {
+            if (applicationInsightsOptions.Enabled == true)
+            {
+                services.AddApplicationInsightsTelemetry(new ApplicationInsightsServiceOptions
+                {
+                    ConnectionString = applicationInsightsOptions.ConnectionString
+                });
+
+                services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) =>
+                {
+                    module.EnableSqlCommandTextInstrumentation =
+                        applicationInsightsOptions.EnableSqlCommandTextInstrumentation ?? false;
+                });
+
+                if (applicationInsightsOptions.EnableProfiler == true)
+                {
+                    services.AddServiceProfiler(options =>
+                    {
+                        options.RandomProfilingOverhead = applicationInsightsOptions.RandomProfilingOverhead ?? 0.05F;
+                        options.Duration =
+                            TimeSpan.FromSeconds(applicationInsightsOptions.ProfilerDurationSeconds ?? 120);
+                    });
+                }
+            }
+            else
+            {
+                services.AddSingleton<IJavaScriptSnippet, BlankJavaScriptSnippet>();
+            }
         }
 
         private void AddNotificationClusterRepository(IServiceCollection services)

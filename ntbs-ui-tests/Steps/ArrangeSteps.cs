@@ -30,33 +30,45 @@ namespace ntbs_ui_tests.Steps
         [Given(@"I navigate to the app")]
         public void GivenINavigateToApp()
         {
-            Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}");
+            WithErrorLogging(() =>
+            {
+                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}");
+            });
         }
 
         [Given(@"I am on the (.*) page")]
         public void GivenIAmOnPage(string pageName)
         {
-            Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}/{pageName}");
+            WithErrorLogging(() =>
+            {
+                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}/{pageName}");
+            });
         }
 
         [Given(@"I am on the Homepage")]
         public void GivenIAmOnTheHomepage()
         {
-            Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}");
+            WithErrorLogging(() =>
+            {
+                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}");
+            });
         }
 
         [Given(@"I am on seeded '(.*)' notification overview page")]
         public void GivenIAmOnANotificationPage(string notificationName)
         {
-            var notification = Utilities.GetNotificationForUser(notificationName, TestContext.LoggedInUser);
-            SaveNotificationInDatabase(notification);
-
-            Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}/Notifications/{notification.NotificationId}");
-
-            if (!Settings.IsHeadless)
+            WithErrorLogging(() =>
             {
-                Thread.Sleep(4000);
-            }
+                var notification = Utilities.GetNotificationForUser(notificationName, TestContext.LoggedInUser);
+                SaveNotificationInDatabase(notification);
+
+                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}/Notifications/{notification.NotificationId}");
+
+                if (!Settings.IsHeadless)
+                {
+                    Thread.Sleep(4000);
+                }
+            });
         }
 
         #endregion
@@ -66,19 +78,25 @@ namespace ntbs_ui_tests.Steps
         [Given(@"I have logged in as (.*)")]
         public void GivenIHaveLoggedIn(string userId)
         {
-            var user = Settings.Users[userId];
-            user.UserId = GetUserIdFromUsername(user.Username);
-            Browser.FindElement(By.CssSelector("input[type=email]")).SendKeys(user.Username);
-            Browser.FindElement(By.CssSelector("input[type=submit][value=Next]")).Click();
-            Browser.FindElement(By.CssSelector("input[type=password]")).SendKeys(user.Password);
-            Browser.FindElement(By.CssSelector("input[type=submit][value='Sign in']")).Click();
-            TestContext.LoggedInUser = user;
+            WithErrorLogging(() =>
+            {
+                var user = Settings.Users[userId];
+                user.UserId = GetUserIdFromUsername(user.Username);
+                Browser.FindElement(By.CssSelector("input[type=email]")).SendKeys(user.Username);
+                Browser.FindElement(By.CssSelector("input[type=submit][value=Next]")).Click();
+                Browser.FindElement(By.CssSelector("input[type=password]")).SendKeys(user.Password);
+                Browser.FindElement(By.CssSelector("input[type=submit][value='Sign in']")).Click();
+                TestContext.LoggedInUser = user;
+            });
         }
 
         [Given(@"I choose to log in with a different account")]
         public void GivenIChooseToLogInWithDifferentAccount()
         {
-            HtmlElementHelper.FindElementById(Browser, "otherTile").Click();
+            WithErrorLogging(() =>
+            {
+                HtmlElementHelper.FindElementById(Browser, "otherTile").Click();
+            });
         }
 
         private void SaveNotificationInDatabase(Notification notification)
@@ -102,6 +120,21 @@ namespace ntbs_ui_tests.Steps
             using (var context = new NtbsContext(options.Options))
             {
                 return context.User.Single(u => u.Username.ToLower() == username.ToLower()).Id;
+            }
+        }
+
+        private void WithErrorLogging(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch
+            {
+                // This is temporary debugging to help determine why certain tests sometimes fail
+                var webElement = (string)((IJavaScriptExecutor)Browser).ExecuteScript("return document.body.innerHTML;");
+                Console.WriteLine(webElement);
+                throw;
             }
         }
     }
