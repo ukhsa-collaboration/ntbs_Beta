@@ -56,6 +56,11 @@ spec:
               secretKeyRef:
                 name: load-test-connection-strings
                 key: migrationDb
+          - name: ApplicationInsightsOptions__ConnectionString
+            valueFrom:
+              secretKeyRef:
+                name: load-test-connection-strings
+                key: applicationInsights
           - name: AdOptions__UseDummyAuth
             value: "true"
           - name: MigrationConfig__NtbsEnvironment
@@ -72,6 +77,12 @@ spec:
             value: "development"
           - name: EnvironmentDescription__EnvironmentName
             value: "azure-load-test"
+          - name: ApplicationInsightsOptions__Enabled
+            value: "true"
+          - name: ApplicationInsightsOptions__EnableSqlCommandTextInstrumentation
+            value: "true"
+          - name: ApplicationInsightsOptions__EnableProfiler
+            value: "false"
         resources:
           limits:
             cpu: 500m
@@ -101,6 +112,9 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
     nginx.ingress.kubernetes.io/proxy-buffer-size: 16k
+    nginx.ingress.kubernetes.io/server-snippet: |
+      http2_max_header_size 16k;
+      http2_max_field_size 16k;
 spec:
   tls:
     - hosts:

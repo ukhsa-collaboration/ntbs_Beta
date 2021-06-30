@@ -148,10 +148,15 @@ namespace ntbs_service.Pages.Alerts
             Notification.HospitalDetails.TBServiceCode = TransferAlert.TbServiceCode;
             Notification.HospitalDetails.HospitalId = TargetHospitalId;
             Notification.HospitalDetails.CaseManagerId = TargetCaseManagerId;
-            await Service.UpdateHospitalDetailsAsync(Notification, Notification.HospitalDetails);
-            await _treatmentEventRepository.AddAsync(transferOutEvent);
-            await _treatmentEventRepository.AddAsync(transferInEvent);
-            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.Username());
+            // We want to save all these changes in the same transaction so that we make sure the time between the first
+            // and last audit logs are within the timeframe for them to be grouped together on the changes page. We
+            // experienced an issue where the audits from an acceptance were over this threshold and our app didn't
+            // know how to handle the group. See NTBS-2457
+            Service.UpdateHospitalDetailsWithoutSave(Notification, Notification.HospitalDetails);
+            _treatmentEventRepository.AddWithoutSave(transferOutEvent);
+            _treatmentEventRepository.AddWithoutSave(transferInEvent);
+            await _alertService.DismissAlertWithoutSaveAsync(TransferAlert.AlertId, User.Username());
+            await _treatmentEventRepository.SaveChangesAsync(NotificationAuditType.Edited);
         }
 
         public async Task RejectTransferAndDismissAlertAsync()

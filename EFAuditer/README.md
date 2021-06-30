@@ -20,4 +20,4 @@ To use the Auditer in a project, do the following:
 - To add custom info to an EF operation, call "AddAuditCustomField" for the "AuditDetails" field on your database context before calling SaveChanges
 - To manually audit any operation, call `AuditOperationAsync` as defined in AuditDatabaseContext
 
-This is all that is required for logging db operations. Audit.NET can be customised further, e.g. to not include certain models in the auditing - see the [documentation](https://www.amazon.co.uk/Adapter-Aluminum-Compatible-MacBook-Devices-4-1/dp/B07PV66G2S/ref=sr_1_3?keywords=usbc+to+usb+hub&qid=1568809731&s=gateway&sr=8-3) for more details.
+This is all that is required for logging db operations. Audit.NET can be customised further, e.g. to not include certain models in the auditing - see the [documentation](https://github.com/thepirat000/Audit.NET/tree/master/src/Audit.EntityFramework) for more details.

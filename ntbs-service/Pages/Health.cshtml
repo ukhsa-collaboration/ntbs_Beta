@@ -34,6 +34,7 @@
         <div>Cluster matching: @(Model.ClusterMatchingEnabled ? Tick : Cross)</div>
         <div>Reference lab results: @(Model.ReferenceLabResultsEnabled ? Tick : Cross)</div>
         <div>Reporting services: @(Model.ReportingServicesEnabled ? Tick : Cross)</div>
+        <div>Application insights: @(Model.ApplicationInsightsEnabled ? Tick : Cross)</div>
     </div>
 
     <div>
@@ -123,6 +124,19 @@
             {
                 @Tick
                 <span>Cron: @Model.ScheduledJobsConfig.MarkImportedNotificationsAsImportedCron</span>
+            }
+            else
+            {
+                @Cross
+            }
+        </div>
+
+        <div>
+            Update table counts:
+            @if (Model.ScheduledJobsConfig.UpdateTableCountsJobEnabled)
+            {
+                @Tick
+                <span>Cron: @Model.ScheduledJobsConfig.UpdateTableCountsJobCron</span>
             }
             else
             {

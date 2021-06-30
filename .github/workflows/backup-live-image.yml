@@ -3,7 +3,7 @@ name: Backup live container
 on:
   push:
     tags:
-      - live-*
+      - Release-*
 
 jobs:
   backup-live-container-job:

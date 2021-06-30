@@ -104,7 +104,7 @@
         #endregion
 
         #region Social Context
-        public const string VenueDateToShouldBeLaterThanDateFrom = "{0} must be later than date from";
+        public const string VenueDateToShouldBeLaterThanDateFrom = "To date cannot be earlier than from date";
         public const string SupplyOneOfTheVenueFields = "Please supply at least one of venue type, name, address, postcode or comments";
         public const string SupplyOneOfTheAddressFields = "Please supply at least one of address, postcode or comments";
         #endregion

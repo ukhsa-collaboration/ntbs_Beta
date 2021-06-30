@@ -24,6 +24,7 @@ namespace ntbs_service.Services
         Task UpdateSitesAsync(int notificationId, IEnumerable<NotificationSite> notificationSites);
         Task UpdateComorbidityAsync(Notification notification, ComorbidityDetails comorbidityDetails);
         Task UpdateHospitalDetailsAsync(Notification notification, HospitalDetails hospitalDetails);
+        void UpdateHospitalDetailsWithoutSave(Notification notification, HospitalDetails hospitalDetails);
         Task SubmitNotificationAsync(Notification notification);
         Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing);
         Task UpdateTravelAndVisitorAsync(Notification notification, TravelDetails travelDetails, VisitorDetails visitorDetails);
@@ -159,6 +160,11 @@ namespace ntbs_service.Services
             _context.SetValues(notification.HospitalDetails, hospitalDetails);
 
             await _notificationRepository.SaveChangesAsync();
+        }
+
+        public void UpdateHospitalDetailsWithoutSave(Notification notification, HospitalDetails hospitalDetails)
+        {
+            _context.SetValues(notification.HospitalDetails, hospitalDetails);
         }
 
         public async Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing)

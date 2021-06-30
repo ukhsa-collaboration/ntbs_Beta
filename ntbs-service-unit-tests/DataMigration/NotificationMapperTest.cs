@@ -585,8 +585,8 @@ namespace ntbs_service_unit_tests.DataMigration
                     .SelectMany(group => group)
                     .Single();
 
-                // Assert
-                Assert.Equal(NotificationStatus.Denotified ,notification.NotificationStatus);
+            // Assert
+            Assert.Equal(NotificationStatus.Denotified ,notification.NotificationStatus);
         }
 
         // Data for this has been based on real examples, but with care taken to anonymize it
@@ -670,6 +670,32 @@ namespace ntbs_service_unit_tests.DataMigration
             // Assert
             Assert.Null(notification.TravelDetails.TotalNumberOfCountries);
             Assert.Null(notification.VisitorDetails.TotalNumberOfCountries);
+        }
+
+        // Data for this has been taken from an edited test notification, relating to NTBS-2478
+        [Fact]
+        public async Task whenLastTreatmentEventIsOutcomeStillOnTreatment_DoNotCloseNotificationDuringMapping()
+        {
+            // Arrange
+            const int runId = 12345;
+            var legacyIds = new List<string> { "300123" };
+            SetupNotificationsInGroups(("300123", "12"));
+
+            const string malvernCode = "TBS0656";
+            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
+            {
+                {new Guid("33464912-E5B1-4998-AFCA-083C3AE65A80"), new TBService {Code = malvernCode}},
+            };
+
+            // Act
+            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
+                    runId,
+                    legacyIds))
+                .SelectMany(group => group)
+                .Single();
+
+            // Assert
+            Assert.Equal(NotificationStatus.Notified, notification.NotificationStatus);
         }
 
         private void SetupNotificationsInGroups(params (string, string)[] legacyIdAndLegacyGroup)
