@@ -495,6 +495,16 @@ namespace ntbs_service
                     module.EnableSqlCommandTextInstrumentation =
                         applicationInsightsOptions.EnableSqlCommandTextInstrumentation ?? false;
                 });
+
+                if (applicationInsightsOptions.EnableProfiler == true)
+                {
+                    services.AddServiceProfiler(options =>
+                    {
+                        options.RandomProfilingOverhead = applicationInsightsOptions.RandomProfilingOverhead ?? 0.05F;
+                        options.Duration =
+                            TimeSpan.FromSeconds(applicationInsightsOptions.ProfilerDurationSeconds ?? 120);
+                    });
+                }
             }
             else
             {
