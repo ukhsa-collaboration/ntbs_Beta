@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@sentry/webpack-plugin": "1.15.1",
-    "@types/node": "15.6.2",
+    "@types/node": "15.12.5",
     "@types/webpack-env": "1.16.0",
     "css-loader": "5.2.6",
     "mini-css-extract-plugin": "1.6.0",
