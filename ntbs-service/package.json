@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/core": "7.14.3",
+    "@babel/core": "7.14.6",
     "@babel/preset-env": "7.14.4",
     "@sentry/browser": "6.5.0",
     "@sentry/integrations": "6.5.0",
