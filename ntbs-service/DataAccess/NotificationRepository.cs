@@ -74,17 +74,19 @@ namespace ntbs_service.DataAccess
 
         public IQueryable<Notification> GetRecentNotificationsIQueryable()
         {
-            return GetNotificationsWithBasicInformationIQueryable()
+            return _context.Notification
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified
                             || n.NotificationStatus == NotificationStatus.Closed)
-                .OrderByDescending(n => n.NotificationDate);
+                .OrderByDescending(n => n.NotificationDate)
+                .ThenBy(n => n.NotificationId);
         }
 
         public IQueryable<Notification> GetDraftNotificationsIQueryable()
         {
-            return GetNotificationsWithBasicInformationIQueryable()
+            return _context.Notification
                 .Where(n => n.NotificationStatus == NotificationStatus.Draft)
-                .OrderByDescending(n => n.SubmissionDate);
+                .OrderByDescending(n => n.SubmissionDate)
+                .ThenBy(n => n.NotificationId);
         }
 
         public async Task<Notification> GetNotificationAsync(int notificationId)

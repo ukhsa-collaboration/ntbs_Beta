@@ -8,6 +8,7 @@ using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Projections;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;
 
@@ -38,8 +39,8 @@ namespace ntbs_service.Pages
         }
 
         public IList<AlertWithTbServiceForDisplay> Alerts { get; set; }
-        public IList<Notification> DraftNotifications { get; set; }
-        public IList<Notification> RecentNotifications { get; set; }
+        public IList<NotificationForHomePage> DraftNotifications { get; set; }
+        public IList<NotificationForHomePage> RecentNotifications { get; set; }
         public SelectList TbServices { get; set; }
         public SelectList KpiFilter { get; set; }
         public IEnumerable<HomepageKpi> HomepageKpiDetails { get; set; }
@@ -74,8 +75,16 @@ namespace ntbs_service.Pages
         {
             var draftNotificationsQueryable = _notificationRepository.GetDraftNotificationsIQueryable();
             var recentNotificationsQueryable = _notificationRepository.GetRecentNotificationsIQueryable();
-            DraftNotifications = (await _authorizationService.FilterNotificationsByUserAsync(User, draftNotificationsQueryable)).Take(10).ToList();
-            RecentNotifications = (await _authorizationService.FilterNotificationsByUserAsync(User, recentNotificationsQueryable)).Take(10).ToList();
+            DraftNotifications =
+                (await _authorizationService.FilterNotificationsByUserAsync(User, draftNotificationsQueryable))
+                .Take(10)
+                .SelectNotificationForHomePage()
+                .ToList();
+            RecentNotifications =
+                (await _authorizationService.FilterNotificationsByUserAsync(User, recentNotificationsQueryable))
+                .Take(10)
+                .SelectNotificationForHomePage()
+                .ToList();
         }
 
         private async Task SetUserAlertsAndTbServicesAsync()

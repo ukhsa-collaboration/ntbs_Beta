@@ -10,6 +10,7 @@ using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Projections;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Pages;
 using ntbs_service.Services;
@@ -91,21 +92,21 @@ namespace ntbs_service_unit_tests.Pages
             {
                 new Notification
                 {
-                    PatientDetails = new PatientDetails{ GivenName = "Alice" },
+                    PatientDetails = new PatientDetails{ GivenName = "Alice", FamilyName = "Adams" },
                     NotificationStatus = NotificationStatus.Notified,
                     SubmissionDate = submissionDate1 == null ? (DateTime?)null : DateTime.Parse(submissionDate1),
                     NotificationDate = DateTime.Parse("2021-04-01")
                 },
                 new Notification
                 {
-                    PatientDetails = new PatientDetails{ GivenName = "Bob" },
+                    PatientDetails = new PatientDetails{ GivenName = "Bob", FamilyName = "Baker" },
                     NotificationStatus = NotificationStatus.Notified,
                     SubmissionDate = submissionDate1 == null ? (DateTime?)null : DateTime.Parse(submissionDate2),
                     NotificationDate = DateTime.Parse("2021-04-30")
                 },
                 new Notification
                 {
-                    PatientDetails = new PatientDetails{ GivenName = "Charlie" },
+                    PatientDetails = new PatientDetails{ GivenName = "Charlie", FamilyName = "Cook" },
                     NotificationStatus = NotificationStatus.Notified,
                     SubmissionDate = submissionDate1 == null ? (DateTime?)null : DateTime.Parse(submissionDate3),
                     NotificationDate = DateTime.Parse("2021-04-15")
@@ -125,10 +126,10 @@ namespace ntbs_service_unit_tests.Pages
 
             // Act
             await pageModel.OnGetAsync();
-            var resultRecents = Assert.IsAssignableFrom<List<Notification>>(pageModel.RecentNotifications);
+            var resultRecents = Assert.IsAssignableFrom<List<NotificationForHomePage>>(pageModel.RecentNotifications);
 
             // Assert
-            Assert.Equal(new[] { "Bob", "Charlie", "Alice" }, resultRecents.Select(n => n.PatientDetails.GivenName));
+            Assert.Equal(new[] { "BAKER, Bob", "COOK, Charlie", "ADAMS, Alice" }, resultRecents.Select(n => n.FullName));
             _homePageFixture.Context.RemoveRange(recents);
         }
 
@@ -140,19 +141,19 @@ namespace ntbs_service_unit_tests.Pages
             {
                 new Notification
                 {
-                    PatientDetails = new PatientDetails{ GivenName = "Dave" },
+                    PatientDetails = new PatientDetails{ GivenName = "Dave", FamilyName = "Davids" },
                     NotificationStatus = NotificationStatus.Draft,
                     SubmissionDate = DateTime.Parse("2021-04-01")
                 },
                 new Notification
                 {
-                    PatientDetails = new PatientDetails{ GivenName = "Eve" },
+                    PatientDetails = new PatientDetails{ GivenName = "Eve", FamilyName = "Smith" },
                     NotificationStatus = NotificationStatus.Draft,
                     SubmissionDate = DateTime.Parse("2021-04-30")
                 },
                 new Notification
                 {
-                    PatientDetails = new PatientDetails{ GivenName = "Frank" },
+                    PatientDetails = new PatientDetails{ GivenName = "Frank", FamilyName = "Jones" },
                     NotificationStatus = NotificationStatus.Draft,
                     SubmissionDate = DateTime.Parse("2021-04-15")
                 }
@@ -171,10 +172,10 @@ namespace ntbs_service_unit_tests.Pages
 
             // Act
             await pageModel.OnGetAsync();
-            var resultDrafts = Assert.IsAssignableFrom<List<Notification>>(pageModel.DraftNotifications);
+            var resultDrafts = Assert.IsAssignableFrom<List<NotificationForHomePage>>(pageModel.DraftNotifications);
 
             // Assert
-            Assert.Equal(new[] { "Eve", "Frank", "Dave" }, resultDrafts.Select(n => n.PatientDetails.GivenName));
+            Assert.Equal(new[] { "SMITH, Eve", "JONES, Frank", "DAVIDS, Dave" }, resultDrafts.Select(n => n.FullName));
             _homePageFixture.Context.RemoveRange(drafts);
         }
 
