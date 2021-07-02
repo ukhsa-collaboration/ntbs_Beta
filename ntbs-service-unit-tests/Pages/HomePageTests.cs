@@ -80,12 +80,8 @@ namespace ntbs_service_unit_tests.Pages
                 .Returns(Task.FromResult(new List<HomepageKpi> { mockHomepageKpiWithTbService } as IEnumerable<HomepageKpi>));
         }
 
-        [Theory]
-        [InlineData(null, null, null)]
-        [InlineData("2021-04-01", "2021-04-15", "2021-04-30")]
-        public async Task OnGetAsync_PopulatesPageModel_WithRecentNotifications(string submissionDate1,
-            string submissionDate2,
-            string submissionDate3)
+        [Fact]
+        public async Task OnGetAsync_PopulatesPageModel_WithRecentNotifications()
         {
             // Arrange
             var recents = new List<Notification>
@@ -94,21 +90,21 @@ namespace ntbs_service_unit_tests.Pages
                 {
                     PatientDetails = new PatientDetails{ GivenName = "Alice", FamilyName = "Adams" },
                     NotificationStatus = NotificationStatus.Notified,
-                    SubmissionDate = submissionDate1 == null ? (DateTime?)null : DateTime.Parse(submissionDate1),
+                    CreationDate = DateTime.Parse("2021-04-01"),
                     NotificationDate = DateTime.Parse("2021-04-01")
                 },
                 new Notification
                 {
                     PatientDetails = new PatientDetails{ GivenName = "Bob", FamilyName = "Baker" },
                     NotificationStatus = NotificationStatus.Notified,
-                    SubmissionDate = submissionDate1 == null ? (DateTime?)null : DateTime.Parse(submissionDate2),
+                    CreationDate = DateTime.Parse("2021-04-15"),
                     NotificationDate = DateTime.Parse("2021-04-30")
                 },
                 new Notification
                 {
                     PatientDetails = new PatientDetails{ GivenName = "Charlie", FamilyName = "Cook" },
                     NotificationStatus = NotificationStatus.Notified,
-                    SubmissionDate = submissionDate1 == null ? (DateTime?)null : DateTime.Parse(submissionDate3),
+                    CreationDate = DateTime.Parse("2021-04-30"),
                     NotificationDate = DateTime.Parse("2021-04-15")
                 }
             };
@@ -143,19 +139,19 @@ namespace ntbs_service_unit_tests.Pages
                 {
                     PatientDetails = new PatientDetails{ GivenName = "Dave", FamilyName = "Davids" },
                     NotificationStatus = NotificationStatus.Draft,
-                    SubmissionDate = DateTime.Parse("2021-04-01")
+                    CreationDate = DateTime.Parse("2021-04-01")
                 },
                 new Notification
                 {
                     PatientDetails = new PatientDetails{ GivenName = "Eve", FamilyName = "Smith" },
                     NotificationStatus = NotificationStatus.Draft,
-                    SubmissionDate = DateTime.Parse("2021-04-30")
+                    CreationDate = DateTime.Parse("2021-04-30")
                 },
                 new Notification
                 {
                     PatientDetails = new PatientDetails{ GivenName = "Frank", FamilyName = "Jones" },
                     NotificationStatus = NotificationStatus.Draft,
-                    SubmissionDate = DateTime.Parse("2021-04-15")
+                    CreationDate = DateTime.Parse("2021-04-15")
                 }
             };
 

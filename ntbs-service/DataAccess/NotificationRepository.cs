@@ -85,7 +85,7 @@ namespace ntbs_service.DataAccess
         {
             return _context.Notification
                 .Where(n => n.NotificationStatus == NotificationStatus.Draft)
-                .OrderByDescending(n => n.SubmissionDate)
+                .OrderByDescending(n => n.CreationDate)
                 .ThenBy(n => n.NotificationId);
         }
 
