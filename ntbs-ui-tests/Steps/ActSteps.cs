@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -8,6 +9,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using TechTalk.SpecFlow;
 using Xunit;
+using ExpectedConditions = SeleniumExtras.WaitHelpers.ExpectedConditions;
 
 namespace ntbs_ui_tests.Steps
 {
@@ -218,6 +220,10 @@ namespace ntbs_ui_tests.Steps
         {
             WithErrorLogging(() =>
             {
+                // In some scenarios the select does not become visible/active until an API call (triggered by previous input) has returned.
+                // Consequently we add a wait here on the visibility of the element we will later select.
+                var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
+                wait.Until(ExpectedConditions.ElementIsVisible(By.XPath($"//select[@id='{selectId}']/option[normalize-space(text())='{text}']")));
                 new SelectElement(HtmlElementHelper.FindElementById(Browser, selectId)).SelectByText(text);
             });
         }
@@ -230,6 +236,16 @@ namespace ntbs_ui_tests.Steps
             WithErrorLogging(() =>
             {
                 Thread.Sleep(3000);
+            });
+        }
+
+        [When(@"I wait for (.*) to be missing from '(.*)'")]
+        public void WhenIWaitForOptionToBeMissingFromDropdown(string text, string selectId)
+        {
+            WithErrorLogging(() =>
+            {
+                var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
+                wait.Until(ElementDoesNotExistInDropdown(text, selectId));
             });
         }
 
@@ -246,6 +262,38 @@ namespace ntbs_ui_tests.Steps
                 Console.WriteLine(webElement);
                 throw;
             }
+        }
+
+        private static Func<IWebDriver, bool> ElementDoesNotExistInDropdown(string text, string dropdownId)
+        {
+            return driver =>
+            {
+                var options = GetDropdownOptionsWithRetry(driver, dropdownId);
+                return options.All(opt => opt != text);
+            };
+        }
+
+        private static List<string> GetDropdownOptionsWithRetry(IWebDriver driver, string dropdownId)
+        {
+            try
+            {
+                return GetDropdownOptions(driver, dropdownId);
+            }
+            catch (StaleElementReferenceException)
+            {
+                // In scenarios where the dropdown we're looking at has just been reloaded (e.g. because of the result
+                // of an API call) the options can become stale between finding the select and reading their text. In this
+                // case we can find the new select by just trying again.
+                return GetDropdownOptions(driver, dropdownId);
+            }
+        }
+
+        private static List<string> GetDropdownOptions(IWebDriver driver, string dropdownId)
+        {
+            return new SelectElement(HtmlElementHelper.FindElementById(driver, dropdownId))
+                .Options
+                .Select(opt => opt.Text)
+                .ToList();
         }
     }
 }
