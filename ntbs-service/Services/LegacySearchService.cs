@@ -24,7 +24,20 @@ namespace ntbs_service.Services
 
     public class LegacySearchService : ILegacySearchService
     {
-        private string SelectQueryStart => @"SELECT * " + FromString;
+        private string SelectQueryStart =>
+            @"SELECT n.PrimaryNotificationId,
+                     n.NotificationDate,
+                     n.PrimarySource,
+                     n.NtbsHospitalId,
+                     dmg.NtbsSexId,
+                     dmg.GivenName,
+                     dmg.FamilyName,
+                     dmg.DateOfBirth,
+                     dmg.NhsNumber,
+                     dmg.BirthCountryName,
+                     addrs.Postcode
+            "
+            + FromString;
         private string CountQuery => @"SELECT COUNT(*) " + FromString;
 
         private string FromString => $@"
