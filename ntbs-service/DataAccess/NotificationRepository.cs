@@ -288,8 +288,31 @@ namespace ntbs_service.DataAccess
         public async Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids)
         {
             return (await GetBannerReadyNotificationsIQueryable()
-                    .Where(n => ids.Contains(n.NotificationId))
-                    .ToListAsync())
+                .Where(n => ids.Contains(n.NotificationId))
+                .Select(n => new NotificationForBannerModel
+                    {
+                        NotificationId = n.NotificationId,
+                        CreationDate = n.CreationDate,
+                        NotificationDate = n.NotificationDate,
+                        TbService = n.HospitalDetails.TBServiceName,
+                        TbServiceCode = n.HospitalDetails.TBServiceCode,
+                        TbServicePHECCode = n.HospitalDetails.TBService.PHECCode,
+                        LocationPHECCode = n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC.PHECCode,
+                        CaseManager = n.HospitalDetails.CaseManagerName,
+                        CaseManagerIsActive = n.HospitalDetails.CaseManager.IsActive,
+                        CaseManagerId = n.HospitalDetails.CaseManagerId,
+                        NhsNumber = n.PatientDetails.FormattedNhsNumber,
+                        DateOfBirth = n.PatientDetails.FormattedDob,
+                        CountryOfBirth = n.PatientDetails.CountryName,
+                        Postcode = n.PatientDetails.FormattedNoAbodeOrPostcodeString,
+                        Name = n.PatientDetails.FullName,
+                        Sex = n.PatientDetails.SexLabel,
+                        NotificationStatus = n.NotificationStatus,
+                        DrugResistance = n.DrugResistanceProfile.DrugResistanceProfileString,
+                        TreatmentEvents = n.TreatmentEvents
+                    })
+                .AsNoTracking()
+                .ToListAsync())
                 .Select(n => new NotificationBannerModel(n, showLink: true));
         }
 
