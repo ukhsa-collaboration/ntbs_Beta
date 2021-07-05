@@ -24,7 +24,20 @@ namespace ntbs_service.Services
 
     public class LegacySearchService : ILegacySearchService
     {
-        private string SelectQueryStart =>
+        private string FullSearchQuery(string conditions) =>
+            $@"WITH SearchedNotifications AS (
+                   {SelectLegacyNotifications}
+                   {conditions}
+               ),
+               TotalCount AS (
+                   SELECT COUNT(*) AS TotalCount
+                   FROM SearchedNotifications
+               )
+               SELECT *
+               FROM SearchedNotifications AS n, TotalCount AS tc
+               {OrderAndPaginateNotifications}";
+
+        private string SelectLegacyNotifications =>
             @"SELECT n.PrimaryNotificationId,
                      n.NotificationDate,
                      n.PrimarySource,
@@ -38,7 +51,6 @@ namespace ntbs_service.Services
                      addrs.Postcode
             "
             + FromString;
-        private string CountQuery => @"SELECT COUNT(*) " + FromString;
 
         private string FromString => $@"
             FROM MergedNotifications n 
@@ -47,7 +59,7 @@ namespace ntbs_service.Services
             WHERE NOT EXISTS ({_notificationImportHelper.SelectImportedNotificationWhereIdEquals("n.PrimaryNotificationId")})
             ";
 
-        private const string SelectQueryEnd = @"
+        private const string OrderAndPaginateNotifications = @"
             ORDER BY CASE
                     WHEN n.NtbsHospitalId IN @editPermissionHospitals THEN 1
                     WHEN n.NtbsHospitalId NOT IN @editPermissionHospitals THEN 0
@@ -91,8 +103,7 @@ namespace ntbs_service.Services
                 return (new List<NotificationBannerModel>(), 0);
             }
 
-            IEnumerable<dynamic> results;
-            int count;
+            IList<dynamic> results;
             var (queryConditions, parameters) = builder.GetResult();
             parameters.Offset = offset;
             parameters.Fetch = numberToFetch;
@@ -100,24 +111,23 @@ namespace ntbs_service.Services
             parameters.editPermissionHospitals = (await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(permittedTbServiceCodes))
                 .Select(h => h.HospitalId);
 
-            var fullSelectQuery = SelectQueryStart + queryConditions + SelectQueryEnd;
-            var fullCountQuery = CountQuery + queryConditions;
-
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
-                results = await connection.QueryAsync(fullSelectQuery, (object)parameters);
-                count = (await connection.QueryAsync<int>(fullCountQuery, (object)parameters)).Single();
+                results = (await connection.QueryAsync(FullSearchQuery(queryConditions), (object)parameters)).ToList();
             }
 
-            var notificationBannerModels = results.Select(r => (NotificationBannerModel)AsNotificationBannerAsync(r).Result);
+            var notificationBannerModels = results
+                .Select(r => (NotificationBannerModel)AsNotificationBannerAsync(r).Result);
+            var count = results.FirstOrDefault()?.TotalCount ?? 0;
+
             return (notificationBannerModels, count);
         }
 
         public async Task<NotificationBannerModel> GetByIdAsync(string notificationId)
         {
-            var fullQuery = SelectQueryStart + SelectByIdCondition;
+            var fullQuery = SelectLegacyNotifications + SelectByIdCondition;
             dynamic result;
 
             using (var connection = new SqlConnection(connectionString))
