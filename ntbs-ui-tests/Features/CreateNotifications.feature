@@ -85,7 +85,7 @@ Feature: Notification creation
     And I wait
     And I select SOLIHULL HOSPITAL for 'HospitalDetails_HospitalId'
     And I enter Dr Lawton into 'HospitalDetails_Consultant'
-    And I enter Birmingham UITester into 'HospitalDetails_CaseManagerId'
+    And I select Birmingham UITester for 'HospitalDetails_CaseManagerId'
     When I click on the 'submit-button' button
 
     Then I can see the value 'Birmingham & Solihull' for the field 'tb-service' in the 'HospitalDetails' overview section
@@ -100,7 +100,7 @@ Feature: Notification creation
     When I check 'NotificationSiteMap_PULMONARY_'
     And I check 'bcg-vaccination-yes'
     And I enter 1990 into 'ClinicalDetails_BCGVaccinationYear'
-    And I enter Not offered into 'ClinicalDetails_HIVTestState'
+    And I select Not offered for 'ClinicalDetails_HIVTestState'
     And I check 'symptomatic-yes'
     And I enter 2 into 'FormattedSymptomDate_Day'
     And I enter 2 into 'FormattedSymptomDate_Month'
@@ -162,9 +162,9 @@ Feature: Notification creation
     And I enter 1 into 'FormattedTestDate_Day'
     And I enter 1 into 'FormattedTestDate_Month'
     And I enter 2012 into 'FormattedTestDate_Year'
-    And I enter Smear into 'TestResultForEdit_ManualTestTypeId'
-    And I enter BronchialWashings into 'TestResultForEdit_SampleTypeId'
-    And I enter Negative into 'TestResultForEdit_Result'
+    And I select Smear for 'TestResultForEdit_ManualTestTypeId'
+    And I make selection 1 from Respiratory section for 'TestResultForEdit_SampleTypeId'
+    And I select Negative for 'TestResultForEdit_Result'
     And I click on the 'save-test-result-button' button
     When I click on the 'submit-button' button
 
@@ -314,11 +314,11 @@ Feature: Notification creation
     When I click 'Social context - venues' on the navigation bar
     Then I should be on the SocialContextVenues page
     When I click on the 'add-new-social-context-venue-button' button
-    And I enter Catering into 'Venue_VenueTypeId'
+    And I select Catering for 'Venue_VenueTypeId'
     And I enter Nandos into 'Venue_Name'
     And I enter 445 Star Gates into 'Venue_Address'
     And I enter S55 4EP into 'Venue_Postcode'
-    And I enter Monthly into 'Venue_Frequency'
+    And I select Monthly for 'Venue_Frequency'
     And I enter 23 into 'FormattedDateFrom_Day'
     And I enter 3 into 'FormattedDateFrom_Month'
     And I enter 2003 into 'FormattedDateFrom_Year'
@@ -354,9 +354,9 @@ Feature: Notification creation
     And I enter 31 into 'FormattedEventDate_Day'
     And I enter 1 into 'FormattedEventDate_Month'
     And I enter 2019 into 'FormattedEventDate_Year'
-    And I enter Treatment outcome into 'treatmentevent-type'
-    And I enter Cured into 'treatmentoutcome-type'
-    And I enter Multi-drug resistant regimen into 'treatmentoutcome-subtype'
+    And I select Treatment outcome for 'treatmentevent-type'
+    And I select Cured for 'treatmentoutcome-type'
+    And I select Multi-drug resistant regimen for 'treatmentoutcome-subtype'
     And I enter He did it into 'treatmentevent-note'
     And I click on the 'save-treatment-event-button' button
     And I wait
