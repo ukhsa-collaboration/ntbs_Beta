@@ -25,7 +25,7 @@ Feature: Notification editing
     And I enter 56 Schnowzer Boulevard into 'PatientDetails_Address'
     And I select radio value 'postcode-yes'
     And I enter ST1 1AA into 'PatientDetails_Postcode'
-    And I make selection 26 from Other section for 'PatientDetails_OccupationId'
+    And I make selection Retired from Other section for 'PatientDetails_OccupationId'
     When I click on the 'save-button' button
 
     Then I can see the value 'LEICESTER, Jester' for the field 'full-name' in the 'PatientDetails' overview section
@@ -125,7 +125,7 @@ Feature: Notification editing
     And I enter 3 into 'FormattedTestDate_Month'
     And I enter 2011 into 'FormattedTestDate_Year'
     And I select Histology for 'TestResultForEdit_ManualTestTypeId'
-    And I make selection 7 from Non-Respiratory section for 'TestResultForEdit_SampleTypeId'
+    And I make selection Bone and joint from Non-Respiratory section for 'TestResultForEdit_SampleTypeId'
     And I select Negative for 'TestResultForEdit_Result'
     And I click on the 'save-test-result-button' button
     When I click on the 'save-button' button
@@ -265,7 +265,7 @@ Feature: Notification editing
     When I go to edit the 'SocialContextVenues' section
     Then I should be on the SocialContextVenues page
     When I click on the Edit link
-    And I select Nursery for 'Venue_VenueTypeId'
+    And I make selection Nursery from Childcare & education section for 'Venue_VenueTypeId'
     And I enter McDonalds into 'Venue_Name'
     And I enter 666 Stan Drive into 'Venue_Address'
     And I enter LS6 2EB into 'Venue_Postcode'
