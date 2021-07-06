@@ -58,7 +58,7 @@ Feature: Notification creation
     And I enter 1999 into 'year-of-entry'
     And I enter 44 Poodle Terrace into 'PatientDetails_Address'
     And I select radio value 'postcode-no'
-    And I make selection 28 from Other section for 'PatientDetails_OccupationId'
+    And I make selection Other from Other section for 'PatientDetails_OccupationId'
     And I enter Software Developer into 'occupation-other'
     When I click on the 'submit-button' button
 
@@ -163,7 +163,7 @@ Feature: Notification creation
     And I enter 1 into 'FormattedTestDate_Month'
     And I enter 2012 into 'FormattedTestDate_Year'
     And I select Smear for 'TestResultForEdit_ManualTestTypeId'
-    And I make selection 1 from Respiratory section for 'TestResultForEdit_SampleTypeId'
+    And I make selection Bronchial washings from Respiratory section for 'TestResultForEdit_SampleTypeId'
     And I select Negative for 'TestResultForEdit_Result'
     And I click on the 'save-test-result-button' button
     When I click on the 'submit-button' button
@@ -314,7 +314,7 @@ Feature: Notification creation
     When I click 'Social context - venues' on the navigation bar
     Then I should be on the SocialContextVenues page
     When I click on the 'add-new-social-context-venue-button' button
-    And I select Catering for 'Venue_VenueTypeId'
+    And I make selection Catering from Workplace section for 'Venue_VenueTypeId'
     And I enter Nandos into 'Venue_Name'
     And I enter 445 Star Gates into 'Venue_Address'
     And I enter S55 4EP into 'Venue_Postcode'

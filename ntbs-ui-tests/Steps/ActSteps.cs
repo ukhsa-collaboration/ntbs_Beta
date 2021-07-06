@@ -39,7 +39,7 @@ namespace ntbs_ui_tests.Steps
                 Assert.NotNull(Browser.FindElement(By.ClassName("notification-banner-title-text")));
             });
         }
-        
+
         [When(@"I click '(.*)' on the navigation bar")]
         public void ClickOnTheNavigationBar(string label)
         {
@@ -200,13 +200,19 @@ namespace ntbs_ui_tests.Steps
                 }
             });
         }
-        
+
         [When(@"I make selection (.*) from (.*) section for '(.*)'")]
-        public void WhenISelectValueFromGroupForFieldWithId(string value, string group, string elementId)
+        public void WhenISelectValueFromGroupForFieldWithId(string option, string group, string selectId)
         {
             WithErrorLogging(() =>
             {
-                var selection = HtmlElementHelper.FindElementByXpath(Browser, $"//select[@id='{elementId}']/optgroup[@label='{group}']/option[@value='{value}']");
+                var optionXPath =
+                    $"//select[@id='{selectId}']/optgroup[@label='{group}']/option[normalize-space(text())='{option}']";
+
+                var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
+                wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(optionXPath)));
+
+                var selection = HtmlElementHelper.FindElementByXpath(Browser, optionXPath);
                 selection.Click();
                 if (!Settings.IsHeadless)
                 {
