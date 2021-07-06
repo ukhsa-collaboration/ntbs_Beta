@@ -98,7 +98,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
 
-            var caseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(tbServiceCodes);
+            var caseManagers = await GetCaseManagerDropdownValues(tbServiceCodes);
             CaseManagers = new SelectList(
                 caseManagers,
                 nameof(Models.Entities.User.Id),
@@ -169,6 +169,17 @@ namespace ntbs_service.Pages.Notifications.Edit
             await GetRelatedEntities();
         }
 
+        private async Task<IList<User>> GetCaseManagerDropdownValues(IList<string> tbServiceCodes)
+        {
+            var caseManagersToReturn = await _referenceDataRepository.GetActiveCaseManagersByTbServiceCodesAsync(tbServiceCodes);
+            if (HospitalDetails.CaseManager?.IsActive == false)
+            {
+                caseManagersToReturn.Add(Notification.HospitalDetails.CaseManager);
+            }
+
+            return caseManagersToReturn;
+        }
+
         private async Task GetRelatedEntities()
         {
             if (HospitalDetails.HospitalId.HasValue)
@@ -194,7 +205,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 await GetActiveOrCurrentHospitalsByTbServiceCodesAsync(tbServiceCodeAsList, notification);
 
             var filteredCaseManagers =
-                await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(tbServiceCodeAsList);
+                await _referenceDataRepository.GetActiveCaseManagersByTbServiceCodesAsync(tbServiceCodeAsList);
 
             var filteredHospitalDetailsPageSelectLists = new FilteredHospitalDetailsPageSelectLists
             {

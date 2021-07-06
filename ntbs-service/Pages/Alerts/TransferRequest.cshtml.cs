@@ -122,7 +122,7 @@ namespace ntbs_service.Pages.Alerts
         {
             var tbServices = await _referenceDataRepository.GetAllTbServicesAsync();
             TbServices = new SelectList(tbServices, nameof(TBService.Code), nameof(TBService.Name));
-            var caseManagers = await _referenceDataRepository.GetAllCaseManagers();
+            var caseManagers = await _referenceDataRepository.GetAllActiveCaseManagers();
             CaseManagers = new SelectList(caseManagers,
                 nameof(Models.Entities.User.Id),
                 nameof(Models.Entities.User.DisplayName));
@@ -160,7 +160,7 @@ namespace ntbs_service.Pages.Alerts
         public async Task<JsonResult> OnGetFilteredCaseManagersListByTbServiceCode(string value)
         {
             var filteredCaseManagers =
-                await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(new List<string> { value });
+                await _referenceDataRepository.GetActiveCaseManagersByTbServiceCodesAsync(new List<string> { value });
 
             return new JsonResult(
                 new FilteredCaseManagerList
