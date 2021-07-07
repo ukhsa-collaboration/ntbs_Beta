@@ -267,8 +267,6 @@ OR
 (P1.[GivenName] = P2.[FamilyName] and P1.[FamilyName] = P2.[GivenName]))
 AND P1.[Dob] = P2.[Dob]
 AND P1.[NotificationId] <> P2.[NotificationId]
-AND N1.[NotificationDate] < DATEADD(day, -45.0E0, GETDATE())
-AND N2.[NotificationDate] < DATEADD(day, -45.0E0, GETDATE())
 AND (N1.[NotificationStatus] IN ('Notified', 'Closed')) 
 AND (N2.[NotificationStatus] IN ('Notified', 'Closed')) 
 AND (N1.[GroupId] <> N2.[GroupId] OR N1.[GroupId] is NULL or N2.[GroupId] is NULL)")
@@ -289,14 +287,11 @@ AND (N1.[GroupId] <> N2.[GroupId] OR N1.[GroupId] is NULL or N2.[GroupId] is NUL
                         (
                             t.notification.PatientDetails.NhsNumber == t.duplicate.PatientDetails.NhsNumber &&
                             t.notification.PatientDetails.NhsNumber != null
-                        ) // check that the notifications have happened long enough in the past
+                        )
+                        // Check that the notifications are different
                         &&
                         (
-                            t.notification.NotificationId != t.duplicate.NotificationId &&
-                            t.notification.NotificationDate <
-                            DateTime.Now.AddDays(-DataQualityPotentialDuplicateAlert.MinNumberDaysNotifiedForAlert) &&
-                            t.duplicate.NotificationDate <
-                            DateTime.Now.AddDays(-DataQualityPotentialDuplicateAlert.MinNumberDaysNotifiedForAlert)
+                            t.notification.NotificationId != t.duplicate.NotificationId
                         )
                         // Check that the notifications are complete and have not been discarded (denotified or deleted)
                         && (
