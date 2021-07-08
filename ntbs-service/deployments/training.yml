@@ -58,6 +58,8 @@ spec:
                 key: migrationDb
           - name: AzureAdOptions__Enabled
             value: "true"
+          - name: AzureAdOptions__ReadOnlyUserGroup
+            value: "App.Auth.NIS.NTBS.Read_Only_Training"
           - name: AzureAdOptions__ClientId
             valueFrom:
               secretKeyRef:
