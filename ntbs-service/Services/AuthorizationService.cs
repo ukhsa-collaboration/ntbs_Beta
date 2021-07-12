@@ -8,6 +8,7 @@ using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Projections;
 using ntbs_service.Pages;
 
 namespace ntbs_service.Services
@@ -189,7 +190,8 @@ namespace ntbs_service.Services
                    && _userPermissionsFilter.IncludedPHECCodes.Contains(phecCode);
         }
 
-        public async Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications)
+        public async Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user,
+            IQueryable<Notification> notifications)
         {
             if (_userPermissionsFilter == null)
             {
@@ -215,6 +217,7 @@ namespace ntbs_service.Services
                     )
                 );
             }
+
             return notifications;
         }
 

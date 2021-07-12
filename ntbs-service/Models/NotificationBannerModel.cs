@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Projections;
 
 namespace ntbs_service.Models
 {
@@ -59,16 +61,45 @@ namespace ntbs_service.Models
             NotificationStatusString = notification.NotificationStatus.GetDisplayName();
             NotificationDate = notification.FormattedNotificationDate;
             DrugResistance = notification.DrugResistanceProfile.DrugResistanceProfileString;
-            TreatmentOutcome = CalculateOutcome(notification);
+            TreatmentOutcome = CalculateOutcome(notification.TreatmentEvents);
             Source = "ntbs";
             ShowLink = showLink;
             ShowPadlock = showPadlock;
             RedirectPath = RouteHelper.GetNotificationPath(notification.NotificationId, NotificationSubPaths.Overview);
         }
 
-        private static string CalculateOutcome(Notification notification)
+        public NotificationBannerModel(NotificationForBannerModel notification, bool showPadlock = false,
+            bool showLink = false)
         {
-            return notification.TreatmentEvents.GetMostRecentTreatmentEvent()
+            NotificationId = notification.NotificationId.ToString();
+            SortByDate = notification.NotificationDate ?? notification.CreationDate;
+            TbService = notification.TbService;
+            TbServiceCode = notification.TbServiceCode;
+            TbServicePHECCode = notification.TbServicePHECCode;
+            LocationPHECCode = notification.LocationPHECCode;
+            CaseManager = notification.CaseManager;
+            CaseManagerIsActive = notification.CaseManagerIsActive;
+            CaseManagerId = notification.CaseManagerId;
+            NhsNumber = notification.NhsNumber;
+            DateOfBirth = notification.DateOfBirth;
+            CountryOfBirth = notification.CountryOfBirth;
+            Postcode = notification.Postcode;
+            Name = notification.Name;
+            Sex = notification.Sex;
+            NotificationStatus = notification.NotificationStatus;
+            NotificationStatusString = notification.NotificationStatus.GetDisplayName();
+            NotificationDate = notification.NotificationDate.ConvertToString();
+            DrugResistance = notification.DrugResistance;
+            TreatmentOutcome = CalculateOutcome(notification.TreatmentEvents);
+            Source = "ntbs";
+            ShowLink = showLink;
+            ShowPadlock = showPadlock;
+            RedirectPath = RouteHelper.GetNotificationPath(notification.NotificationId, NotificationSubPaths.Overview);
+        }
+
+        private static string CalculateOutcome(ICollection<TreatmentEvent> treatmentEvents)
+        {
+            return treatmentEvents.GetMostRecentTreatmentEvent()
                        ?.TreatmentOutcome
                        ?.TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded";
         }
