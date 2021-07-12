@@ -35,13 +35,14 @@ namespace ntbs_service.Pages.ServiceDirectory
                     service => service,
                     service => service.CaseManagerTbServices
                         .Select(c => c.CaseManager)
-                        .OrderBy(c => c.DisplayName)
+                        .Where(cm => cm.IsActive)
+                        .OrderBy(cm => cm.DisplayName)
                         .ToList()
                     );
 
             Phec = await _referenceDataRepository.GetPhecByCode(PhecCode);
 
-            RegionalCaseManagers = await _referenceDataRepository.GetUsersByPhecAdGroup(Phec.AdGroup);
+            RegionalCaseManagers = await _referenceDataRepository.GetActiveUsersByPhecAdGroup(Phec.AdGroup);
 
             PrepareBreadcrumbs();
 
