@@ -18,6 +18,7 @@
         public const string ExternalLinks = "ExternalLinks";
         public const string EnvironmentDescription = "EnvironmentDescription";
         public const string EnvironmentName = "EnvironmentDescription:EnvironmentName";
+        public const string AdOptionsReadOnlyUserGroupName = "AdOptions:ReadOnlyUserGroup";
 
         public const int SqlServerDefaultCommandTimeOut = 600;
     }
