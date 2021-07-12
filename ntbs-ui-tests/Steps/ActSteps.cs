@@ -204,34 +204,13 @@ namespace ntbs_ui_tests.Steps
         [When(@"I make selection (.*) from (.*) section for '(.*)'")]
         public void WhenISelectValueFromGroupForFieldWithId(string option, string group, string selectId)
         {
-            WithErrorLogging(() =>
-            {
-                var optionXPath =
-                    $"//select[@id='{selectId}']/optgroup[@label='{group}']/option[normalize-space(text())='{option}']";
-
-                var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
-                wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(optionXPath)));
-
-                var selection = HtmlElementHelper.FindElementByXpath(Browser, optionXPath);
-                selection.Click();
-                if (!Settings.IsHeadless)
-                {
-                    Thread.Sleep(1000);
-                }
-            });
+            SelectOptionFromDropdown(option, selectId, group);
         }
 
         [When(@"I select (.*) for '(.*)'")]
         public void WhenISelectTextFromDropdown(string text, string selectId)
         {
-            WithErrorLogging(() =>
-            {
-                // In some scenarios the select does not become visible/active until an API call (triggered by previous input) has returned.
-                // Consequently we add a wait here on the visibility of the element we will later select.
-                var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
-                wait.Until(ExpectedConditions.ElementIsVisible(By.XPath($"//select[@id='{selectId}']/option[normalize-space(text())='{text}']")));
-                new SelectElement(HtmlElementHelper.FindElementById(Browser, selectId)).SelectByText(text);
-            });
+            SelectOptionFromDropdown(text, selectId);
         }
 
         #endregion
@@ -268,6 +247,41 @@ namespace ntbs_ui_tests.Steps
                 Console.WriteLine(webElement);
                 throw;
             }
+        }
+
+        private void SelectOptionFromDropdown(string text, string dropdownId, string group = null)
+        {
+            WithErrorLogging(() =>
+            {
+                var xPath = group != null
+                    ? $"//select[@id='{dropdownId}']/optgroup[@label='{group}']/option[normalize-space(text())='{text}']"
+                    : $"//select[@id='{dropdownId}']/option[normalize-space(text())='{text}']";
+                // In some scenarios the select does not become visible/active until an API call (triggered by previous input) has returned.
+                // Consequently we add a wait here on the visibility of the element we will later select.
+                var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
+                wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xPath)));
+                SelectElementFromDropdownWithRetry(text, dropdownId);
+            });
+        }
+
+        private void SelectElementFromDropdownWithRetry(string text, string dropdownId)
+        {
+            try
+            {
+                SelectElementFromDropdown(text, dropdownId);
+            }
+            catch (StaleElementReferenceException)
+            {
+                // In scenarios where the dropdown we're selecting from has just been reloaded (e.g. because of the result
+                // of an API call) the options can become stale between finding the dropdown and selecting a value. In this
+                // case we can select the value by just trying again.
+                SelectElementFromDropdown(text, dropdownId);
+            }
+        }
+
+        private void SelectElementFromDropdown(string text, string dropdownId)
+        {
+            new SelectElement(HtmlElementHelper.FindElementById(Browser, dropdownId)).SelectByText(text);
         }
 
         private static Func<IWebDriver, bool> ElementDoesNotExistInDropdown(string text, string dropdownId)
