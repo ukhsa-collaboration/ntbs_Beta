@@ -50,7 +50,7 @@ namespace ntbs_service.DataAccess
         Task<IList<TreatmentOutcome>> GetTreatmentOutcomesForType(TreatmentOutcomeType type);
         Task<TreatmentOutcome> GetTreatmentOutcomeForTypeAndSubType(TreatmentOutcomeType type, TreatmentOutcomeSubType? subType);
         Task<string> GetLocationPhecCodeForPostcodeAsync(string postcode);
-        Task<IList<User>> GetUsersByPhecAdGroup(string phecAdGroup);
+        Task<IList<User>> GetActiveUsersByPhecAdGroup(string phecAdGroup);
         Task<IList<PHEC>> GetPhecsByAdGroups(string adGroups);
     }
 
@@ -321,9 +321,9 @@ namespace ntbs_service.DataAccess
                 .ToListAsync();
         }
 
-        public async Task<IList<User>> GetUsersByPhecAdGroup(string phecAdGroup)
+        public async Task<IList<User>> GetActiveUsersByPhecAdGroup(string phecAdGroup)
         {
-            return await _context.User.Where(u => u.AdGroups.Contains(phecAdGroup)).ToListAsync();
+            return await _context.User.Where(u => u.AdGroups.Contains(phecAdGroup) && u.IsActive).ToListAsync();
         }
 
         public async Task<IList<PHEC>> GetPhecsByAdGroups(string adGroupsString)

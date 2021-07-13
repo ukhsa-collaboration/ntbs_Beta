@@ -13,10 +13,20 @@ on:
 jobs:
   run-ui-tests:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ntbs-ui-tests
     steps:
+      - name: Discover public IP of runner
+        id: ip
+        uses: haythem/public-ip@v1.2
+      - name: Login to Azure CLI
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Whitelist IP
+        env:
+          RUNNER_IP: ${{ steps.ip.outputs.ipv4 }}
+        run: |
+          az network nsg rule create --name sql-server-ui-tests --nsg-name ntbs-ops-dbs-nsg --resource-group NTBS_Development --access Allow --direction Inbound --protocol Tcp --source-address-prefixes "$RUNNER_IP" --destination-port-ranges 62528 --priority 1625
+          az network nsg rule create --name sql-server-browser-ui-tests --nsg-name ntbs-ops-dbs-nsg --resource-group NTBS_Development --access Allow --direction Inbound --protocol Udp --source-address-prefixes "$RUNNER_IP" --destination-port-ranges 1434 --priority 1626
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -27,8 +37,10 @@ jobs:
           DEFAULT_ENVIRONMENT: int
         run: echo "::set-output name=ENVIRONMENT_UNDER_TEST::${{ github.event.inputs.env || env.DEFAULT_ENVIRONMENT }}"
       - name: Download Selenium
+        working-directory: ntbs-ui-tests
         run: wget https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar -O selenium-server-standalone.jar
       - name: Run UI tests
+        working-directory: ntbs-ui-tests
         env:
           EnvironmentUnderTest: ${{ steps.set_environment.outputs.ENVIRONMENT_UNDER_TEST }}
           Users__BirminghamServiceUser__Password: ${{ secrets.UI_TESTS_BIRMINGHAM_SERVICE_USER_PASSWORD }}
@@ -59,6 +71,11 @@ jobs:
           trap stopSeleniumServer EXIT
           echo "Running tests..."
           dotnet test
+      - name: Remove IP from whitelist
+        if: ${{ always() }}
+        run: |
+          az network nsg rule delete --name sql-server-ui-tests --nsg-name ntbs-ops-dbs-nsg --resource-group NTBS_Development
+          az network nsg rule delete --name sql-server-browser-ui-tests --nsg-name ntbs-ops-dbs-nsg --resource-group NTBS_Development
 
       # Notify slack
       - name: Notify success

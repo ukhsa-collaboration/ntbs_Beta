@@ -8,9 +8,9 @@ namespace ntbs_service.Pages.Reports
     {
         public string ReportingPageExternalUrl { get; }
 
-        public IndexModel(IReportingLinksService reportingLinksService)
+        public IndexModel(IExternalLinksService externalLinksService)
         {
-            ReportingPageExternalUrl = reportingLinksService.GetReportingPageUrl();
+            ReportingPageExternalUrl = externalLinksService.GetReportingPageUrl();
         }
 
         public IActionResult OnGet()
