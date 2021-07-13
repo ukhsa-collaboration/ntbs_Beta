@@ -173,11 +173,16 @@ namespace ntbs_ui_tests.Steps
         {
             WithErrorLogging(() =>
             {
+                // In some scenarios, inputs only become clickable after an asynchronous event.
+                // Consequently, we add a wait here to ensure that the input is ready.
+                WaitUntilElementIsClickable(By.Id(elementId));
+
                 var element = HtmlElementHelper.FindElementById(Browser, elementId);
                 element.Click();
                 element.SendKeys(Keys.Control + "a");
                 element.SendKeys(Keys.Delete);
                 element.SendKeys(value + "\t");
+
                 if (!Settings.IsHeadless)
                 {
                     Thread.Sleep(1000);
@@ -257,31 +262,36 @@ namespace ntbs_ui_tests.Steps
                     ? $"//select[@id='{dropdownId}']/optgroup[@label='{group}']/option[normalize-space(text())='{text}']"
                     : $"//select[@id='{dropdownId}']/option[normalize-space(text())='{text}']";
                 // In some scenarios the select does not become visible/active until an API call (triggered by previous input) has returned.
-                // Consequently we add a wait here on the visibility of the element we will later select.
-                var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
-                wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xPath)));
-                SelectElementFromDropdownWithRetry(text, dropdownId);
+                // Consequently we add a wait here for the element we want to select to be clickable.
+                WaitUntilElementIsClickable(By.XPath(xPath));
+                SelectElementFromDropdownWithRetry(xPath);
             });
         }
 
-        private void SelectElementFromDropdownWithRetry(string text, string dropdownId)
+        private void SelectElementFromDropdownWithRetry(string xPath)
         {
             try
             {
-                SelectElementFromDropdown(text, dropdownId);
+                SelectElementFromDropdown(xPath);
             }
             catch (StaleElementReferenceException)
             {
                 // In scenarios where the dropdown we're selecting from has just been reloaded (e.g. because of the result
                 // of an API call) the options can become stale between finding the dropdown and selecting a value. In this
                 // case we can select the value by just trying again.
-                SelectElementFromDropdown(text, dropdownId);
+                SelectElementFromDropdown(xPath);
             }
         }
 
-        private void SelectElementFromDropdown(string text, string dropdownId)
+        private void SelectElementFromDropdown(string xPath)
         {
-            new SelectElement(HtmlElementHelper.FindElementById(Browser, dropdownId)).SelectByText(text);
+            HtmlElementHelper.FindElementByXpath(Browser, xPath).Click();
+        }
+
+        private void WaitUntilElementIsClickable(By by)
+        {
+            var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
+            wait.Until(ExpectedConditions.ElementToBeClickable(by));
         }
 
         private static Func<IWebDriver, bool> ElementDoesNotExistInDropdown(string text, string dropdownId)
