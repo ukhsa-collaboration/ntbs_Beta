@@ -9,7 +9,6 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using TechTalk.SpecFlow;
 using Xunit;
-using ExpectedConditions = SeleniumExtras.WaitHelpers.ExpectedConditions;
 
 namespace ntbs_ui_tests.Steps
 {
@@ -175,7 +174,7 @@ namespace ntbs_ui_tests.Steps
             {
                 // In some scenarios, inputs only become clickable after an asynchronous event.
                 // Consequently, we add a wait here to ensure that the input is ready.
-                WaitUntilElementIsClickable(By.Id(elementId));
+                Browser.WaitUntilElementIsClickable(By.Id(elementId), Settings.ImplicitWait);
 
                 var element = HtmlElementHelper.FindElementById(Browser, elementId);
                 element.Click();
@@ -263,7 +262,7 @@ namespace ntbs_ui_tests.Steps
                     : $"//select[@id='{dropdownId}']/option[normalize-space(text())='{text}']";
                 // In some scenarios the select does not become visible/active until an API call (triggered by previous input) has returned.
                 // Consequently we add a wait here for the element we want to select to be clickable.
-                WaitUntilElementIsClickable(By.XPath(xPath));
+                Browser.WaitUntilElementIsClickable(By.XPath(xPath), Settings.ImplicitWait);
                 SelectElementFromDropdownWithRetry(xPath);
             });
         }
@@ -286,12 +285,6 @@ namespace ntbs_ui_tests.Steps
         private void SelectElementFromDropdown(string xPath)
         {
             HtmlElementHelper.FindElementByXpath(Browser, xPath).Click();
-        }
-
-        private void WaitUntilElementIsClickable(By by)
-        {
-            var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
-            wait.Until(ExpectedConditions.ElementToBeClickable(by));
         }
 
         private static Func<IWebDriver, bool> ElementDoesNotExistInDropdown(string text, string dropdownId)
