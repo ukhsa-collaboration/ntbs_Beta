@@ -82,10 +82,14 @@ namespace ntbs_ui_tests.Steps
             {
                 var user = Settings.Users[userId];
                 user.UserId = GetUserIdFromUsername(user.Username);
+                const string nextButtonSelector = "input[type=submit][value=Next]";
+                Browser.WaitUntilElementIsClickable(By.CssSelector(nextButtonSelector), Settings.ImplicitWait);
                 Browser.FindElement(By.CssSelector("input[type=email]")).SendKeys(user.Username);
-                Browser.FindElement(By.CssSelector("input[type=submit][value=Next]")).Click();
+                Browser.FindElement(By.CssSelector(nextButtonSelector)).Click();
+                const string signInButtonSelector = "input[type=submit][value='Sign in']";
+                Browser.WaitUntilElementIsClickable(By.CssSelector(signInButtonSelector), Settings.ImplicitWait);
                 Browser.FindElement(By.CssSelector("input[type=password]")).SendKeys(user.Password);
-                Browser.FindElement(By.CssSelector("input[type=submit][value='Sign in']")).Click();
+                Browser.FindElement(By.CssSelector(signInButtonSelector)).Click();
                 TestContext.LoggedInUser = user;
             });
         }
