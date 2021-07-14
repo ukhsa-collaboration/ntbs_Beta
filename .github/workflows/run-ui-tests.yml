@@ -25,8 +25,8 @@ jobs:
         env:
           RUNNER_IP: ${{ steps.ip.outputs.ipv4 }}
         run: |
-          az network nsg rule create --name sql-server-ui-tests --nsg-name ntbs-ops-dbs-nsg --resource-group NTBS_Development --access Allow --direction Inbound --protocol Tcp --source-address-prefixes "$RUNNER_IP" --destination-port-ranges 62528 --priority 1625
-          az network nsg rule create --name sql-server-browser-ui-tests --nsg-name ntbs-ops-dbs-nsg --resource-group NTBS_Development --access Allow --direction Inbound --protocol Udp --source-address-prefixes "$RUNNER_IP" --destination-port-ranges 1434 --priority 1626
+          az network nsg rule create --name sql-server-ui-tests --nsg-name ntbs-ops-dbs-nsg --resource-group NTBS_Development-northeurope --access Allow --direction Inbound --protocol Tcp --source-address-prefixes "$RUNNER_IP" --destination-port-ranges 62528 --priority 1625
+          az network nsg rule create --name sql-server-browser-ui-tests --nsg-name ntbs-ops-dbs-nsg --resource-group NTBS_Development-northeurope --access Allow --direction Inbound --protocol Udp --source-address-prefixes "$RUNNER_IP" --destination-port-ranges 1434 --priority 1626
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -74,8 +74,8 @@ jobs:
       - name: Remove IP from whitelist
         if: ${{ always() }}
         run: |
-          az network nsg rule delete --name sql-server-ui-tests --nsg-name ntbs-ops-dbs-nsg --resource-group NTBS_Development
-          az network nsg rule delete --name sql-server-browser-ui-tests --nsg-name ntbs-ops-dbs-nsg --resource-group NTBS_Development
+          az network nsg rule delete --name sql-server-ui-tests --nsg-name ntbs-ops-dbs-nsg --resource-group NTBS_Development-northeurope
+          az network nsg rule delete --name sql-server-browser-ui-tests --nsg-name ntbs-ops-dbs-nsg --resource-group NTBS_Development-northeurope
 
       # Notify slack
       - name: Notify success
