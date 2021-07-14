@@ -4,7 +4,7 @@ namespace ntbs_service
 {
     public static class VersionInfo
     {
-        public const string CurrentVersion = "1.0.0";
-        public static readonly DateTime CurrentVersionDate = new DateTime(2021, 07, 02, 12, 00, 00);
+        public const string CurrentVersion = "1.0.2";
+        public static readonly DateTime CurrentVersionDate = new DateTime(2021, 07, 15, 12, 00, 00);
     }
 }
