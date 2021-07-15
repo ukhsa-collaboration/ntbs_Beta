@@ -52,7 +52,7 @@ then
     specimen_matching_publish_profile=".\source\Publish Profiles\Pre-production\azure-test-specimen-matching.publish.xml"
 elif [[ $DEPLOY_ENVIRONMENT = "azure-uat" ]]
 then
-    migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Pre-production\azure-migration.publish.xml"
+    migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Pre-production\azure-uat-migration.publish.xml"
     reporting_publish_profile=".\source\Publish Profiles\Pre-production\azure-uat-reporting.publish.xml"
     specimen_matching_publish_profile=".\source\Publish Profiles\Pre-production\azure-uat-specimen-matching.publish.xml"
 else
