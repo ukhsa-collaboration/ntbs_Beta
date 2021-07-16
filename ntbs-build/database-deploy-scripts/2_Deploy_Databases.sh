@@ -45,6 +45,16 @@ then
     migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Pre-production\DEV-migration.publish.xml"
     reporting_publish_profile=".\source\Publish Profiles\Pre-production\DEV-reporting.publish.xml"
     specimen_matching_publish_profile=".\source\Publish Profiles\Pre-production\DEV-specimen-matching.publish.xml"
+elif [[ $DEPLOY_ENVIRONMENT = "test" ]]
+then
+    migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Pre-production\azure-migration.publish.xml"
+    reporting_publish_profile=".\source\Publish Profiles\Pre-production\azure-test-reporting.publish.xml"
+    specimen_matching_publish_profile=".\source\Publish Profiles\Pre-production\azure-test-specimen-matching.publish.xml"
+elif [[ $DEPLOY_ENVIRONMENT = "azure-uat" ]]
+then
+    migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Pre-production\azure-uat-migration.publish.xml"
+    reporting_publish_profile=".\source\Publish Profiles\Pre-production\azure-uat-reporting.publish.xml"
+    specimen_matching_publish_profile=".\source\Publish Profiles\Pre-production\azure-uat-specimen-matching.publish.xml"
 else
     echo "Invalid environment entered."
     exit 1
@@ -80,6 +90,6 @@ deploy_database() {
 }
 
 deploy_database "$migration_dir" "$migration_sqlproj" "$migration_publish_profile" "$migration_dacpac"
-deploy_database "$reporting_dir" "$reporting_sqlproj" "$reporting_publish_profile" "$reporting_dacpac"
 deploy_database "$specimen_matching_dir" "$specimen_matching_sqlproj" "$specimen_matching_publish_profile" "$specimen_matching_dacpac"
+deploy_database "$reporting_dir" "$reporting_sqlproj" "$reporting_publish_profile" "$reporting_dacpac"
 

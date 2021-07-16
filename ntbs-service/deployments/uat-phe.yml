@@ -114,6 +114,22 @@ spec:
               value: "verification"
             - name: EnvironmentDescription__EnvironmentName
               value: "phe-uat"
+            # Set the data refresh job an hour later than live, as it uses the same copy of the ETS database.
+            # The other nightly cron jobs then need to be set back to match.
+            - name: ScheduledJobsConfig__ReportingDataRefreshJobCron
+              value: "30 7 * * *"
+            - name: ScheduledJobsConfig__CloseInactiveNotificationsCron
+              value: "0 8 * * *"
+            - name: ScheduledJobsConfig__DrugResistanceProfileUpdateCron
+              value: "0 8 * * *"
+            - name: ScheduledJobsConfig__UnmatchedLabResultAlertsCron
+              value: "0 8 * * *"
+            - name: ScheduledJobsConfig__DataQualityAlertsCron
+              value: "0 8 * * *"
+            - name: ScheduledJobsConfig__MarkImportedNotificationsAsImportedCron
+              value: "0 8 * * *"
+            - name: ScheduledJobsConfig__UpdateTableCountsJobCron
+              value: "30 8 * * *"
           volumeMounts:
             - mountPath: /krbtab
               name: krb-tab
