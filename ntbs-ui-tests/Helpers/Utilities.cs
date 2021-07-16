@@ -129,7 +129,7 @@ namespace ntbs_ui_tests.Helpers
                         },
                         TravelDetails = new TravelDetails
                         {
-                            HasTravel = Status.Yes, Country1Id = 3, Country2Id = 6, Country3Id = 5,
+                            HasTravel = Status.Yes, Country1Id = 3, Country2Id = 7, Country3Id = 5,
                             StayLengthInMonths1 = 4, StayLengthInMonths2 = 4, StayLengthInMonths3 = 12,
                             TotalNumberOfCountries = 3
                         },
