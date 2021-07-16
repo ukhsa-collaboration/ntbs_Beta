@@ -167,6 +167,19 @@ namespace ntbs_ui_tests.Steps
             });
         }
 
+        [When(@"I remove input from '(.*)'")]
+        public void WhenIRemoveFromInputList(string inputId)
+        {
+            WithErrorLogging(() =>
+            {
+                var inputElement = HtmlElementHelper.FindElementById(Browser, inputId);
+                inputElement.Click();
+                inputElement.SendKeys(Keys.Control + "a");
+                inputElement.SendKeys(Keys.Delete);
+                inputElement.SendKeys("\t");
+            });
+        }
+
         [When(@"I enter (.*) into '(.*)'")]
         public void WhenIEnterValueIntoFieldWithId(string value, string elementId)
         {
