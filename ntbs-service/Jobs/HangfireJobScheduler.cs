@@ -1,6 +1,7 @@
 ﻿using System;
 using Hangfire;
 using ntbs_service.Properties;
+using TimeZoneConverter;
 
 namespace ntbs_service.Jobs
 {
@@ -21,7 +22,10 @@ namespace ntbs_service.Jobs
 
         // The window in which our overnight jobs must run has become so narrow that we now need to adjust for local time
         // to be able to reliably fit them in before the start of the working day.
-        private static readonly TimeZoneInfo GmtStandardTime = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
+        // We're using TZConvert rather than TimeZoneInfo.FindSystemTimeZoneById because it is cross-platform. Note, however,
+        // that this will not be necessary in .NET 6, so when the project updates to .NET 6 we can remove the dependency.
+        // See https://devblogs.microsoft.com/dotnet/date-time-and-time-zone-enhancements-in-net-6/#time-zone-conversion-apis
+        private static readonly TimeZoneInfo GmtStandardTime = TZConvert.GetTimeZoneInfo("GMT Standard Time");
 
         public static void ScheduleRecurringJobs(ScheduledJobsConfig scheduledJobsConfig)
         {
