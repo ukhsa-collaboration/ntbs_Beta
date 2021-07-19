@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
@@ -8,81 +6,37 @@ using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
 {
-    public class TestResultsPageTest : TestRunnerNotificationBase
+    public class TestResultsPageTests : TestRunnerNotificationBase
     {
-        protected override string NotificationSubPath => NotificationSubPaths.EditTestResults;
+        protected override string NotificationSubPath => NotificationSubPaths.ViewTestResults;
 
-        public TestResultsPageTest(NtbsWebApplicationFactory<Startup> factory) : base(factory)
+        public TestResultsPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
         {
         }
 
         [Fact]
-        public async Task IfMatchingLabResultsExist_DisplaysLabResults()
+        public async void TestResultsPageDisplaysSpecimenData()
         {
             // Arrange
             const int notificationId = Utilities.NOTIFIED_ID;
 
             // Act
-            var response = await Client.GetAsync(GetCurrentPathForId(notificationId));
+            var document = await GetDocumentForUrlAsync(GetCurrentPathForId(notificationId));
 
             // Assert
-            var document = await GetDocumentAsync(response);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotNull(document.QuerySelector("#lab-results-summary"));
-            Assert.NotNull(document.QuerySelector("#specimens-details"));
-        }
-
-        [Fact]
-        public async Task IfMatchingLabResultsDoNotExist_DoNotDisplaysLabResults()
-        {
-            // Arrange
-            const int notificationId = Utilities.DRAFT_ID;
-
-            // Act
-            var response = await Client.GetAsync(GetCurrentPathForId(notificationId));
-
-            // Assert
-            var document = await GetDocumentAsync(response);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Null(document.QuerySelector("#lab-results-summary"));
-            Assert.Null(document.QuerySelector("#specimens-details"));
-        }
-
-        [Fact]
-        public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
-        {
-            // Arrange
-            const int id = Utilities.NOTIFIED_ID;
-            var url = GetCurrentPathForId(id);
-            var document = await GetDocumentForUrlAsync(url);
-
-            var formData = new Dictionary<string, string>
-            {
-                ["NotificationId"] = id.ToString(),
-                ["TestData.HasTestCarriedOut"] = "false"
-            };
-
-            // Act
-            var result = await Client.SendPostFormWithData(document, formData, url);
-
-            // Assert
-            var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
-            result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
-        }
-
-        [Fact]
-        public async Task NotifiedPageHasReturnLinkToOverview()
-        {
-            // Arrange
-            const int id = Utilities.NOTIFIED_ID;
-            var url = GetCurrentPathForId(id);
-
-            // Act
-            var document = await GetDocumentForUrlAsync(url);
-
-            // Assert
-            var overviewLink = RouteHelper.GetNotificationOverviewPathWithSectionAnchor(id, NotificationSubPath);
-            Assert.NotNull(document.QuerySelector($"a[href='{overviewLink}']"));
+            Assert.Contains("20 Dec 2010", document.GetElementById("1253490-date").TextContent);
+            Assert.Contains("Lymph node", document.GetElementById("1253490-type").TextContent);
+            Assert.Contains("M. tuberculosis complex", document.GetElementById("1253490-species").TextContent);
+            Assert.Contains("Northern Ireland", document.GetElementById("1253490-labname").TextContent);
+            Assert.Contains("Sensitive", document.GetElementById("1253490-inh").TextContent);
+            Assert.Contains("Sensitive", document.GetElementById("1253490-rif").TextContent);
+            Assert.Contains("No result", document.GetElementById("1253490-pza").TextContent);
+            Assert.Contains("No result", document.GetElementById("1253490-emb").TextContent);
+            Assert.Contains("Sensitive", document.GetElementById("1253490-amino").TextContent);
+            Assert.Contains("Sensitive", document.GetElementById("1253490-quin").TextContent);
+            Assert.Contains("No", document.GetElementById("1253490-mdr").TextContent);
+            Assert.Contains("No", document.GetElementById("1253490-xdr").TextContent);
+            Assert.Contains("Manual", document.GetElementById("1253490-match").TextContent);
         }
     }
 }
