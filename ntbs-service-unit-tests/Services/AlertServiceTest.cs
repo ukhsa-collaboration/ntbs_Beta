@@ -33,7 +33,7 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
-        public async Task AddUniqueAlert_AddsIfNoAlertWithSameNotificationIdAndAlertType()
+        public async Task AddUniqueAlert_DoesNotAddAlert_IfAlertWithSameNotificationIdAndAlertTypeExists()
         {
             // Arrange
             var matchingAlert = Task.FromResult(new TestAlert { AlertId = 2 });
@@ -50,7 +50,7 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
-        public async Task AddUniqueAlert_FailsIfNoAlertWithSameNotificationIdAndAlertType()
+        public async Task AddUniqueAlert_AddsAlert_IfNoAlertWithSameNotificationIdAndAlertType()
         {
             // Arrange
             _mockAlertRepository.Setup(x =>
@@ -174,6 +174,75 @@ namespace ntbs_service_unit_tests.Services
                 AssertAlertNotClosed(alert1);
             }
             _mockAlertRepository.Verify(r => r.SaveAlertChangesAsync(NotificationAuditType.Edited), Times.Once);
+        }
+
+        [Fact]
+        public async Task AddUniqueAlert_CreatesAlertWithCurrentTimestamp()
+        {
+            // Arrange
+            _mockAlertRepository.Setup(x =>
+                    x.GetAlertByNotificationIdAndTypeAsync<TestAlert>(It.IsAny<int>()))
+                .Returns(Task.FromResult((TestAlert)null));
+            var testAlert = new TestAlert { NotificationId = 2, AlertType = AlertType.TransferRequest };
+
+            // Act
+            await _alertService.AddUniqueAlertAsync(testAlert);
+
+            // Assert
+            Assert.Equal(DateTime.Now, testAlert.CreationDate, TimeSpan.FromSeconds(1));
+        }
+
+        [Fact]
+        public async Task AddUniqueOpenAlertAsync_CreatesAlertWithCurrentTimestamp()
+        {
+            // Arrange
+            _mockAlertRepository.Setup(x =>
+                    x.GetOpenAlertByNotificationId<TestAlert>(It.IsAny<int>()))
+                .Returns(Task.FromResult((TestAlert)null));
+            var testAlert = new TestAlert { NotificationId = 2, AlertType = AlertType.TransferRequest };
+
+            // Act
+            await _alertService.AddUniqueOpenAlertAsync(testAlert);
+
+            // Assert
+            Assert.Equal(DateTime.Now, testAlert.CreationDate, TimeSpan.FromSeconds(1));
+        }
+
+        [Fact]
+        public async Task AddUniquePotentialDuplicateAlertAsync_CreatesAlertWithCurrentTimestamp()
+        {
+            // Arrange
+            _mockAlertRepository.Setup(x =>
+                    x.GetDuplicateAlertByNotificationIdAndDuplicateId(It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(Task.FromResult((DataQualityPotentialDuplicateAlert)null));
+            var testAlert = new DataQualityPotentialDuplicateAlert { NotificationId = 2, AlertType = AlertType.DataQualityPotientialDuplicate };
+
+            // Act
+            await _alertService.AddUniquePotentialDuplicateAlertAsync(testAlert);
+
+            // Assert
+            Assert.Equal(DateTime.Now, testAlert.CreationDate, TimeSpan.FromSeconds(1));
+        }
+
+        [Fact]
+        public async Task CreateAlertsForUnmatchedLabResults_CreatesAlertWithCurrentTimestamp()
+        {
+            // Arrange
+            _mockNotificationRepository.Setup(x => x.GetNotificationForAlertCreationAsync(It.IsAny<int>()))
+                .Returns(Task.FromResult(new Notification {NotificationId = 1}));
+            var pairings = new List<SpecimenMatchPairing>
+            {
+                new SpecimenMatchPairing {NotificationId = 1, ReferenceLaboratoryNumber = "A123"}
+            };
+
+            // Act
+            await _alertService.CreateAlertsForUnmatchedLabResults(pairings);
+
+            // Assert
+            _mockAlertRepository.Verify(x => x.AddAlertRangeAsync(
+                It.Is<IEnumerable<Alert>>(alerts =>
+                    alerts.Single().CreationDate < DateTime.Now
+                        && alerts.Single().CreationDate > DateTime.Now.Subtract(TimeSpan.FromSeconds(1)))));
         }
 
         private void AssertAlertClosedRecently(Alert alert)

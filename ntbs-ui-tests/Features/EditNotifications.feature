@@ -220,6 +220,17 @@ Feature: Notification editing
     And I can see the value 'Comoros' for the field 'visitor-country2' in the 'Travel' overview section
     And I can see the value 'Fiji' for the field 'visitor-country3' in the 'Travel' overview section
 
+  Scenario: Can remove countries from travel and visitor fields
+    When I go to edit the 'Travel' section
+    Then I should be on the Travel page
+    When I enter 2 into 'TravelDetails_TotalNumberOfCountries'
+    And I remove input from 'TravelDetails_Country3Id'
+    And I remove input from 'TravelDetails_StayLengthInMonths3'
+    And I click on the 'save-button' button
+
+    Then I can see the value 'Yes' for the field 'has-travel' in the 'Travel' overview section
+    And I can see the value '2' for the field 'travel-countries-total' in the 'Travel' overview section
+
   Scenario: Edit notification comorbidity fields
     When I go to edit the 'Comorbidities' section
     Then I should be on the Comorbidities page

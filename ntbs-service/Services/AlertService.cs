@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
@@ -229,7 +228,7 @@ namespace ntbs_service.Services
 
         private async Task PopulateAndAddAlertAsync(Alert alert)
         {
-            alert.CreationDate = DateTime.Today;
+            alert.CreationDate = DateTime.Now;
             await _alertRepository.AddAlertAsync(alert);
         }
     }
