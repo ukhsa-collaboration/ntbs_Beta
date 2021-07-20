@@ -72,7 +72,7 @@
         public const string ContactTracingChildrenLatentTB = "Children with latent TB must not be greater than number of children screened minus those with active TB";
         public const string ContactTracingAdultsActiveTB = "Adults with active TB  must not be greater than number of adults screened minus those with latent TB";
         public const string ContactTracingChildrenActiveTB = "Children with active TB must not be greater than equal to than number of children screened minus those with latent TB";
-        public const string ContactTracingAdultStartedTreatment = "Adults that have started treatment must not be greater than number of adults with latent TB";
+        public const string ContactTracingAdultsStartedTreatment = "Adults that have started treatment must not be greater than number of adults with latent TB";
         public const string ContactTracingChildrenStartedTreatment = "Children that have started treatment must not be greater than number of children with latent TB";
         public const string ContactTracingAdultsFinishedTreatment = "Adults that have finished treatment must not be greater than number of adults that started treatment";
         public const string ContactTracingChildrenFinishedTreatment = "Children that have finished treatment must not be greater than number of children that started treatment";
