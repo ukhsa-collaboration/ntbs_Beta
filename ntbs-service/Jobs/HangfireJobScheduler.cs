@@ -1,6 +1,7 @@
 ﻿using System;
 using Hangfire;
 using ntbs_service.Properties;
+using TimeZoneConverter;
 
 namespace ntbs_service.Jobs
 {
@@ -19,6 +20,13 @@ namespace ntbs_service.Jobs
         private const string ReportingDataProcessingJobId = "reporting-data-processing";
         private const string UpdateTableCountsJobId = "update-table-counts";
 
+        // The window in which our overnight jobs must run has become so narrow that we now need to adjust for local time
+        // to be able to reliably fit them in before the start of the working day.
+        // We're using TZConvert rather than TimeZoneInfo.FindSystemTimeZoneById because it is cross-platform. Note, however,
+        // that this will not be necessary in .NET 6, so when the project updates to .NET 6 we can remove the dependency.
+        // See https://devblogs.microsoft.com/dotnet/date-time-and-time-zone-enhancements-in-net-6/#time-zone-conversion-apis
+        private static readonly TimeZoneInfo GmtStandardTime = TZConvert.GetTimeZoneInfo("GMT Standard Time");
+
         public static void ScheduleRecurringJobs(ScheduledJobsConfig scheduledJobsConfig)
         {
             if (scheduledJobsConfig.UserSyncEnabled)
@@ -27,7 +35,7 @@ namespace ntbs_service.Jobs
                     UserSyncJobId,
                     job => job.Run(JobCancellationToken.Null),
                     scheduledJobsConfig.UserSyncCron,
-                    TimeZoneInfo.Local);
+                    GmtStandardTime);
             }
             else
             {
@@ -40,7 +48,7 @@ namespace ntbs_service.Jobs
                     CloseInactiveNotificationsJobId,
                     job => job.Run(JobCancellationToken.Null),
                     scheduledJobsConfig.CloseInactiveNotificationsCron,
-                    TimeZoneInfo.Local);
+                    GmtStandardTime);
             }
             else
             {
@@ -53,7 +61,7 @@ namespace ntbs_service.Jobs
                     DrugResistanceProfileUpdateJobId,
                     job => job.Run(JobCancellationToken.Null),
                     scheduledJobsConfig.DrugResistanceProfileUpdateCron,
-                    TimeZoneInfo.Local);
+                    GmtStandardTime);
             }
             else
             {
@@ -66,7 +74,7 @@ namespace ntbs_service.Jobs
                     UnmatchedLabResultAlertsJobId,
                     job => job.Run(JobCancellationToken.Null),
                     scheduledJobsConfig.UnmatchedLabResultAlertsCron,
-                    TimeZoneInfo.Local);
+                    GmtStandardTime);
             }
             else
             {
@@ -79,7 +87,7 @@ namespace ntbs_service.Jobs
                     DataQualityAlertsJobId,
                     job => job.Run(JobCancellationToken.Null),
                     scheduledJobsConfig.DataQualityAlertsCron,
-                    TimeZoneInfo.Local);
+                    GmtStandardTime);
             }
             else
             {
@@ -92,7 +100,7 @@ namespace ntbs_service.Jobs
                     NotificationClusterUpdateJobId,
                     job => job.Run(JobCancellationToken.Null),
                     scheduledJobsConfig.NotificationClusterUpdateCron,
-                    TimeZoneInfo.Local);
+                    GmtStandardTime);
             }
             else
             {
@@ -105,7 +113,7 @@ namespace ntbs_service.Jobs
                     MarkImportedNotificationsAsImportedJobId,
                     job => job.Run(JobCancellationToken.Null),
                     scheduledJobsConfig.MarkImportedNotificationsAsImportedCron,
-                    TimeZoneInfo.Local);
+                    GmtStandardTime);
             }
             else
             {
@@ -119,7 +127,7 @@ namespace ntbs_service.Jobs
                     GenerateReportingDataJobId,
                     job => job.Run(null, JobCancellationToken.Null),
                     scheduledJobsConfig.GenerateReportingDataJobCron,
-                    TimeZoneInfo.Local);
+                    GmtStandardTime);
             }
             else
             {
@@ -133,7 +141,7 @@ namespace ntbs_service.Jobs
                     GenericStoredProcedureJobId,
                     job => job.Run(null, JobCancellationToken.Null),
                     scheduledJobsConfig.GenericStoredProcedureJobCron,
-                    TimeZoneInfo.Local);
+                    GmtStandardTime);
             }
             else
             {
@@ -147,7 +155,7 @@ namespace ntbs_service.Jobs
                     ReportingDataRefreshJobId,
                     job => job.Run(null, JobCancellationToken.Null),
                     scheduledJobsConfig.ReportingDataRefreshJobCron,
-                    TimeZoneInfo.Local);
+                    GmtStandardTime);
             }
             else
             {
@@ -161,7 +169,7 @@ namespace ntbs_service.Jobs
                     ReportingDataProcessingJobId,
                     job => job.Run(null, JobCancellationToken.Null),
                     scheduledJobsConfig.ReportingDataProcessingJobCron,
-                    TimeZoneInfo.Local);
+                    GmtStandardTime);
             }
             else
             {
@@ -175,7 +183,7 @@ namespace ntbs_service.Jobs
                     UpdateTableCountsJobId,
                     job => job.Run(null),
                     scheduledJobsConfig.UpdateTableCountsJobCron,
-                    TimeZoneInfo.Local);
+                    GmtStandardTime);
             }
             else
             {

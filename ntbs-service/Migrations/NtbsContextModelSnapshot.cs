@@ -246,8 +246,8 @@ namespace ntbs_service.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("OtherDetails")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<int?>("YearOfExposure")
                         .HasColumnType("int");
@@ -311,8 +311,8 @@ namespace ntbs_service.Migrations
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("OtherDetails")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<int?>("YearOfExposure")
                         .HasColumnType("int");
@@ -345,8 +345,8 @@ namespace ntbs_service.Migrations
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("OtherDetails")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<int?>("YearOfExposure")
                         .HasColumnType("int");
@@ -382,8 +382,8 @@ namespace ntbs_service.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("OtherDetails")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<int?>("YearOfConsumption")
                         .HasColumnType("int");

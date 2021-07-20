@@ -229,7 +229,7 @@ namespace ntbs_service
             services.AddScoped<ISpecimenImportService, SpecimenImportService>();
             services.AddScoped<ICaseManagerImportService, CaseManagerImportService>();
             services.AddScoped<IAdUserService, AdUserService>();
-            services.AddScoped<IReportingLinksService, ReportingLinksService>();
+            services.AddScoped<IExternalLinksService, ExternalLinksService>();
             services.AddScoped<ITreatmentEventMapper, TreatmentEventMapper>();
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<ILogService, LogService>();

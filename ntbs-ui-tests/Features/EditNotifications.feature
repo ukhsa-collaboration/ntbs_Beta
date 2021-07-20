@@ -25,7 +25,7 @@ Feature: Notification editing
     And I enter 56 Schnowzer Boulevard into 'PatientDetails_Address'
     And I select radio value 'postcode-yes'
     And I enter ST1 1AA into 'PatientDetails_Postcode'
-    And I make selection 26 from Other section for 'PatientDetails_OccupationId'
+    And I make selection Retired from Other section for 'PatientDetails_OccupationId'
     When I click on the 'save-button' button
 
     Then I can see the value 'LEICESTER, Jester' for the field 'full-name' in the 'PatientDetails' overview section
@@ -50,7 +50,7 @@ Feature: Notification editing
     And I wait
     And I select GOOD HOPE HOSPITAL for 'HospitalDetails_HospitalId'
     And I enter Dr Howard Foreman into 'HospitalDetails_Consultant'
-    And I enter Birmingham UITester into 'HospitalDetails_CaseManagerId'
+    And I select Birmingham UITester for 'HospitalDetails_CaseManagerId'
     When I click on the 'save-button' button
 
     Then I can see the value 'Birmingham & Solihull' for the field 'tb-service' in the 'HospitalDetails' overview section
@@ -67,7 +67,7 @@ Feature: Notification editing
     And I check 'NotificationSiteMap_BONE_SPINE_'
     And I check 'NotificationSiteMap_CRYPTIC_'
     And I check 'bcg-vaccination-no'
-    And I enter Offered and done into 'ClinicalDetails_HIVTestState'
+    And I select Offered and done for 'ClinicalDetails_HIVTestState'
     And I check 'symptomatic-yes'
     And I enter 1 into 'FormattedSymptomDate_Day'
     And I enter 2 into 'FormattedSymptomDate_Month'
@@ -124,9 +124,9 @@ Feature: Notification editing
     And I enter 11 into 'FormattedTestDate_Day'
     And I enter 3 into 'FormattedTestDate_Month'
     And I enter 2011 into 'FormattedTestDate_Year'
-    And I enter Histology into 'TestResultForEdit_ManualTestTypeId'
-    And I enter Bone and joint into 'TestResultForEdit_SampleTypeId'
-    And I enter Negative into 'TestResultForEdit_Result'
+    And I select Histology for 'TestResultForEdit_ManualTestTypeId'
+    And I make selection Bone and joint from Non-Respiratory section for 'TestResultForEdit_SampleTypeId'
+    And I select Negative for 'TestResultForEdit_Result'
     And I click on the 'save-test-result-button' button
     When I click on the 'save-button' button
 
@@ -220,6 +220,17 @@ Feature: Notification editing
     And I can see the value 'Comoros' for the field 'visitor-country2' in the 'Travel' overview section
     And I can see the value 'Fiji' for the field 'visitor-country3' in the 'Travel' overview section
 
+  Scenario: Can remove countries from travel and visitor fields
+    When I go to edit the 'Travel' section
+    Then I should be on the Travel page
+    When I enter 2 into 'TravelDetails_TotalNumberOfCountries'
+    And I remove input from 'TravelDetails_Country3Id'
+    And I remove input from 'TravelDetails_StayLengthInMonths3'
+    And I click on the 'save-button' button
+
+    Then I can see the value 'Yes' for the field 'has-travel' in the 'Travel' overview section
+    And I can see the value '2' for the field 'travel-countries-total' in the 'Travel' overview section
+
   Scenario: Edit notification comorbidity fields
     When I go to edit the 'Comorbidities' section
     Then I should be on the Comorbidities page
@@ -265,11 +276,11 @@ Feature: Notification editing
     When I go to edit the 'SocialContextVenues' section
     Then I should be on the SocialContextVenues page
     When I click on the Edit link
-    And I enter Nursery into 'Venue_VenueTypeId'
+    And I make selection Nursery from Childcare & education section for 'Venue_VenueTypeId'
     And I enter McDonalds into 'Venue_Name'
     And I enter 666 Stan Drive into 'Venue_Address'
     And I enter LS6 2EB into 'Venue_Postcode'
-    And I enter Daily into 'Venue_Frequency'
+    And I select Daily for 'Venue_Frequency'
     And I enter 4 into 'FormattedDateFrom_Day'
     And I enter 4 into 'FormattedDateFrom_Month'
     And I enter 2004 into 'FormattedDateFrom_Year'
@@ -307,9 +318,9 @@ Feature: Notification editing
     And I enter 5 into 'FormattedEventDate_Day'
     And I enter 4 into 'FormattedEventDate_Month'
     And I enter 2012 into 'FormattedEventDate_Year'
-    And I enter Treatment outcome into 'treatmentevent-type'
-    And I enter Lost to follow-up into 'treatmentoutcome-type'
-    And I enter Patient left UK into 'treatmentoutcome-subtype'
+    And I select Treatment outcome for 'treatmentevent-type'
+    And I select Lost to follow-up for 'treatmentoutcome-type'
+    And I select Patient left UK for 'treatmentoutcome-subtype'
     And I enter Moved to Yemen we think into 'treatmentevent-note'
     And I click on the 'save-treatment-event-button' button
     And I click on the Notification details link

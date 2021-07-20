@@ -20,6 +20,7 @@ namespace ntbs_service.Models.Entities
         [RequiredIf(nameof(ShouldValidateFull), ErrorMessage = ValidationMessages.Mandatory)]
         [AssertThat(nameof(ResultAddedIfTestCarriedOut), ErrorMessage = ValidationMessages.NoTestResult)]
         public bool? HasTestCarriedOut { get; set; }
+        [ValidationChildEnumerable]
         public virtual ICollection<ManualTestResult> ManualTestResults { get; set; }
 
         [NotMapped]

@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
@@ -29,12 +30,16 @@ namespace ntbs_service.Models.Entities
         public Status? ImmigrationDetaineeStatus { get; set; }
 
         [Display(Name = "History of smoking")]
+        [ValidationChild]
         public virtual RiskFactorDetails RiskFactorSmoking { get; set; }
         [Display(Name = "History of drug misuse")]
+        [ValidationChild]
         public virtual RiskFactorDetails RiskFactorDrugs { get; set; }
         [Display(Name = "History of homelessness")]
+        [ValidationChild]
         public virtual RiskFactorDetails RiskFactorHomelessness { get; set; }
         [Display(Name = "History of imprisonment")]
+        [ValidationChild]
         public virtual RiskFactorDetails RiskFactorImprisonment { get; set; }
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;

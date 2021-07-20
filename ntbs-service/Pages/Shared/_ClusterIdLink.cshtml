@@ -1,9 +1,9 @@
 ﻿@using ntbs_service.Services
-@inject IReportingLinksService ReportingLinksService
+@inject IExternalLinksService _externalLinksService
 @model ntbs_service.Models.Entities.Notification
 
 @{
-    var clusterLink = ReportingLinksService.GetClusterReport(Model.ClusterId);
+    var clusterLink = _externalLinksService.GetClusterReport(Model.ClusterId);
 }
 
 @if (string.IsNullOrEmpty(clusterLink))

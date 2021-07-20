@@ -276,44 +276,22 @@ AND (N1.[GroupId] <> N2.[GroupId] OR N1.[GroupId] is NULL or N2.[GroupId] is NUL
         private async Task<IList<NotificationAndDuplicateIds>>
             GetNotificationIdsEligibleForDqPotentialDuplicateAlertsBasedOnMatchingNhsNumberAsync()
         {
-            return await _context.Notification
-                .SelectMany(_ => _context.Notification,
-                    (notification, duplicate) => new { notification, duplicate })
-                .Where(t =>
-                    // Check that one of the following cases are true:
-                    // Check that the notification's nhs numbers match, the notification is notified and the notifications
-                    // have been notified for at least the minimum amount of time specified
-                    (
-                        (
-                            t.notification.PatientDetails.NhsNumber == t.duplicate.PatientDetails.NhsNumber &&
-                            t.notification.PatientDetails.NhsNumber != null
-                        )
-                        // Check that the notifications are different
-                        &&
-                        (
-                            t.notification.NotificationId != t.duplicate.NotificationId
-                        )
-                        // Check that the notifications are complete and have not been discarded (denotified or deleted)
-                        && (
-                            t.notification.NotificationStatus == NotificationStatus.Notified ||
-                            t.notification.NotificationStatus == NotificationStatus.Closed
-                        )
-                        && (
-                            t.duplicate.NotificationStatus == NotificationStatus.Notified ||
-                            t.duplicate.NotificationStatus == NotificationStatus.Closed
-                        )
-                        // Check that notifications are not already linked.
-                        &&
-                        (
-                            t.notification.GroupId != t.duplicate.GroupId || t.notification.GroupId == null
-                        )
-                    )
-                )
-                .Select(t => new NotificationAndDuplicateIds
-                {
-                    NotificationId = t.notification.NotificationId,
-                    DuplicateId = t.duplicate.NotificationId
-                }).ToListAsync();
+            // See comment on GetNotificationIdsEligibleForDqPotentialDuplicateAlertsBasedOnMatchingFamilyNameAsync()
+            // The query EF generates has a convoluted WHERE clause that bewilders the query optimiser and causes it to
+            // choose a bad query plan. This is a much neater query that the query optimiser can understand and execute
+            // quickly.
+            return await _context.NotificationAndDuplicateIds.FromSqlRaw(@"SELECT N1.[NotificationId] AS [NotificationId], N2.[NotificationId] AS [DuplicateId]
+FROM [Notification] AS N1
+LEFT JOIN [Patients] AS P1 ON N1.[NotificationId] = P1.[NotificationId]
+CROSS JOIN [Notification] AS N2
+LEFT JOIN [Patients] AS P2 ON N2.[NotificationId] = P2.[NotificationId]
+WHERE
+P1.[NhsNumber] = P2.[NhsNumber]
+AND P1.[NotificationId] <> P2.[NotificationId]
+AND (N1.[NotificationStatus] IN ('Notified', 'Closed'))
+AND (N2.[NotificationStatus] IN ('Notified', 'Closed'))
+AND (N1.[GroupId] <> N2.[GroupId] OR N1.[GroupId] is NULL or N2.[GroupId] is NULL)")
+                .ToListAsync();
         }
 
         private IQueryable<Notification> GetNotificationQueryableForNotifiedDataQualityAlerts<T>() where T : Alert

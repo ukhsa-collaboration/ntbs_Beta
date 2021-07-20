@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -37,7 +38,7 @@ namespace ntbs_ui_tests.Steps
                 Assert.NotNull(Browser.FindElement(By.ClassName("notification-banner-title-text")));
             });
         }
-        
+
         [When(@"I click '(.*)' on the navigation bar")]
         public void ClickOnTheNavigationBar(string label)
         {
@@ -166,16 +167,34 @@ namespace ntbs_ui_tests.Steps
             });
         }
 
+        [When(@"I remove input from '(.*)'")]
+        public void WhenIRemoveFromInputList(string inputId)
+        {
+            WithErrorLogging(() =>
+            {
+                var inputElement = HtmlElementHelper.FindElementById(Browser, inputId);
+                inputElement.Click();
+                inputElement.SendKeys(Keys.Control + "a");
+                inputElement.SendKeys(Keys.Delete);
+                inputElement.SendKeys("\t");
+            });
+        }
+
         [When(@"I enter (.*) into '(.*)'")]
         public void WhenIEnterValueIntoFieldWithId(string value, string elementId)
         {
             WithErrorLogging(() =>
             {
+                // In some scenarios, inputs only become clickable after an asynchronous event.
+                // Consequently, we add a wait here to ensure that the input is ready.
+                Browser.WaitUntilElementIsClickable(By.Id(elementId), Settings.ImplicitWait);
+
                 var element = HtmlElementHelper.FindElementById(Browser, elementId);
                 element.Click();
                 element.SendKeys(Keys.Control + "a");
                 element.SendKeys(Keys.Delete);
                 element.SendKeys(value + "\t");
+
                 if (!Settings.IsHeadless)
                 {
                     Thread.Sleep(1000);
@@ -198,28 +217,17 @@ namespace ntbs_ui_tests.Steps
                 }
             });
         }
-        
+
         [When(@"I make selection (.*) from (.*) section for '(.*)'")]
-        public void WhenISelectValueFromGroupForFieldWithId(string value, string group, string elementId)
+        public void WhenISelectValueFromGroupForFieldWithId(string option, string group, string selectId)
         {
-            WithErrorLogging(() =>
-            {
-                var selection = HtmlElementHelper.FindElementByXpath(Browser, $"//select[@id='{elementId}']/optgroup[@label='{group}']/option[@value='{value}']");
-                selection.Click();
-                if (!Settings.IsHeadless)
-                {
-                    Thread.Sleep(1000);
-                }
-            });
+            SelectOptionFromDropdown(option, selectId, group);
         }
 
         [When(@"I select (.*) for '(.*)'")]
         public void WhenISelectTextFromDropdown(string text, string selectId)
         {
-            WithErrorLogging(() =>
-            {
-                new SelectElement(HtmlElementHelper.FindElementById(Browser, selectId)).SelectByText(text);
-            });
+            SelectOptionFromDropdown(text, selectId);
         }
 
         #endregion
@@ -230,6 +238,16 @@ namespace ntbs_ui_tests.Steps
             WithErrorLogging(() =>
             {
                 Thread.Sleep(3000);
+            });
+        }
+
+        [When(@"I wait for (.*) to be missing from '(.*)'")]
+        public void WhenIWaitForOptionToBeMissingFromDropdown(string text, string selectId)
+        {
+            WithErrorLogging(() =>
+            {
+                var wait = new WebDriverWait(Browser, Settings.ImplicitWait);
+                wait.Until(ElementDoesNotExistInDropdown(text, selectId));
             });
         }
 
@@ -246,6 +264,72 @@ namespace ntbs_ui_tests.Steps
                 Console.WriteLine(webElement);
                 throw;
             }
+        }
+
+        private void SelectOptionFromDropdown(string text, string dropdownId, string group = null)
+        {
+            WithErrorLogging(() =>
+            {
+                var xPath = group != null
+                    ? $"//select[@id='{dropdownId}']/optgroup[@label='{group}']/option[normalize-space(text())='{text}']"
+                    : $"//select[@id='{dropdownId}']/option[normalize-space(text())='{text}']";
+                // In some scenarios the select does not become visible/active until an API call (triggered by previous input) has returned.
+                // Consequently we add a wait here for the element we want to select to be clickable.
+                Browser.WaitUntilElementIsClickable(By.XPath(xPath), Settings.ImplicitWait);
+                SelectElementFromDropdownWithRetry(xPath);
+            });
+        }
+
+        private void SelectElementFromDropdownWithRetry(string xPath)
+        {
+            try
+            {
+                SelectElementFromDropdown(xPath);
+            }
+            catch (StaleElementReferenceException)
+            {
+                // In scenarios where the dropdown we're selecting from has just been reloaded (e.g. because of the result
+                // of an API call) the options can become stale between finding the dropdown and selecting a value. In this
+                // case we can select the value by just trying again.
+                SelectElementFromDropdown(xPath);
+            }
+        }
+
+        private void SelectElementFromDropdown(string xPath)
+        {
+            HtmlElementHelper.FindElementByXpath(Browser, xPath).Click();
+        }
+
+        private static Func<IWebDriver, bool> ElementDoesNotExistInDropdown(string text, string dropdownId)
+        {
+            return driver =>
+            {
+                var options = GetDropdownOptionsWithRetry(driver, dropdownId);
+                return options.All(opt => opt != text);
+            };
+        }
+
+        private static List<string> GetDropdownOptionsWithRetry(IWebDriver driver, string dropdownId)
+        {
+            try
+            {
+                return GetDropdownOptions(driver, dropdownId);
+            }
+            catch (StaleElementReferenceException)
+            {
+                // In scenarios where the dropdown we're looking at has just been reloaded (e.g. because of the result
+                // of an API call) the options can become stale between finding the select and reading their text. In this
+                // case we can find the new select by just trying again.
+                return GetDropdownOptions(driver, dropdownId);
+            }
+        }
+
+        private static List<string> GetDropdownOptions(IWebDriver driver, string dropdownId)
+        {
+            return new SelectElement(HtmlElementHelper.FindElementById(driver, dropdownId))
+                .Options
+                .Select(opt => opt.Text)
+                .ToList();
         }
     }
 }

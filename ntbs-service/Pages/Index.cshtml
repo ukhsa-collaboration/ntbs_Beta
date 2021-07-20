@@ -113,16 +113,16 @@
                     @Html.DisplayNameFor(model => model.DraftNotifications[0].NotificationId)
                 </nhs-table-item>
                 <nhs-table-item>
-                    @Html.DisplayNameFor(model => model.DraftNotifications[0].PatientDetails.FullName)
+                    @Html.DisplayNameFor(model => model.DraftNotifications[0].FullName)
                 </nhs-table-item>
                 <nhs-table-item>
                     @Html.DisplayNameFor(model => model.DraftNotifications[0].FormattedCreationDate)
                 </nhs-table-item>
                 <nhs-table-item>
-                    @Html.DisplayNameFor(model => model.DraftNotifications[0].HospitalDetails.TBServiceName)
+                    @Html.DisplayNameFor(model => model.DraftNotifications[0].TbServiceName)
                 </nhs-table-item>
                 <nhs-table-item>
-                    @Html.DisplayNameFor(model => model.DraftNotifications[0].HospitalDetails.CaseManagerName)
+                    @Html.DisplayNameFor(model => model.DraftNotifications[0].CaseManagerName)
                 </nhs-table-item>
             </nhs-table-head>
             <nhs-table-body>
@@ -134,17 +134,17 @@
                                 @Html.DisplayFor(_ => item.NotificationId)
                             </a>
                         </nhs-table-item>
-                        <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.PatientDetails.FullName)">
-                            @Html.DisplayFor(_ => item.PatientDetails.FullName)
+                        <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.FullName)">
+                            @Html.DisplayFor(_ => item.FullName)
                         </nhs-table-item>
                         <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.FormattedCreationDate)">
                             @Html.DisplayFor(_ => item.FormattedCreationDate)
                         </nhs-table-item>
-                        <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.HospitalDetails.TBServiceName)">
-                            @Html.DisplayFor(_ => item.HospitalDetails.TBServiceName)
+                        <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.TbServiceName)">
+                            @Html.DisplayFor(_ => item.TbServiceName)
                         </nhs-table-item>
-                        <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.HospitalDetails.CaseManagerName)">
-                            @Html.DisplayFor(_ => item.HospitalDetails.CaseManagerName)
+                        <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.CaseManagerName)">
+                            @Html.DisplayFor(_ => item.CaseManagerName)
                         </nhs-table-item>
                     </nhs-table-body-row>
                 }
@@ -161,16 +161,16 @@
                 @Html.DisplayNameFor(model => model.RecentNotifications[0].NotificationId)
             </nhs-table-item>
             <nhs-table-item>
-                @Html.DisplayNameFor(model => model.RecentNotifications[0].PatientDetails.FullName)
+                @Html.DisplayNameFor(model => model.RecentNotifications[0].FullName)
             </nhs-table-item>
             <nhs-table-item>
                 @Html.DisplayNameFor(model => model.RecentNotifications[0].FormattedNotificationDate)
             </nhs-table-item>
             <nhs-table-item>
-                @Html.DisplayNameFor(model => model.RecentNotifications[0].HospitalDetails.TBServiceName)
+                @Html.DisplayNameFor(model => model.RecentNotifications[0].TbServiceName)
             </nhs-table-item>
             <nhs-table-item>
-                @Html.DisplayNameFor(model => model.RecentNotifications[0].HospitalDetails.CaseManagerName)
+                @Html.DisplayNameFor(model => model.RecentNotifications[0].CaseManagerName)
             </nhs-table-item>
         </nhs-table-head>
         <nhs-table-body>
@@ -182,17 +182,17 @@
                             @Html.DisplayFor(modelItem => item.NotificationId)
                         </a>
                     </nhs-table-item>
-                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.PatientDetails.FullName)">
-                        @Html.DisplayFor(modelItem => item.PatientDetails.FullName)
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.FullName)">
+                        @Html.DisplayFor(modelItem => item.FullName)
                     </nhs-table-item>
                     <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.FormattedNotificationDate)">
                         @Html.DisplayFor(modelItem => item.FormattedNotificationDate)
                     </nhs-table-item>
-                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.HospitalDetails.TBServiceName)">
-                        @Html.DisplayFor(modelItem => item.HospitalDetails.TBServiceName)
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.TbServiceName)">
+                        @Html.DisplayFor(modelItem => item.TbServiceName)
                     </nhs-table-item>
-                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.HospitalDetails.CaseManagerName)">
-                        @Html.DisplayFor(modelItem => item.HospitalDetails.CaseManagerName)
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.CaseManagerName)">
+                        @Html.DisplayFor(modelItem => item.CaseManagerName)
                     </nhs-table-item>
                 </nhs-table-body-row>
             }

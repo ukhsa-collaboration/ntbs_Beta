@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
@@ -38,6 +37,8 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         [BindProperty]
         public TreatmentOutcomeSubType? SelectedTreatmentOutcomeSubType { get; set; }
         public IEnumerable<SelectListItem> TreatmentEventTypes { get; set; }
+
+        public IList<TreatmentEvent> TreatmentEvents { get; private set; }
 
         public TreatmentEventModel(
             INotificationService service,
@@ -82,6 +83,8 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                     Value = ((int)t).ToString(),
                     Text = t.GetDisplayName()
                 });
+
+            TreatmentEvents = Notification.GetTreatmentEventsWithStartingEvent().OrderForEpisodes().ToList();
 
             return Page();
         }

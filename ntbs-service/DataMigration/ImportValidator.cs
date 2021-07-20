@@ -49,7 +49,7 @@ namespace ntbs_service.DataMigration
             PerformContext context,
             int runId)
         {
-            TrimAndCleanLongFormNotes(notification);
+            TrimAndCleanStringProperties(notification);
 
             var missingDateResults = notification.TestData.ManualTestResults
                 .Where(result => !result.TestDate.HasValue)
@@ -99,24 +99,35 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        private static void TrimAndCleanLongFormNotes(Notification notification)
+        private static void TrimAndCleanStringProperties(object entity)
         {
-            CleanContainsNoTabsProperties(notification.ClinicalDetails);
-            notification.SocialContextAddresses.ForEach(CleanContainsNoTabsProperties);
-            notification.SocialContextVenues.ForEach(CleanContainsNoTabsProperties);
-            notification.TreatmentEvents.ForEach(CleanContainsNoTabsProperties);
-            notification.MBovisDetails.MBovisExposureToKnownCases.ForEach(CleanContainsNoTabsProperties);
-            notification.MBovisDetails.MBovisOccupationExposures.ForEach(CleanContainsNoTabsProperties);
-            notification.MBovisDetails.MBovisAnimalExposures.ForEach(CleanContainsNoTabsProperties);
-            notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions.ForEach(CleanContainsNoTabsProperties);
-        }
-
-        private static void CleanContainsNoTabsProperties(object entity)
-        {
+            // Clean strings properties of this object
             entity?.GetType()
                 .GetProperties()
-                .Where(prop => Attribute.IsDefined(prop, typeof(ContainsNoTabsAttribute)))
+                .Where(prop => prop.PropertyType == typeof(string)
+                               && prop.CanWrite
+                               && (Attribute.IsDefined(prop, typeof(RegularExpressionAttribute))
+                                   || Attribute.IsDefined(prop, typeof(MaxLengthAttribute))))
                 .ForEach(prop => prop.SetValue(entity, TrimAndCleanString((string)prop.GetValue(entity))));
+
+            // Clean strings properties of this object's entity children
+            entity?
+                .GetType()
+                .GetProperties()
+                .Where(prop => Attribute.IsDefined(prop, typeof(ValidationChildAttribute)))
+                .ForEach(prop => TrimAndCleanStringProperties(prop.GetValue(entity)));
+
+            // Clean strings properties of this object's enumerable children
+            entity?
+                .GetType()
+                .GetProperties()
+                .Where(prop => Attribute.IsDefined(prop, typeof(ValidationChildEnumerableAttribute)))
+                .Select(prop => prop.GetValue(entity))
+                .Where(enumerable => enumerable != null)
+                .OfType<IEnumerable<object>>()
+                // Flatten
+                .SelectMany(element => element)
+                .ForEach(TrimAndCleanStringProperties);
         }
 
         private static string TrimAndCleanString(string s) => s?.Trim().Replace("\t", " ");

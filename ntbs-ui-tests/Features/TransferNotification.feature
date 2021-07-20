@@ -8,10 +8,10 @@ Feature: Transfer notification
 
     When I expand manage notification section
     And I click on the 'transfer-button' button
-    And I enter Yorkshire and Humber into 'PhecCode'
-    And I enter LCHC (Leeds Community Healthcare NHS Trust) into 'TransferRequest_TbServiceCode'
-    And I wait
-    And I enter Leeds UITester into 'TransferRequest_CaseManagerId'
+    And I select Yorkshire and Humber for 'PhecCode'
+    And I wait for Bath to be missing from 'TransferRequest_TbServiceCode'
+    And I select LCHC (Leeds Community Healthcare NHS Trust) for 'TransferRequest_TbServiceCode'
+    And I select Leeds UITester for 'TransferRequest_CaseManagerId'
     And I check 'transfer-radio-Other'
     And I enter Patient likes travel into 'TransferRequest_OtherReasonDescription'
     And I enter I hope your service is doing well into 'TransferRequest_TransferRequestNote'

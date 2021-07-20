@@ -550,15 +550,13 @@ namespace ntbs_service.DataMigration
         private static TravelDetails ExtractTravelDetails(MigrationDbNotification notification)
         {
             var hasTravel = Converter.GetStatusFromString(notification.HasTravel);
-            var numberOfCountries = Converter.ToNullableInt(notification.travel_TotalNumberOfCountries);
-            var countriesRecorded = new List<int?>
+            var totalEnteredByUser = Converter.ToNullableInt(notification.travel_TotalNumberOfCountries);
+            var countryCount = new List<int?>
                 {
                     notification.travel_Country1, notification.travel_Country2, notification.travel_Country3
                 }.Distinct()
                 .Count(c => c != null);
-            var totalNumberOfCountries = hasTravel == Status.Yes && numberOfCountries != null
-                ? Math.Max(numberOfCountries.Value, countriesRecorded)
-                : (int?)null;
+            var totalNumberOfCountries = GetCountryTotalOrNull(hasTravel, totalEnteredByUser, countryCount);
 
             var details = new TravelDetails
             {
@@ -578,15 +576,13 @@ namespace ntbs_service.DataMigration
         private static VisitorDetails ExtractVisitorDetails(MigrationDbNotification notification)
         {
             var hasVisitor = Converter.GetStatusFromString(notification.HasVisitor);
-            var numberOfCountries = Converter.ToNullableInt(notification.visitor_TotalNumberOfCountries);
-            var countriesRecorded = new List<int?>
+            var totalEnteredByUser = Converter.ToNullableInt(notification.visitor_TotalNumberOfCountries);
+            var countryCount = new List<int?>
                     {
                         notification.visitor_Country1, notification.visitor_Country2, notification.visitor_Country3
                     }.Distinct()
                     .Count(c => c != null);
-            var totalNumberOfCountries = hasVisitor == Status.Yes && numberOfCountries != null
-                ? Math.Max(numberOfCountries.Value, countriesRecorded)
-                : (int?)null;
+            var totalNumberOfCountries = GetCountryTotalOrNull(hasVisitor, totalEnteredByUser, countryCount);
 
             var details = new VisitorDetails
             {
@@ -903,6 +899,13 @@ namespace ntbs_service.DataMigration
                 denotificationDetails.OtherDescription = "Denotified in legacy system, with denotification date " +
                                                          (notification.DenotificationDate?.ToString() ?? "missing");
             }
+        }
+
+        private static int? GetCountryTotalOrNull(Status? status, int? countryCount, int countryCount2)
+        {
+            return status == Status.Yes && countryCount != null && Math.Max(countryCount.Value, countryCount2) != 0
+                ? Math.Max(countryCount.Value, countryCount2)
+                : (int?)null;
         }
     }
 }
