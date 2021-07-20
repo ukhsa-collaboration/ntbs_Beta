@@ -139,11 +139,10 @@ namespace ntbs_service.DataAccess
                             : alert.Notification.HospitalDetails.TBServiceCode,
                         TbServiceName = alert is TransferAlert
                             ? ((TransferAlert)alert).TbService.Name
-                            : alert.Notification.HospitalDetails.TBService != null
-                                ? alert.Notification.HospitalDetails.TBService.Name : null,
+                            : alert.Notification.HospitalDetails.TBService.Name,
                         CaseManagerName = alert is TransferAlert
                             ? ((TransferAlert)alert).CaseManager.DisplayName
-                            : alert.Notification.HospitalDetails.CaseManager != null && alert.Notification.HospitalDetails.CaseManager.IsActive
+                            : alert.Notification.HospitalDetails.CaseManager.IsActive
                                 ? alert.Notification.HospitalDetails.CaseManager.DisplayName : null,
                         AlertType = alert.AlertType,
                         Action = alert.Action,

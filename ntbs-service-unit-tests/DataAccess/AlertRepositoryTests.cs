@@ -25,11 +25,16 @@ namespace ntbs_service_unit_tests.DataAccess
         private readonly TBService _tbService = new TBService {Code = "TB-TEST-001", Name = "Test Service 001"};
 
         [Theory]
-        [InlineData(true, true)]
-        [InlineData(false, true)]
-        [InlineData(true, false)]
-        [InlineData(false, false)]
-        public async void CorrectlyMapsTransferAlertToDisplayAlert(bool hasCaseManager, bool hasTbService)
+        [InlineData(true, true, "Pharoah Sanders", "Test Service 001", "TB-TEST-001")]
+        [InlineData(false, true, null, "Test Service 001", "TB-TEST-001")]
+        [InlineData(true, false, "Pharoah Sanders", null, null)]
+        [InlineData(false, false, null, null, null)]
+        public async void CorrectlyMapsTransferAlertToDisplayAlert(
+            bool hasCaseManager,
+            bool hasTbService,
+            string expectedCaseManagerName,
+            string expectedTbServiceName,
+            string expectedTbServiceCode)
         {
             // Arrange
             var notification = await GivenNotificationWithCaseManagerAndTbService
@@ -48,20 +53,20 @@ namespace ntbs_service_unit_tests.DataAccess
             var result = (await _alertRepo.GetOpenAlertsForNotificationAsync(notification.NotificationId)).Single();
 
             // Assert
-            Assert.Equal(hasCaseManager ? _caseManager.DisplayName : null, result.CaseManagerName);
-            Assert.Equal(hasTbService ? _tbService.Code : null, result.TbServiceCode);
-            Assert.Equal(hasTbService ? _tbService.Name : null, result.TbServiceName);
+            Assert.Equal(expectedCaseManagerName, result.CaseManagerName);
+            Assert.Equal(expectedTbServiceCode, result.TbServiceCode);
+            Assert.Equal(expectedTbServiceName, result.TbServiceName);
             Assert.Equal(new DateTime(2004,2,2), result.CreationDate);
             Assert.Equal(notification.NotificationId, result.NotificationId);
             Assert.Equal(AlertType.TransferRequest, result.AlertType);
         }
 
         [Theory]
-        [InlineData(true, true)]
-        [InlineData(true, false)]
-        [InlineData(false, true)]
-        [InlineData(false, false)]
-        public async void CorrectlyMapsUserOnNonTransferAlertToDisplayAlert(bool hasCaseManager, bool caseManagerIsActive)
+        [InlineData(true, true, "Pharoah Sanders")]
+        [InlineData(true, false, null)]
+        [InlineData(false, false, null)]
+        public async void CorrectlyMapsUserOnNonTransferAlertToDisplayAlert
+            (bool hasCaseManager, bool caseManagerIsActive, string expectedCaseManagerName)
         {
             // Arrange
             var caseManager = hasCaseManager
@@ -81,13 +86,16 @@ namespace ntbs_service_unit_tests.DataAccess
             var result = (await _alertRepo.GetOpenAlertsForNotificationAsync(notification.NotificationId)).Single();
 
             // Assert
-            Assert.Equal(caseManagerIsActive && hasCaseManager ? caseManager.DisplayName : null, result.CaseManagerName);
+            Assert.Equal(expectedCaseManagerName, result.CaseManagerName);
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async void CorrectlyMapsTBServiceOnNonTransferAlertToDisplayAlert(bool hasTbService)
+        [InlineData(true, "Test Service 001", "TB-TEST-001")]
+        [InlineData(false, null, null)]
+        public async void CorrectlyMapsTBServiceOnNonTransferAlertToDisplayAlert(
+            bool hasTbService,
+            string expectedTbServiceName,
+            string expectedTbServiceCode)
         {
             // Arrange
             var notification = await GivenNotificationWithCaseManagerAndTbService(_caseManager, hasTbService ? _tbService : null);
@@ -104,8 +112,8 @@ namespace ntbs_service_unit_tests.DataAccess
             var result = (await _alertRepo.GetOpenAlertsForNotificationAsync(notification.NotificationId)).Single();
 
             // Assert
-            Assert.Equal(hasTbService ? _tbService.Code : null, result.TbServiceCode);
-            Assert.Equal(hasTbService ? _tbService.Name : null, result.TbServiceName);
+            Assert.Equal(expectedTbServiceCode, result.TbServiceCode);
+            Assert.Equal(expectedTbServiceName, result.TbServiceName);
         }
 
         private async Task<Notification> GivenNotificationWithCaseManagerAndTbService(User caseManager, TBService tbService)
