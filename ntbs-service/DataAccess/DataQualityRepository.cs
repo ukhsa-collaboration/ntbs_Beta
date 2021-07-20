@@ -132,14 +132,14 @@ namespace ntbs_service.DataAccess
             int count,
             int offset) =>
             GetMultipleNotificationsEligibleForDataQualityTreatmentOutcomeAlerts<DataQualityTreatmentOutcome12>(
-                DataQualityTreatmentOutcome12.NotificationInQualifyingDateRangeExpression,
+                DataQualityTreatmentOutcome12.NotificationInQualifyingRangeExpression,
                 DataQualityTreatmentOutcome12.NotificationInRangeQualifies,
                 count,
                 offset);
 
         public Task<int> GetNotificationsEligibleForDqTreatmentOutcome12AlertsCountAsync() =>
             GetNotificationsEligibleForAlertsCount(DataQualityTreatmentOutcome12
-                .NotificationInQualifyingDateRangeExpression);
+                .NotificationInQualifyingRangeExpression);
 
         #endregion
 
@@ -149,14 +149,14 @@ namespace ntbs_service.DataAccess
             int count,
             int offset) =>
             GetMultipleNotificationsEligibleForDataQualityTreatmentOutcomeAlerts<DataQualityTreatmentOutcome24>(
-                DataQualityTreatmentOutcome24.NotificationInQualifyingDateRangeExpression,
+                DataQualityTreatmentOutcome24.NotificationInQualifyingRangeExpression,
                 DataQualityTreatmentOutcome24.NotificationInRangeQualifies,
                 count,
                 offset);
 
         public Task<int> GetNotificationsEligibleForDqTreatmentOutcome24AlertsCountAsync() =>
             GetNotificationsEligibleForAlertsCount(DataQualityTreatmentOutcome24
-                .NotificationInQualifyingDateRangeExpression);
+                .NotificationInQualifyingRangeExpression);
 
         #endregion
 
@@ -166,14 +166,14 @@ namespace ntbs_service.DataAccess
             int count,
             int offset) =>
             GetMultipleNotificationsEligibleForDataQualityTreatmentOutcomeAlerts<DataQualityTreatmentOutcome36>(
-                DataQualityTreatmentOutcome36.NotificationInQualifyingDateRangeExpression,
+                DataQualityTreatmentOutcome36.NotificationInQualifyingRangeExpression,
                 DataQualityTreatmentOutcome36.NotificationInRangeQualifies,
                 count,
                 offset);
 
         public Task<int> GetNotificationsEligibleForDqTreatmentOutcome36AlertsCountAsync() =>
             GetNotificationsEligibleForAlertsCount(DataQualityTreatmentOutcome36
-                .NotificationInQualifyingDateRangeExpression);
+                .NotificationInQualifyingRangeExpression);
 
         #endregion
 
