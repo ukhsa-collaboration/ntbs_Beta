@@ -12,7 +12,7 @@ using Xunit;
 
 namespace ntbs_service_unit_tests.DataAccess
 {
-    public class DataQualityRepositoryTests : IClassFixture<DataQualityRepositoryFixture>, IDisposable
+    public class DataQualityRepositoryTests : IClassFixture<RepositoryFixture<DataQualityRepository>>, IDisposable
     {
         private readonly NtbsContext _context;
 
@@ -20,7 +20,7 @@ namespace ntbs_service_unit_tests.DataAccess
         private const string BirthCountryAlertName = "B";
         private const string ClinicalDatesAlertName = "C";
 
-        public DataQualityRepositoryTests(DataQualityRepositoryFixture dataQualityRepositoryFixture)
+        public DataQualityRepositoryTests(RepositoryFixture<DataQualityRepository> dataQualityRepositoryFixture)
         {
             _context = dataQualityRepositoryFixture.Context;
         }
