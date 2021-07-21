@@ -12,7 +12,7 @@ const FetchSpecimenPotentialMatch = Vue.extend({
         update: function (userInput: string) {
             this.clearPotentialMatchHtml();
             this.clearErrorMessage();
-            
+
             clearTimeout(this.timeout);
             this.timeout = setTimeout(() => {
                 this.fetchPotentialMatchData(userInput)
@@ -29,11 +29,12 @@ const FetchSpecimenPotentialMatch = Vue.extend({
 
             axios.request(requestConfig)
                 .then((response: any) => {
-                    if (typeof response.data === "object") {
-                        this.showErrorMessage(response.data.errorMessage);
-                    } else {
+                    if (typeof response.data !== "object") {
                         this.updatePotentialMatchHtml(response.data);
+                    } else if (response.data.errorMessage !== undefined) {
+                        this.showErrorMessage(response.data.errorMessage);
                     }
+                    // If no NotificationID was specified, leave it in the cleared state
                 });
         },
         showErrorMessage: function (errorMessage: string) {
@@ -50,8 +51,6 @@ const FetchSpecimenPotentialMatch = Vue.extend({
         },
         updatePotentialMatchHtml(divHtml: string) {
             this.$refs["matchDetails"].innerHTML = divHtml;
-            console.log('UpdatingPotentialDiv');
-            console.log(divHtml);
         },
         clearPotentialMatchHtml() {
             this.$refs["matchDetails"].innerHTML = "";
