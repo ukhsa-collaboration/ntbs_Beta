@@ -6,7 +6,7 @@ undergoing maintenance. It is NTBS-branded to allow future users to confidently 
 The temporarily-unavailable folder contains a Dockerfile for building the coming-soon image. Due to the simplicity of it, no
 versioning system is used for the images.
 
-We use the same repository for the image as the main app - see `publishComingSoonPageImage.ps1` script for publishing
+We use the same repository for the image as the main app - see `publishTemporarilyUnavailablePageImage.ps1` script for publishing
 the image.
 
 ## Deploying

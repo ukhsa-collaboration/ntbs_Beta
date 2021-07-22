@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-    <RootNamespace>coming_soon</RootNamespace>
+    <RootNamespace>temporarily_unavailable</RootNamespace>
   </PropertyGroup>
 
 
