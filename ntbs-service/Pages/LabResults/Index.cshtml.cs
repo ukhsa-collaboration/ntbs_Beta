@@ -117,6 +117,11 @@ namespace ntbs_service.Pages.LabResults
                 return new JsonResult(new { errorMessage });
             }
 
+            if (string.IsNullOrWhiteSpace(manualNotificationId))
+            {
+                return new JsonResult(new {});
+            }
+
             var parsedManualNotificationId = int.Parse(manualNotificationId);
             var notification = await _notificationRepository.GetNotifiedNotificationAsync(parsedManualNotificationId);
             if (notification == null)
@@ -237,8 +242,7 @@ namespace ntbs_service.Pages.LabResults
                 NotificationId = notification.NotificationId,
                 NotificationDate = notification.NotificationDate,
                 NtbsAddress = notification.PatientDetails.Address,
-                NtbsName =
-                    $"{notification.PatientDetails.FamilyName.ToUpper()}, {notification.PatientDetails.GivenName}",
+                NtbsName = notification.PatientDetails.FullName,
                 NtbsPostcode = notification.PatientDetails.Postcode,
                 NtbsBirthDate = notification.PatientDetails.Dob,
                 NtbsNhsNumber = notification.PatientDetails.FormattedNhsNumber,
