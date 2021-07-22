@@ -94,6 +94,8 @@ namespace ntbs_integration_tests.Helpers
 
         public const int NOTIFICATION_WITH_PREVIOUS_TB_SERVICE_OF_ABINGDON = 10400;
 
+        public const int UNUSED_NOTIFICATION_ID = 999999;
+
         public const int ALERT_ID = 20001;
         public const int TRANSFER_ALERT_ID = 20002;
         public const int TRANSFER_ALERT_ID_TO_ACCEPT = 20003;
