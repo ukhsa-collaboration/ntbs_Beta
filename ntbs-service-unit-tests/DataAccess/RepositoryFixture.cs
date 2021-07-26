@@ -6,14 +6,14 @@ using Xunit;
 namespace ntbs_service_unit_tests.DataAccess
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class DataQualityRepositoryFixture : IAsyncLifetime
+    public class RepositoryFixture<T> : IAsyncLifetime
     {
         public NtbsContext Context;
 
         public async Task InitializeAsync()
         {
             var contextOptions = new DbContextOptionsBuilder<NtbsContext>()
-                .UseSqlite($"Filename={nameof(DataQualityRepositoryTests)}.db")
+                .UseSqlite($"Filename={typeof(T)}.db")
                 .Options;
 
             Context = new NtbsContext(contextOptions);

@@ -16,7 +16,7 @@ namespace ntbs_service_unit_tests.DataMigration
     // happening on all parts of a notification that we expect it to happen on.
     // We aim to write much more in depth tests for services that are missing them, including validation,
     // with this test suite being the start of that process.
-    public class ImportValidatorTest
+    public partial class ImportValidatorTest
     {
         private readonly IImportValidator _importValidator;
         private readonly Mock<IReferenceDataRepository> _referenceDataRepositoryMock =
@@ -125,28 +125,6 @@ namespace ntbs_service_unit_tests.DataMigration
                 errorMessages);
             Assert.Contains(ValidationMessages.HasNoUnpasteurisedMilkConsumptionRecords,
                 errorMessages);
-        }
-
-        [Fact]
-        public async Task ImportValidatorCleansContactTracingValues()
-        {
-            // Arrange
-            var notification = CreateBasicNotification();
-
-            // These values would fail validation
-            notification.ContactTracing = new ContactTracing
-            {
-                AdultsIdentified = 1,
-                AdultsScreened = 3
-            };
-
-            // Act
-            var validationResults = await _importValidator.CleanAndValidateNotification(null, RunId, notification);
-
-            // Assert
-            var errorMessages = validationResults.Select(r => r.ErrorMessage).ToList();
-
-            Assert.Empty(errorMessages);
         }
 
         [Fact]
