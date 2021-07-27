@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire.Server;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration.RawModels;
 using ntbs_service.Helpers;
@@ -12,8 +13,8 @@ namespace ntbs_service.DataMigration
 {
     public interface ITreatmentEventMapper
     {
-        Task<TreatmentEvent> AsTransferEvent(MigrationDbTransferEvent rawEvent);
-        Task<TreatmentEvent> AsOutcomeEvent(MigrationDbOutcomeEvent rawEvent);
+        Task<TreatmentEvent> AsTransferEvent(MigrationDbTransferEvent rawEvent, PerformContext context, int runId);
+        Task<TreatmentEvent> AsOutcomeEvent(MigrationDbOutcomeEvent rawEvent, PerformContext context, int runId);
     }
     public class TreatmentEventMapper : ITreatmentEventMapper
     {
@@ -27,7 +28,7 @@ namespace ntbs_service.DataMigration
             _referenceDataRepository = referenceDataRepository;
         }
         
-        public async Task<TreatmentEvent> AsTransferEvent(MigrationDbTransferEvent rawEvent)
+        public async Task<TreatmentEvent> AsTransferEvent(MigrationDbTransferEvent rawEvent, PerformContext context, int runId)
         {
             var ev = new TreatmentEvent
             {
@@ -35,12 +36,12 @@ namespace ntbs_service.DataMigration
                 TreatmentEventType = Converter.GetEnumValue<TreatmentEventType>(rawEvent.TreatmentEventType)
             };
 
-            await TryAddTbServiceAndCaseManagerToTreatmentEvent(ev, rawEvent.HospitalId, rawEvent.CaseManager);
+            await TryAddTbServiceAndCaseManagerToTreatmentEvent(ev, rawEvent.HospitalId, rawEvent.CaseManager, context, runId);
 
             return ev;
         }
 
-        public async Task<TreatmentEvent> AsOutcomeEvent(MigrationDbOutcomeEvent rawEvent)
+        public async Task<TreatmentEvent> AsOutcomeEvent(MigrationDbOutcomeEvent rawEvent, PerformContext context, int runId)
         {
             var ev = new TreatmentEvent
             {
@@ -50,12 +51,12 @@ namespace ntbs_service.DataMigration
                 Note = rawEvent.Note
             };
 
-            await TryAddTbServiceAndCaseManagerToTreatmentEvent(ev, rawEvent.NtbsHospitalId, rawEvent.CaseManager);
+            await TryAddTbServiceAndCaseManagerToTreatmentEvent(ev, rawEvent.NtbsHospitalId, rawEvent.CaseManager, context, runId);
 
             return ev;
         }
 
-        private async Task TryAddTbServiceAndCaseManagerToTreatmentEvent(TreatmentEvent ev, Guid? hospitalId, string caseManagerUsername)
+        private async Task TryAddTbServiceAndCaseManagerToTreatmentEvent(TreatmentEvent ev, Guid? hospitalId, string caseManagerUsername, PerformContext context, int runId)
         {
             if (hospitalId is Guid guid)
             {
@@ -73,7 +74,7 @@ namespace ntbs_service.DataMigration
 
             if (!string.IsNullOrEmpty(caseManagerUsername))
             {
-                await _caseManagerImportService.ImportOrUpdateLegacyUser(caseManagerUsername, ev.TbServiceCode);
+                await _caseManagerImportService.ImportOrUpdateLegacyUser(caseManagerUsername, ev.TbServiceCode, context, runId);
                 ev.CaseManagerId = (await _referenceDataRepository.GetUserByUsernameAsync(caseManagerUsername)).Id;
             }
         }

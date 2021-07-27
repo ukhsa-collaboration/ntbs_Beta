@@ -61,7 +61,7 @@ namespace ntbs_service_unit_tests.DataMigration
             };
 
             // Act
-            var mappedEvent = await _treatmentEventMapper.AsTransferEvent(migrationTransferEvent);
+            var mappedEvent = await _treatmentEventMapper.AsTransferEvent(migrationTransferEvent, null, 1);
 
             // Assert
             Assert.Equal(DateTime.Parse("12/12/2012"), mappedEvent.EventDate);
@@ -88,7 +88,7 @@ namespace ntbs_service_unit_tests.DataMigration
             };
 
             // Act
-            var mappedEvent = await _treatmentEventMapper.AsOutcomeEvent(migrationTransferEvent);
+            var mappedEvent = await _treatmentEventMapper.AsOutcomeEvent(migrationTransferEvent, null, 1);
 
             // Assert
             Assert.Equal(DateTime.Parse("12/12/2012"), mappedEvent.EventDate);
@@ -115,7 +115,7 @@ namespace ntbs_service_unit_tests.DataMigration
             };
 
             // Act
-            var mappedEvent = await _treatmentEventMapper.AsOutcomeEvent(migrationTransferEvent);
+            var mappedEvent = await _treatmentEventMapper.AsOutcomeEvent(migrationTransferEvent, null, 1);
 
             // Assert
             Assert.Equal(DateTime.Parse("12/12/2012"), mappedEvent.EventDate);
