@@ -165,9 +165,13 @@ namespace ntbs_service.DataMigration
                 await _logger.LogNotificationWarning(context, runId, notification.LegacyId, message);
             }
 
-            notification.ClinicalDetails.Notes +=
-                "The following contact tracing values were invalid and were removed from the notification\n"
+            var contactTracingNotes =
+                "The following contact tracing values were invalid and were removed from the notification:\n"
                 + string.Join(", ", lostData);
+
+            notification.ClinicalDetails.Notes = string.IsNullOrWhiteSpace(notification.ClinicalDetails.Notes)
+                ? contactTracingNotes
+                : notification.ClinicalDetails.Notes + ".\n" + contactTracingNotes;
         }
 
         private static void CleanValidationProperty(string propertyName, Notification notification,
