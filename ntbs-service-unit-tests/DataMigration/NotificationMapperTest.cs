@@ -796,6 +796,11 @@ namespace ntbs_service_unit_tests.DataMigration
                 throw new NotImplementedException();
             }
 
+            public Task<IEnumerable<MigrationDbNhsNumberMatch>> GetLegacyNotificationNhsNumberMatches(string nhsNumber)
+            {
+                throw new NotImplementedException();
+            }
+
             public IEnumerable<IGrouping<string, string>> GroupedNotificationsStub { get; set; }
 
             private static IEnumerable<T> CvsRecords<T>(string file, IEnumerable<string> legacyIds)
