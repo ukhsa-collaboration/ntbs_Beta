@@ -240,8 +240,6 @@ namespace ntbs_service_unit_tests.DataMigration
 
         private void VerifyInitialImportServicesAreCalled(Notification notification, Times times)
         {
-            _caseManagerImportService.Verify(s =>
-                s.ImportOrUpdateUserFromNotification(notification, _performContext, _runId), times);
             _importValidator
                 .Verify(s => s.CleanAndValidateNotification(_performContext, _runId, notification), times);
         }

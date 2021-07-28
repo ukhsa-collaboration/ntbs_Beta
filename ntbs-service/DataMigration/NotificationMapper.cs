@@ -161,12 +161,12 @@ namespace ntbs_service.DataMigration
                 var notificationTransferEvents = new List<TreatmentEvent>();
                 foreach (var transfer in transferEvents.Where(sc => sc.OldNotificationId == id))
                 {
-                    notificationTransferEvents.Add(await _treatmentEventMapper.AsTransferEvent(transfer));
+                    notificationTransferEvents.Add(await _treatmentEventMapper.AsTransferEvent(transfer, context, runId));
                 }
                 var notificationOutcomeEvents = new List<TreatmentEvent>();
                 foreach (var outcome in outcomeEvents.Where(sc => sc.OldNotificationId == id))
                 {
-                    notificationOutcomeEvents.Add(await _treatmentEventMapper.AsOutcomeEvent(outcome));
+                    notificationOutcomeEvents.Add(await _treatmentEventMapper.AsOutcomeEvent(outcome, context, runId));
                 }
                 var notificationMBovisAnimalExposures = mbovisAnimalExposures
                     .Where(sc => sc.OldNotificationId == id)
@@ -348,7 +348,7 @@ namespace ntbs_service.DataMigration
             notification.ComorbidityDetails = ExtractComorbidityDetails(rawNotification);
             notification.ImmunosuppressionDetails = ExtractImmunosuppressionDetails(rawNotification);
             notification.SocialRiskFactors = ExtractSocialRiskFactors(rawNotification);
-            notification.HospitalDetails = await ExtractHospitalDetailsAsync(rawNotification);
+            notification.HospitalDetails = await ExtractHospitalDetailsAsync(rawNotification, context, runId);
             notification.ContactTracing = ExtractContactTracingDetails(rawNotification);
             notification.PreviousTbHistory = ExtractPreviousTbHistory(rawNotification);
             notification.MDRDetails = ExtractMdrDetailsAsync(rawNotification);
@@ -356,7 +356,7 @@ namespace ntbs_service.DataMigration
             return notification;
         }
 
-        private async Task<HospitalDetails> ExtractHospitalDetailsAsync(MigrationDbNotification rawNotification)
+        private async Task<HospitalDetails> ExtractHospitalDetailsAsync(MigrationDbNotification rawNotification, PerformContext context, int runId)
         {
             var details = new HospitalDetails
             {
@@ -383,7 +383,7 @@ namespace ntbs_service.DataMigration
 
             if (!string.IsNullOrEmpty(rawNotification.CaseManager))
             {
-                await _caseManagerImportService.ImportOrUpdateLegacyUser(rawNotification.CaseManager, details.TBServiceCode);
+                await _caseManagerImportService.ImportOrUpdateLegacyUser(rawNotification.CaseManager, details.TBServiceCode, context, runId);
                 details.CaseManagerId = (await _referenceDataRepository.GetUserByUsernameAsync(rawNotification.CaseManager)).Id;
             }
 
