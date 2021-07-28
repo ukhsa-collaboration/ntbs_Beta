@@ -31,6 +31,7 @@ namespace ntbs_service.DataMigration
         Task<IEnumerable<MigrationDbMBovisMilkConsumption>> GetMigrationMBovisUnpasteurisedMilkConsumption(List<string> legacyIds);
         Task<MigrationLegacyUser> GetLegacyUserByUsername(string username);
         Task<IEnumerable<MigrationLegacyUserHospital>> GetLegacyUserHospitalsByUsername(string username);
+        Task<IEnumerable<MigrationDbNhsNumberMatch>> GetLegacyNotificationNhsNumberMatches(string nhsNumber);
     }
 
     public class MigrationRepository : IMigrationRepository
@@ -52,6 +53,13 @@ namespace ntbs_service.DataMigration
 				OR notificationInRange.OldNotificationId = notificationInGroup.OldNotificationId
             WHERE notificationInRange.NotificationDate >= @StartDate AND notificationInRange.NotificationDate < @EndDate
             AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("notificationInGroup.OldNotificationId")})";
+
+        private string LegacyNotificationByNhsNumberQuery => $@"
+            SELECT n.OldNotificationId, n.Source
+            FROM MigrationNotificationsView n
+            LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
+            WHERE dmg.NhsNumber = @NhsNumber
+            AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("n.OldNotificationId")})";
 
         private const string NotificationsByIdQuery = @"
             SELECT *
@@ -237,6 +245,11 @@ namespace ntbs_service.DataMigration
             return await ExecuteByUsernameQuery<MigrationLegacyUserHospital>(LegacyUserHospitalsByUsernameQuery, username);
         }
 
+        public async Task<IEnumerable<MigrationDbNhsNumberMatch>> GetLegacyNotificationNhsNumberMatches(string nhsNumber)
+        {
+            return await ExecuteByNhsNumberQuery<MigrationDbNhsNumberMatch>(LegacyNotificationByNhsNumberQuery, nhsNumber);
+        }
+
         private async Task<IEnumerable<T>> ExecuteByIdQuery<T>(string query, IEnumerable<string> legacyIds)
         {
             using (var connection = new SqlConnection(connectionString))
@@ -252,6 +265,15 @@ namespace ntbs_service.DataMigration
             {
                 connection.Open();
                 return await connection.QueryAsync<T>(query, new {Username = username});
+            }
+        }
+
+        private async Task<IEnumerable<T>> ExecuteByNhsNumberQuery<T>(string query, string nhsNumber)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                return await connection.QueryAsync<T>(query, new {NhsNumber = nhsNumber});
             }
         }
     }

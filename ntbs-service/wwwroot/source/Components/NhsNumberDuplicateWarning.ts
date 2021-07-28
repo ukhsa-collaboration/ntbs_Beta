@@ -46,7 +46,12 @@ const NhsNumberDuplicateWarning = Vue.extend({
                         // New lines required to match output from .cshtml
                         warningContainer.appendChild(document.createTextNode("\r\n,\r\n"));
                     }
-                    warningContainer.appendChild(this.createAnchorTag(id, url));
+                    if (url) {
+                        warningContainer.appendChild(this.createAnchorTag(id, url));
+                    }
+                    else {
+                        warningContainer.appendChild(this.createSpanTag(id));
+                    }
                     requiresPrependedComma = true;
                 }
             }
@@ -59,6 +64,11 @@ const NhsNumberDuplicateWarning = Vue.extend({
             anchorTag.innerHTML = `#${id}`;
             anchorTag.title = `Open notification overview for notification #${id}`;
             return anchorTag;
+        },
+        createSpanTag: function (id: string) {
+            const legacyTag = document.createElement("span");
+            legacyTag.innerHTML = id;
+            return legacyTag;
         }
     }
 });
