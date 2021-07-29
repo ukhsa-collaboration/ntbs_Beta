@@ -307,8 +307,13 @@ namespace ntbs_service.DataAccess
                         Sex = n.PatientDetails.SexLabel,
                         NotificationStatus = n.NotificationStatus,
                         DrugResistance = n.DrugResistanceProfile.DrugResistanceProfileString,
-                        TreatmentEvents = n.TreatmentEvents
+                        TreatmentEvents = n.TreatmentEvents,
+                        PreviousTbServiceCodes = n.PreviousTbServices.Select(service => service.TbServiceCode),
+                        PreviousPhecCodes = n.PreviousTbServices.Select(service => service.PhecCode),
+                        LinkedNotificationPhecCodes = n.Group.Notifications.Select(no => no.HospitalDetails.TBService.PHECCode),
+                        LinkedNotificationTbServiceCodes = n.Group.Notifications.Select(no => no.HospitalDetails.TBServiceCode)
                     })
+                .AsSingleQuery()
                 .AsNoTracking()
                 .ToListAsync())
                 .Select(n => new NotificationBannerModel(n, showLink: true));

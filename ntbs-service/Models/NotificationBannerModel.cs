@@ -36,6 +36,10 @@ namespace ntbs_service.Models
         public bool ShowPadlock;
         public string RedirectPath;
         public int? CaseManagerId;
+        public IEnumerable<string> PreviousTbServiceCodes { get; set; }
+        public IEnumerable<string> PreviousPhecCodes { get; set; }
+        public IEnumerable<string> LinkedNotificationTbServiceCodes { get; set; }
+        public IEnumerable<string> LinkedNotificationPhecCodes { get; set; }
 
         // Access level is treated as a bool for either able to edit or not. This differs from the standard PermissionLevel
         // implemented across the codebase due to there being no visual difference between no permission level and readonly
@@ -62,6 +66,12 @@ namespace ntbs_service.Models
             NotificationDate = notification.FormattedNotificationDate;
             DrugResistance = notification.DrugResistanceProfile.DrugResistanceProfileString;
             TreatmentOutcome = CalculateOutcome(notification.TreatmentEvents);
+            PreviousTbServiceCodes = notification.PreviousTbServices.Select(service => service.TbServiceCode);
+            PreviousPhecCodes = notification.PreviousTbServices.Select(service => service.PhecCode);
+            LinkedNotificationPhecCodes =
+                notification.Group?.Notifications.Select(no => no.HospitalDetails.TBService.PHECCode);
+            LinkedNotificationTbServiceCodes =
+                notification.Group?.Notifications.Select(no => no.HospitalDetails.TBServiceCode);
             Source = "ntbs";
             ShowLink = showLink;
             ShowPadlock = showPadlock;
@@ -91,6 +101,10 @@ namespace ntbs_service.Models
             NotificationDate = notification.NotificationDate.ConvertToString();
             DrugResistance = notification.DrugResistance;
             TreatmentOutcome = CalculateOutcome(notification.TreatmentEvents);
+            PreviousTbServiceCodes = notification.PreviousTbServiceCodes;
+            PreviousPhecCodes = notification.PreviousPhecCodes;
+            LinkedNotificationTbServiceCodes = notification.LinkedNotificationTbServiceCodes;
+            LinkedNotificationPhecCodes = notification.LinkedNotificationPhecCodes;
             Source = "ntbs";
             ShowLink = showLink;
             ShowPadlock = showPadlock;
