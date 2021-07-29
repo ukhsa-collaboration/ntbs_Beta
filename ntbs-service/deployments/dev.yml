@@ -83,6 +83,8 @@ spec:
               value: "development"
             - name: EnvironmentDescription__EnvironmentName
               value: "phe-dev"
+            - name: ScheduledJobsConfig__UserSyncCron
+              value: "00 21 * * *"
       imagePullSecrets:
         - name: registery-password
         - name: default-dockercfg-bs7wj
