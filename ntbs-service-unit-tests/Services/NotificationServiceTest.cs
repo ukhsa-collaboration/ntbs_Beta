@@ -290,6 +290,22 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
+        public async Task UpdatePatientDetails_FormatsNhsNumber()
+        {
+            var reference = new PatientDetails { NhsNumber = "12345" };
+            var input = new PatientDetails { NhsNumber = "12 345" };
+            var notification = new Notification();
+
+            await _notificationService.UpdatePatientDetailsAsync(notification, input);
+
+            Assert.Equal(reference.NhsNumber, input.NhsNumber);
+
+            _mockContext.Verify(context => context.SetValues(notification.PatientDetails, input));
+            _mockAlertService.Verify(x => x.AutoDismissAlertAsync<DataQualityBirthCountryAlert>(It.IsAny<Notification>()), Times.Once);
+            VerifyUpdateDatabaseCalled();
+        }
+
+        [Fact]
         public async Task UpdatePatientFlags_StripsNhsNumberIfNotKnownAsync()
         {
             var reference = new PatientDetails { NhsNumberNotKnown = true, NhsNumber = "12345" };
