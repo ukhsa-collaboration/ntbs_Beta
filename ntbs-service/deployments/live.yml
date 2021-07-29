@@ -117,6 +117,23 @@ spec:
               value: "live"
             - name: EnvironmentDescription__EnvironmentName
               value: "phe-live"
+            # We've moved away from the default config in live as the ETS restore is sometimes happening
+            # too late in the night. If/when those issues are resolved we should remove these values and
+            # fallback to appSettings.
+            - name: ScheduledJobsConfig__ReportingDataRefreshJobCron
+              value: "30 07 * * *"
+            - name: ScheduledJobsConfig__CloseInactiveNotificationsCron
+              value: "00 08 * * *"
+            - name: ScheduledJobsConfig__DrugResistanceProfileUpdateCron
+              value: "00 08 * * *"
+            - name: ScheduledJobsConfig__UnmatchedLabResultAlertsCron
+              value: "00 08 * * *"
+            - name: ScheduledJobsConfig__DataQualityAlertsCron
+              value: "00 08 * * *"
+            - name: ScheduledJobsConfig__MarkImportedNotificationsAsImportedCron
+              value: "00 08 * * *"
+            - name: ScheduledJobsConfig__UpdateTableCountsJobCron
+              value: "30 08 * * *"
           volumeMounts:
             - mountPath: /krbtab
               name: krb-tab
