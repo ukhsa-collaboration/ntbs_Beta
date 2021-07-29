@@ -80,6 +80,7 @@ namespace ntbs_service.Services
         public async Task UpdatePatientDetailsAsync(Notification notification, PatientDetails patient)
         {
             await UpdatePatientFlagsAsync(patient);
+            FormatNhsNumber(patient);
             _context.SetValues(notification.PatientDetails, patient);
 
             await _notificationRepository.SaveChangesAsync();
@@ -109,6 +110,11 @@ namespace ntbs_service.Services
             {
                 patient.YearOfUkEntry = null;
             }
+        }
+
+        private static void FormatNhsNumber(PatientDetails patient)
+        {
+            patient.NhsNumber = NotificationHelper.FormatNhsNumber(patient.NhsNumber);
         }
 
         private async Task UpdateOccupation(PatientDetails patient)
