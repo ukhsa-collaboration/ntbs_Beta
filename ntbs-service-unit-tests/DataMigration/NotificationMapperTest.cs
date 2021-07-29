@@ -49,8 +49,19 @@ namespace ntbs_service_unit_tests.DataMigration
         private readonly Mock<IImportLogger> _importLoggerMock = new Mock<IImportLogger>();
         private readonly ITreatmentEventMapper _treatmentEventMapper;
 
-        private Dictionary<Guid, TBService> _hospitalToTbServiceCodeDict;
-        private Dictionary<string, User> _usernameToUserDict = SetUserDict();
+        const string RoyalBerkshireCode = "TBS001";
+        const string BristolRoyalCode = "TBS002";
+        const string WestonGeneralCode = "TBS003";
+        const string ColchesterGeneralCode = "TBS0049";
+        const string FrimleyParkCode = "TBS0075";
+        const string LeedsGeneralCode = "TBS0106";
+        const string SalfordRoyalCode = "TBS0193";
+        const string MalvernCode = "TBS0656";
+
+        private readonly Guid RoyalBerkshireGuid = new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A");
+
+        private Dictionary<Guid, TBService> _hospitalToTbServiceCodeDict = GetHospitalToTbServiceCodeDict();
+        private Dictionary<string, User> _usernameToUserDict = GetUserDict();
 
         public NotificationMapperTest()
         {
@@ -102,25 +113,12 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyCreates_basicNotification()
         {
             // Arrange
-            const int runId = 12345;
-            var legacyIds = new List<string> { "130331" };
-            SetupNotificationsInGroups(("130331", "1"));
-            const string royalBerkshireCode = "TBS001";
-            const string bristolRoyalCode = "TBS002";
-            const string westonGeneralCode = "TBS003";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
-            {
-                {new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A"), new TBService {Code = royalBerkshireCode}},
-                {new Guid("F026FDCD-7BAF-4C96-994C-20E436CC8C59"), new TBService {Code = bristolRoyalCode}},
-                {new Guid("0AC033AB-9A11-4FA6-AA1A-1FCA71180C2F"), new TBService {Code = westonGeneralCode}}
-            };
+            const int runId = 10101;
+            const string legacyId = "130331";
+            SetupNotificationsInGroups((legacyId, "1"));
 
             // Act
-            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    runId,
-                    legacyIds))
-                .SelectMany(group => group)
-                .Single();
+            var notification = await GetSingleNotification(legacyId, runId);
             var validationErrors =
                 await _importValidator.CleanAndValidateNotification(null, runId, notification);
 
@@ -140,14 +138,20 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal(2010, notification.PatientDetails.YearOfUkEntry);
             Assert.Equal("3 Winglass Place\nWongaton", notification.PatientDetails.Address);
 
-            Assert.Equal(new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A"), notification.HospitalDetails.HospitalId);
-            Assert.Equal(royalBerkshireCode, notification.HospitalDetails.TBServiceCode);
+            Assert.Equal(RoyalBerkshireGuid, notification.HospitalDetails.HospitalId);
+            Assert.Equal(RoyalBerkshireCode, notification.HospitalDetails.TBServiceCode);
             Assert.Equal("Dr McGown", notification.HospitalDetails.Consultant);
 
             Assert.Equal(HIVTestStatus.HIVStatusKnown, notification.ClinicalDetails.HIVTestState);
             Assert.Equal(Status.Yes, notification.ClinicalDetails.HomeVisitCarriedOut);
             Assert.Equal(new DateTime(2015, 03, 25, 00, 00, 00), notification.ClinicalDetails.FirstHomeVisitDate);
             Assert.Equal("Patient did not begin course of treatment under DOT", notification.ClinicalDetails.Notes);
+
+            Assert.Equal(Status.Yes, notification.ImmunosuppressionDetails.Status);
+            Assert.False(notification.ImmunosuppressionDetails.HasBioTherapy);
+            Assert.True(notification.ImmunosuppressionDetails.HasTransplantation);
+            Assert.True(notification.ImmunosuppressionDetails.HasOther);
+            Assert.Equal("Some other immunosuppression", notification.ImmunosuppressionDetails.OtherDescription);
 
             Assert.Equal(Status.No, notification.SocialRiskFactors.RiskFactorDrugs.Status);
             Assert.Null(notification.SocialRiskFactors.RiskFactorDrugs.IsCurrent);
@@ -190,18 +194,6 @@ namespace ntbs_service_unit_tests.DataMigration
                 ("241256", "4"),
                 ("242084", "5")
             );
-
-            const string salfordRoyalCode = "TBS0193";
-            const string leedsGeneralCode = "TBS0106";
-            const string frimleyParkCode = "TBS0075";
-            const string colchesterGeneralCode = "TBS0049";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
-            {
-                {new Guid("3ECAC202-C204-4384-B3F9-0D3FF412DC36"), new TBService {Code = salfordRoyalCode}},
-                {new Guid("7E9C715D-0248-4D97-8F67-1134FC133588"), new TBService {Code = leedsGeneralCode}},
-                {new Guid("44C3608F-231E-4DD7-963C-4492D804E894"), new TBService {Code = frimleyParkCode}},
-                {new Guid("0EEE2EC2-1F3E-4175-BE90-85AA33F0686C"), new TBService {Code = colchesterGeneralCode}}
-            };
 
             // Act
             var notifications = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
@@ -263,22 +255,12 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyCreates_PostMortemNotification()
         {
             // Arrange
-            const int runId = 12345;
-            var legacyIds = new List<string> { "132465" };
-            SetupNotificationsInGroups(("132465", "6"));
-
-            const string colchesterGeneralCode = "TBS0049";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
-            {
-                {new Guid("0EEE2EC2-1F3E-4175-BE90-85AA33F0686C"), new TBService {Code = colchesterGeneralCode}}
-            };
+            const string legacyId = "132465";
+            SetupNotificationsInGroups((legacyId, "6"));
 
             // Act
-            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    runId,
-                    legacyIds))
-                .SelectMany(group => group)
-                .Single();
+            var notification = await GetSingleNotification(legacyId);
+
 
             // Assert
             Assert.Single(notification.TreatmentEvents);
@@ -294,22 +276,11 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyCreates_DeathEventWithoutPostmortem()
         {
             // Arrange
-            const int runId = 12345;
-            var legacyIds = new List<string> { "132468" };
-            SetupNotificationsInGroups(("132468", "6"));
-
-            const string colchesterGeneralCode = "TBS0049";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
-            {
-                {new Guid("0EEE2EC2-1F3E-4175-BE90-85AA33F0686C"), new TBService {Code = colchesterGeneralCode}}
-            };
+            const string legacyId = "132468";
+            SetupNotificationsInGroups((legacyId, "6"));
 
             // Act
-            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    runId,
-                    legacyIds))
-                .SelectMany(group => group)
-                .Single();
+            var notification = await GetSingleNotification(legacyId);
 
             // Assert
             Assert.False(notification.ClinicalDetails.IsPostMortem);
@@ -324,22 +295,11 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task doesNotAddDeathEvent_WhenOneAlreadyExists()
         {
             // Arrange
-            const int runId = 12345;
-            var legacyIds = new List<string> { "132469" };
-            SetupNotificationsInGroups(("132469", "6"));
-
-            const string colchesterGeneralCode = "TBS0049";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
-            {
-                {new Guid("0EEE2EC2-1F3E-4175-BE90-85AA33F0686C"), new TBService {Code = colchesterGeneralCode}}
-            };
+            const string legacyId = "132469";
+            SetupNotificationsInGroups((legacyId, "6"));
 
             // Act
-            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    runId,
-                    legacyIds))
-                .SelectMany(group => group)
-                .Single();
+            var notification = await GetSingleNotification(legacyId);
 
             // Assert
             Assert.False(notification.ClinicalDetails.IsPostMortem);
@@ -358,22 +318,11 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyMaps_MBovisAnimalAndKnownCaseExposures()
         {
             // Arrange
-            const int runId = 12345;
-            var legacyIds = new List<string> { "131686" };
-            SetupNotificationsInGroups(("131686", "7"));
-
-            const string royalBerkshireCode = "TBS001";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
-            {
-                {new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A"), new TBService {Code = royalBerkshireCode}},
-            };
+            const string legacyId = "131686";
+            SetupNotificationsInGroups((legacyId, "7"));
 
             // Act
-            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    runId,
-                    legacyIds))
-                .SelectMany(group => group)
-                .Single();
+            var notification = await GetSingleNotification(legacyId);
 
             // Assert
             // Notification 131686 has animal and known cases forms filled out, so their statuses should be yes.
@@ -413,22 +362,11 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyMaps_MBovisMilkAndOccupationExposures()
         {
             // Arrange
-            const int runId = 12345;
-            var legacyIds = new List<string> { "131687" };
-            SetupNotificationsInGroups(("131687", "8"));
-
-            const string royalBerkshireCode = "TBS001";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
-            {
-                {new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A"), new TBService {Code = royalBerkshireCode}},
-            };
+            const string legacyId = "131687";
+            SetupNotificationsInGroups((legacyId, "8"));
 
             // Act
-            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    runId,
-                    legacyIds))
-                .SelectMany(group => group)
-                .Single();
+            var notification = await GetSingleNotification(legacyId);
 
             // Assert
             // Notification 131687 has milk and occupation forms filled out, so their statuses should be yes.
@@ -466,22 +404,11 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyMaps_NotStartedMBovisQuestionnaire()
         {
             // Arrange
-            const int runId = 12345;
-            var legacyIds = new List<string> { "237137" };
-            SetupNotificationsInGroups(("237137", "9"));
-
-            const string leedsGeneralCode = "TBS0106";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
-            {
-                {new Guid("7E9C715D-0248-4D97-8F67-1134FC133588"), new TBService {Code = leedsGeneralCode}},
-            };
+            const string legacyId = "237137";
+            SetupNotificationsInGroups((legacyId, "9"));
 
             // Act
-            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    runId,
-                    legacyIds))
-                .SelectMany(group => group)
-                .Single();
+            var notification = await GetSingleNotification(legacyId);
 
             // Assert
             // Notification 237137 has no M. bovis forms filled out, so the statuses should be null
@@ -500,22 +427,11 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyMaps_DuplicateTravelCountries()
         {
             // Arrange
-            const int runId = 12345;
-            var legacyIds = new List<string> { "237137" };
-            SetupNotificationsInGroups(("237137", "9"));
-
-            const string leedsGeneralCode = "TBS0106";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
-            {
-                {new Guid("7E9C715D-0248-4D97-8F67-1134FC133588"), new TBService {Code = leedsGeneralCode}},
-            };
+            const string legacyId = "237137";
+            SetupNotificationsInGroups((legacyId, "9"));
 
             // Act
-            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    runId,
-                    legacyIds))
-                .SelectMany(group => group)
-                .Single();
+            var notification = await GetSingleNotification(legacyId);
 
             // Assert
             Assert.Equal(3, notification.TravelDetails.TotalNumberOfCountries);
@@ -533,33 +449,23 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyWarns_WithInvalidPostcode()
         {
             // Arrange
-            const int runId = 12345;
-            var legacyIds = new List<string> { "237138" };
-            SetupNotificationsInGroups(("237138", "10"));
-
-            const string leedsGeneralCode = "TBS0106";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
-            {
-                {new Guid("7E9C715D-0248-4D97-8F67-1134FC133588"), new TBService {Code = leedsGeneralCode}},
-            };
+            const int runId = 10101;
+            const string legacyId = "237138";
+            SetupNotificationsInGroups((legacyId, "10"));
 
             _postcodeService.Setup(service => service.FindPostcodeAsync("BF1"))
                 .Returns(Task.FromResult<PostcodeLookup>(null));
 
             // Act
-            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                        runId,
-                        legacyIds))
-                    .SelectMany(group => group)
-                    .Single();
+            var notification = await GetSingleNotification(legacyId, runId);
 
-                // Assert
-                Assert.Equal("BF1", notification.PatientDetails.Postcode);
-                Assert.Null(notification.PatientDetails.PostcodeToLookup);
+            // Assert
+            Assert.Equal("BF1", notification.PatientDetails.Postcode);
+            Assert.Null(notification.PatientDetails.PostcodeToLookup);
 
-                _importLoggerMock.Verify(
-                    s => s.LogNotificationWarning(null, runId, "237138", "invalid or unknown postcode"),
-                    Times.Once);
+            _importLoggerMock.Verify(
+                s => s.LogNotificationWarning(null, runId, legacyId, "invalid or unknown postcode"),
+                Times.Once);
         }
 
 
@@ -569,25 +475,14 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyMaps_DenotifiedStatusIfOtherwiseWouldBeClosed()
         {
             // Arrange
-            const int runId = 12345;
-            var legacyIds = new List<string> { "249398" };
-            SetupNotificationsInGroups(("249398", "10"));
-
-            const string malvernCode = "TBS0656";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
-            {
-                {new Guid("33464912-E5B1-4998-AFCA-083C3AE65A80"), new TBService {Code = malvernCode}},
-            };
+            const string legacyId = "249398";
+            SetupNotificationsInGroups((legacyId, "10"));
 
             // Act
-            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                        runId,
-                        legacyIds))
-                    .SelectMany(group => group)
-                    .Single();
+            var notification = await GetSingleNotification(legacyId);
 
             // Assert
-            Assert.Equal(NotificationStatus.Denotified ,notification.NotificationStatus);
+            Assert.Equal(NotificationStatus.Denotified, notification.NotificationStatus);
         }
 
         // Data for this has been based on real examples, but with care taken to anonymize it
@@ -595,22 +490,11 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyMaps_DenotificationValuesWithDenotificationReason()
         {
             // Arrange
-            const int runId = 12345;
-            var legacyIds = new List<string> { "193300" };
-            SetupNotificationsInGroups(("193300", "11"));
-
-            const string malvernCode = "TBS0656";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
-            {
-                {new Guid("33464912-E5B1-4998-AFCA-083C3AE65A80"), new TBService {Code = malvernCode}},
-            };
+            const string legacyId = "193300";
+            SetupNotificationsInGroups((legacyId, "11"));
 
             // Act
-            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    runId,
-                    legacyIds))
-                .SelectMany(group => group)
-                .Single();
+            var notification = await GetSingleNotification(legacyId);
 
             // Assert
             Assert.Equal(NotificationStatus.Denotified, notification.NotificationStatus);
@@ -622,22 +506,11 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyMaps_DenotificationValuesWhenNoDenotificationReason()
         {
             // Arrange
-            const int runId = 12345;
-            var legacyIds = new List<string> { "193301" };
-            SetupNotificationsInGroups(("193301", "11"));
-
-            const string malvernCode = "TBS0656";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
-            {
-                {new Guid("33464912-E5B1-4998-AFCA-083C3AE65A80"), new TBService {Code = malvernCode}},
-            };
+            const string legacyId = "193301";
+            SetupNotificationsInGroups((legacyId, "11"));
 
             // Act
-            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    runId,
-                    legacyIds))
-                .SelectMany(group => group)
-                .Single();
+            var notification = await GetSingleNotification(legacyId);
 
             // Assert
             Assert.Equal(NotificationStatus.Denotified, notification.NotificationStatus);
@@ -651,26 +524,107 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyMaps_TravelAndVisitorNumbersToNullWhenNoCountriesAddedWithStatusOfYes()
         {
             // Arrange
-            const int runId = 12345;
-            var legacyIds = new List<string> { "130991" };
-            SetupNotificationsInGroups(("130991", "12"));
-
-            const string royalBerkshireCode = "TBS001";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
-            {
-                {new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A"), new TBService {Code = royalBerkshireCode}},
-            };
+            const string legacyId = "130991";
+            SetupNotificationsInGroups((legacyId, "12"));
 
             // Act
-            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    runId,
-                    legacyIds))
-                .SelectMany(group => group)
-                .Single();
+            var notification = await GetSingleNotification(legacyId);
 
             // Assert
             Assert.Null(notification.TravelDetails.TotalNumberOfCountries);
             Assert.Null(notification.VisitorDetails.TotalNumberOfCountries);
+        }
+
+        [Fact]
+        public async Task correctlyMaps_ImmunosuppressionDetails_WhenStatusIsNo()
+        {
+            // Arrange
+            const string legacyId = "132500";
+            SetupNotificationsInGroups((legacyId, "12"));
+
+            // Act
+            var notification = await GetSingleNotification(legacyId);
+
+            // Assert
+            Assert.Equal(Status.No, notification.ImmunosuppressionDetails.Status);
+            Assert.Null(notification.ImmunosuppressionDetails.HasBioTherapy);
+            Assert.Null(notification.ImmunosuppressionDetails.HasTransplantation);
+            Assert.Null(notification.ImmunosuppressionDetails.HasOther);
+            Assert.Null(notification.ImmunosuppressionDetails.OtherDescription);
+        }
+
+        [Fact]
+        public async Task correctlyMaps_ImmunosuppressionDetails_WithDescriptionWhenHasOtherIsFalse()
+        {
+            // Arrange
+            const string legacyId = "132501";
+            SetupNotificationsInGroups((legacyId, "12"));
+
+            // Act
+            var notification = await GetSingleNotification(legacyId);
+
+            // Assert
+            Assert.Equal(Status.Yes, notification.ImmunosuppressionDetails.Status);
+            Assert.False(notification.ImmunosuppressionDetails.HasBioTherapy);
+            Assert.False(notification.ImmunosuppressionDetails.HasTransplantation);
+            Assert.True(notification.ImmunosuppressionDetails.HasOther);
+            Assert.Equal("Some other immunosuppression", notification.ImmunosuppressionDetails.OtherDescription);
+        }
+
+        [Fact]
+        public async Task correctlyMaps_ImmunosuppressionDetails_WithoutDescriptionWhenHasOtherIsTrue()
+        {
+            // Arrange
+            const string legacyId = "132502";
+            SetupNotificationsInGroups((legacyId, "12"));
+
+            // Act
+            var notification = await GetSingleNotification(legacyId);
+
+            // Assert
+            Assert.Equal(Status.Yes, notification.ImmunosuppressionDetails.Status);
+            Assert.False(notification.ImmunosuppressionDetails.HasBioTherapy);
+            Assert.False(notification.ImmunosuppressionDetails.HasTransplantation);
+            Assert.True(notification.ImmunosuppressionDetails.HasOther);
+            Assert.Equal("No description provided in the legacy system",
+                notification.ImmunosuppressionDetails.OtherDescription);
+        }
+
+        [Fact]
+        public async Task correctlyMaps_ImmunosuppressionDetails_WhenAllTypesAreFalse()
+        {
+            // Arrange
+            const string legacyId = "132503";
+            SetupNotificationsInGroups((legacyId, "12"));
+
+            // Act
+            var notification = await GetSingleNotification(legacyId);
+
+            // Assert
+            Assert.Equal(Status.Yes, notification.ImmunosuppressionDetails.Status);
+            Assert.False(notification.ImmunosuppressionDetails.HasBioTherapy);
+            Assert.False(notification.ImmunosuppressionDetails.HasTransplantation);
+            Assert.True(notification.ImmunosuppressionDetails.HasOther);
+            Assert.Equal("No immunosuppression type was provided in the legacy record",
+                notification.ImmunosuppressionDetails.OtherDescription);
+        }
+
+        [Fact]
+        public async Task correctlyCleans_ImmunosuppressionDetails_OtherDescription()
+        {
+            // Arrange
+            const string legacyId = "132504";
+            SetupNotificationsInGroups((legacyId, "12"));
+
+            // Act
+            var notification = await GetSingleNotification(legacyId);
+
+            // Assert
+            Assert.Equal(Status.Yes, notification.ImmunosuppressionDetails.Status);
+            Assert.True(notification.ImmunosuppressionDetails.HasBioTherapy);
+            Assert.True(notification.ImmunosuppressionDetails.HasTransplantation);
+            Assert.True(notification.ImmunosuppressionDetails.HasOther);
+            Assert.Equal("Some invalid characters", notification.ImmunosuppressionDetails.OtherDescription);
         }
 
         // Data for this has been taken from an edited test notification, relating to NTBS-2478
@@ -678,22 +632,11 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task whenLastTreatmentEventIsOutcomeStillOnTreatment_DoNotCloseNotificationDuringMapping()
         {
             // Arrange
-            const int runId = 12345;
-            var legacyIds = new List<string> { "300123" };
-            SetupNotificationsInGroups(("300123", "12"));
-
-            const string malvernCode = "TBS0656";
-            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
-            {
-                {new Guid("33464912-E5B1-4998-AFCA-083C3AE65A80"), new TBService {Code = malvernCode}},
-            };
+            const string legacyId = "300123";
+            SetupNotificationsInGroups((legacyId, "12"));
 
             // Act
-            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
-                    runId,
-                    legacyIds))
-                .SelectMany(group => group)
-                .Single();
+            var notification = await GetSingleNotification(legacyId);
 
             // Assert
             Assert.Equal(NotificationStatus.Notified, notification.NotificationStatus);
@@ -710,7 +653,29 @@ namespace ntbs_service_unit_tests.DataMigration
             _migrationRepository.GroupedNotificationsStub = grouped;
         }
 
-        private static Dictionary<string, User> SetUserDict()
+        private async Task<Notification> GetSingleNotification(string legacyId, int runId = 12345)
+        {
+            return (await _notificationMapper.GetNotificationsGroupedByPatient(null,
+                    runId,
+                    new List<string> { legacyId }))
+                .SelectMany(group => group)
+                .Single();
+        }
+
+        private static Dictionary<Guid, TBService> GetHospitalToTbServiceCodeDict() =>
+            new Dictionary<Guid, TBService>
+            {
+                { new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A"), new TBService { Code = RoyalBerkshireCode } },
+                { new Guid("F026FDCD-7BAF-4C96-994C-20E436CC8C59"), new TBService { Code = BristolRoyalCode } },
+                { new Guid("0AC033AB-9A11-4FA6-AA1A-1FCA71180C2F"), new TBService { Code = WestonGeneralCode } },
+                { new Guid("3ECAC202-C204-4384-B3F9-0D3FF412DC36"), new TBService { Code = SalfordRoyalCode } },
+                { new Guid("7E9C715D-0248-4D97-8F67-1134FC133588"), new TBService { Code = LeedsGeneralCode } },
+                { new Guid("44C3608F-231E-4DD7-963C-4492D804E894"), new TBService { Code = FrimleyParkCode } },
+                { new Guid("0EEE2EC2-1F3E-4175-BE90-85AA33F0686C"), new TBService { Code = ColchesterGeneralCode } },
+                { new Guid("33464912-E5B1-4998-AFCA-083C3AE65A80"), new TBService { Code = MalvernCode } },
+            };
+
+        private static Dictionary<string, User> GetUserDict()
         {
             return new Dictionary<string, User>
             {
