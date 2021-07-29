@@ -186,7 +186,6 @@ namespace ntbs_service.DataMigration
             var isAnyNotificationInvalid = false;
             foreach (var notification in notifications)
             {
-                await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, context, runId);
                 var linkedNotificationId = notification.LegacyId;
                 _logger.LogInformation(context, runId, $"Validating notification with Id={linkedNotificationId}");
 
