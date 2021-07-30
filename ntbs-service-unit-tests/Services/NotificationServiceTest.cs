@@ -193,6 +193,7 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public async Task UpdateImmunosuppressionDetails_LeavesValuesUnchangedWhenStatusIsYes()
         {
+            // Arrange
             var reference = new ImmunosuppressionDetails
             {
                 Status = Status.Yes,
@@ -211,8 +212,10 @@ namespace ntbs_service_unit_tests.Services
             };
             var notification = new Notification();
 
+            // Act
             await _notificationService.UpdateImmunosuppresionDetailsAsync(notification, input);
 
+            // Assert
             Assert.Equal(reference.Status, input.Status);
             Assert.Equal(reference.HasBioTherapy, input.HasBioTherapy);
             Assert.Equal(reference.HasTransplantation, input.HasTransplantation);
@@ -226,6 +229,7 @@ namespace ntbs_service_unit_tests.Services
         [InlineData((int)Status.Unknown)]
         public async Task UpdateImmunosuppressionDetails_StripsAllButStatusWhenStatusIsNotYes(int status)
         {
+            // Arrange
             var parsedStatus = (Status)status;
             var reference = new ImmunosuppressionDetails
             {
@@ -245,8 +249,10 @@ namespace ntbs_service_unit_tests.Services
             };
             var notification = new Notification();
 
+            // Act
             await _notificationService.UpdateImmunosuppresionDetailsAsync(notification, input);
 
+            // Assert
             Assert.Equal(reference.Status, input.Status);
             Assert.NotEqual(reference.HasBioTherapy, input.HasBioTherapy);
             Assert.Null(input.HasBioTherapy);
@@ -264,6 +270,7 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public async Task UpdateImmunosuppressionDetails_StripsOtherDescriptionWhenHasOtherIsFalse()
         {
+            // Arrange
             var reference = new ImmunosuppressionDetails
             {
                 Status = Status.Yes,
@@ -278,8 +285,10 @@ namespace ntbs_service_unit_tests.Services
             };
             var notification = new Notification();
 
+            // Act
             await _notificationService.UpdateImmunosuppresionDetailsAsync(notification, input);
 
+            // Assert
             Assert.Equal(reference.Status, input.Status);
             Assert.Equal(reference.HasOther, input.HasOther);
             Assert.NotEqual(reference.OtherDescription, input.OtherDescription);
@@ -290,8 +299,27 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
+        public async Task UpdatePatientDetails_FormatsNhsNumber()
+        {
+            // Arrange
+            var expectedNhsNumber = "12345" ;
+            var input = new PatientDetails { NhsNumber = "12 345" };
+            var notification = new Notification();
+
+            // Act
+            await _notificationService.UpdatePatientDetailsAsync(notification, input);
+
+            // Assert
+            _mockContext.Verify(context => context.SetValues(
+                notification.PatientDetails,
+                It.Is<PatientDetails>(pd => pd.NhsNumber == expectedNhsNumber)));
+            VerifyUpdateDatabaseCalled();
+        }
+
+        [Fact]
         public async Task UpdatePatientFlags_StripsNhsNumberIfNotKnownAsync()
         {
+            // Arrange
             var reference = new PatientDetails { NhsNumberNotKnown = true, NhsNumber = "12345" };
             var input = new PatientDetails
             {
@@ -299,8 +327,10 @@ namespace ntbs_service_unit_tests.Services
                 NhsNumber = reference.NhsNumber
             };
 
+            // Act
             await _notificationService.UpdatePatientFlagsAsync(input);
 
+            // Assert
             Assert.Equal(reference.NhsNumberNotKnown, input.NhsNumberNotKnown);
             Assert.NotEqual(reference.NhsNumber, input.NhsNumber);
             Assert.Null(input.NhsNumber);
@@ -309,6 +339,7 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public async Task UpdatePatientFlags_DoesNotStripNhsNumberIfKnown()
         {
+            // Arrange
             var reference = new PatientDetails { NhsNumberNotKnown = false, NhsNumber = "12345" };
             var input = new PatientDetails
             {
@@ -316,8 +347,10 @@ namespace ntbs_service_unit_tests.Services
                 NhsNumber = reference.NhsNumber
             };
 
+            // Act
             await _notificationService.UpdatePatientFlagsAsync(input);
 
+            // Assert
             Assert.Equal(reference.NhsNumberNotKnown, input.NhsNumberNotKnown);
             Assert.Equal(reference.NhsNumber, input.NhsNumber);
         }
@@ -325,11 +358,14 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public async Task UpdatePatientFlags_StripsPostcodeIfNoFixedAbode()
         {
+            // Arrange
             var reference = new PatientDetails { NoFixedAbode = true, Postcode = "12345" };
             var input = new PatientDetails { NoFixedAbode = reference.NoFixedAbode, Postcode = reference.Postcode };
 
+            // Act
             await _notificationService.UpdatePatientFlagsAsync(input);
 
+            // Assert
             Assert.Equal(reference.NoFixedAbode, input.NoFixedAbode);
             Assert.NotEqual(reference.Postcode, input.Postcode);
             Assert.Null(input.Postcode);
@@ -338,11 +374,14 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public async Task UpdatePatientFlags_DoesNotStripPostcodeIfFixedAbode()
         {
+            // Arrange
             var reference = new PatientDetails { NoFixedAbode = false, Postcode = "12345" };
             var input = new PatientDetails { NoFixedAbode = reference.NoFixedAbode, Postcode = reference.Postcode };
 
+            // Act
             await _notificationService.UpdatePatientFlagsAsync(input);
 
+            // Assert
             Assert.Equal(reference.NoFixedAbode, input.NoFixedAbode);
             Assert.Equal(reference.Postcode, input.Postcode);
         }
@@ -359,8 +398,10 @@ namespace ntbs_service_unit_tests.Services
             _mockReferenceDataRepository.Setup(rep => rep.GetOccupationByIdAsync(input.OccupationId.Value))
                 .Returns(Task.FromResult(new Occupation { HasFreeTextField = false }));
 
+            // Act
             await _notificationService.UpdatePatientFlagsAsync(input);
 
+            // Assert
             Assert.Equal(reference.OccupationId, input.OccupationId);
             Assert.NotEqual(reference.OccupationOther, input.OccupationOther);
             Assert.Null(input.OccupationOther);
@@ -369,6 +410,7 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public async Task UpdatePatientFlags_DoesNotStripOccupationFreeTextIfFreeTextForOccupation()
         {
+            // Arrange
             var reference = new PatientDetails { OccupationId = 1, OccupationOther = "12345" };
             var input = new PatientDetails
             {
@@ -378,14 +420,17 @@ namespace ntbs_service_unit_tests.Services
             _mockReferenceDataRepository.Setup(rep => rep.GetOccupationByIdAsync(input.OccupationId.Value))
                 .Returns(Task.FromResult(new Occupation { HasFreeTextField = true }));
 
+            // Act
             await _notificationService.UpdatePatientFlagsAsync(input);
 
+            // Assert
             Assert.Equal(reference.OccupationId, input.OccupationId);
             Assert.Equal(reference.OccupationOther, input.OccupationOther);
         }
 
         private void VerifyUpdateDatabaseCalled()
         {
+            // Arrange
             _mockNotificationRepository.Verify(mock =>
                 mock.SaveChangesAsync(It.IsAny<NotificationAuditType>(), It.IsAny<string>()));
         }
@@ -426,6 +471,7 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public async Task UpdateNotificationClustersAsync_DoesNotThrowIfNotificationExists()
         {
+            // Arrange
             const int existingNotification = 1;
             _mockNotificationRepository
                 .Setup(r => r.GetNotificationAsync(existingNotification))
@@ -445,11 +491,13 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public async Task UpdateNotificationClustersAsync_ThrowsIfNotificationDoesNotExist()
         {
+            // Arrange
             const int notExistingNotification = 1;
             _mockNotificationRepository
                 .Setup(r => r.GetNotificationAsync(notExistingNotification))
                 .Returns(Task.FromResult<Notification>(null));
 
+            // Assert
             await Assert.ThrowsAnyAsync<DataException>(() =>
                 _notificationService.UpdateNotificationClustersAsync(
                     new List<NotificationClusterValue>

@@ -30,7 +30,6 @@ namespace ntbs_service_unit_tests.DataMigration
         private readonly Mock<IMigrationRepository> _migrationRepositoryMock = new Mock<IMigrationRepository>();
         private readonly Mock<IOptionsMonitor<AdOptions>> _adOptionMock = new Mock<IOptionsMonitor<AdOptions>>();
 
-        private Dictionary<string, IEnumerable<MigrationDbNotification>> _idToNotificationDict;
         private Dictionary<string, MigrationLegacyUser> _usernameToLegacyUserDict = new Dictionary<string, MigrationLegacyUser>();
         private Dictionary<string, IEnumerable<MigrationLegacyUserHospital>> _usernameToLegacyUserHospitalDict = new Dictionary<string, IEnumerable<MigrationLegacyUserHospital>>();
 
@@ -57,12 +56,11 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task WhenCaseManagerForLegacyNotificationWithCorrectPermissionsDoesNotExistInNtbs_AddsCaseManagerWithTbServices()
         {
             // Arrange
-            var notification = GivenLegacyNotificationWithCaseManagerAndTbServiceCode(CASE_MANAGER_USERNAME_1, "TBS00TEST");
             GivenLegacyUserWithName(CASE_MANAGER_USERNAME_1, "John", "Johnston");
             await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS00TEST", HOSPITAL_GUID_1);
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, BATCH_ID);
+            await _caseManagerImportService.ImportOrUpdateLegacyUser(CASE_MANAGER_USERNAME_1, "TBS00TEST", null, BATCH_ID);
 
             // Assert
             var addedUser = _context.User.SingleOrDefault();
@@ -78,12 +76,11 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task WhenCaseManagerForLegacyNotificationWithIncorrectPermissionsDoesNotExistInNtbs_AddsCaseManagerWithNoTbServices()
         {
             // Arrange
-            var notification = GivenLegacyNotificationWithCaseManagerAndTbServiceCode(CASE_MANAGER_USERNAME_1, "TBS00TEST");
             GivenLegacyUserWithName(CASE_MANAGER_USERNAME_1, "John", "Johnston");
             await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS11FAKE", HOSPITAL_GUID_1);
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, BATCH_ID);
+            await _caseManagerImportService.ImportOrUpdateLegacyUser(CASE_MANAGER_USERNAME_1, "TBS00TEST", null, BATCH_ID);
 
             // Assert
             var addedUser = _context.User.SingleOrDefault();
@@ -99,13 +96,12 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task WhenCaseManagerForLegacyNotificationExistsInNtbs_UserNotImportedButNameUpdated()
         {
             // Arrange
-            var notification = GivenLegacyNotificationWithCaseManagerAndTbServiceCode(CASE_MANAGER_USERNAME_1, "TBS00TEST");
             GivenLegacyUserWithName(CASE_MANAGER_USERNAME_1, "John", "Johnston");
             await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS99HULL", HOSPITAL_GUID_1);
             await GivenUserExistsInNtbsWithName("Jon", "Jonston");
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateUserFromNotification(notification, null, BATCH_ID);
+            await _caseManagerImportService.ImportOrUpdateLegacyUser(CASE_MANAGER_USERNAME_1, "TBS99HULL", null, BATCH_ID);
 
             // Assert
             var updatedUser = _context.User.Single();
@@ -120,45 +116,6 @@ namespace ntbs_service_unit_tests.DataMigration
                 .Returns((string username) => Task.FromResult(_usernameToLegacyUserDict[username]));
             _migrationRepositoryMock.Setup(repo => repo.GetLegacyUserHospitalsByUsername(It.IsAny<string>()))
                 .Returns((string username) => Task.FromResult(_usernameToLegacyUserHospitalDict[username]));
-            _migrationRepositoryMock.Setup(repo => repo.GetNotificationsById(It.IsAny<List<string>>()))
-                .Returns((List<string> ids) => Task.FromResult(_idToNotificationDict[ids[0]]));
-        }
-
-        private Notification GivenLegacyNotificationWithCaseManagerAndTbServiceCode(string caseManager, string TbServiceCode)
-        {
-            _idToNotificationDict = new Dictionary<string, IEnumerable<MigrationDbNotification>>
-            {
-                {
-                    NOTIFICATION_ID,
-                    new List<MigrationDbNotification> {new MigrationDbNotification {CaseManager = caseManager}}
-                }
-            };
-            return new Notification
-            {
-                IsLegacy = true,
-                LegacySource = "LTBR",
-                LTBRID = NOTIFICATION_ID,
-                HospitalDetails = new HospitalDetails {TBServiceCode = TbServiceCode},
-                TreatmentEvents = new List<TreatmentEvent>()
-            };
-        }
-
-        private Notification GivenLegacyNotificationWithNoCaseManager()
-        {
-            _idToNotificationDict = new Dictionary<string, IEnumerable<MigrationDbNotification>>
-            {
-                {
-                    NOTIFICATION_ID,
-                    new List<MigrationDbNotification> {new MigrationDbNotification()}
-                }
-            };
-            return new Notification
-            {
-                IsLegacy = true,
-                LTBRID = NOTIFICATION_ID,
-                HospitalDetails = new HospitalDetails(),
-                TreatmentEvents = new List<TreatmentEvent>()
-            };
         }
 
         private void GivenLegacyUserWithName(string username, string givenName, string familyName)

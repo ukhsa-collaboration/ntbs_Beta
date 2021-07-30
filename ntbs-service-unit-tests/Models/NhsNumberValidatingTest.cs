@@ -39,7 +39,8 @@ namespace ntbs_service_unit_tests.Models
                 {
                     "0000000000",
                     "1111111111",
-                    "9999999999"
+                    "9999999999",
+                    "111 111 1111"
                 }
                 .Select(number => new object[] { number });
         }
@@ -75,7 +76,8 @@ namespace ntbs_service_unit_tests.Models
             {
                 "4123456789",
                 "5234567890",
-                "6345678901"
+                "6345678901",
+                "683 844 1857"
             }
             .Select(number => new object[] { number });
         }
@@ -93,7 +95,9 @@ namespace ntbs_service_unit_tests.Models
             {
                 "6511195635",
                 "8881441519",
-                "5864552852"
+                "5864552852",
+                "251 244 6433",
+                "683 8 4 4 085 7"
             }
             .Select(number => new object[] { number });
         }
