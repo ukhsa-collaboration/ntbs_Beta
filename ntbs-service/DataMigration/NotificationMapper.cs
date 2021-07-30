@@ -445,29 +445,25 @@ namespace ntbs_service.DataMigration
             details.HasBioTherapy = Converter.GetNullableBoolValue(notification.HasBioTherapy);
             details.HasTransplantation = Converter.GetNullableBoolValue(notification.HasTransplantation);
             details.HasOther = Converter.GetNullableBoolValue(notification.HasOther);
+            details.OtherDescription = RemoveCharactersNotIn(
+                ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
+                notification.OtherDescription);
 
-            if (details.HasBioTherapy != true && details.HasTransplantation != true && details.HasOther != true)
+            if (details.HasOther == true && string.IsNullOrWhiteSpace(details.OtherDescription))
+            {
+                details.OtherDescription = "No description provided in the legacy system";
+            }
+
+            if (details.HasBioTherapy != true && details.HasTransplantation != true)
             {
                 details.HasOther = true;
-                details.OtherDescription = "No immunosuppression type was provided in the legacy record";
-            }
-            else if (details.HasOther == true)
-            {
-                if (!string.IsNullOrWhiteSpace(notification.OtherDescription))
-                {
-                    var otherDescription = RemoveCharactersNotIn(
-                        ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
-                        notification.OtherDescription);
-                    details.OtherDescription = otherDescription;
-                }
-                else
-                {
-                    details.OtherDescription = "No description provided in the legacy system";
-                }
+                details.OtherDescription = string.IsNullOrWhiteSpace(details.OtherDescription)
+                    ? "No immunosuppression type was provided in the legacy record"
+                    : details.OtherDescription;
             }
 
-            // Ensure that if a description exists, HasOther is ticked
-            if (details.HasOther != true && !string.IsNullOrWhiteSpace(details.OtherDescription))
+            // Ensure that if a description exists then HasOther is ticked
+            if (!string.IsNullOrWhiteSpace(details.OtherDescription))
             {
                 details.HasOther = true;
             }
