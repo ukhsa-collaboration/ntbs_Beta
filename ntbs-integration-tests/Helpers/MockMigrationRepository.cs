@@ -5,13 +5,30 @@ using System.Threading.Tasks;
 using ntbs_service.DataMigration;
 using ntbs_service.DataMigration.RawModels;
 
-namespace ntbs_service.Services
+namespace ntbs_integration_tests.Helpers
 {
     public class MockMigrationRepository : IMigrationRepository
     {
         public static readonly string MockNhsNumberDuplicate = "9500699141";
         public static readonly string MockNhsNumberDuplicateLegacyId = "1001";
         public static readonly string MockNhsNumberDuplicateLegacySource = "ETS";
+
+        public Task<IEnumerable<MigrationDbNhsNumberMatch>> GetLegacyNotificationNhsNumberMatches(string nhsNumber)
+        {
+            IEnumerable<MigrationDbNhsNumberMatch> matches;
+            if (nhsNumber == MockNhsNumberDuplicate)
+            {
+                matches = new List<MigrationDbNhsNumberMatch>
+                {
+                    new MigrationDbNhsNumberMatch {OldNotificationId = MockNhsNumberDuplicateLegacyId, Source = MockNhsNumberDuplicateLegacySource}
+                };
+            }
+            else
+            {
+                matches = new List<MigrationDbNhsNumberMatch>();
+            }
+            return Task.FromResult(matches);
+        }
 
         public Task<IEnumerable<IGrouping<string, string>>> GetGroupedNotificationIdsById(IEnumerable<string> legacyIds)
         {
@@ -86,23 +103,6 @@ namespace ntbs_service.Services
         public Task<IEnumerable<MigrationLegacyUserHospital>> GetLegacyUserHospitalsByUsername(string username)
         {
             throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<MigrationDbNhsNumberMatch>> GetLegacyNotificationNhsNumberMatches(string nhsNumber)
-        {
-            IEnumerable<MigrationDbNhsNumberMatch> matches;
-            if (nhsNumber == MockNhsNumberDuplicate)
-            {
-                matches = new List<MigrationDbNhsNumberMatch>
-                {
-                    new MigrationDbNhsNumberMatch {OldNotificationId = MockNhsNumberDuplicateLegacyId, Source = MockNhsNumberDuplicateLegacySource}
-                };
-            }
-            else
-            {
-                matches = new List<MigrationDbNhsNumberMatch>();
-            }
-            return Task.FromResult(matches);
         }
     }
 }

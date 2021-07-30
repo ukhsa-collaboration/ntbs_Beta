@@ -115,7 +115,10 @@ namespace ntbs_service.Pages.Notifications.Edit
                 return null;
             }
 
-            var ntbsNhsNumberMatches = await NotificationRepository.GetNotificationIdsByNhsNumberAsync(nhsNumber);
+            var ntbsNhsNumberMatchesTask = NotificationRepository.GetNotificationIdsByNhsNumberAsync(nhsNumber);
+            var legacyNhsNumberMatchesTask = _migrationRepository.GetLegacyNotificationNhsNumberMatches(nhsNumber);
+            var ntbsNhsNumberMatches = await ntbsNhsNumberMatchesTask;
+            var legacyNhsNumberMatches = await legacyNhsNumberMatchesTask;
             var idsInGroup = group?.Notifications?.Select(n => n.NotificationId) ?? new List<int>();
             var filteredNtbsIdDictionary = ntbsNhsNumberMatches
                 .Except(idsInGroup)
@@ -124,8 +127,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                     id => id.ToString(),
                     id => RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview));
 
-            var legacyIds = await _migrationRepository.GetLegacyNotificationNhsNumberMatches(nhsNumber);
-            var legacyIdDictionary = legacyIds.ToDictionary(
+            var legacyIdDictionary = legacyNhsNumberMatches.ToDictionary(
                 match => $"{match.Source}: {match.OldNotificationId}",
                 match => "");
 

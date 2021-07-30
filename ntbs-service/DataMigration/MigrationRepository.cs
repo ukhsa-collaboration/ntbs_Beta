@@ -55,11 +55,11 @@ namespace ntbs_service.DataMigration
             AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("notificationInGroup.OldNotificationId")})";
 
         private string LegacyNotificationByNhsNumberQuery => $@"
-            SELECT n.OldNotificationId, n.Source
-            FROM MigrationNotificationsView n
-            LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
-            WHERE dmg.NhsNumber = @NhsNumber
-            AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("n.OldNotificationId")})";
+            SELECT d.OldNotificationId, d.Source
+            FROM Demographics d
+            INNER JOIN MergedNotifications mn ON mn.PrimaryNotificationId = d.OldNotificationId
+            WHERE d.NhsNumber = @NhsNumber AND mn.IsDenotified = 0
+            AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("d.OldNotificationId")})";
 
         private const string NotificationsByIdQuery = @"
             SELECT *
