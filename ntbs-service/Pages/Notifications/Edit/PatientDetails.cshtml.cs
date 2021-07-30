@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
+using ntbs_service.DataMigration;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -17,6 +18,7 @@ namespace ntbs_service.Pages.Notifications.Edit
     {
         private readonly IPostcodeService _postcodeService;
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IMigrationRepository _migrationRepository;
 
         public SelectList Ethnicities { get; set; }
         public SelectList Countries { get; set; }
@@ -39,10 +41,12 @@ namespace ntbs_service.Pages.Notifications.Edit
             IAlertRepository alertRepository,
             IPostcodeService postcodeService,
             IReferenceDataRepository referenceDataRepository,
+            IMigrationRepository migrationRepository,
             IUserHelper userHelper) : base(service, authorizationService, notificationRepository, alertRepository, userHelper)
         {
             _postcodeService = postcodeService;
             _referenceDataRepository = referenceDataRepository;
+            _migrationRepository = migrationRepository;
 
             CurrentPage = NotificationSubPaths.EditPatientDetails;
         }
@@ -111,16 +115,23 @@ namespace ntbs_service.Pages.Notifications.Edit
                 return null;
             }
 
-            var notificationIds = await NotificationRepository.GetNotificationIdsByNhsNumberAsync(nhsNumber);
+            var ntbsNhsNumberMatchesTask = NotificationRepository.GetNotificationIdsByNhsNumberAsync(nhsNumber);
+            var legacyNhsNumberMatchesTask = _migrationRepository.GetLegacyNotificationNhsNumberMatches(nhsNumber);
+            var ntbsNhsNumberMatches = await ntbsNhsNumberMatchesTask;
+            var legacyNhsNumberMatches = await legacyNhsNumberMatchesTask;
             var idsInGroup = group?.Notifications?.Select(n => n.NotificationId) ?? new List<int>();
-            var filteredIds = notificationIds
+            var filteredNtbsIdDictionary = ntbsNhsNumberMatches
                 .Except(idsInGroup)
                 .Where(n => n != NotificationId)
                 .ToDictionary(
                     id => id.ToString(),
                     id => RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview));
 
-            return filteredIds;
+            var legacyIdDictionary = legacyNhsNumberMatches.ToDictionary(
+                match => $"{match.Source}: {match.OldNotificationId}",
+                match => "");
+
+            return filteredNtbsIdDictionary.Concat(legacyIdDictionary).ToDictionary(x => x.Key, x => x.Value);
         }
 
         protected override async Task ValidateAndSave()

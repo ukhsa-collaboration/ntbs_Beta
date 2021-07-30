@@ -1,11 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
-using AngleSharp.Html.Dom;
-using MoreLinq;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
@@ -28,44 +23,64 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 new Notification
                 {
-                    NotificationId = Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                    NotificationId = Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_1_SHARED_NHS_NUMBER_1,
                     NotificationStatus = NotificationStatus.Notified,
                     GroupId = Utilities.PATIENT_NOTIFICATION_GROUP_ID,
                     PatientDetails = new PatientDetails
                     {
                         NhsNumberNotKnown = false,
-                        NhsNumber = Utilities.NHS_NUMBER_SHARED
+                        NhsNumber = Utilities.NHS_NUMBER_SHARED_1
                     }
                 },
                 new Notification
                 {
-                    NotificationId = Utilities.PATIENT_GROUPED_DENOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                    NotificationId = Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_2_SHARED_NHS_NUMBER_1,
                     NotificationStatus = NotificationStatus.Denotified,
                     GroupId = Utilities.PATIENT_NOTIFICATION_GROUP_ID,
                     PatientDetails = new PatientDetails
                     {
                         NhsNumberNotKnown = false,
-                        NhsNumber = Utilities.NHS_NUMBER_SHARED
+                        NhsNumber = Utilities.NHS_NUMBER_SHARED_1
                     }
                 },
                 new Notification
                 {
-                    NotificationId = Utilities.PATIENT_DRAFT_NOTIFICATION_SHARED_NHS_NUMBER,
+                    NotificationId = Utilities.PATIENT_DRAFT_NOTIFICATION_SHARED_NHS_NUMBER_1,
                     NotificationStatus = NotificationStatus.Draft,
                     PatientDetails = new PatientDetails
                     {
                         NhsNumberNotKnown = false,
-                        NhsNumber = Utilities.NHS_NUMBER_SHARED
+                        NhsNumber = Utilities.NHS_NUMBER_SHARED_1
                     }
                 },
                 new Notification
                 {
-                    NotificationId = Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                    NotificationId = Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER_1,
                     NotificationStatus = NotificationStatus.Notified,
                     PatientDetails = new PatientDetails
                     {
                         NhsNumberNotKnown = false,
-                        NhsNumber = Utilities.NHS_NUMBER_SHARED
+                        NhsNumber = Utilities.NHS_NUMBER_SHARED_1
+                    }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.PATIENT_NOTIFIED_NOTIFICATION_1_SHARED_NHS_NUMBER_2,
+                    NotificationStatus = NotificationStatus.Notified,
+                    PatientDetails = new PatientDetails
+                    {
+                        NhsNumberNotKnown = false,
+                        NhsNumber = Utilities.NHS_NUMBER_SHARED_2
+                    }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.PATIENT_DENOTIFIED_NOTIFICATION_2_SHARED_NHS_NUMBER_2,
+                    NotificationStatus = NotificationStatus.Denotified,
+                    PatientDetails = new PatientDetails
+                    {
+                        NhsNumberNotKnown = false,
+                        NhsNumber = Utilities.NHS_NUMBER_SHARED_2
                     }
                 }
             };
@@ -250,37 +265,19 @@ namespace ntbs_integration_tests.NotificationPages
         {
             yield return new object[]
             {
-                Utilities.PATIENT_DRAFT_NOTIFICATION_SHARED_NHS_NUMBER,
+                Utilities.PATIENT_DRAFT_NOTIFICATION_SHARED_NHS_NUMBER_1,
                 new List<int>
                 {
-                    Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
-                    Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
-                    Utilities.PATIENT_GROUPED_DENOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER
+                    Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER_1,
+                    Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_1_SHARED_NHS_NUMBER_1
                 }
             };
             yield return new object[]
             {
-                Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER_1,
                 new List<int>
                 {
-                    Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
-                    Utilities.PATIENT_GROUPED_DENOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER
-                }
-            };
-            yield return new object[]
-            {
-                Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
-                new List<int>
-                {
-                    Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
-                }
-            };
-            yield return new object[]
-            {
-                Utilities.PATIENT_GROUPED_DENOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
-                new List<int>
-                {
-                    Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                    Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_1_SHARED_NHS_NUMBER_1
                 }
             };
         }
@@ -324,7 +321,7 @@ namespace ntbs_integration_tests.NotificationPages
             var response = await Client.SendVerificationPostAsync(
                 initialPage,
                 initialDocument,
-                GetHandlerPath(null, "NhsNumberDuplicates", Utilities.NOTIFIED_ID),
+                GetHandlerPath(null, "NhsNumberDuplicates", id),
                 request);
 
             // Assert
@@ -333,11 +330,11 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task OnPostNhsNumberDuplicates_ReturnsExpectedResponseForGroupedDuplicateNhsNumber()
+        public async Task OnPostNhsNumberDuplicates_ReturnsEmptyResponseForDenotifiedDuplicateNhsNumber()
         {
             // Arrange
-            const int id = Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER;
-            const string nhsNumber = Utilities.NHS_NUMBER_SHARED;
+            const int id = Utilities.PATIENT_NOTIFIED_NOTIFICATION_1_SHARED_NHS_NUMBER_2;
+            const string nhsNumber = Utilities.NHS_NUMBER_SHARED_2;
             var initialPage = await Client.GetAsync(GetCurrentPathForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
             var request = new NhsNumberValidationModel
@@ -345,7 +342,60 @@ namespace ntbs_integration_tests.NotificationPages
                 NotificationId = id,
                 NhsNumber = nhsNumber
             };
-            const int expectedWarningNotificationId = Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER;
+
+            // Act
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetHandlerPath(null, "NhsNumberDuplicates", id),
+                request);
+
+            // Assert
+            var result = await response.Content.ReadAsStringAsync();
+            Assert.Equal("{}", result);
+        }
+
+        [Fact]
+        public async Task OnPostNhsNumberDuplicates_ReturnsResponseWithLegacyDuplicate()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            string nhsNumber = Utilities.NHS_NUMBER_LEGACY_DUPLICATE;
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(id));
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new NhsNumberValidationModel
+            {
+                NotificationId = id,
+                NhsNumber = nhsNumber
+            };
+
+            // Act
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetHandlerPath(null, "NhsNumberDuplicates", id),
+                request);
+
+            // Assert
+            var result = await response.Content.ReadAsStringAsync();
+            Assert.Contains(Utilities.NHS_NUMBER_LEGACY_DUPLICATE_SOURCE
+                            + ": " + Utilities.NHS_NUMBER_LEGACY_DUPLICATE_ID, result);
+        }
+
+        [Fact]
+        public async Task OnPostNhsNumberDuplicates_ReturnsExpectedResponseForGroupedDuplicateNhsNumber()
+        {
+            // Arrange
+            const int id = Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_1_SHARED_NHS_NUMBER_1;
+            const string nhsNumber = Utilities.NHS_NUMBER_SHARED_1;
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(id));
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var request = new NhsNumberValidationModel
+            {
+                NotificationId = id,
+                NhsNumber = nhsNumber
+            };
+            const int expectedWarningNotificationId = Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER_1;
             var expectedWarningUrl = RouteHelper.GetNotificationPath(expectedWarningNotificationId, NotificationSubPaths.Overview);
 
             // Act

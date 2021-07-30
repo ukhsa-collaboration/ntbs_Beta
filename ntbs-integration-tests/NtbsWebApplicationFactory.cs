@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_integration_tests.Helpers;
 using ntbs_service.DataAccess;
+using ntbs_service.DataMigration;
 using ntbs_service.Services;
 using Serilog;
 using Serilog.Events;
@@ -86,6 +87,8 @@ namespace ntbs_integration_tests
                     sp => new MockSpecimenService(Utilities.NOTIFIED_ID,
                         Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                         Utilities.PERMITTED_PHEC_CODE));
+                services.AddScoped<IMigrationRepository>(
+                    sp => new MockMigrationRepository());
 
                 services.AddScoped<IHomepageKpiService>(sp => new MockHomepageKpiService());
             });
