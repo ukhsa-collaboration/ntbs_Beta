@@ -14,7 +14,7 @@ namespace ntbs_service.Models.Validations
             {
                 return null;
             }
-            var nhsNumber = NotificationHelper.FormatNhsNumber(value.ToString());
+            var nhsNumber = NotificationFieldFormattingHelper.FormatNhsNumberForModel(value.ToString());
             var match = Regex.Match(nhsNumber, "^[0-9]+$");
             if (!match.Success)
             {

@@ -2,7 +2,7 @@ namespace ntbs_service.Helpers
 {
     public static class NotificationFieldFormattingHelper
     {
-        public static string FormatNHSNumber(string nhsNumber)
+        public static string FormatNHSNumberForDisplay(string nhsNumber)
         {
             if (string.IsNullOrEmpty(nhsNumber))
             {
@@ -19,6 +19,11 @@ namespace ntbs_service.Helpers
                 nhsNumber.Substring(3, 3),
                 nhsNumber.Substring(6, 4)
             );
+        }
+
+        public static string FormatNhsNumberForModel(string rawNhsNumber)
+        {
+            return string.IsNullOrEmpty(rawNhsNumber) ? null : rawNhsNumber.Replace(" ", "");
         }
     }
 }
