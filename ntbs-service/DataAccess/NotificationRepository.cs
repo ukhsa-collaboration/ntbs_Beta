@@ -152,7 +152,7 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<int>> GetNotificationIdsByNhsNumberAsync(string nhsNumber)
         {
-            return await _context.Notification
+            return await GetBaseNotificationsIQueryable()
                 .Where(n => (n.NotificationStatus == NotificationStatus.Notified
                              || n.NotificationStatus == NotificationStatus.Closed)
                             && n.PatientDetails.NhsNumber == nhsNumber)
