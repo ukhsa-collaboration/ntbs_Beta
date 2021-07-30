@@ -46,6 +46,6 @@ namespace ntbs_service.Models.Entities
 
         public string FormattedLabDob => LabBirthDate.ConvertToString();
         public string FormattedSpecimenDate => SpecimenDate.ConvertToString();
-        public string FormattedNhsNumber => NotificationFieldFormattingHelper.FormatNHSNumber(LabNhsNumber);
+        public string FormattedNhsNumber => NotificationFieldFormattingHelper.FormatNHSNumberForDisplay(LabNhsNumber);
     }
 }

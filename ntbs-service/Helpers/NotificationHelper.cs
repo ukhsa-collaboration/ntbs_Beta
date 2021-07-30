@@ -43,10 +43,5 @@ namespace ntbs_service.Helpers
                 ? TreatmentEventType.TreatmentStart
                 : TreatmentEventType.DiagnosisMade;
         }
-
-        public static string FormatNhsNumber(string rawNhsNumber)
-        {
-            return rawNhsNumber.Replace(" ", "");
-        }
     }
 }
