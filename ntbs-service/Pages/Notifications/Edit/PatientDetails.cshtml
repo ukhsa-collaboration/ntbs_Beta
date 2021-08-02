@@ -34,13 +34,13 @@
                             {
                                 @:,
                             }
-                            if (!url.IsNullOrEmpty())
+                            if (!url.Contains("Legacy"))
                             {
                                 <a href="@url" target="_blank" title="Open notification overview for notification #@id">#@id</a>
                             }
                             else
                             {
-                                @id;
+                                <a href="@url" target="_blank" title="Open import page for notification @id">@id</a>
                             }
 
                             requiresPrependedComma = true;
