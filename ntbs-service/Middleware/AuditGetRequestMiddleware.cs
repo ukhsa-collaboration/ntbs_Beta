@@ -49,6 +49,13 @@ namespace ntbs_service.Middleware
                     await auditService.AuditNotificationReadAsync(id, NotificationAuditType.Full, userName);
                 };
             }
+
+            if (response.StatusCode == StatusCodes.Status200OK
+                && pathArray.Contains("search")
+                && request.QueryString.HasValue)
+            {
+                await auditService.AuditSearch(request.Query, UserHelper.GetUsername(context));
+            }
         }
     }
 }

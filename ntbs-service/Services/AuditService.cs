@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.SeedData;
 
@@ -21,6 +23,7 @@ namespace ntbs_service.Services
             NotificationAuditType auditType);
         Task AuditPrint(int notificationId,
             string userName);
+        Task AuditSearch(IQueryCollection queryParameterString, string userName);
         Task<IList<AuditLog>> GetWriteAuditsForNotification(int notificationId);
     }
 
@@ -99,6 +102,21 @@ namespace ntbs_service.Services
                 .Where(log => log.RootEntity == RootEntities.Notification)
                 .Where(log => log.RootId == notificationId.ToString())
                 .ToListAsync();
+        }
+
+        public async Task AuditSearch(IQueryCollection queryParameters, string userName)
+        {
+            var parametersWithValuesDictionary = queryParameters
+                .Where(kvp => !string.IsNullOrEmpty(kvp.Value))
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.First());
+            var dataForAuditLog = JsonConvert.SerializeObject(parametersWithValuesDictionary);
+            await _auditContext.AuditOperationAsync(
+                null,
+                RootEntities.Notification,
+                null,
+                AuditEventType.SEARCH_EVENT,
+                userName,
+                data: dataForAuditLog);
         }
     }
 }
