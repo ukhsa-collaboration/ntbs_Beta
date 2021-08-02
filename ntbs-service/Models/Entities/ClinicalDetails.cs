@@ -52,7 +52,7 @@ namespace ntbs_service.Models.Entities
         public DateTime? StartingDate => TreatmentStartDate ?? DiagnosisDate;
 
         [Display(Name = "Has the patient started treatment?")]
-        public bool? DidNotStartTreatment { get; set; }
+        public bool? StartedTreatment { get; set; }
 
         [Display(Name = "Was the TB diagnosis made at post-mortem?")]
         public bool? IsPostMortem { get; set; }

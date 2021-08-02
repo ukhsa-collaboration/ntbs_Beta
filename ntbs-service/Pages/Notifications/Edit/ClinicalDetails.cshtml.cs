@@ -206,7 +206,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.Remove("ClinicalDetails.SymptomStartDate");
             }
 
-            if (ClinicalDetails.DidNotStartTreatment == true)
+            if (ClinicalDetails.StartedTreatment != true)
             {
                 ClinicalDetails.TreatmentStartDate = null;
                 FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
