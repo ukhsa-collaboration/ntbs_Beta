@@ -129,7 +129,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             var legacyIdDictionary = legacyNhsNumberMatches.ToDictionary(
                 match => $"{match.Source}: {match.OldNotificationId}",
-                match => "");
+                match => RouteHelper.GetLegacyNotificationPath(match.OldNotificationId));
 
             return filteredNtbsIdDictionary.Concat(legacyIdDictionary).ToDictionary(x => x.Key, x => x.Value);
         }
@@ -197,7 +197,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public async Task<JsonResult> OnPostNhsNumberDuplicates([FromBody]NhsNumberValidationModel validationData)
         {
             var group = await NotificationRepository.GetNotificationGroupAsync(validationData.NotificationId);
-            return new JsonResult(await GenerateDuplicateNhsNumberNotificationUrlsAsync(validationData.NhsNumber, group));
+            return new JsonResult(await GenerateDuplicateNhsNumberNotificationUrlsAsync(NotificationFieldFormattingHelper.FormatNhsNumberForModel(validationData.NhsNumber), group));
         }
     }
 }
