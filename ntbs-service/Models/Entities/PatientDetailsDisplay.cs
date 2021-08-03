@@ -14,7 +14,7 @@ namespace ntbs_service.Models.Entities
 
         public string FormattedNhsNumber => NhsNumberNotKnown
             ? "Not known"
-            : NotificationFieldFormattingHelper.FormatNHSNumber(NhsNumber);
+            : NotificationFieldFormattingHelper.FormatNHSNumberForDisplay(NhsNumber);
 
         public string SexLabel => Sex?.Label;
         public string EthnicityLabel => Ethnicity?.Label;

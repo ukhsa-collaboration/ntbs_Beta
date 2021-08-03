@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
+using ntbs_service.Helpers;
 
 namespace ntbs_service.Models.Validations
 {
@@ -13,7 +14,7 @@ namespace ntbs_service.Models.Validations
             {
                 return null;
             }
-            var nhsNumber = value.ToString();
+            var nhsNumber = NotificationFieldFormattingHelper.FormatNhsNumberForModel(value.ToString());
             var match = Regex.Match(nhsNumber, "^[0-9]+$");
             if (!match.Success)
             {

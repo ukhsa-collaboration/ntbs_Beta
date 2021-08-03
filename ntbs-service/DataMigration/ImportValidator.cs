@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -51,6 +50,46 @@ namespace ntbs_service.DataMigration
         {
             TrimAndCleanStringProperties(notification);
 
+            await CleanTestData(notification, context, runId);
+
+            await CleanContactTracingData(notification, context, runId);
+        }
+
+        private static void TrimAndCleanStringProperties(object entity)
+        {
+            // Clean strings properties of this object
+            entity?.GetType()
+                .GetProperties()
+                .Where(prop => prop.PropertyType == typeof(string)
+                               && prop.CanWrite
+                               && (Attribute.IsDefined(prop, typeof(RegularExpressionAttribute))
+                                   || Attribute.IsDefined(prop, typeof(MaxLengthAttribute))))
+                .ForEach(prop => prop.SetValue(entity, TrimAndCleanString((string)prop.GetValue(entity))));
+
+            // Clean strings properties of this object's entity children
+            entity?
+                .GetType()
+                .GetProperties()
+                .Where(prop => Attribute.IsDefined(prop, typeof(ValidationChildAttribute)))
+                .ForEach(prop => TrimAndCleanStringProperties(prop.GetValue(entity)));
+
+            // Clean strings properties of this object's enumerable children
+            entity?
+                .GetType()
+                .GetProperties()
+                .Where(prop => Attribute.IsDefined(prop, typeof(ValidationChildEnumerableAttribute)))
+                .Select(prop => prop.GetValue(entity))
+                .Where(enumerable => enumerable != null)
+                .OfType<IEnumerable<object>>()
+                // Flatten
+                .SelectMany(element => element)
+                .ForEach(TrimAndCleanStringProperties);
+        }
+
+        private static string TrimAndCleanString(string s) => s?.Trim().Replace("\t", " ");
+
+        private async Task CleanTestData(Notification notification, PerformContext context, int runId)
+        {
             var missingDateResults = notification.TestData.ManualTestResults
                 .Where(result => !result.TestDate.HasValue)
                 .ToList();
@@ -89,48 +128,100 @@ namespace ntbs_service.DataMigration
             {
                 notification.TestData.HasTestCarriedOut = false;
             }
+        }
 
-            if (ValidateObject(notification.ContactTracing).Any())
+        private async Task CleanContactTracingData(Notification notification, PerformContext context, int runId)
+        {
+            if (!ValidateObject(notification.ContactTracing).Any())
             {
-                const string message = "invalid contact tracing figures. " +
-                                       "The notification will be imported without contact tracing data.";
+                // If there are no issues in the contact tracing
+                return;
+            }
+
+            var messages = new List<string>();
+            var lostData = new List<string>();
+
+            // The order we clean properties is important, because if we overwrite one value (eg. AdultsScreened) with
+            // null then we also need to overwrite the values that are necessarily lower than it (eg. AdultsActiveTB)
+
+            CleanValidationProperty(nameof(ContactTracing.AdultsScreened), notification, messages, lostData);
+            CleanValidationProperty(nameof(ContactTracing.ChildrenScreened), notification, messages, lostData);
+
+            // Because Active + Latent <= Screened, these have to be cleaned together
+            CleanValidationPropertyPair(nameof(ContactTracing.AdultsActiveTB), nameof(ContactTracing.AdultsLatentTB),
+                notification, messages, lostData);
+            CleanValidationPropertyPair(nameof(ContactTracing.ChildrenActiveTB),
+                nameof(ContactTracing.ChildrenLatentTB), notification, messages, lostData);
+
+
+            CleanValidationProperty(nameof(ContactTracing.AdultsStartedTreatment), notification, messages, lostData);
+            CleanValidationProperty(nameof(ContactTracing.ChildrenStartedTreatment), notification, messages, lostData);
+
+            CleanValidationProperty(nameof(ContactTracing.AdultsFinishedTreatment), notification, messages, lostData);
+            CleanValidationProperty(nameof(ContactTracing.ChildrenFinishedTreatment), notification, messages, lostData);
+
+            foreach (var message in messages)
+            {
                 await _logger.LogNotificationWarning(context, runId, notification.LegacyId, message);
-                notification.ContactTracing = new ContactTracing();
+            }
+
+            var contactTracingNotes =
+                "The following contact tracing values were invalid and were removed from the notification:\n"
+                + string.Join(", ", lostData);
+
+            if (string.IsNullOrWhiteSpace(notification.ClinicalDetails.Notes))
+            {
+                notification.ClinicalDetails.Notes = contactTracingNotes;
+            }
+            else
+            {
+                notification.ClinicalDetails.Notes += notification.ClinicalDetails.Notes.Last() == '.' ? "" : ".";
+                notification.ClinicalDetails.Notes += "\n" + contactTracingNotes;
             }
         }
 
-        private static void TrimAndCleanStringProperties(object entity)
+        private static void CleanValidationProperty(string propertyName, Notification notification,
+            List<string> messages, List<string> lostData)
         {
-            // Clean strings properties of this object
-            entity?.GetType()
-                .GetProperties()
-                .Where(prop => prop.PropertyType == typeof(string)
-                               && prop.CanWrite
-                               && (Attribute.IsDefined(prop, typeof(RegularExpressionAttribute))
-                                   || Attribute.IsDefined(prop, typeof(MaxLengthAttribute))))
-                .ForEach(prop => prop.SetValue(entity, TrimAndCleanString((string)prop.GetValue(entity))));
+            var property = typeof(ContactTracing).GetProperty(propertyName);
+            var propertyValue = property?.GetValue(notification.ContactTracing);
 
-            // Clean strings properties of this object's entity children
-            entity?
-                .GetType()
-                .GetProperties()
-                .Where(prop => Attribute.IsDefined(prop, typeof(ValidationChildAttribute)))
-                .ForEach(prop => TrimAndCleanStringProperties(prop.GetValue(entity)));
-
-            // Clean strings properties of this object's enumerable children
-            entity?
-                .GetType()
-                .GetProperties()
-                .Where(prop => Attribute.IsDefined(prop, typeof(ValidationChildEnumerableAttribute)))
-                .Select(prop => prop.GetValue(entity))
-                .Where(enumerable => enumerable != null)
-                .OfType<IEnumerable<object>>()
-                // Flatten
-                .SelectMany(element => element)
-                .ForEach(TrimAndCleanStringProperties);
+            var validationResults =
+                ValidateProperty(notification.ContactTracing, propertyValue, propertyName).ToList();
+            if (validationResults.Any())
+            {
+                property?.SetValue(notification.ContactTracing, null);
+                messages.AddRange(validationResults.Select(result => result.ErrorMessage));
+                lostData.Add($"{propertyName}: {propertyValue}");
+            }
         }
 
-        private static string TrimAndCleanString(string s) => s?.Trim().Replace("\t", " ");
+        private static void CleanValidationPropertyPair(string propertyName1, string propertyName2,
+            Notification notification, List<string> messages, List<string> lostData)
+        {
+            var property1 = typeof(ContactTracing).GetProperty(propertyName1);
+            var propertyValue1 = property1?.GetValue(notification.ContactTracing);
+
+            var property2 = typeof(ContactTracing).GetProperty(propertyName2);
+            var propertyValue2 = property2?.GetValue(notification.ContactTracing);
+
+            var validationResults1 =
+                ValidateProperty(notification.ContactTracing, propertyValue1, propertyName1).ToList();
+            var validationResults2 =
+                ValidateProperty(notification.ContactTracing, propertyValue2, propertyName2).ToList();
+
+            if (validationResults1.Any() || validationResults2.Any())
+            {
+                property1?.SetValue(notification.ContactTracing, null);
+                property2?.SetValue(notification.ContactTracing, null);
+
+                messages.AddRange(validationResults1.Select(result => result.ErrorMessage));
+                messages.AddRange(validationResults2.Select(result => result.ErrorMessage));
+
+                if (propertyValue1 != null) lostData.Add($"{propertyName1}: {propertyValue1}");
+                if (propertyValue2 != null) lostData.Add($"{propertyName2}: {propertyValue2}");
+            }
+        }
 
         private async Task<IEnumerable<ValidationResult>> GetValidationErrors(PerformContext context,
             int runId, Notification notification)
@@ -189,6 +280,17 @@ namespace ntbs_service.DataMigration
             var validationsResults = new List<ValidationResult>();
 
             Validator.TryValidateObject(objectToValidate, validationContext, validationsResults, true);
+
+            return validationsResults;
+        }
+
+        private static IEnumerable<ValidationResult> ValidateProperty(object objectToValidate, object propertyValue,
+            string propertyName)
+        {
+            var validationContext = new ValidationContext(objectToValidate, null, null) { MemberName = propertyName };
+            var validationsResults = new List<ValidationResult>();
+
+            Validator.TryValidateProperty(propertyValue, validationContext, validationsResults);
 
             return validationsResults;
         }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
@@ -153,10 +152,9 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<int>> GetNotificationIdsByNhsNumberAsync(string nhsNumber)
         {
-            return await _context.Notification
+            return await GetBaseNotificationsIQueryable()
                 .Where(n => (n.NotificationStatus == NotificationStatus.Notified
-                             || n.NotificationStatus == NotificationStatus.Closed
-                             || n.NotificationStatus == NotificationStatus.Denotified)
+                             || n.NotificationStatus == NotificationStatus.Closed)
                             && n.PatientDetails.NhsNumber == nhsNumber)
                 .Select(n => n.NotificationId)
                 .ToListAsync();

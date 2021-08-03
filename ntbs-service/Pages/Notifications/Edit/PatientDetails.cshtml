@@ -1,5 +1,6 @@
 @page "/Notifications/{notificationId:int}/Edit/PatientDetails/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.PatientDetailsModel
+@using Castle.Core.Internal
 @using NHSUK.FrontEndLibrary.TagHelpers
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
@@ -33,7 +34,15 @@
                             {
                                 @:,
                             }
-                            <a href="@url" target="_blank" title="Open notification overview for notification #@id">#@id</a>
+                            if (!url.Contains("Legacy"))
+                            {
+                                <a href="@url" target="_blank" title="Open notification overview for notification #@id">#@id</a>
+                            }
+                            else
+                            {
+                                <a href="@url" target="_blank" title="Open import page for notification @id">@id</a>
+                            }
+
                             requiresPrependedComma = true;
                         }
                     }

@@ -46,19 +46,32 @@ const NhsNumberDuplicateWarning = Vue.extend({
                         // New lines required to match output from .cshtml
                         warningContainer.appendChild(document.createTextNode("\r\n,\r\n"));
                     }
-                    warningContainer.appendChild(this.createAnchorTag(id, url));
+                    if (url.includes("Legacy")) {
+                        warningContainer.appendChild(this.createAnchorLegacyTag(id, url));
+                    }
+                    else {
+                        warningContainer.appendChild(this.createAnchorNtbsTag(id, url));
+                    }
                     requiresPrependedComma = true;
                 }
             }
             this.$refs["nhs-number-warning"].classList.remove("hidden");
         },
-        createAnchorTag: function (id: string, url: string) {
+        createAnchorNtbsTag: function (id: string, url: string) {
             const anchorTag = document.createElement("a");
             anchorTag.href = url;
             anchorTag.target = "_blank";
             anchorTag.innerHTML = `#${id}`;
             anchorTag.title = `Open notification overview for notification #${id}`;
             return anchorTag;
+        },
+        createAnchorLegacyTag: function (id: string, url: string) {
+            const legacyTag = document.createElement("a");
+            legacyTag.href = url;
+            legacyTag.target = "_blank";
+            legacyTag.innerHTML = id;
+            legacyTag.title = `Open import page for notification ${id}`;
+            return legacyTag;
         }
     }
 });

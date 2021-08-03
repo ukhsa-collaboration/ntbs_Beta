@@ -88,16 +88,12 @@ namespace ntbs_service.Services
 
         public async Task UpdatePatientFlagsAsync(PatientDetails patientDetails)
         {
-            if (patientDetails.NhsNumberNotKnown)
-            {
-                patientDetails.NhsNumber = null;
-            }
-
             if (patientDetails.NoFixedAbode)
             {
                 patientDetails.Postcode = null;
             }
 
+            UpdateNhsNumber(patientDetails);
             UpdateEntryYearToUk(patientDetails);
 
             await UpdateOccupation(patientDetails);
@@ -109,6 +105,11 @@ namespace ntbs_service.Services
             {
                 patient.YearOfUkEntry = null;
             }
+        }
+
+        private static void UpdateNhsNumber(PatientDetails patient)
+        {
+            patient.NhsNumber = patient.NhsNumberNotKnown ? null : NotificationFieldFormattingHelper.FormatNhsNumberForModel(patient.NhsNumber);
         }
 
         private async Task UpdateOccupation(PatientDetails patient)

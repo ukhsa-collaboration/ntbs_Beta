@@ -112,7 +112,16 @@ namespace ntbs_service.Services
             var specimens = new List<MatchedSpecimen>();
             if (notificationId == _notificationIdWithResults)
             {
-                specimens.Add(new MatchedSpecimen { NotificationId = _notificationIdWithResults });
+                specimens.Add(new MatchedSpecimen
+                {
+                    NotificationId = _notificationIdWithResults, Aminoglycoside = "Sensitive", Ethambutol = "No result",
+                    Isoniazid = "Sensitive", Rifampicin = "Sensitive", Pyrazinamide = "No result",
+                    Quinolone = "Sensitive", Species = "M. tuberculosis complex", LabAddress = "",
+                    LabName = "Northern Ireland", LaboratoryName = "Northern Ireland", LabPostcode = "LS1 7GG",
+                    LabSex = "M", MatchMethod = "Manual", LabNhsNumber = "9308027100", MDR = "No",
+                    ReferenceLaboratoryNumber = "1253490", SpecimenTypeCode = "Lymph node", XDR = "No",
+                    SpecimenDate = new DateTime(2010,12,20), LabBirthDate = new DateTime(1990,5,13)
+                });
             }
 
             return Task.FromResult((IEnumerable<MatchedSpecimen>)specimens);
