@@ -108,6 +108,7 @@ namespace ntbs_service.Services
         {
             var parametersWithValuesDictionary = queryParameters
                 .Where(kvp => !string.IsNullOrEmpty(kvp.Value))
+                // We are assuming here that all parameters have a single value
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.First());
             var dataForAuditLog = JsonConvert.SerializeObject(parametersWithValuesDictionary);
             await _auditContext.AuditOperationAsync(
