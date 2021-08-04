@@ -24,7 +24,7 @@ namespace EFAuditer_tests.UnitTests.Services
     public static class TestHelper
     {
         public static string ToJson(this IList<EventEntryChange> changes) =>
-            JsonConvert.SerializeObject(changes, Audit.Core.Configuration.JsonSettings);
+            System.Text.Json.JsonSerializer.Serialize(changes, Audit.Core.Configuration.JsonSettings);
 
         public static string OwnedEntityTypeString => "OwnedEntityTypeString";
 

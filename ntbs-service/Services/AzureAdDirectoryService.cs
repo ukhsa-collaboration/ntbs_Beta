@@ -29,12 +29,12 @@ namespace ntbs_service.Services
 
     public class AzureAdDirectoryService : IAzureAdDirectoryService
     {
-        private readonly IGraphServiceClient _graphServiceClient;
+        private readonly GraphServiceClient _graphServiceClient;
         private readonly AdOptions _adOptions;
 
         public AzureAdDirectoryService() { }
 
-        public AzureAdDirectoryService(IGraphServiceClient graphServiceClient, AdOptions adOptions)
+        public AzureAdDirectoryService(GraphServiceClient graphServiceClient, AdOptions adOptions)
         {
             _graphServiceClient = graphServiceClient;
             _adOptions = adOptions;

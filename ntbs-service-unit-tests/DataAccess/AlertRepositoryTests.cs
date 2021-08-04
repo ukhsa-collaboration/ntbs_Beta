@@ -6,6 +6,7 @@ using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service_unit_tests.TestHelpers;
 using Xunit;
 
 namespace ntbs_service_unit_tests.DataAccess
@@ -17,6 +18,7 @@ namespace ntbs_service_unit_tests.DataAccess
 
         public AlertRepositoryTests(RepositoryFixture<AlertRepository> alertRepositoryFixture)
         {
+            ContextHelper.DisableAudits();
             _context = alertRepositoryFixture.Context;
             _alertRepo = new AlertRepository(_context);
         }

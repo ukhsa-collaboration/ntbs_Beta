@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Audit.Core;
 using EFAuditer;
 using Hangfire;
 using Hangfire.Console;
@@ -27,6 +29,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using ntbs_service.Authentication;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
@@ -459,6 +462,7 @@ namespace ntbs_service
         {
             if (Configuration.GetValue<bool>(Constants.AuditEnabledConfigValue))
             {
+                Audit.Core.Configuration.JsonSettings.MaxDepth = 1;
                 services.AddEFAuditer(auditDbConnectionString);
             }
             else

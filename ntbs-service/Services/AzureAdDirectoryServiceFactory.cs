@@ -13,7 +13,7 @@ namespace ntbs_service.Services
 
     public class AzureAdDirectoryServiceFactory : IAzureAdDirectoryServiceFactory
     {
-        private IGraphServiceClient _graphServiceClient;
+        private GraphServiceClient _graphServiceClient;
         private readonly AdOptions _adSettings;
         private readonly AzureAdOptions _azureAdSettings;
 

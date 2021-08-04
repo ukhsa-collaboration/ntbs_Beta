@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Audit.Core;
 using Audit.EntityFramework;
 using Microsoft.AspNetCore.Http;
@@ -62,18 +64,21 @@ namespace EFAuditer
                 ?? GetCustomKey(ev, CustomFields.AppUser)
                 ?? ev.Environment.UserName;
 
-            var serializerSettings = Audit.Core.Configuration.JsonSettings;
-            serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+            var serializerSettings = new JsonSerializerOptions
+            {
+                MaxDepth = 0,
+                IgnoreNullValues = true
+            };
 
             switch (audit.EventType)
             {
                 case "Insert":
                     audit.AuditData =
-                        JsonConvert.SerializeObject(entry.ColumnValues, serializerSettings);
+                        System.Text.Json.JsonSerializer.Serialize(entry.ColumnValues, serializerSettings);
                     break;
                 case "Update":
                     audit.AuditData =
-                        JsonConvert.SerializeObject(entry.Changes, serializerSettings);
+                        System.Text.Json.JsonSerializer.Serialize(entry.Changes, serializerSettings);
                     break;
             }
 

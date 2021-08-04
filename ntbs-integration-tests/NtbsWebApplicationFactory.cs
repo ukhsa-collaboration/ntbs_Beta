@@ -27,6 +27,7 @@ namespace ntbs_integration_tests
                 throw new InvalidOperationException("Cannot build the web host before the test class name has been set.");
             }
 
+            Audit.Core.Configuration.AuditDisabled = true;
             builder.UseSerilog();
             builder.UseEnvironment("CI");
 
