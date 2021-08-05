@@ -2,13 +2,11 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Audit.Core;
 using Audit.EntityFramework;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 namespace EFAuditer
 {
@@ -74,11 +72,11 @@ namespace EFAuditer
             {
                 case "Insert":
                     audit.AuditData =
-                        System.Text.Json.JsonSerializer.Serialize(entry.ColumnValues, serializerSettings);
+                        JsonSerializer.Serialize(entry.ColumnValues, serializerSettings);
                     break;
                 case "Update":
                     audit.AuditData =
-                        System.Text.Json.JsonSerializer.Serialize(entry.Changes, serializerSettings);
+                        JsonSerializer.Serialize(entry.Changes, serializerSettings);
                     break;
             }
 
