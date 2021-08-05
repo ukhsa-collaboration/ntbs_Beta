@@ -17,7 +17,8 @@ namespace EFAuditer
             string eventType,
             string userName,
             string rootEntity = null,
-            string rootId = null)
+            string rootId = null,
+            string data = null)
         {
             var log = CreateAuditLog(
                 key,
@@ -26,7 +27,8 @@ namespace EFAuditer
                 eventType,
                 userName,
                 rootEntity,
-                rootId);
+                rootId,
+                data);
             AuditLogs.Add(log);
             await SaveChangesAsync();
         }
@@ -38,7 +40,8 @@ namespace EFAuditer
             string eventType,
             string userName,
             string rootEntity,
-            string rootId)
+            string rootId,
+            string data)
         {
             return new AuditLog
             {
@@ -49,7 +52,8 @@ namespace EFAuditer
                 AuditUser = userName,
                 AuditDetails = details,
                 RootEntity = rootEntity,
-                RootId = rootId
+                RootId = rootId,
+                AuditData = data
             };
         }
     }
