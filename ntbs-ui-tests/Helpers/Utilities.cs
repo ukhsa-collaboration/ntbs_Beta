@@ -73,7 +73,7 @@ namespace ntbs_ui_tests.Helpers
                         {
                             BCGVaccinationState = Status.Yes, BCGVaccinationYear = 1990,
                             DiagnosisDate = new DateTime(2011, 3, 23), DotStatus = DotStatus.DotReceived,
-                            DidNotStartTreatment = true, EnhancedCaseManagementLevel = 2,
+                            StartedTreatment = false, EnhancedCaseManagementLevel = 2,
                             EnhancedCaseManagementStatus = Status.Yes, FirstPresentationDate = new DateTime(2010, 12, 25), 
                             HomeVisitCarriedOut = Status.No, HealthcareDescription = "Been giving lots of paracetamol",
                             HealthcareSetting = HealthcareSetting.GP, HIVTestState = HIVTestStatus.OfferedButRefused,

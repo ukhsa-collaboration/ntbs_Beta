@@ -286,11 +286,11 @@
         <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-TreatmentStartDate">
             <nhs-fieldset>
                 <nhs-fieldset-legend nhs-legend-size="Standard">
-                    @Html.DisplayNameFor(m => m.Notification.ClinicalDetails.DidNotStartTreatment)
+                    @Html.DisplayNameFor(m => m.Notification.ClinicalDetails.StartedTreatment)
                 </nhs-fieldset-legend>
                 <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                     <div class="nhsuk-radios__item">
-                        <input asp-for="ClinicalDetails.DidNotStartTreatment" id="treatment-yes" class="nhsuk-radios__input" type="radio" value="false" data-aria-controls="conditional-treatment-conditional">
+                        <input asp-for="ClinicalDetails.StartedTreatment" id="treatment-yes" class="nhsuk-radios__input" type="radio" value="true" data-aria-controls="conditional-treatment-conditional">
                         <label class="nhsuk-label nhsuk-radios__label" for="treatment-yes">
                             Yes
                         </label>
@@ -336,7 +336,7 @@
                         </validate-date>
                     </div>
                     <div class="nhsuk-radios__item">
-                        <input asp-for="ClinicalDetails.DidNotStartTreatment" id="treatment-no" class="nhsuk-radios__input" type="radio" value="true">
+                        <input asp-for="ClinicalDetails.StartedTreatment" id="treatment-no" class="nhsuk-radios__input" type="radio" value="false">
                         <label class="nhsuk-label nhsuk-radios__label" for="treatment-no">
                             No
                         </label>
