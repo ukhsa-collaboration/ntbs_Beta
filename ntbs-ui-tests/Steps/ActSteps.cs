@@ -275,7 +275,7 @@ namespace ntbs_ui_tests.Steps
                     : $"//select[@id='{dropdownId}']/option[normalize-space(text())='{text}']";
                 // In some scenarios the select does not become visible/active until an API call (triggered by previous input) has returned.
                 // Consequently we add a wait here for the element we want to select to be clickable.
-                Browser.WaitUntilElementIsClickable(By.XPath(xPath), Settings.ImplicitWait);
+                Browser.WaitUntilElementIsClickableWithRetry(By.XPath(xPath), Settings.ImplicitWait);
                 SelectElementFromDropdownWithRetry(xPath);
             });
         }
