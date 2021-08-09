@@ -15,6 +15,7 @@ namespace ntbs_service.Jobs
     {
         private readonly IAlertService _alertService;
         private readonly IDataQualityRepository _dataQualityRepository;
+        private readonly NtbsContext _context;
         private const int CountPerBatch = 500;
 
         public DataQualityAlertsJob(
@@ -24,6 +25,7 @@ namespace ntbs_service.Jobs
         {
             _alertService = alertService;
             _dataQualityRepository = dataQualityRepository;
+            _context = ntbsContext;
         }
 
         private delegate Task<int> GetNotificationsEligibleForDqAlertsCount();
@@ -105,6 +107,15 @@ namespace ntbs_service.Jobs
             await CreateTreatmentOutcome12MonthAlertsInBulkAsync();
             await CreateTreatmentOutcome24MonthAlertsInBulkAsync();
             await CreateTreatmentOutcome36MonthAlertsInBulkAsync();
+
+            // When we check for treatment outcome alerts above, quite a lot of notifications are being brought
+            // into the context. (This is because the eligibility check cannot be entirely translated into SQL so
+            // we are fetching more notifications that we really need from the database and processing them in
+            // memory). Because Notifications have quite a lot of "owns" relationships, this is bringing quite a
+            // large number of objects into the context. This in turn can make save operations slow. We have seen
+            // that each duplicate alert save below was taking more than a second. Here we clear the change tracker
+            // meaning that the context is able to handle saves much more quickly.
+            _context.ChangeTracker.Clear();
 
             var possibleDuplicateNotificationIds =
                 await _dataQualityRepository.GetNotificationIdsEligibleForDqPotentialDuplicateAlertsAsync();
