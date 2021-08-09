@@ -149,7 +149,7 @@ namespace ntbs_integration_tests.Helpers
             "ReadOnly@ntbs.phe.com",
             "ReadOnly UserGroup",
             UserType.NhsUser,
-            new[] { "App.Auth.NIS.NTBS.Read_Only_User" },
+            new[] { "App.Auth.NIS.NTBS.Read_Only" },
             isReadOnly: true);
     }
 }
