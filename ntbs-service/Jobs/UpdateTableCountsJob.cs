@@ -17,6 +17,8 @@ namespace ntbs_service.Jobs
         private readonly ITableCountsRepository _tableCountsRepository;
         private PerformContext _context;
 
+        private const double DecreaseMarginOfError = 0.995; // Allow decreases of less than 0.5%
+
         public UpdateTableCountsJob(ITableCountsRepository tableCountsRepository)
         {
             _tableCountsRepository = tableCountsRepository;
@@ -84,7 +86,7 @@ namespace ntbs_service.Jobs
 
             var currentValue = (int)property.GetValue(currentCount);
             var previousValue = (int)property.GetValue(previousCount);
-            if (currentValue < previousValue)
+            if (currentValue < previousValue * DecreaseMarginOfError && currentValue < previousValue - 1)
             {
                 errors.Add($"Property: {property.Name} has decreased from {previousValue} to {currentValue}");
             }
