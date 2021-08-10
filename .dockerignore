@@ -13,7 +13,10 @@ Dockerfile*
 ntbs-service/deployments/*
 
 # Auxiliary apps - not needed for main deployment
-ntbs-bulk-insert/
-coming-soon/
+load-test-data-generation/
+load-tests/
+temporarily-unavailable/
 frontend-dotnetcore/**
 !frontend-dotnetcore/dist
+ntbs-nhs-razor-tags/**
+!ntbs-nhs-razor-tags/dist
