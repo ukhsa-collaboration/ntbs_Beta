@@ -458,7 +458,6 @@ namespace ntbs_service
         {
             if (Configuration.GetValue<bool>(Constants.AuditEnabledConfigValue))
             {
-                Audit.Core.Configuration.JsonSettings.MaxDepth = 1;
                 services.AddEFAuditer(auditDbConnectionString);
             }
             else

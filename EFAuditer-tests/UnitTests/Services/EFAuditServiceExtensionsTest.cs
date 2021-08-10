@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using Audit.Core;
 using Audit.EntityFramework;
 using EFAuditer;
@@ -23,9 +22,6 @@ namespace EFAuditer_tests.UnitTests.Services
 
     public static class TestHelper
     {
-        public static string ToJson(this IList<EventEntryChange> changes) =>
-            JsonSerializer.Serialize(changes, Audit.Core.Configuration.JsonSettings);
-
         public static string OwnedEntityTypeString => "OwnedEntityTypeString";
 
         public static string HasRootEntityTypeString => "RootEntityTypeString";

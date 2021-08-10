@@ -62,21 +62,15 @@ namespace EFAuditer
                 ?? GetCustomKey(ev, CustomFields.AppUser)
                 ?? ev.Environment.UserName;
 
-            var serializerSettings = new JsonSerializerOptions
-            {
-                MaxDepth = 0,
-                IgnoreNullValues = true
-            };
-
             switch (audit.EventType)
             {
                 case "Insert":
                     audit.AuditData =
-                        JsonSerializer.Serialize(entry.ColumnValues, serializerSettings);
+                        JsonSerializer.Serialize(entry.ColumnValues, Audit.Core.Configuration.JsonSettings);
                     break;
                 case "Update":
                     audit.AuditData =
-                        JsonSerializer.Serialize(entry.Changes, serializerSettings);
+                        JsonSerializer.Serialize(entry.Changes, Audit.Core.Configuration.JsonSettings);
                     break;
             }
 
