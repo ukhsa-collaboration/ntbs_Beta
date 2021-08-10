@@ -45,6 +45,9 @@
   .nhsuk-expander[open] {
     margin-bottom: 0;
 
+    border-radius: 4px 4px 0 0;
+    border-bottom-width: 8px;
+
     .nhsuk-details__summary {
       padding: 0;
       border-width: 2px;
@@ -52,14 +55,29 @@
       border-style: solid;
       border-radius: 4px;
       background-color: $manage-notification-expander-background;
+      margin: -1px -1px -2px -1px;
 
-      &:focus .nhsuk-details__summary-text {
-        box-shadow: none;
+      &:focus {
+        background-color: $nhsuk-focus-color;
+
+        .nhsuk-details__summary-text {
+          box-shadow: none;
+        }
       }
     }
 
     .nhsuk-details__summary-text {
       margin-left: 16px;
+
+      @include mq($until: tablet) {
+        font-size: 16px;
+        line-height: 24px;
+      }
+
+      @include mq($from: tablet) {
+        font-size: 19px;
+        line-height: 28px;
+      }
       color: black;
       text-decoration: none;
       &:before {
@@ -75,9 +93,13 @@
     }
   }
 
-  .nhsuk-expander[open] .nhsuk-details__summary-text &:before {
-    // Taken from nhs expander, but with colour swapped for $manage-notification-circle
-    background: url("data:image/svg+xml,%3Csvg class='nhsuk-icon nhsuk-icon__minus' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='32' aria-hidden='true'%3E%3Ccircle cx='12' cy='12' r='10' fill='#{url-friendly-colour($manage-notification-circle)}'%3E%3C/circle%3E%3Cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M8 12h8'%3E%3C/path%3E%3C/svg%3E%0A") left -2px center no-repeat;
+  .nhsuk-expander[open] {
+    border-bottom-width: 1px;
+
+    .nhsuk-details__summary-text::before {
+      // Taken from nhs expander, but with colour swapped for $manage-notification-circle
+      background: url("data:image/svg+xml,%3Csvg class='nhsuk-icon nhsuk-icon__minus' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='32' aria-hidden='true'%3E%3Ccircle cx='12' cy='12' r='10' fill='#{url-friendly-colour($manage-notification-circle)}'%3E%3C/circle%3E%3Cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M8 12h8'%3E%3C/path%3E%3C/svg%3E%0A") left -2px center no-repeat;
+    }
   }
 }
 
