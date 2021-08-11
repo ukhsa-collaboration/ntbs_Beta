@@ -3,7 +3,7 @@ Feature: Transfer notification
   Background: Create a transfer request
     Given I navigate to the app
     And I have logged in as BirminghamServiceUser
-    And I am on seeded 'MINIMAL_DETAILS' notification overview page
+    And I am on seeded 'MAXIMUM_DETAILS' notification overview page
     Then I can see the value 'Birmingham & Solihull' for the field 'tb-service' in the 'HospitalDetails' overview section
 
     When I expand manage notification section
@@ -46,6 +46,8 @@ Feature: Transfer notification
 
     Then I should see the Notification
     Then I can see the value 'LCHC (Leeds Community Healthcare NHS Trust)' for the field 'tb-service' in the 'HospitalDetails' overview section
+    Then I can see no value for the field 'local-patient-id' in the 'PatientDetails' overview section
+    Then I can see no value for the field 'consultant' in the 'HospitalDetails' overview section
 
   Scenario: Decline transfer of notification between services
     When I log out
@@ -65,6 +67,8 @@ Feature: Transfer notification
     Given I have logged in as BirminghamServiceUser
 
     When I navigate to the url of the current notification
+    Then I can see the value '3455' for the field 'local-patient-id' in the 'PatientDetails' overview section
+    Then I can see the value 'Dr Frank Lotchewski' for the field 'consultant' in the 'HospitalDetails' overview section
     When I take action on the alert with title Transfer rejected
 
     Then I should be on the TransferDeclined page
