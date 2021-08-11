@@ -18,6 +18,7 @@ namespace ntbs_service.Services
     public interface INotificationService
     {
         Task UpdatePatientDetailsAsync(Notification notification, PatientDetails patientDetails);
+        void UpdatePatientDetailsWithoutSave(Notification notification, PatientDetails patientDetails);
         Task UpdatePatientFlagsAsync(PatientDetails patientDetails);
         Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails timeline);
         Task UpdateTestDataAsync(Notification notification, TestData testData);
@@ -84,6 +85,11 @@ namespace ntbs_service.Services
 
             await _notificationRepository.SaveChangesAsync();
             await _alertService.AutoDismissAlertAsync<DataQualityBirthCountryAlert>(notification);
+        }
+
+        public void UpdatePatientDetailsWithoutSave(Notification notification, PatientDetails patient)
+        {
+            _context.SetValues(notification.PatientDetails, patient);
         }
 
         public async Task UpdatePatientFlagsAsync(PatientDetails patientDetails)

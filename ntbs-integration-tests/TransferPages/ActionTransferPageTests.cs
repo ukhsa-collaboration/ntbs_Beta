@@ -40,11 +40,13 @@ namespace ntbs_integration_tests.TransferPage
                 {
                     NotificationId = Utilities.NOTIFICATION_WITH_TRANSFER_REQUEST_TO_ACCEPT,
                     NotificationStatus = NotificationStatus.Notified,
-                    HospitalDetails = new HospitalDetails()
+                    HospitalDetails = new HospitalDetails
                     {
                         TBServiceCode = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID,
-                        CaseManagerId = Utilities.CASEMANAGER_ABINGDON_ID
-                    }
+                        CaseManagerId = Utilities.CASEMANAGER_ABINGDON_ID,
+                        Consultant = "Dr John Dorian"
+                    },
+                    PatientDetails = new PatientDetails { LocalPatientId = "Patient Number 1234" }
                 }
             };
         }
@@ -115,6 +117,10 @@ namespace ntbs_integration_tests.TransferPage
             Assert.Contains("Abingdon Community Hospital", overviewPage.QuerySelector("#banner-tb-service").TextContent);
             Assert.Contains("Abingdon Permitted", overviewPage.QuerySelector("#banner-case-manager").TextContent);
             Assert.Contains("ABINGDON COMMUNITY HOSPITAL", overviewPage.QuerySelector("#overview-hospital-details-hospital-name").TextContent);
+            Assert.Empty(
+                overviewPage.QuerySelector("#overview-patient-details-local-patient-id").TextContent.Replace(" ", ""));
+            Assert.Empty(overviewPage.QuerySelector("#overview-hospital-details-consultant").TextContent.Replace(" ", ""));
+
             Assert.Null(overviewPage.QuerySelector("#alert-20003"));
         }
 
