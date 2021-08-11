@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Audit.Core;
 using Audit.EntityFramework;
 using EFAuditer;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace EFAuditer_tests.UnitTests.Services
@@ -23,9 +22,6 @@ namespace EFAuditer_tests.UnitTests.Services
 
     public static class TestHelper
     {
-        public static string ToJson(this IList<EventEntryChange> changes) =>
-            JsonConvert.SerializeObject(changes, Audit.Core.Configuration.JsonSettings);
-
         public static string OwnedEntityTypeString => "OwnedEntityTypeString";
 
         public static string HasRootEntityTypeString => "RootEntityTypeString";
