@@ -227,6 +227,19 @@ namespace ntbs_ui_tests.Steps
             });
         }
 
+
+        [Then(@"I can see no value for the field '(.*)' in the '(.*)' overview section")]
+        public void ThenICanNoValueForFieldInTheOverviewSection(string field, string section)
+        {
+            WithErrorLogging(() =>
+            {
+                var sectionId = HtmlElementHelper.GetSectionIdFromSection(section);
+                var htmlId = $"{sectionId}-{field}";
+                Assert.Empty(HtmlElementHelper.FindElementById(Browser, htmlId).Text.Replace(" ", ""));
+            });
+        }
+
+
         [Then(@"The notification should be denotified")]
         public void ThenCurrentNotificationShouldBeDenotified()
         {
