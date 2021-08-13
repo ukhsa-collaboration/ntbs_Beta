@@ -1,13 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
-using Dapper;
-using Hangfire;
 using Hangfire.Console;
 using Hangfire.Server;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -15,80 +10,22 @@ namespace ntbs_service.Jobs
 {
     public class StoredProcedureJobBase
     {
-        protected readonly IConfiguration _configuration;
-        protected readonly string _connectionString;
-        protected string _sqlString = "";
-        protected object[] _parameters;
-        protected PerformContext _context;
-
-        public StoredProcedureJobBase(IConfiguration configuration, string sqlString, object[] sqlParameters = null)
+        protected static void CheckExecutedSuccessfully(PerformContext context, IEnumerable<dynamic> resultToTest)
         {
-            _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString(Constants.DbConnectionStringReporting);
-            _sqlString = sqlString;
-            _parameters = sqlParameters;
-        }
-
-        public StoredProcedureJobBase(IConfiguration configuration)
-        {
-            _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString(Constants.DbConnectionStringReporting);
-        }
-
-        /// PerformContext context is passed in via Hangfire Server
-        public virtual async Task Run(PerformContext context, IJobCancellationToken token)
-        {
-            _context = context;
-
-            Log.Information($"Starting stored procedure job");
-            _context.WriteLine($"Starting stored procedure job");
-
-            if (string.IsNullOrEmpty(_sqlString))
-            {
-                throw new ArgumentNullException(nameof(_sqlString));
-            }
-
-            var successfulExecution = false;
-            var resultChanges = 0;
-
-            try
-            {
-                var result = await ExecuteStoredProcedure(token);
-                resultChanges = result.Count();
-                successfulExecution = DidExecuteSuccessfully(result);
-            }
-            finally
-            {
-                Log.Information($"Finishing stored procedure job with {resultChanges} changes made, successful? {successfulExecution}.");
-                _context.WriteLine($"Finishing stored procedure job with {resultChanges} changes made, successful? {successfulExecution}.");
-            }
-        }
-
-        protected virtual async Task<IEnumerable<dynamic>> ExecuteStoredProcedure(IJobCancellationToken token)
-        {
-            IEnumerable<dynamic> result = new List<dynamic>();
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                result = await connection.QueryAsync(_sqlString, _parameters, null, Constants.SqlServerDefaultCommandTimeOut, System.Data.CommandType.StoredProcedure);
-            }
-
-            return result;
-        }
-
-        protected virtual bool DidExecuteSuccessfully(IEnumerable<dynamic> resultToTest)
-        {
-            var success = false;
-
             var serialisedResult = JsonConvert.SerializeObject(resultToTest);
-            Log.Information(serialisedResult);
-            _context.WriteLine($"Result: {serialisedResult}");
+            LogInfo(context, $"Result: {serialisedResult}");
 
-            // always successful as we cannot know what the expected output should be.
-            success = true;
+            if (resultToTest.Any())
+            {
+                throw new ApplicationException(
+                    "Stored procedure did not execute successfully as result has messages, check the logs");
+            }
+        }
 
-            return success;
+        protected static void LogInfo(PerformContext context, string message)
+        {
+            Log.Information(message);
+            context.WriteLine(message);
         }
     }
 }

@@ -123,7 +123,7 @@ namespace ntbs_service.Jobs
                 // PerformContext context is passed in via Hangfire Server
                 RecurringJob.AddOrUpdate<ReportingDataRefreshJob>(
                     ReportingDataRefreshJobId,
-                    job => job.Run(null, JobCancellationToken.Null),
+                    job => job.Run(null),
                     scheduledJobsConfig.ReportingDataRefreshJobCron,
                     GmtStandardTime);
             }
@@ -137,7 +137,7 @@ namespace ntbs_service.Jobs
                 // PerformContext context is passed in via Hangfire Server
                 RecurringJob.AddOrUpdate<ReportingDataProcessingJob>(
                     ReportingDataProcessingJobId,
-                    job => job.Run(null, JobCancellationToken.Null),
+                    job => job.Run(null),
                     scheduledJobsConfig.ReportingDataProcessingJobCron,
                     GmtStandardTime);
             }
