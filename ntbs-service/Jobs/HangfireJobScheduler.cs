@@ -15,7 +15,6 @@ namespace ntbs_service.Jobs
         private const string NotificationClusterUpdateJobId = "notification-cluster-update";
         private const string MarkImportedNotificationsAsImportedJobId = "mark-notifications-as-imported";
         private const string GenericStoredProcedureJobId = "generic-stored-procedure-execution";
-        private const string GenerateReportingDataJobId = "generate-report-data";
         private const string ReportingDataRefreshJobId = "reporting-data-refresh";
         private const string ReportingDataProcessingJobId = "reporting-data-processing";
         private const string UpdateTableCountsJobId = "update-table-counts";
@@ -118,20 +117,6 @@ namespace ntbs_service.Jobs
             else
             {
                 RecurringJob.RemoveIfExists(MarkImportedNotificationsAsImportedJobId);
-            }
-
-            if (scheduledJobsConfig.GenerateReportingDataJobEnabled)
-            {
-                // PerformContext context is passed in via Hangfire Server
-                RecurringJob.AddOrUpdate<GenerateReportingDataJob>(
-                    GenerateReportingDataJobId,
-                    job => job.Run(null, JobCancellationToken.Null),
-                    scheduledJobsConfig.GenerateReportingDataJobCron,
-                    GmtStandardTime);
-            }
-            else
-            {
-                RecurringJob.RemoveIfExists(GenerateReportingDataJobId);
             }
 
             if (scheduledJobsConfig.GenericStoredProcedureJobEnabled)

@@ -23,9 +23,6 @@
         public bool MarkImportedNotificationsAsImportedEnabled { get; set; }
         public string MarkImportedNotificationsAsImportedCron { get; set; }
 
-        public bool GenerateReportingDataJobEnabled { get; set; }
-        public string GenerateReportingDataJobCron { get; set; }
-
         public bool ReportingDataRefreshJobEnabled { get; set; }
         public string ReportingDataRefreshJobCron { get; set; }
 
