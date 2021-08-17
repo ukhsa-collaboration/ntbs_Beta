@@ -1,13 +1,14 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Hangfire.Console;
 using Hangfire.Server;
 using ntbs_service.DataAccess;
 using Serilog;
+using static ntbs_service.Jobs.StoredProcedureJobHelper;
 
 namespace ntbs_service.Jobs
 {
-    public class ReportingDataProcessingJob : StoredProcedureJobBase
+    public class ReportingDataProcessingJob
     {
         private readonly IExternalStoredProcedureRepository _externalStoredProcedureRepository;
 
@@ -25,7 +26,7 @@ namespace ntbs_service.Jobs
             {
                 LogInfo(context, "Starting reporting uspPopulateForestExtract");
                 var results = await _externalStoredProcedureRepository.ExecutePopulateForestExtractStoredProcedure();
-                CheckExecutedSuccessfully(context, results);
+                AssertSuccessfulExecution(context, results);
             }
             catch (Exception ex)
             {

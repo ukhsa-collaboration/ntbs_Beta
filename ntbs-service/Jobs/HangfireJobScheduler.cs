@@ -124,7 +124,7 @@ namespace ntbs_service.Jobs
                 // PerformContext context is passed in via Hangfire Server
                 RecurringJob.AddOrUpdate<GenerateReportingDataJob>(
                     GenerateReportingDataJobId,
-                    job => job.Run(null, JobCancellationToken.Null),
+                    job => job.Run(null),
                     scheduledJobsConfig.GenerateReportingDataJobCron,
                     GmtStandardTime);
             }

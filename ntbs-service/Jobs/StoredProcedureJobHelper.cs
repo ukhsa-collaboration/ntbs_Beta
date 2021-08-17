@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hangfire.Console;
@@ -8,9 +8,9 @@ using Serilog;
 
 namespace ntbs_service.Jobs
 {
-    public class StoredProcedureJobBase
+    internal class StoredProcedureJobHelper
     {
-        protected static void CheckExecutedSuccessfully(PerformContext context, IEnumerable<dynamic> resultToTest)
+        public static void AssertSuccessfulExecution(PerformContext context, IEnumerable<dynamic> resultToTest)
         {
             var serialisedResult = JsonConvert.SerializeObject(resultToTest);
             LogInfo(context, $"Result: {serialisedResult}");
@@ -22,7 +22,7 @@ namespace ntbs_service.Jobs
             }
         }
 
-        protected static void LogInfo(PerformContext context, string message)
+        public static void LogInfo(PerformContext context, string message)
         {
             Log.Information(message);
             context.WriteLine(message);

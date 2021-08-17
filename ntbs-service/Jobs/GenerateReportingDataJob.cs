@@ -4,10 +4,11 @@ using Hangfire.Console;
 using Hangfire.Server;
 using ntbs_service.DataAccess;
 using Serilog;
+using static ntbs_service.Jobs.StoredProcedureJobHelper;
 
 namespace ntbs_service.Jobs
 {
-    public class GenerateReportingDataJob : StoredProcedureJobBase
+    public class GenerateReportingDataJob
     {
         private readonly IExternalStoredProcedureRepository _externalStoredProcedureRepository;
 
@@ -25,7 +26,7 @@ namespace ntbs_service.Jobs
             {
                 LogInfo(context, "Starting reporting uspGenerate");
                 var results = await _externalStoredProcedureRepository.ExecuteReportingGenerateStoredProcedure();
-                CheckExecutedSuccessfully(context, results);
+                AssertSuccessfulExecution(context, results);
             }
             catch (Exception ex)
             {

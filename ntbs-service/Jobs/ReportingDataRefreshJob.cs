@@ -4,10 +4,11 @@ using Hangfire.Console;
 using Hangfire.Server;
 using ntbs_service.DataAccess;
 using Serilog;
+using static ntbs_service.Jobs.StoredProcedureJobHelper;
 
 namespace ntbs_service.Jobs
 {
-    public class ReportingDataRefreshJob : StoredProcedureJobBase
+    public class ReportingDataRefreshJob
     {
         private readonly IExternalStoredProcedureRepository _externalStoredProcedureRepository;
 
@@ -26,17 +27,17 @@ namespace ntbs_service.Jobs
                 LogInfo(context, "Starting specimen-matching uspGenerate");
                 var stepOneResults =
                     await _externalStoredProcedureRepository.ExecuteSpecimenMatchingGenerateStoredProcedure();
-                CheckExecutedSuccessfully(context, stepOneResults);
+                AssertSuccessfulExecution(context, stepOneResults);
 
                 LogInfo(context, "Starting reporting uspGenerate");
                 var stepTwoResults =
                     await _externalStoredProcedureRepository.ExecuteReportingGenerateStoredProcedure();
-                CheckExecutedSuccessfully(context, stepTwoResults);
+                AssertSuccessfulExecution(context, stepTwoResults);
 
                 LogInfo(context, "Starting migration uspGenerate");
                 var stepThreeResults =
                     await _externalStoredProcedureRepository.ExecuteMigrationGenerateStoredProcedure();
-                CheckExecutedSuccessfully(context, stepThreeResults);
+                AssertSuccessfulExecution(context, stepThreeResults);
             }
             catch (Exception ex)
             {
