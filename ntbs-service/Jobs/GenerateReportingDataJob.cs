@@ -1,52 +1,41 @@
-using System;
-using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
-using Hangfire;
 using Hangfire.Console;
 using Hangfire.Server;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+using ntbs_service.DataAccess;
 using Serilog;
+using static ntbs_service.Jobs.StoredProcedureJobHelper;
 
 namespace ntbs_service.Jobs
 {
-    public class GenerateReportingDataJob : StoredProcedureJobBase
+    public class GenerateReportingDataJob
     {
-        public GenerateReportingDataJob(IConfiguration configuration)
-        : base(configuration)
+        private readonly IExternalStoredProcedureRepository _externalStoredProcedureRepository;
+
+        public GenerateReportingDataJob(IExternalStoredProcedureRepository externalStoredProcedureRepository)
         {
-            _sqlString = "[dbo].[uspGenerate]";
-            _parameters = null;
+            _externalStoredProcedureRepository = externalStoredProcedureRepository;
         }
 
-        /// PerformContext context is passed in via Hangfire Server
-        public override async Task Run(PerformContext context, IJobCancellationToken token)
+        // PerformContext context is passed in via Hangfire Server
+        public async Task Run(PerformContext context)
         {
-            Log.Information($"Starting generate reporting data job");
+            LogInfo(context, "Starting generate reporting data job");
 
-            await base.Run(context, token);
-
-            Log.Information($"Finishing generate reporting data job.");
-        }
-
-        protected override bool DidExecuteSuccessfully(System.Collections.Generic.IEnumerable<dynamic> resultToTest)
-        {
-            var success = false;
-
-            var serialisedResult = JsonConvert.SerializeObject(resultToTest);
-            Log.Information(serialisedResult);
-            _context.WriteLine($"Result: {serialisedResult}");
-
-            if (resultToTest.Count() == 0)
+            try
             {
-                success = true;
+                LogInfo(context, "Starting reporting uspGenerate");
+                var results = await _externalStoredProcedureRepository.ExecuteReportingGenerateStoredProcedure();
+                AssertSuccessfulExecution(context, results);
             }
-            else
+            catch (Exception ex)
             {
-                throw new ApplicationException("Stored procedure did not execute successfully as result has messages, check the logs.");
+                context.WriteLine(ex.Message);
+                Log.Error(ex, "Error occurred during generate reporting data job");
+                throw;
             }
 
-            return success;
+            LogInfo(context, "Finishing generate reporting data job.");
         }
     }
 }
