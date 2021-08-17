@@ -29,7 +29,21 @@ namespace EFAuditer_tests.UnitTests.Services
         public static string HasRootEntityRootEntityId => "123456";
     }
 
-    public class EFAuditServiceExtensionsTest
+    public enum TestEnum
+    {
+        HankMarvin,
+        DoctorGonzalez
+    }
+
+    public class AuditSettingsFixture
+    {
+        public AuditSettingsFixture()
+        {
+            EFAuditServiceExtensions.SetAuditJsonSettings();
+        }
+    }
+
+    public class EFAuditServiceExtensionsTest : IClassFixture<AuditSettingsFixture>
     {
         [Fact]
         public void AuditAction_SetsUpdateValuesCorrectly()
@@ -80,6 +94,57 @@ namespace EFAuditer_tests.UnitTests.Services
             const string expectedUpdateChangesJson = @"{""ColumnName"":""Test2"",""OriginalValue"":""Value2"",""NewValue"":""Value3""}";
             Assert.Contains(expectedFromNullChangesJson, audit.AuditData);
             Assert.Contains(expectedUpdateChangesJson, audit.AuditData);
+            const string notExpectedColumnValuesJson = @"{""Column1"":""Value1"",""Column2"":""Value2""}";
+            Assert.DoesNotContain(notExpectedColumnValuesJson, audit.AuditData);
+
+            // Close enough when not injecting time services into the class
+            Assert.InRange(audit.AuditDateTime, DateTime.Now.AddMinutes(-1), DateTime.Now);
+            Assert.Equal("Env user", audit.AuditUser);
+            Assert.Null(audit.AuditDetails);
+        }
+        [Fact]
+        public void AuditAction_SetsEnumValuesCorrectly()
+        {
+            // Arrange
+            var ev = new AuditEvent
+            {
+                Environment = new AuditEventEnvironment()
+                {
+                    UserName = "Env user"
+                },
+                CustomFields = new Dictionary<string, object> { }
+            };
+            var entry = new EventEntry
+            {
+                PrimaryKey = new Dictionary<string, object> { { "EntityId", "123" } },
+                EntityType = typeof(Entity),
+                Action = "Update",
+                Table = "EntityTable",
+                Changes = new List<EventEntryChange>
+                {
+                    new EventEntryChange
+                    {
+                        ColumnName = "NameOfFather", NewValue = TestEnum.HankMarvin
+                    }
+                },
+                ColumnValues = new Dictionary<string, object>
+                {
+                    { "Column1", "Value1" },
+                    { "Column2", "Value2" }
+                }
+            };
+            var audit = new AuditLog();
+
+            // Act
+            EFAuditServiceExtensions.AuditAction(ev, entry, audit);
+
+            // Assert
+            Assert.Equal("123", audit.OriginalId);
+            Assert.Equal("Entity", audit.EntityType);
+            Assert.Equal("Update", audit.EventType);
+
+            const string expectedFromNullChangesJson = @"{""ColumnName"":""NameOfFather"",""NewValue"":""HankMarvin""}";
+            Assert.Contains(expectedFromNullChangesJson, audit.AuditData);
             const string notExpectedColumnValuesJson = @"{""Column1"":""Value1"",""Column2"":""Value2""}";
             Assert.DoesNotContain(notExpectedColumnValuesJson, audit.AuditData);
 

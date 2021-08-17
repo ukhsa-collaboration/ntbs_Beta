@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Audit.Core;
 using Audit.EntityFramework;
 using Microsoft.AspNetCore.Http;
@@ -39,6 +40,8 @@ namespace EFAuditer
                     }
                 }
             });
+
+            SetAuditJsonSettings();
 
             Action<AuditEvent, EventEntry, AuditLog> auditAction = AuditAction;
 
@@ -85,6 +88,11 @@ namespace EFAuditer
                     audit.RootId = audit.OriginalId;
                     break;
             }
+        }
+
+        public static void SetAuditJsonSettings()
+        {
+            Audit.Core.Configuration.JsonSettings.Converters.Add(new JsonStringEnumConverter());
         }
 
         private static string GetCustomKey(AuditEvent ev, string key)
