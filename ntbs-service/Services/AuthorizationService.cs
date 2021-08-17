@@ -74,7 +74,7 @@ namespace ntbs_service.Services
         {
             async Task SetPadlockAndLinkForBannerAsync(ClaimsPrincipal u, NotificationBannerModel bannerModel)
             {
-                bannerModel.ShowPadlock = !(await CanViewBannerModelAsync(u, bannerModel));
+                bannerModel.ShowPadlock = bannerModel.Source == NotificationBannerModel.NTBS_SOURCE && !(await CanViewBannerModelAsync(u, bannerModel));
                 bannerModel.ShowLink = !UserIsReadOnlyAndNotificationIsDraftOrLegacy(u, bannerModel);
             }
 
@@ -235,7 +235,7 @@ namespace ntbs_service.Services
         private bool UserIsReadOnlyAndNotificationIsDraftOrLegacy(ClaimsPrincipal user, NotificationBannerModel bannerModel)
         {
             return _userHelper.UserIsReadOnly(user) &&
-                   (bannerModel.NotificationStatus == NotificationStatus.Draft || bannerModel.Source != "ntbs");
+                   (bannerModel.NotificationStatus == NotificationStatus.Draft || bannerModel.Source != NotificationBannerModel.NTBS_SOURCE);
         }
     }
 }

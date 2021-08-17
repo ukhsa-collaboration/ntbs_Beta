@@ -175,7 +175,7 @@ namespace ntbs_service.Services
                 PreviousPhecCodes = new List<string>(),
                 LinkedNotificationPhecCodes = new List<string>(),
                 LinkedNotificationTbServiceCodes = new List<string>(),
-                ShowPadlock = true,
+                ShowPadlock = false,
                 ShowLink = true,
                 RedirectPath = RouteHelper.GetLegacyNotificationPath(result.PrimaryNotificationId)
             };

@@ -12,6 +12,8 @@ namespace ntbs_service.Models
     [NotMapped]
     public class NotificationBannerModel
     {
+        public static string NTBS_SOURCE = "ntbs";
+
         public string NotificationId;
         public DateTime? SortByDate;
         public string NotificationDate;
@@ -72,7 +74,7 @@ namespace ntbs_service.Models
                 notification.Group?.Notifications.Select(no => no.HospitalDetails.TBService.PHECCode);
             LinkedNotificationTbServiceCodes =
                 notification.Group?.Notifications.Select(no => no.HospitalDetails.TBServiceCode);
-            Source = "ntbs";
+            Source = NTBS_SOURCE;
             ShowLink = showLink;
             ShowPadlock = showPadlock;
             RedirectPath = RouteHelper.GetNotificationPath(notification.NotificationId, NotificationSubPaths.Overview);
@@ -105,7 +107,7 @@ namespace ntbs_service.Models
             PreviousPhecCodes = notification.PreviousPhecCodes;
             LinkedNotificationTbServiceCodes = notification.LinkedNotificationTbServiceCodes;
             LinkedNotificationPhecCodes = notification.LinkedNotificationPhecCodes;
-            Source = "ntbs";
+            Source = NTBS_SOURCE;
             ShowLink = showLink;
             ShowPadlock = showPadlock;
             RedirectPath = RouteHelper.GetNotificationPath(notification.NotificationId, NotificationSubPaths.Overview);
