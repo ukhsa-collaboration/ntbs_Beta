@@ -1,123 +1,52 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
-using Hangfire;
 using Hangfire.Console;
 using Hangfire.Server;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+using ntbs_service.DataAccess;
 using Serilog;
+using static ntbs_service.Jobs.StoredProcedureJobHelper;
 
 namespace ntbs_service.Jobs
 {
-    public class ReportingDataRefreshJob : StoredProcedureJobBase
+    public class ReportingDataRefreshJob
     {
-        protected readonly string _reportingDatabaseConnectionString = "";
-        protected readonly string _specimenMatchingConnectionString = "";
-        protected readonly string _migrationConnectionString = "";
+        private readonly IExternalStoredProcedureRepository _externalStoredProcedureRepository;
 
-        public ReportingDataRefreshJob(IConfiguration configuration)
-        : base(configuration)
+        public ReportingDataRefreshJob(IExternalStoredProcedureRepository externalStoredProcedureRepository)
         {
-            _reportingDatabaseConnectionString = _configuration.GetConnectionString(Constants.DbConnectionStringReporting);
-            _specimenMatchingConnectionString = _configuration.GetConnectionString(Constants.DbConnectionStringSpecimenMatching);
-            _migrationConnectionString = _configuration.GetConnectionString(Constants.DbConnectionStringMigration);
-
-            _sqlString = "";
-            _parameters = null;
+            _externalStoredProcedureRepository = externalStoredProcedureRepository;
         }
 
-        /// PerformContext context is passed in via Hangfire Server
-        public override async Task Run(PerformContext context, IJobCancellationToken token)
+        // PerformContext context is passed in via Hangfire Server
+        public async Task Run(PerformContext context)
         {
-            _context = context;
-            Log.Information($"Starting reporting data refresh job.");
+            LogInfo(context, "Starting reporting data refresh job");
 
             try
             {
-                var stepOneResults = await ExecuteSpecimenMatchingGenerateStoredProcedure(token);
-                var stepTwoResults = await ExecuteReportingGenerateStoredProcedure(token);
-                var stepThreeResults = await ExecuteMigrationGenerateStoredProcedure(token);
+                LogInfo(context, "Starting specimen-matching uspGenerate");
+                var stepOneResults =
+                    await _externalStoredProcedureRepository.ExecuteSpecimenMatchingGenerateStoredProcedure();
+                AssertSuccessfulExecution(context, stepOneResults);
 
-                var allResults = new List<dynamic>();
-                allResults.AddRange(stepOneResults);
-                allResults.AddRange(stepTwoResults);
-                allResults.AddRange(stepThreeResults);
+                LogInfo(context, "Starting reporting uspGenerate");
+                var stepTwoResults =
+                    await _externalStoredProcedureRepository.ExecuteReportingGenerateStoredProcedure();
+                AssertSuccessfulExecution(context, stepTwoResults);
 
-                var success = DidExecuteSuccessfully(allResults);
+                LogInfo(context, "Starting migration uspGenerate");
+                var stepThreeResults =
+                    await _externalStoredProcedureRepository.ExecuteMigrationGenerateStoredProcedure();
+                AssertSuccessfulExecution(context, stepThreeResults);
             }
             catch (Exception ex)
             {
-                _context.WriteLine(ex.Message);
-                Log.Error(ex, "Error occured during reporting data refresh job.");
+                context.WriteLine(ex.Message);
+                Log.Error(ex, "Error occured during reporting data refresh job");
                 throw;
             }
 
-            Log.Information($"Finishing reporting data refresh job.");
+            LogInfo(context, "Finishing reporting data refresh job");
         }
-
-        protected virtual async Task<IEnumerable<dynamic>> ExecuteSpecimenMatchingGenerateStoredProcedure(IJobCancellationToken token)
-        {
-            IEnumerable<dynamic> result = new List<dynamic>();
-
-            using (var connection = new SqlConnection(_specimenMatchingConnectionString))
-            {
-                connection.Open();
-                result = await connection.QueryAsync("[dbo].[uspGenerate]", _parameters, null, Constants.SqlServerDefaultCommandTimeOut, System.Data.CommandType.StoredProcedure);
-            }
-
-            return result;
-        }
-
-        protected virtual async Task<IEnumerable<dynamic>> ExecuteReportingGenerateStoredProcedure(IJobCancellationToken token)
-        {
-            IEnumerable<dynamic> result = new List<dynamic>();
-
-            using (var connection = new SqlConnection(_reportingDatabaseConnectionString))
-            {
-                connection.Open();
-                result = await connection.QueryAsync("[dbo].[uspGenerate]", _parameters, null, Constants.SqlServerDefaultCommandTimeOut, System.Data.CommandType.StoredProcedure);
-            }
-
-            return result;
-        }
-
-        protected virtual async Task<IEnumerable<dynamic>> ExecuteMigrationGenerateStoredProcedure(IJobCancellationToken token)
-        {
-            IEnumerable<dynamic> result = new List<dynamic>();
-
-            using (var connection = new SqlConnection(_migrationConnectionString))
-            {
-                connection.Open();
-                result = await connection.QueryAsync("[dbo].[uspGenerate]", _parameters, null, Constants.SqlServerDefaultCommandTimeOut, System.Data.CommandType.StoredProcedure);
-            }
-
-            return result;
-        }
-
-        protected override bool DidExecuteSuccessfully(System.Collections.Generic.IEnumerable<dynamic> resultToTest)
-        {
-            var success = false;
-
-            var serialisedResult = JsonConvert.SerializeObject(resultToTest);
-            Log.Information(serialisedResult);
-            _context.WriteLine($"Result: {serialisedResult}");
-
-            if (resultToTest.Count() == 0)
-            {
-                success = true;
-            }
-            else
-            {
-                throw new ApplicationException("Stored procedure did not execute successfully as result has messages, check the logs.");
-            }
-
-            return success;
-        }
-
-
     }
 }

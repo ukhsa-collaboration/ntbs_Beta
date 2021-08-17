@@ -233,6 +233,7 @@ namespace ntbs_service
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<ILogService, LogService>();
             services.AddScoped<ITableCountsRepository, TableCountsRepository>();
+            services.AddScoped<IExternalStoredProcedureRepository, ExternalStoredProcedureRepository>();
 
             AddAuditService(services, auditDbConnectionString);
             AddReferenceLabResultServices(services);
