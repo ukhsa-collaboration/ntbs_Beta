@@ -27,6 +27,8 @@ namespace ntbs_integration_tests
                 throw new InvalidOperationException("Cannot build the web host before the test class name has been set.");
             }
 
+            // Disable auditing for all integration tests so we don't run into possible object cycle errors
+            Audit.Core.Configuration.AuditDisabled = true;
             builder.UseSerilog();
             builder.UseEnvironment("CI");
 

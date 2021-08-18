@@ -16,11 +16,11 @@ namespace ntbs_ui_tests.Helpers
                 throw new ArgumentException($"Unexpected notification name {notificationName} given");
             }
             baseNotification.CreationDate = DateTime.Now;
-            baseNotification.HospitalDetails = new HospitalDetails
-            {
-                TBServiceCode = userConfig.TbServiceCode,
-                CaseManagerId = userConfig.UserId
-            };
+
+            baseNotification.HospitalDetails ??= new HospitalDetails();
+            baseNotification.HospitalDetails.TBServiceCode = userConfig.TbServiceCode;
+            baseNotification.HospitalDetails.CaseManagerId = userConfig.UserId;
+
             return baseNotification;
         }
 
@@ -73,8 +73,8 @@ namespace ntbs_ui_tests.Helpers
                         {
                             BCGVaccinationState = Status.Yes, BCGVaccinationYear = 1990,
                             DiagnosisDate = new DateTime(2011, 3, 23), DotStatus = DotStatus.DotReceived,
-                            DidNotStartTreatment = true, EnhancedCaseManagementLevel = 2,
-                            EnhancedCaseManagementStatus = Status.Yes, FirstPresentationDate = new DateTime(2010, 12, 25), 
+                            StartedTreatment = false, EnhancedCaseManagementLevel = 2,
+                            EnhancedCaseManagementStatus = Status.Yes, FirstPresentationDate = new DateTime(2010, 12, 25),
                             HomeVisitCarriedOut = Status.No, HealthcareDescription = "Been giving lots of paracetamol",
                             HealthcareSetting = HealthcareSetting.GP, HIVTestState = HIVTestStatus.OfferedButRefused,
                             IsSymptomatic = true, IsDotOffered = Status.Unknown,

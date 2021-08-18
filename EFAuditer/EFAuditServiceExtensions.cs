@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Audit.Core;
 using Audit.EntityFramework;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 namespace EFAuditer
 {
@@ -40,6 +41,8 @@ namespace EFAuditer
                 }
             });
 
+            SetAuditJsonSettings();
+
             Action<AuditEvent, EventEntry, AuditLog> auditAction = AuditAction;
 
             Audit.Core.Configuration.Setup()
@@ -62,18 +65,15 @@ namespace EFAuditer
                 ?? GetCustomKey(ev, CustomFields.AppUser)
                 ?? ev.Environment.UserName;
 
-            var serializerSettings = Audit.Core.Configuration.JsonSettings;
-            serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-
             switch (audit.EventType)
             {
                 case "Insert":
                     audit.AuditData =
-                        JsonConvert.SerializeObject(entry.ColumnValues, serializerSettings);
+                        JsonSerializer.Serialize(entry.ColumnValues, Audit.Core.Configuration.JsonSettings);
                     break;
                 case "Update":
                     audit.AuditData =
-                        JsonConvert.SerializeObject(entry.Changes, serializerSettings);
+                        JsonSerializer.Serialize(entry.Changes, Audit.Core.Configuration.JsonSettings);
                     break;
             }
 
@@ -88,6 +88,11 @@ namespace EFAuditer
                     audit.RootId = audit.OriginalId;
                     break;
             }
+        }
+
+        public static void SetAuditJsonSettings()
+        {
+            Audit.Core.Configuration.JsonSettings.Converters.Add(new JsonStringEnumConverter());
         }
 
         private static string GetCustomKey(AuditEvent ev, string key)

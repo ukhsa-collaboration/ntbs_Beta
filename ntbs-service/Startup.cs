@@ -11,7 +11,6 @@ using Hangfire.SqlServer;
 using Microsoft.ApplicationInsights.AspNetCore;
 using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using Microsoft.ApplicationInsights.DependencyCollector;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -234,6 +233,7 @@ namespace ntbs_service
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<ILogService, LogService>();
             services.AddScoped<ITableCountsRepository, TableCountsRepository>();
+            services.AddScoped<IExternalStoredProcedureRepository, ExternalStoredProcedureRepository>();
 
             AddAuditService(services, auditDbConnectionString);
             AddReferenceLabResultServices(services);

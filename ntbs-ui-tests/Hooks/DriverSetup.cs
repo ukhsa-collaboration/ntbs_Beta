@@ -27,6 +27,7 @@ namespace ntbs_ui_tests.Hooks
             this.objectContainer = objectContainer;
             this.settings = settings;
             this.testContext = testContext;
+            Audit.Core.Configuration.AuditDisabled = true;
         }
 
         [BeforeScenario]

@@ -75,7 +75,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDiagnosisDate.Day"] = "1",
                 ["FormattedDiagnosisDate.Month"] = "1",
                 ["FormattedDiagnosisDate.Year"] = "2050",
-                ["ClinicalDetails.DidNotStartTreatment"] = "false",
+                ["ClinicalDetails.StartedTreatment"] = "true",
                 ["FormattedTreatmentDate.Day"] = "1",
                 ["ClinicalDetails.Notes"] = new string('i', 1002),
             };
@@ -379,7 +379,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedTreatmentDate.Day"] = "1",
                 ["FormattedTreatmentDate.Month"] = "1",
                 ["FormattedTreatmentDate.Year"] = "2012",
-                ["ClinicalDetails.DidNotStartTreatment"] = "true",
+                ["ClinicalDetails.StartedTreatment"] = "false",
                 ["ClinicalDetails.IsPostMortem"] = "false",
                 ["FormattedSymptomDate.Day"] = "10",
                 ["FormattedSymptomDate.Month"] = "10",

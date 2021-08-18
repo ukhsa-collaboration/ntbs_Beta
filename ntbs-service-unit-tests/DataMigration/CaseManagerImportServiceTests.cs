@@ -12,6 +12,7 @@ using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Properties;
 using ntbs_service.Services;
+using ntbs_service_unit_tests.TestHelpers;
 using Xunit;
 
 namespace ntbs_service_unit_tests.DataMigration
@@ -36,6 +37,7 @@ namespace ntbs_service_unit_tests.DataMigration
         public CaseManagerImportServiceTests()
         {
             _context = SetupTestContext();
+            ContextHelper.DisableAudits();
             SetupMockMigrationRepo();
             _adOptionMock.Setup(s => s.CurrentValue).Returns(new AdOptions{ReadOnlyUserGroup = "TestReadOnly"});
             IUserRepository userRepository = new UserRepository(_context, _adOptionMock.Object);

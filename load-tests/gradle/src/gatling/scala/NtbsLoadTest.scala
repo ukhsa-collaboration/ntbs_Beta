@@ -5,14 +5,36 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
+import com.github.javafaker.Faker
+import java.time.ZoneId
+
 class NtbsLoadTest extends Simulation {
+
+    val faker = new Faker()
 
     val httpProtocol = http
         .baseUrl(Config.urlUnderTest)
         .inferHtmlResources(WhiteList(s"""${Config.urlUnderTest}/.*"""), BlackList())
 
+    def newNotificationInfomation(): Map[String, Any] = {
+        val dateOfBirth = faker
+            .date()
+            .birthday()
+            .toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDateTime();
+
+        Map(
+            "nhsNumber" -> (9000000001L + Random.nextInt(999999999)),
+            "givenName" -> faker.name().firstName(),
+            "familyName" -> faker.name().lastName(),
+            "dayOfBirth" -> f"${dateOfBirth.getDayOfMonth()}%02d",
+            "monthOfBirth" -> f"${dateOfBirth.getMonthValue()}%02d",
+            "yearOfBirth" -> f"${dateOfBirth.getYear()}"
+        )
+    }
+    val creationFeeder = Iterator.continually(newNotificationInfomation())
     val notificationFeeder = Iterator.continually(Map("notificationId" -> (300001 + Random.nextInt(10000))))
-    val nhsNumberFeeder = Iterator.continually(Map("nhsNumber" -> (9000000001L + Random.nextInt(999999999))))
 
     val dashboard = DashboardScenarioBuilder.build()
     val searchByFamilyName = SearchScenarioBuilder.buildFamilyNameSearch("Test")
@@ -41,7 +63,7 @@ class NtbsLoadTest extends Simulation {
     val subitDraftNotification = SubmitDraftNotificationScenarioBuilder.build()
 
     val createFullScenario = scenario("Create")
-        .feed(nhsNumberFeeder)
+        .feed(creationFeeder)
         .exec(
             searchByFamilyName,
             createNotificationWithPatientDetails,

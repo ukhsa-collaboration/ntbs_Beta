@@ -8,6 +8,7 @@ using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.QueryEntities;
+using ntbs_service_unit_tests.TestHelpers;
 using Xunit;
 
 namespace ntbs_service_unit_tests.DataAccess
@@ -22,6 +23,7 @@ namespace ntbs_service_unit_tests.DataAccess
 
         public DataQualityRepositoryTests(RepositoryFixture<DataQualityRepository> dataQualityRepositoryFixture)
         {
+            ContextHelper.DisableAudits();
             _context = dataQualityRepositoryFixture.Context;
         }
 

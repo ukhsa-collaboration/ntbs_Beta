@@ -10,6 +10,7 @@ using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Properties;
 using ntbs_service.Services;
+using ntbs_service_unit_tests.TestHelpers;
 using Xunit;
 
 namespace ntbs_service_unit_tests.Services
@@ -26,7 +27,8 @@ namespace ntbs_service_unit_tests.Services
         public AdImportServiceTest()
         {
             _context = SetupTestContext();
-            
+            ContextHelper.DisableAudits();
+
             _adUsers = new List<LdapEntry>();
             var adDirectoryService = SetupMockAdDirectoryService();
             _adDirectoryServiceFactoryMock.Setup(s => s.Create()).Returns(adDirectoryService);

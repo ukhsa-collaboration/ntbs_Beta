@@ -42,7 +42,7 @@ RUN npm install
 WORKDIR /
 COPY ./NuGet.Config ./NuGet.Config
 COPY ./EFAuditer ./EFAuditer
-COPY ./frontend-dotnetcore/dist ./frontend-dotnetcore/dist
+COPY ./ntbs-nhs-razor-tags/dist ./ntbs-nhs-razor-tags/dist
 COPY ./ntbs-service ./ntbs-service
 COPY ./ntbs-ui-tests ./ntbs-ui-tests
 

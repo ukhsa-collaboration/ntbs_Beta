@@ -102,7 +102,7 @@ namespace ntbs_service_unit_tests.Jobs
             var previousTableCounts = CreateBasicTableCounts(0);
             typeof(TableCounts)
                 .GetProperty(fieldName)
-                .SetValue(previousTableCounts, 1);
+                .SetValue(previousTableCounts, 10);
 
             var tableCounts = new[] { CreateBasicTableCounts(0), previousTableCounts };
             _tableCountsRepository
@@ -112,14 +112,14 @@ namespace ntbs_service_unit_tests.Jobs
             // Act and assert
             var exception = await Assert.ThrowsAsync<ApplicationException>(() => _updateTableCountsJob.Run(null));
             Assert.Contains("Some table counts have decreased", exception.Message);
-            Assert.Contains($"Property: {fieldName} has decreased from 1 to 0", exception.Message);
+            Assert.Contains($"Property: {fieldName} has decreased from 10 to 0", exception.Message);
         }
 
         [Fact]
         public async Task Run_LogsWarnings_WhenAllFieldsAreReduced()
         {
             // Arrange
-            var tableCounts = new[] { CreateBasicTableCounts(0), CreateBasicTableCounts(1) };
+            var tableCounts = new[] { CreateBasicTableCounts(9949), CreateBasicTableCounts(10000) };
             _tableCountsRepository
                 .Setup(r => r.GetRecentTableCounts())
                 .Returns(Task.FromResult(tableCounts.AsEnumerable()));
@@ -128,9 +128,36 @@ namespace ntbs_service_unit_tests.Jobs
             var exception = await Assert.ThrowsAsync<ApplicationException>(() => _updateTableCountsJob.Run(null));
             Assert.Contains("Some table counts have decreased", exception.Message);
             CountNames.ForEach(fieldName =>
-                Assert.Contains($"Property: {fieldName} has decreased from 1 to 0", exception.Message)
+                Assert.Contains($"Property: {fieldName} has decreased from 10000 to 9949", exception.Message)
             );
         }
+
+        [Theory]
+        [InlineData(9950, 10000)]
+        [InlineData(9, 10)]
+        public async Task Run_LogsInfo_WhenFieldReducedByVerySmallAmount(int currentCount, int previousCount)
+        {
+            // Arrange
+            var tableCounts = new[] { CreateBasicTableCounts(currentCount), CreateBasicTableCounts(previousCount) };
+            _tableCountsRepository
+                .Setup(r => r.GetRecentTableCounts())
+                .Returns(Task.FromResult(tableCounts.AsEnumerable()));
+
+            Log.Logger = new LoggerConfiguration().WriteTo.TestCorrelator().CreateLogger();
+            using (TestCorrelator.CreateContext())
+            {
+                // Act
+                await _updateTableCountsJob.Run(null);
+
+                // Assert
+                var logEvents = TestCorrelator.GetLogEventsFromCurrentContext().ToList();
+
+                Assert.DoesNotContain(logEvents, logEvent => logEvent.Level > LogEventLevel.Information);
+                Assert.Contains(logEvents, logEvent => logEvent.Level == LogEventLevel.Information
+                                                       && logEvent.RenderMessage() == "Table counts look normal");
+            }
+        }
+
 
         private static IEnumerable<string> CountNames => new[]
         {
