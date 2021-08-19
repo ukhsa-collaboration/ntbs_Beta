@@ -313,6 +313,7 @@ namespace ntbs_service.DataAccess
                         LinkedNotificationPhecCodes = n.Group.Notifications.Select(no => no.HospitalDetails.TBService.PHECCode),
                         LinkedNotificationTbServiceCodes = n.Group.Notifications.Select(no => no.HospitalDetails.TBServiceCode)
                     })
+                // Do not use query splitting as EFCore doesn't allow query splitting with a collection in the select
                 .AsSingleQuery()
                 .AsNoTracking()
                 .ToListAsync())
