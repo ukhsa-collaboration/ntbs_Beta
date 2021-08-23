@@ -299,6 +299,7 @@ namespace ntbs_integration_tests.Helpers
                     NotificationStatus = NotificationStatus.Denotified,
                     DenotificationDetails = new DenotificationDetails
                     {
+                        DateOfDenotification = new DateTime(2020, 12, 25),
                         Reason = DenotificationReason.Other,
                         OtherDescription = "a great reason"
                     },

@@ -16,5 +16,7 @@ namespace ntbs_service.Models.Enums
         TreatmentStart,
         [Display(Name = "Diagnosis made")]
         DiagnosisMade,
+        [Display(Name = "Denotification")]
+        Denotification
     }
 }

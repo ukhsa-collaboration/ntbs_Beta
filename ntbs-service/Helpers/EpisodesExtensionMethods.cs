@@ -103,6 +103,8 @@ namespace ntbs_service.Helpers
                             return 5;
                         case TreatmentEventType.TreatmentOutcome:
                             return 6;
+                        case TreatmentEventType.Denotification:
+                            return 7;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
