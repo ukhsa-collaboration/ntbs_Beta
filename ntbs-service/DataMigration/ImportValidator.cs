@@ -283,7 +283,7 @@ namespace ntbs_service.DataMigration
 
             foreach (var validationResult in validationsResults)
             {
-                validationResult.ErrorMessage = $"{objectToValidate.GetType().Name}: {validationResult.ErrorMessage}";
+                validationResult.ErrorMessage = $"{objectToValidate.GetType().GetDisplayName()}: {validationResult.ErrorMessage}";
             }
 
             return validationsResults;

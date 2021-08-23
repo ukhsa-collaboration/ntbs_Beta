@@ -64,23 +64,23 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Assert
             var errorMessages = validationResults.Select(r => r.ErrorMessage).ToList();
-            Assert.Contains("MDRDetails: The field Relationship of the current case to the contact must be a string or array type with a maximum length of '90'.",
+            Assert.Contains("MDR details: The field Relationship of the current case to the contact must be a string or array type with a maximum length of '90'.",
                 errorMessages);
-            Assert.Contains("PatientDetails: " + String.Format(ValidationMessages.StandardStringFormat, "Family name"),
+            Assert.Contains("Personal details: " + String.Format(ValidationMessages.StandardStringFormat, "Family name"),
                 errorMessages);
-            Assert.Contains("ClinicalDetails: " + ValidationMessages.DateValidityRangeStart("Diagnosis date", "01/01/2010"),
+            Assert.Contains("Clinical details: " + ValidationMessages.DateValidityRangeStart("Diagnosis date", "01/01/2010"),
                 errorMessages);
-            Assert.Contains("TravelDetails: The field total number of countries must be between 1 and 50.",
+            Assert.Contains("Travel details: The field total number of countries must be between 1 and 50.",
                 errorMessages);
-            Assert.Contains("ImmunosuppressionDetails: " + String.Format(ValidationMessages.InvalidCharacter, "Immunosuppression type description"),
+            Assert.Contains("Immunosuppression: " + String.Format(ValidationMessages.InvalidCharacter, "Immunosuppression type description"),
                 errorMessages);
-            Assert.Contains("HospitalDetails: " + String.Format(ValidationMessages.InvalidCharacter, "Consultant"),
+            Assert.Contains("Hospital details: " + String.Format(ValidationMessages.InvalidCharacter, "Consultant"),
                 errorMessages);
-            Assert.Contains("VisitorDetails: " + ValidationMessages.TravelOrVisitDurationHasCountry,
+            Assert.Contains("Visitor details: " + ValidationMessages.TravelOrVisitDurationHasCountry,
                 errorMessages);
-            Assert.Contains("PreviousTbHistory: " + ValidationMessages.ValidYear,
+            Assert.Contains("Previous history: " + ValidationMessages.ValidYear,
                 errorMessages);
-            Assert.Contains("MBovisExposureToKnownCase: " + String.Format(ValidationMessages.RequiredSelect, "Exposure setting"),
+            Assert.Contains("M. bovis - exposure to another case: " + String.Format(ValidationMessages.RequiredSelect, "Exposure setting"),
                 errorMessages);
         }
 
@@ -111,19 +111,19 @@ namespace ntbs_service_unit_tests.DataMigration
             // Assert
             var errorMessages = validationResults.Select(r => r.ErrorMessage).ToList();
 
-            Assert.Contains("TreatmentEvent: Event Date must not be before 01/01/2010",
+            Assert.Contains("Treatment event: Event Date must not be before 01/01/2010",
                 errorMessages);
-            Assert.Contains("SocialContextAddress: " + ValidationMessages.SupplyOneOfTheAddressFields,
+            Assert.Contains("Social context address: " + ValidationMessages.SupplyOneOfTheAddressFields,
                 errorMessages);
-            Assert.Contains("SocialContextVenue: " + ValidationMessages.SupplyOneOfTheVenueFields,
+            Assert.Contains("Social context venue: " + ValidationMessages.SupplyOneOfTheVenueFields,
                 errorMessages);
-            Assert.Contains("MBovisDetails: " + ValidationMessages.HasNoExposureRecords,
+            Assert.Contains("M. bovis details: " + ValidationMessages.HasNoExposureRecords,
                 errorMessages);
-            Assert.Contains("MBovisDetails: " + ValidationMessages.HasNoAnimalExposureRecords,
+            Assert.Contains("M. bovis details: " + ValidationMessages.HasNoAnimalExposureRecords,
                 errorMessages);
-            Assert.Contains("MBovisDetails: " + ValidationMessages.HasNoOccupationExposureRecords,
+            Assert.Contains("M. bovis details: " + ValidationMessages.HasNoOccupationExposureRecords,
                 errorMessages);
-            Assert.Contains("MBovisDetails: " + ValidationMessages.HasNoUnpasteurisedMilkConsumptionRecords,
+            Assert.Contains("M. bovis details: " + ValidationMessages.HasNoUnpasteurisedMilkConsumptionRecords,
                 errorMessages);
         }
 
