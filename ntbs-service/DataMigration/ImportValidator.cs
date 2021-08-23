@@ -281,6 +281,11 @@ namespace ntbs_service.DataMigration
 
             Validator.TryValidateObject(objectToValidate, validationContext, validationsResults, true);
 
+            foreach (var validationResult in validationsResults)
+            {
+                validationResult.ErrorMessage = $"{objectToValidate.GetType().Name}: {validationResult.ErrorMessage}";
+            }
+
             return validationsResults;
         }
 
