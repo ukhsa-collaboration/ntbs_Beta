@@ -316,6 +316,12 @@ namespace ntbs_integration_tests.Helpers
                     ClinicalDetails = new ClinicalDetails
                     {
                         TreatmentRegimen = TreatmentRegimen.MdrTreatment
+                    },
+                    TreatmentEvents = new List<TreatmentEvent> { new TreatmentEvent
+                        {
+                            TreatmentEventId = 4444,
+                            TreatmentEventType = TreatmentEventType.DiagnosisMade, EventDate = new DateTime(2011, 2, 1)
+                        }
                     }
                 },
                 new Notification

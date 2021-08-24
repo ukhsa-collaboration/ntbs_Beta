@@ -51,7 +51,7 @@
                     @(period.IsTransfer ? "Transfer" :  $"Treatment period {period.PeriodNumber}")
                 </h4>
 
-                @if (period.TreatmentEvents.Last().TreatmentEventType == TreatmentEventType.Denotification || period.TreatmentEvents.Last().IsEpisodeEndingTreatmentEvent())
+                @if (period.TreatmentEvents.Last().IsEpisodeEndingTreatmentEvent())
                 {
                     <span id="@sectionId-@period.PeriodNumber-dates">@period.TreatmentEvents.First().FormattedEventDate to @period.TreatmentEvents.Last().FormattedEventDate</span>
                 }

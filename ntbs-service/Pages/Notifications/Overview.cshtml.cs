@@ -105,15 +105,8 @@ namespace ntbs_service.Pages.Notifications
                     EventDate = Notification.DenotificationDetails.DateOfDenotification,
                     TreatmentEventType = TreatmentEventType.Denotification
                 };
-                if (TreatmentPeriods.Any())
-                {
-                    TreatmentPeriods.Last().TreatmentEvents.Add(denotificationEvent);
-                    TreatmentPeriods.Last().TreatmentEvents.OrderForEpisodes();
-                }
-                else
-                {
-                    TreatmentPeriods.Add(TreatmentPeriod.CreateTreatmentPeriod(1, denotificationEvent));
-                }
+                TreatmentPeriods.Last().TreatmentEvents.Add(denotificationEvent);
+                TreatmentPeriods.Last().TreatmentEvents.OrderForEpisodes();
             }
         }
 
