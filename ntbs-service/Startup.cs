@@ -632,6 +632,8 @@ namespace ntbs_service
             app.UseCookiePolicy();
             app.UseSession();
 
+            app.UseMiddleware<MsOfficeLinkPrefetchMiddleware>();
+
             if (!Env.IsEnvironment("CI"))
             {
                 app.UseMiddleware<ActivityDetectionMiddleware>();
