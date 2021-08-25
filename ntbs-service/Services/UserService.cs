@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ntbs_service.DataAccess;
@@ -117,9 +118,9 @@ namespace ntbs_service.Services
 
         public string GetUserDisplayName(ClaimsPrincipal user)
         {
-            var displayName = NameFormattingHelper.FormatDisplayName(user.Identity.Name);
+            var displayName = NameFormattingHelper.FormatDisplayName(user.Identity?.Name);
 
-            if (displayName.Contains("@"))
+            if (displayName.IsNullOrEmpty() || displayName.Contains("@"))
             {
                 var nameClaim = user.Claims.FirstOrDefault(c => c.Type == "name");
                 if (nameClaim != null)

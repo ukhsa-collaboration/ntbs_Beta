@@ -21,7 +21,7 @@ namespace ntbs_service.Helpers
                     var fullAccess = permissionLevel == PermissionLevel.Edit;
                     return new NotificationBannerModel(
                         n,
-                        showPadlock: !fullAccess,
+                        showPadlock: permissionLevel == PermissionLevel.None,
                         showLink: fullAccess || n.NotificationStatus != NotificationStatus.Draft);
                 })
                 .Select(n => n.Result);

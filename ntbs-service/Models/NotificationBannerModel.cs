@@ -12,6 +12,8 @@ namespace ntbs_service.Models
     [NotMapped]
     public class NotificationBannerModel
     {
+        public static string NtbsSource = "NTBS";
+
         public string NotificationId;
         public DateTime? SortByDate;
         public string NotificationDate;
@@ -36,10 +38,14 @@ namespace ntbs_service.Models
         public bool ShowPadlock;
         public string RedirectPath;
         public int? CaseManagerId;
+        public IEnumerable<string> PreviousTbServiceCodes { get; set; }
+        public IEnumerable<string> PreviousPhecCodes { get; set; }
+        public IEnumerable<string> LinkedNotificationTbServiceCodes { get; set; }
+        public IEnumerable<string> LinkedNotificationPhecCodes { get; set; }
 
-        // Access level is treated as a bool for either able to edit or not. This differs from the standard PermissionLevel
-        // implemented across the codebase due to there being no visual difference between no permission level and readonly
-        // permission on notification banner models
+        // Access level is treated as a bool for either able to view or not. This differs from the standard PermissionLevel
+        // implemented across the codebase due to there being no visual difference between full edit permissions
+        // and readonly permissions on notification banner models
         public NotificationBannerModel(Notification notification, bool showPadlock = false, bool showLink = false)
         {
             NotificationId = notification.NotificationId.ToString();
@@ -62,7 +68,13 @@ namespace ntbs_service.Models
             NotificationDate = notification.FormattedNotificationDate;
             DrugResistance = notification.DrugResistanceProfile.DrugResistanceProfileString;
             TreatmentOutcome = CalculateOutcome(notification.TreatmentEvents);
-            Source = "ntbs";
+            PreviousTbServiceCodes = notification.PreviousTbServices.Select(service => service.TbServiceCode);
+            PreviousPhecCodes = notification.PreviousTbServices.Select(service => service.PhecCode);
+            LinkedNotificationPhecCodes =
+                notification.Group?.Notifications.Select(no => no.HospitalDetails.TBService.PHECCode);
+            LinkedNotificationTbServiceCodes =
+                notification.Group?.Notifications.Select(no => no.HospitalDetails.TBServiceCode);
+            Source = NtbsSource;
             ShowLink = showLink;
             ShowPadlock = showPadlock;
             RedirectPath = RouteHelper.GetNotificationPath(notification.NotificationId, NotificationSubPaths.Overview);
@@ -91,7 +103,11 @@ namespace ntbs_service.Models
             NotificationDate = notification.NotificationDate.ConvertToString();
             DrugResistance = notification.DrugResistance;
             TreatmentOutcome = CalculateOutcome(notification.TreatmentEvents);
-            Source = "ntbs";
+            PreviousTbServiceCodes = notification.PreviousTbServiceCodes;
+            PreviousPhecCodes = notification.PreviousPhecCodes;
+            LinkedNotificationTbServiceCodes = notification.LinkedNotificationTbServiceCodes;
+            LinkedNotificationPhecCodes = notification.LinkedNotificationPhecCodes;
+            Source = NtbsSource;
             ShowLink = showLink;
             ShowPadlock = showPadlock;
             RedirectPath = RouteHelper.GetNotificationPath(notification.NotificationId, NotificationSubPaths.Overview);

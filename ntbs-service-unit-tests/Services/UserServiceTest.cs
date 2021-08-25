@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MockQueryable.Moq;
@@ -190,6 +191,105 @@ namespace ntbs_service_unit_tests.Services
             Assert.Equal(tbService, result);
         }
 
+        [Theory]
+        [MemberData(nameof(FormattedNamePairs))]
+        public void GetUserDisplayName_ReturnsFormattedIdentityName_WhenNotAnEmail(string identityName,
+            string expectedName)
+        {
+            var mockIdentity = new Mock<IIdentity>();
+            mockIdentity.Setup(i => i.Name).Returns(identityName);
+            _mockUser.Setup(u => u.Identity).Returns(mockIdentity.Object);
+
+            // Act
+            var result = _service.GetUserDisplayName(_mockUser.Object);
+
+            // Assert
+            Assert.Equal(expectedName, result);
+            _mockUser.Verify(u => u.Claims, Times.Never);
+        }
+
+        [Theory]
+        [MemberData(nameof(FormattedNamePairs))]
+        public void GetUserDisplayName_ReturnsFormattedClaimName_WhenIdentityNameIsEmail(string claimName,
+            string expectedName)
+        {
+            var mockIdentity = new Mock<IIdentity>();
+            mockIdentity.Setup(i => i.Name).Returns("name@example.com");
+            _mockUser.Setup(u => u.Identity).Returns(mockIdentity.Object);
+            _mockUser.Setup(u => u.Claims).Returns(new[] { new Claim("name", claimName, null) });
+
+            // Act
+            var result = _service.GetUserDisplayName(_mockUser.Object);
+
+            // Assert
+            Assert.Equal(expectedName, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(FormattedNamePairs))]
+        public void GetUserDisplayName_ReturnsFormattedClaimName_WhenIdentityNameIsNull(string claimName,
+            string expectedName)
+        {
+            var mockIdentity = new Mock<IIdentity>();
+            mockIdentity.Setup(i => i.Name).Returns((string) null);
+            _mockUser.Setup(u => u.Identity).Returns(mockIdentity.Object);
+            _mockUser.Setup(u => u.Claims).Returns(new[] { new Claim("name", claimName, null) });
+
+            // Act
+            var result = _service.GetUserDisplayName(_mockUser.Object);
+
+            // Assert
+            Assert.Equal(expectedName, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(NoNameClaimLists))]
+        public void GetUserDisplayName_ReturnsFormattedIdentityName_WhenNoNameClaim(IEnumerable<Claim> claims)
+        {
+            const string identityName = "perry.cox@example.com";
+
+            var mockIdentity = new Mock<IIdentity>();
+            mockIdentity.Setup(i => i.Name).Returns(identityName);
+            _mockUser.Setup(u => u.Identity).Returns(mockIdentity.Object);
+            _mockUser.Setup(u => u.Claims).Returns(claims);
+
+            // Act
+            var result = _service.GetUserDisplayName(_mockUser.Object);
+
+            // Assert
+            Assert.Equal(identityName, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(NoNameClaimLists))]
+        public void GetUserDisplayName_ReturnsNullIdentityName_WhenNoNameClaim(IEnumerable<Claim> claims)
+        {
+            const string identityName = null;
+
+            var mockIdentity = new Mock<IIdentity>();
+            mockIdentity.Setup(i => i.Name).Returns(identityName);
+            _mockUser.Setup(u => u.Identity).Returns(mockIdentity.Object);
+            _mockUser.Setup(u => u.Claims).Returns(claims);
+
+            // Act
+            var result = _service.GetUserDisplayName(_mockUser.Object);
+
+            // Assert
+            Assert.Equal(identityName, result);
+        }
+
+        public static IEnumerable<object[]> NoNameClaimLists => new[]
+        {
+            new object[] { Enumerable.Empty<Claim>() },
+            new object[] { new [] { new Claim("job-title", "Doctor", null) } }
+        };
+
+        public static IEnumerable<object[]> FormattedNamePairs => new[]
+        {
+            new object[] { "John Dorian", "John Dorian" },
+            new object[] { "    Christopher Turk   ", "Christopher Turk" },
+            new object[] { "    Elliot Reid  (Sacred Heart Hospital)", "Elliot Reid" },
+        };
 
         private void SetupClaimMocking(Claim claim)
         {
