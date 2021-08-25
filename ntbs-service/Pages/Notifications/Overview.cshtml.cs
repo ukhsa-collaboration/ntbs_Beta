@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
@@ -70,6 +71,7 @@ namespace ntbs_service.Pages.Notifications
             CultureAndResistance = await _cultureAndResistanceService.GetCultureAndResistanceDetailsAsync(NotificationId);
             TreatmentPeriods = Notification.TreatmentEvents.GroupEpisodesIntoPeriods();
 
+            AddDenotificationEventIfDenotified();
             CalculateTreatmentOutcomes();
             return Page();
         }
@@ -90,6 +92,21 @@ namespace ntbs_service.Pages.Notifications
             {
                 Should36MonthOutcomeBeDisplayed = true;
                 OutcomeAt36Months = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(Notification, 3);
+            }
+        }
+
+        // We only want to add a 'pseudo-event' which is displayed but isn't actually tied to the notification/outcomes
+        private void AddDenotificationEventIfDenotified()
+        {
+            if (Notification.NotificationStatus == NotificationStatus.Denotified)
+            {
+                var denotificationEvent = new TreatmentEvent
+                {
+                    EventDate = Notification.DenotificationDetails.DateOfDenotification,
+                    TreatmentEventType = TreatmentEventType.Denotification
+                };
+                TreatmentPeriods.Last().TreatmentEvents.Add(denotificationEvent);
+                TreatmentPeriods.Last().TreatmentEvents.OrderForEpisodes();
             }
         }
 

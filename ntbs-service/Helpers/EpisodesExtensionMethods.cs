@@ -67,9 +67,10 @@ namespace ntbs_service.Helpers
 
         public static bool IsEpisodeEndingTreatmentEvent(this TreatmentEvent treatmentEvent)
         {
-            return (treatmentEvent.TreatmentOutcome != null
-                    && EpisodeEndingOutcomeTypes.Contains(treatmentEvent.TreatmentOutcome.TreatmentOutcomeType))
-                   || treatmentEvent.TreatmentEventType == TreatmentEventType.TransferOut;
+            return treatmentEvent.TreatmentEventType == TreatmentEventType.Denotification
+                   || treatmentEvent.TreatmentEventType == TreatmentEventType.TransferOut
+                   || (treatmentEvent.TreatmentOutcome != null
+                       && EpisodeEndingOutcomeTypes.Contains(treatmentEvent.TreatmentOutcome.TreatmentOutcomeType));
         }
 
         public static IEnumerable<TreatmentEvent> OrderForEpisodes(this IEnumerable<TreatmentEvent> treatmentEvents)
@@ -103,6 +104,8 @@ namespace ntbs_service.Helpers
                             return 5;
                         case TreatmentEventType.TreatmentOutcome:
                             return 6;
+                        case TreatmentEventType.Denotification:
+                            return 7;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }

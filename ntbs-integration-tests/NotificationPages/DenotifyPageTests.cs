@@ -21,13 +21,39 @@ namespace ntbs_integration_tests.NotificationPages
         {
             return new List<Notification>()
             {
-                new Notification(){ NotificationId = Utilities.DENOTIFY_WITH_DESCRIPTION, NotificationStatus = NotificationStatus.Notified },
-                new Notification(){ NotificationId = Utilities.DENOTIFY_NO_DESCRIPTION, NotificationStatus = NotificationStatus.Notified },
+                new Notification()
+                {
+                    NotificationId = Utilities.DENOTIFY_WITH_DESCRIPTION,
+                    NotificationStatus = NotificationStatus.Notified,
+                    TreatmentEvents = new List<TreatmentEvent> { new TreatmentEvent
+                        {
+                            TreatmentEventId = 4040,
+                            TreatmentEventType = TreatmentEventType.DiagnosisMade, EventDate = new DateTime(2011, 2, 1)
+                        }
+                    }
+                },
+                new Notification()
+                {
+                    NotificationId = Utilities.DENOTIFY_NO_DESCRIPTION,
+                    NotificationStatus = NotificationStatus.Notified,
+                    TreatmentEvents = new List<TreatmentEvent> { new TreatmentEvent
+                        {
+                            TreatmentEventId = 4041,
+                            TreatmentEventType = TreatmentEventType.DiagnosisMade, EventDate = new DateTime(2011, 2, 1)
+                        }
+                    }
+                },
                 new Notification()
                 {
                     NotificationId = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE,
                     NotificationStatus = NotificationStatus.Notified,
-                    NotificationDate = new DateTime(2011, 1, 1)
+                    NotificationDate = new DateTime(2011, 1, 1),
+                    TreatmentEvents = new List<TreatmentEvent> { new TreatmentEvent
+                        {
+                            TreatmentEventId = 4042,
+                            TreatmentEventType = TreatmentEventType.DiagnosisMade, EventDate = new DateTime(2011, 2, 1)
+                        }
+                    }
                 }
             };
         }

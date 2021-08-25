@@ -299,6 +299,7 @@ namespace ntbs_integration_tests.Helpers
                     NotificationStatus = NotificationStatus.Denotified,
                     DenotificationDetails = new DenotificationDetails
                     {
+                        DateOfDenotification = new DateTime(2020, 12, 25),
                         Reason = DenotificationReason.Other,
                         OtherDescription = "a great reason"
                     },
@@ -315,6 +316,12 @@ namespace ntbs_integration_tests.Helpers
                     ClinicalDetails = new ClinicalDetails
                     {
                         TreatmentRegimen = TreatmentRegimen.MdrTreatment
+                    },
+                    TreatmentEvents = new List<TreatmentEvent> { new TreatmentEvent
+                        {
+                            TreatmentEventId = 4444,
+                            TreatmentEventType = TreatmentEventType.DiagnosisMade, EventDate = new DateTime(2011, 2, 1)
+                        }
                     }
                 },
                 new Notification
