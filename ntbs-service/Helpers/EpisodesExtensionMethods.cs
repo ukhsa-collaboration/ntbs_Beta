@@ -123,7 +123,7 @@ namespace ntbs_service.Helpers
                         case TreatmentEventType.TransferIn:
                             return 2;
                         default:
-                            return (int?) null;
+                            return 0;
                     }
                 });
         }
