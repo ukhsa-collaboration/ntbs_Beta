@@ -23,9 +23,6 @@ namespace ntbs_service.Services
         Task SetFullAccessOnNotificationBannersAsync(
             IEnumerable<NotificationBannerModel> notificationBanners,
             ClaimsPrincipal user);
-        Task<bool> CanViewBannerModelAsync(
-            ClaimsPrincipal user,
-            NotificationBannerModel notificationBannerModel);
     }
 
     public class AuthorizationService : IAuthorizationService
@@ -123,7 +120,7 @@ namespace ntbs_service.Services
             return (PermissionLevel.None, Messages.UnauthorizedWarning);
         }
 
-        public async Task<bool> CanViewBannerModelAsync(
+        private async Task<bool> CanViewBannerModelAsync(
             ClaimsPrincipal user,
             NotificationBannerModel notificationBannerModel)
         {
