@@ -295,6 +295,17 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
+        public async Task OverviewPageShowsDenotificationEvent_ForDenotifiedRecord()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.DENOTIFIED_ID);
+            var document = await GetDocumentForUrlAsync(url);
+            var eventText = document.QuerySelector("#overview-episodes").TextContent;
+            Assert.Contains("25 Dec 2020", eventText);
+            Assert.Contains("Denotification", eventText);
+        }
+
+        [Fact]
         public async Task OverviewPageDoesNotShowDenotificationDetails_ForNotifiedRecord()
         {
             // Arrange

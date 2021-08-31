@@ -8,7 +8,6 @@ using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
-using ntbs_service.Models.Projections;
 using ntbs_service.Pages;
 
 namespace ntbs_service.Services
@@ -24,9 +23,6 @@ namespace ntbs_service.Services
         Task SetFullAccessOnNotificationBannersAsync(
             IEnumerable<NotificationBannerModel> notificationBanners,
             ClaimsPrincipal user);
-        Task<bool> CanEditBannerModelAsync(
-            ClaimsPrincipal user,
-            NotificationBannerModel notificationBannerModel);
     }
 
     public class AuthorizationService : IAuthorizationService
@@ -74,7 +70,7 @@ namespace ntbs_service.Services
         {
             async Task SetPadlockAndLinkForBannerAsync(ClaimsPrincipal u, NotificationBannerModel bannerModel)
             {
-                bannerModel.ShowPadlock = !(await CanEditBannerModelAsync(u, bannerModel));
+                bannerModel.ShowPadlock = bannerModel.Source == NotificationBannerModel.NtbsSource && !(await CanViewBannerModelAsync(u, bannerModel));
                 bannerModel.ShowLink = !UserIsReadOnlyAndNotificationIsDraftOrLegacy(u, bannerModel);
             }
 
@@ -124,7 +120,7 @@ namespace ntbs_service.Services
             return (PermissionLevel.None, Messages.UnauthorizedWarning);
         }
 
-        public async Task<bool> CanEditBannerModelAsync(
+        private async Task<bool> CanViewBannerModelAsync(
             ClaimsPrincipal user,
             NotificationBannerModel notificationBannerModel)
         {
@@ -133,21 +129,14 @@ namespace ntbs_service.Services
                 _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
             }
 
-            switch (_userPermissionsFilter.Type)
-            {
-                case UserType.NationalTeam:
-                    return true;
-                case UserType.PheUser:
-                    {
-                        var allowedCodes = _userPermissionsFilter.IncludedPHECCodes;
-                        return allowedCodes.Contains(notificationBannerModel.TbServicePHECCode) ||
-                               allowedCodes.Contains(notificationBannerModel.LocationPHECCode);
-                    }
-                case UserType.NhsUser:
-                    return _userPermissionsFilter.IncludedTBServiceCodes.Contains(notificationBannerModel.TbServiceCode);
-                default:
-                    return false;
-            }
+            return _userPermissionsFilter.Type == UserType.NationalTeam
+                   || UserBelongsToTbService(notificationBannerModel.TbServiceCode)
+                   || UserBelongsToPhec(notificationBannerModel.TbServicePHECCode)
+                   || UserBelongsToPhec(notificationBannerModel.LocationPHECCode)
+                   || notificationBannerModel.LinkedNotificationPhecCodes.Any(UserBelongsToPhec)
+                   || notificationBannerModel.LinkedNotificationTbServiceCodes.Any(UserBelongsToTbService)
+                   || notificationBannerModel.PreviousTbServiceCodes.Any(UserBelongsToTbService)
+                   || notificationBannerModel.PreviousPhecCodes.Any(UserBelongsToPhec);
         }
 
         private bool UserHasDirectRelationToLinkedNotification(Notification notification)
@@ -160,7 +149,7 @@ namespace ntbs_service.Services
         {
             foreach (var previousTbService in notification.PreviousTbServices)
             {
-                if (UserBelongsToTbServiceOfNotification(previousTbService.TbServiceCode) || UserBelongsToTreatmentPhecOfNotification(previousTbService.PhecCode))
+                if (UserBelongsToTbService(previousTbService.TbServiceCode) || UserBelongsToPhec(previousTbService.PhecCode))
                 {
                     return true;
                 }
@@ -170,17 +159,17 @@ namespace ntbs_service.Services
 
         private bool UserHasDirectRelationToNotification(Notification notification)
         {
-            return UserBelongsToTbServiceOfNotification(notification.HospitalDetails.TBServiceCode) || UserBelongsToTreatmentPhecOfNotification(notification.HospitalDetails.TBService?.PHECCode);
+            return UserBelongsToTbService(notification.HospitalDetails.TBServiceCode) || UserBelongsToPhec(notification.HospitalDetails.TBService?.PHECCode);
         }
 
-        private bool UserBelongsToTbServiceOfNotification(string tbServiceCode)
+        private bool UserBelongsToTbService(string tbServiceCode)
         {
             return _userPermissionsFilter.Type == UserType.NhsUser && _userPermissionsFilter.IncludedTBServiceCodes.Contains(tbServiceCode);
         }
 
-        private bool UserBelongsToTreatmentPhecOfNotification(string treatmentPhecCode)
+        private bool UserBelongsToPhec(string phecCode)
         {
-            return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(treatmentPhecCode);
+            return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(phecCode);
         }
 
         private bool UserBelongsToResidencePhecOfNotification(Notification notification)
@@ -242,7 +231,7 @@ namespace ntbs_service.Services
         private bool UserIsReadOnlyAndNotificationIsDraftOrLegacy(ClaimsPrincipal user, NotificationBannerModel bannerModel)
         {
             return _userHelper.UserIsReadOnly(user) &&
-                   (bannerModel.NotificationStatus == NotificationStatus.Draft || bannerModel.Source != "ntbs");
+                   (bannerModel.NotificationStatus == NotificationStatus.Draft || bannerModel.Source != NotificationBannerModel.NtbsSource);
         }
     }
 }

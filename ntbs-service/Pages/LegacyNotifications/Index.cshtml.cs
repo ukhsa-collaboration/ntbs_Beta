@@ -90,7 +90,7 @@ namespace ntbs_service.Pages.LegacyNotifications
             }
 
             NotificationBannerModel.ShowLink = false;
-            NotificationBannerModel.ShowPadlock = !await _authorizationService.CanEditBannerModelAsync(User, NotificationBannerModel);
+            NotificationBannerModel.ShowPadlock = false;
             return Page();
         }
     }

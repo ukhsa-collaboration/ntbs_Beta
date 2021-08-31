@@ -171,7 +171,11 @@ namespace ntbs_service.Services
                 Postcode = (result.Postcode as string).FormatStringToPostcodeFormat(),
                 NhsNumber = (result.NhsNumber as string).FormatStringToNhsNumberFormat(),
                 DateOfBirth = (result.DateOfBirth as DateTime?).ConvertToString(),
-                ShowPadlock = true,
+                PreviousTbServiceCodes = new List<string>(),
+                PreviousPhecCodes = new List<string>(),
+                LinkedNotificationPhecCodes = new List<string>(),
+                LinkedNotificationTbServiceCodes = new List<string>(),
+                ShowPadlock = false,
                 ShowLink = true,
                 RedirectPath = RouteHelper.GetLegacyNotificationPath(result.PrimaryNotificationId)
             };

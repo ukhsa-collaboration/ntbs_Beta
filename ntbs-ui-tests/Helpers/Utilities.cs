@@ -38,6 +38,10 @@ namespace ntbs_ui_tests.Helpers
                             {
                                 SiteId = (int)SiteId.PULMONARY
                             }
+                        },
+                        TreatmentEvents = new List<TreatmentEvent>
+                        {
+                            new() { EventDate = new DateTime(2020, 12, 12), TreatmentEventType = TreatmentEventType.DiagnosisMade}
                         }
                     }
                 },

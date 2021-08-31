@@ -67,9 +67,10 @@ namespace ntbs_service.Helpers
 
         public static bool IsEpisodeEndingTreatmentEvent(this TreatmentEvent treatmentEvent)
         {
-            return (treatmentEvent.TreatmentOutcome != null
-                    && EpisodeEndingOutcomeTypes.Contains(treatmentEvent.TreatmentOutcome.TreatmentOutcomeType))
-                   || treatmentEvent.TreatmentEventType == TreatmentEventType.TransferOut;
+            return treatmentEvent.TreatmentEventType == TreatmentEventType.Denotification
+                   || treatmentEvent.TreatmentEventType == TreatmentEventType.TransferOut
+                   || (treatmentEvent.TreatmentOutcome != null
+                       && EpisodeEndingOutcomeTypes.Contains(treatmentEvent.TreatmentOutcome.TreatmentOutcomeType));
         }
 
         public static IEnumerable<TreatmentEvent> OrderForEpisodes(this IEnumerable<TreatmentEvent> treatmentEvents)
@@ -98,13 +99,31 @@ namespace ntbs_service.Helpers
                         case TreatmentEventType.TransferOut:
                             return 3;
                         case TreatmentEventType.TransferIn:
-                            return 4;
+                            return 3;
                         case TreatmentEventType.TreatmentRestart:
-                            return 5;
+                            return 4;
                         case TreatmentEventType.TreatmentOutcome:
+                            return 5;
+                        case TreatmentEventType.Denotification:
                             return 6;
                         default:
                             throw new ArgumentOutOfRangeException();
+                    }
+                })
+                // We want to order transfers that occur on the same day by the time they happened
+                .ThenBy(treatmentEvent => treatmentEvent.EventDate.Value)
+                // Imported transfers don't have a time and therefore the previous ordering doesn't work.
+                // The best we can do is make sure the transfer out is first
+                .ThenBy(treatmentEvent =>
+                {
+                    switch (treatmentEvent.TreatmentEventType)
+                    {
+                        case TreatmentEventType.TransferOut:
+                            return 1;
+                        case TreatmentEventType.TransferIn:
+                            return 2;
+                        default:
+                            return 0;
                     }
                 });
         }
