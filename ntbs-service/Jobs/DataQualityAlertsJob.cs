@@ -124,7 +124,8 @@ namespace ntbs_service.Jobs
                 var alert = new DataQualityPotentialDuplicateAlert
                 {
                     NotificationId = notification.NotificationId,
-                    DuplicateId = notification.DuplicateId
+                    DuplicateId = notification.DuplicateId,
+                    NhsNumberMatch = notification.NhsNumberMatch
                 };
                 await _alertService.AddUniquePotentialDuplicateAlertAsync(alert);
             }
