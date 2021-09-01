@@ -8,7 +8,7 @@ const YearComparison = Vue.extend({
         validate: function (event: FocusEvent) {
             // For validating an input year against a year on a different model, which needs to be passed in as the yeartocompare prop
             const inputField = event.target as HTMLInputElement;
-            const newValue = inputField.value;
+            const newValue = inputField.value || null;
 
             const requestConfig = {
                 method: "post" as Method,
