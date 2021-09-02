@@ -257,7 +257,7 @@ namespace ntbs_service.DataAccess
             // globally and in most situations we probably want the default behaviour.
             // See https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.infrastructure.relationaldbcontextoptionsbuilder-2.userelationalnulls?view=efcore-5.0
             return await _context.NotificationAndDuplicateIds.FromSqlRaw(@"SELECT N1.[NotificationId] AS [NotificationId], N2.[NotificationId] AS [DuplicateId],
-CASE WHEN P1.[NhsNumber] IS NOT NULL AND P2.[NhsNumber] IS NOT NULL AND P1.[NhsNumber] <> P2.[NhsNumber] THEN CAST(0 AS BIT) ELSE CAST(1 AS BIT) END AS [NhsNumberMatch]
+P1.[NhsNumber] AS [NhsNumber], P2.[NhsNumber] AS [DuplicateNhsNumber]
 FROM [Notification] AS N1
 LEFT JOIN [Patients] AS P1 ON N1.[NotificationId] = P1.[NotificationId]
 CROSS JOIN [Notification] AS N2
@@ -281,7 +281,8 @@ AND (N1.[GroupId] <> N2.[GroupId] OR N1.[GroupId] is NULL or N2.[GroupId] is NUL
             // The query EF generates has a convoluted WHERE clause that bewilders the query optimiser and causes it to
             // choose a bad query plan. This is a much neater query that the query optimiser can understand and execute
             // quickly.
-            return await _context.NotificationAndDuplicateIds.FromSqlRaw(@"SELECT N1.[NotificationId] AS [NotificationId], N2.[NotificationId] AS [DuplicateId], CAST(1 AS BIT) AS [NhsNumberMatch]
+            return await _context.NotificationAndDuplicateIds.FromSqlRaw(@"SELECT N1.[NotificationId] AS [NotificationId], N2.[NotificationId] AS [DuplicateId],
+P1.[NhsNumber] AS [NhsNumber], P2.[NhsNumber] AS [DuplicateNhsNumber]
 FROM [Notification] AS N1
 LEFT JOIN [Patients] AS P1 ON N1.[NotificationId] = P1.[NotificationId]
 CROSS JOIN [Notification] AS N2

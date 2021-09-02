@@ -125,7 +125,8 @@ namespace ntbs_service.Jobs
                 {
                     NotificationId = notification.NotificationId,
                     DuplicateId = notification.DuplicateId,
-                    NhsNumberMatch = notification.NhsNumberMatch
+                    NhsNumberMismatch = notification.NhsNumber != notification.DuplicateNhsNumber
+                                        && notification.NhsNumber != null && notification.DuplicateNhsNumber != null
                 };
                 await _alertService.AddUniquePotentialDuplicateAlertAsync(alert);
             }

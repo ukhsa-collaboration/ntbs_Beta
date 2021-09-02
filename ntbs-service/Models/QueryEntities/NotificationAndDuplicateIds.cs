@@ -7,6 +7,7 @@ namespace ntbs_service.Models.QueryEntities
     {
         public int NotificationId { get; set; }
         public int DuplicateId { get; set; }
-        public bool NhsNumberMatch { get; set; }
+        public string NhsNumber { get; set; }
+        public string DuplicateNhsNumber { get; set; }
     }
 }

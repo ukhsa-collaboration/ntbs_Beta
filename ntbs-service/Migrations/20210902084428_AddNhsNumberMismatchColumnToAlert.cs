@@ -2,12 +2,12 @@
 
 namespace ntbs_service.Migrations
 {
-    public partial class AddAlertNhsNumberMatchColumn : Migration
+    public partial class AddNhsNumberMismatchColumnToAlert : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<bool>(
-                name: "NhsNumberMatch",
+                name: "NhsNumberMismatch",
                 table: "Alert",
                 type: "bit",
                 nullable: true);
@@ -16,7 +16,7 @@ namespace ntbs_service.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "NhsNumberMatch",
+                name: "NhsNumberMismatch",
                 table: "Alert");
         }
     }

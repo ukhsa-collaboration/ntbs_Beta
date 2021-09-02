@@ -10,8 +10,8 @@ using ntbs_service.DataAccess;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    [Migration("20210831122406_AddAlertNhsNumberMatchColumn")]
-    partial class AddAlertNhsNumberMatchColumn
+    [Migration("20210902084428_AddNhsNumberMismatchColumnToAlert")]
+    partial class AddNhsNumberMismatchColumnToAlert
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1339,8 +1339,11 @@ namespace ntbs_service.Migrations
                     b.Property<int>("DuplicateId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("NhsNumberMatch")
-                        .HasColumnType("bit");
+                    b.Property<string>("DuplicateNhsNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NhsNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NotificationId")
                         .HasColumnType("int");
@@ -4871,7 +4874,7 @@ namespace ntbs_service.Migrations
                     b.Property<int>("DuplicateId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("NhsNumberMatch")
+                    b.Property<bool>("NhsNumberMismatch")
                         .HasColumnType("bit");
 
                     b.HasDiscriminator().HasValue("DataQualityPotientialDuplicate");
