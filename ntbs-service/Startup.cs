@@ -266,6 +266,11 @@ namespace ntbs_service
                             })
                         .UseConsole();
                 });
+
+                services.AddHangfireServer(options =>
+                {
+                    options.WorkerCount = Configuration.GetValue<int>(Constants.HangfireWorkerCount);
+                });
             }
         }
 
@@ -670,10 +675,6 @@ namespace ntbs_service
                 DisplayStorageConnectionString = false,
             };
             app.UseHangfireDashboard("/hangfire", dashboardOptions);
-            app.UseHangfireServer(new BackgroundJobServerOptions
-            {
-                WorkerCount = Configuration.GetValue<int>(Constants.HangfireWorkerCount)
-            });
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
 
             var scheduledJobConfig = new ScheduledJobsConfig();
