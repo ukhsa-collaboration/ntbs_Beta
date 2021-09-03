@@ -68,8 +68,8 @@
                                 has-error="@hasCountryError">
                             </span>
                             <div ref="selectField" class="@countrySelectErrorClass">
-                                <autocomplete-select v-on:validate-input="validate" placeholder="Please select" validate="true" inline-template>
-                                    <select asp-for="MBovisOccupationExposure.CountryId" asp-items="Model.Countries" ref="selectElement">
+                                <autocomplete-select v-on:input-changed="validate" placeholder="Please select" validate="true" inline-template>
+                                    <select asp-for="MBovisOccupationExposure.CountryId" asp-items="Model.Countries" ref="selectField">
                                         <option value=""></option>
                                     </select>
                                 </autocomplete-select>
