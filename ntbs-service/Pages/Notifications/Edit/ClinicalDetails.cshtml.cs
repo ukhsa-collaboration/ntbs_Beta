@@ -312,7 +312,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnPostValidateClinicalDetailsYearComparison([FromBody]YearComparisonValidationModel validationData)
         {
-            return ValidationService.GetYearComparisonValidationResult(validationData.NewYear, validationData.ExistingYear, validationData.PropertyName);
+            return validationData.NewYear.HasValue ? ValidationService.GetYearComparisonValidationResult(validationData.NewYear.Value, validationData.ExistingYear, validationData.PropertyName) : Content("");
         }
 
         public ContentResult OnGetValidateClinicalDetailsProperties(IEnumerable<Dictionary<string, string>> keyValuePairs)
