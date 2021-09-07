@@ -253,7 +253,7 @@
                     <span nhs-span-type="ErrorMessage" id="birth-country-error"
                           ref="errorField" asp-validation-for="PatientDetails.CountryId" has-error="@hasCountryError"></span>
                     <div ref="selectField" data-aria-controls="year-of-entry-conditional" class=@countrySelectErrorClass>
-                        <autocomplete-select v-on:input-changed="validate" placeholder="Select a Birth Country" validate="true" inline-template>
+                        <autocomplete-select v-on:input-changed="validate" placeholder="Select a Birth Country" emit-change-on="blur" inline-template>
                             <select asp-for="PatientDetails.CountryId" asp-items="Model.Countries" ref="selectField">
                                 <option value=""></option>
                             </select>

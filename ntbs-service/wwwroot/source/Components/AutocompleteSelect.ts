@@ -3,7 +3,7 @@ import Vue from "vue";
 const accessible = require("accessible-autocomplete");
 
 const AutocompleteSelect = Vue.extend({
-    props: ["placeholder", "validate", "filter"],
+    props: ["placeholder", "emitChangeOn"],
     mounted: function() {
         this.selectElement = this.$refs["selectField"];
         const selectId = this.selectElement.id;
@@ -13,14 +13,9 @@ const AutocompleteSelect = Vue.extend({
             showAllValues: true,
             selectElement: this.selectElement
         };
-        if (this.$props.validate) {
+        if (this.$props.emitChangeOn) {
             options.onConfirm = (val: any) => {
-                this.onConfirmValidate(val);
-            }
-        };
-        if (this.$props.filter) {
-            options.onConfirm = (val: any) => {
-                this.onConfirmFilter(val);
+                this.onConfirm(val);
             }
         };
         accessible.enhanceSelectElement(options);
@@ -30,7 +25,7 @@ const AutocompleteSelect = Vue.extend({
         this.autocompleteElement.setAttribute('autocomplete', 'no');
         // In IE, name gets automatically populated with empty string and razor then tries to bind this value to the model, so we need to remove name completely
         this.autocompleteElement.removeAttribute('name');
-        if (this.$props.validate || this.$props.filter) {
+        if (this.$props.emitChangeOn) {
             // As we do not build the element ourselves, use ordinary event listeners rather than vue's
             this.autocompleteElement.addEventListener('change', (event: any) => this.inputChanged(event));
             this.selectElement.addEventListener('select-changed', (event: any) => this.selectChanged(event));
@@ -45,20 +40,16 @@ const AutocompleteSelect = Vue.extend({
                 this.$emit("input-changed", event);
             }
         },
-        onConfirmValidate: function (value: any) {
-            // this is called twice, value is undefined when user clicks away from input field which is when we want validation to happen
-            if (!this.$props.validate || value != undefined) {
-                return;
-            }
-            this.setSelectValue(this.autocompleteElement.value);
-        },
-        onConfirmFilter: function (value: any) {
-            // this is called twice, value is defined when user makes a selection which is when we want filtering to happen
-            if (!this.$props.filter) {
+        onConfirm: function (value: any) {
+            // this is called twice, when a user selects a value (value is defined) and when user clicks away from input (blur, value undefined)
+            if (!this.$props.emitChangeOn || (this.$props.emitChangeOn == "blur" && value != undefined)) {
                 return;
             }
             if (value != undefined) {
                 this.setSelectValue(value);
+            }
+            else if (this.$props.emitChangeOn == "blur") {
+                this.setSelectValue(this.autocompleteElement.value);
             }
         },
         setSelectValue: function (value: any) {
@@ -67,8 +58,11 @@ const AutocompleteSelect = Vue.extend({
             // value by name in all the options
             for (let i=0; i < this.selectElement.options.length; i++) {
                 if (value === this.selectElement[i].textContent) {
+                    const previousValue = this.selectElement.value;
                     this.selectElement.value = this.selectElement[i].value;
-                    this.selectElement.dispatchEvent(event);
+                    if (this.selectElement.value != previousValue) {
+                        this.selectElement.dispatchEvent(event);
+                    }
                     break;
                 }
             };

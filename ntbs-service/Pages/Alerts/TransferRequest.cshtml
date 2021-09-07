@@ -29,7 +29,7 @@
                         <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@hasTbServiceCodeError"
                               ref="errorField" asp-validation-for="TransferRequest.TbServiceCode"></span>
                         <autocomplete-select ref="filterContainer" v-on:mounted="filteringMounted" v-on:input-changed="filteringChanged"
-                                             placeholder="Select TB service" filter="true" inline-template>
+                                             placeholder="Select TB service" emit-change-on="select" inline-template>
                             <select ref="selectField" nhs-select-type="@tbServiceCodeSelectErrorState" asp-for="TransferRequest.TbServiceCode"
                                 asp-items="Model.TbServices">
                                 <option value=""></option>
