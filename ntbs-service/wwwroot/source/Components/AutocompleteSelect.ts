@@ -42,14 +42,14 @@ const AutocompleteSelect = Vue.extend({
         },
         onConfirm: function (value: any) {
             // this is called twice, when a user selects a value (value is defined) and when user clicks away from input (blur, value undefined)
-            if (!this.$props.emitChangeOn || (this.$props.emitChangeOn == "blur" && value != undefined)) {
+            if (!this.$props.emitChangeOn) {
                 return;
             }
-            if (value != undefined) {
-                this.setSelectValue(value);
-            }
-            else if (this.$props.emitChangeOn == "blur") {
+            if (this.$props.emitChangeOn === "blur" && value === undefined) {
                 this.setSelectValue(this.autocompleteElement.value);
+            }
+            else if (this.$props.emitChangeOn === "select" && value !== undefined) {
+                this.setSelectValue(value);
             }
         },
         setSelectValue: function (value: any) {
