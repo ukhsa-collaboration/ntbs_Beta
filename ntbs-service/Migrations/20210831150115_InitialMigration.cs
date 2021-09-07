@@ -19,8 +19,8 @@ namespace ntbs_service.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     IsoCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HasHighTbOccurence = table.Column<bool>(type: "bit", nullable: false),
-                    IsLegacy = table.Column<bool>(type: "bit", nullable: false)
+                    HasHighTbOccurence = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    IsLegacy = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -43,16 +43,19 @@ namespace ntbs_service.Migrations
                     table.PrimaryKey("PK_Ethnicity", x => x.EthnicityId);
                 });
 
+            migrationBuilder.EnsureSchema(
+                name: "shared");
+
             migrationBuilder.CreateTable(
                 name: "FrequentlyAskedQuestion",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Question = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Answer = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Question = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Answer = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderIndex = table.Column<int>(type: "int", nullable: false),
-                    AnchorLink = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    AnchorLink = table.Column<string>(type: "nvarchar(50)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -103,17 +106,6 @@ namespace ntbs_service.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ManualTestType", x => x.ManualTestTypeId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "NotificationAndDuplicateIds",
-                columns: table => new
-                {
-                    NotificationId = table.Column<int>(type: "int", nullable: false),
-                    DuplicateId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
                 });
 
             migrationBuilder.CreateTable(
@@ -232,22 +224,22 @@ namespace ntbs_service.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Username = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
+                    Username = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     GivenName = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
                     FamilyName = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
-                    DisplayName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     AdGroups = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsCaseManager = table.Column<bool>(type: "bit", nullable: false),
-                    IsReadOnly = table.Column<bool>(type: "bit", nullable: false),
-                    JobTitle = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    DisplayName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    IsCaseManager = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     EmailPrimary = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     EmailSecondary = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    JobTitle = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     PhoneNumberPrimary = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     PhoneNumberSecondary = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IsReadOnly = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -337,7 +329,7 @@ namespace ntbs_service.Migrations
                     Postcode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     LocalAuthorityCode = table.Column<string>(type: "nvarchar(50)", nullable: true),
                     CountryCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PCT = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PCT = table.Column<string>(type: "varchar(10)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -357,17 +349,18 @@ namespace ntbs_service.Migrations
                 {
                     NotificationId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    LegacySource = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
-                    ETSID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    LTBRPatientId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    LTBRID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    HospitalId = table.Column<int>(type: "int", nullable: true),
+                    NotificationStatus = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     SubmissionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletionReason = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: "0001-01-01T00:00:00.0000000"),
+                    ETSID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    LTBRID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     GroupId = table.Column<int>(type: "int", nullable: true),
-                    ClusterId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     NotificationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    NotificationStatus = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                    DeletionReason = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    ClusterId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    LTBRPatientId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    LegacySource = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -416,7 +409,7 @@ namespace ntbs_service.Migrations
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     ServiceAdGroup = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
                     PHECCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    IsLegacy = table.Column<bool>(type: "bit", nullable: false)
+                    IsLegacy = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -462,29 +455,29 @@ namespace ntbs_service.Migrations
                 columns: table => new
                 {
                     NotificationId = table.Column<int>(type: "int", nullable: false),
-                    IsSymptomatic = table.Column<bool>(type: "bit", nullable: true),
                     SymptomStartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     FirstPresentationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    TBServicePresentationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DiagnosisDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TreatmentStartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     StartedTreatment = table.Column<bool>(type: "bit", nullable: true),
                     IsPostMortem = table.Column<bool>(type: "bit", nullable: true),
                     BCGVaccinationState = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     BCGVaccinationYear = table.Column<int>(type: "int", nullable: true),
-                    HIVTestState = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    TreatmentRegimen = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     MDRTreatmentStartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    TreatmentRegimenOtherDescription = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Notes = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    IsDotOffered = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    HIVTestState = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    IsSymptomatic = table.Column<bool>(type: "bit", nullable: true),
+                    TBServicePresentationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DotStatus = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     EnhancedCaseManagementStatus = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    EnhancedCaseManagementLevel = table.Column<byte>(type: "tinyint", nullable: false, defaultValue: (byte)0),
-                    HomeVisitCarriedOut = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    Notes = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     FirstHomeVisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    HealthcareDescription = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     HealthcareSetting = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    HealthcareDescription = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    HomeVisitCarriedOut = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    EnhancedCaseManagementLevel = table.Column<byte>(type: "tinyint", nullable: false, defaultValue: (byte)0),
+                    TreatmentRegimen = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    TreatmentRegimenOtherDescription = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    IsDotOffered = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -637,9 +630,9 @@ namespace ntbs_service.Migrations
                     NotificationId = table.Column<int>(type: "int", nullable: false),
                     ExposureToKnownCaseStatus = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     RelationshipToCase = table.Column<string>(type: "nvarchar(90)", maxLength: 90, nullable: true),
-                    NotifiedToPheStatus = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     RelatedNotificationId = table.Column<int>(type: "int", nullable: true),
-                    CountryId = table.Column<int>(type: "int", nullable: true)
+                    CountryId = table.Column<int>(type: "int", nullable: true),
+                    NotifiedToPheStatus = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -692,18 +685,18 @@ namespace ntbs_service.Migrations
                     NotificationId = table.Column<int>(type: "int", nullable: false),
                     FamilyName = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: true),
                     GivenName = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: true),
-                    NhsNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NhsNumberNotKnown = table.Column<bool>(type: "bit", nullable: false),
-                    LocalPatientId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    NhsNumber = table.Column<string>(type: "nvarchar(10)", nullable: true),
                     Dob = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     Postcode = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PostcodeToLookup = table.Column<string>(type: "nvarchar(10)", nullable: true),
-                    NoFixedAbode = table.Column<bool>(type: "bit", nullable: false),
                     CountryId = table.Column<int>(type: "int", nullable: true),
-                    YearOfUkEntry = table.Column<int>(type: "int", nullable: true),
                     EthnicityId = table.Column<int>(type: "int", nullable: true),
                     SexId = table.Column<int>(type: "int", nullable: true),
+                    NhsNumberNotKnown = table.Column<bool>(type: "bit", nullable: false),
+                    NoFixedAbode = table.Column<bool>(type: "bit", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    PostcodeToLookup = table.Column<string>(type: "nvarchar(10)", nullable: true),
+                    LocalPatientId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    YearOfUkEntry = table.Column<int>(type: "int", nullable: true),
                     OccupationId = table.Column<int>(type: "int", nullable: true),
                     OccupationOther = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true)
                 },
@@ -833,12 +826,12 @@ namespace ntbs_service.Migrations
                 {
                     SocialContextVenueId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    NotificationId = table.Column<int>(type: "int", nullable: false),
                     VenueTypeId = table.Column<int>(type: "int", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Frequency = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    NotificationId = table.Column<int>(type: "int", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     Postcode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Frequency = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     DateFrom = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateTo = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Details = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
@@ -905,14 +898,14 @@ namespace ntbs_service.Migrations
                 columns: table => new
                 {
                     NotificationId = table.Column<int>(type: "int", nullable: false),
-                    HasTravel = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    Country2Id = table.Column<int>(type: "int", nullable: true),
+                    StayLengthInMonths1 = table.Column<int>(type: "int", nullable: true),
+                    Country3Id = table.Column<int>(type: "int", nullable: true),
+                    StayLengthInMonths2 = table.Column<int>(type: "int", nullable: true),
                     TotalNumberOfCountries = table.Column<int>(type: "int", nullable: true),
                     Country1Id = table.Column<int>(type: "int", nullable: true),
-                    StayLengthInMonths1 = table.Column<int>(type: "int", nullable: true),
-                    Country2Id = table.Column<int>(type: "int", nullable: true),
-                    StayLengthInMonths2 = table.Column<int>(type: "int", nullable: true),
-                    Country3Id = table.Column<int>(type: "int", nullable: true),
-                    StayLengthInMonths3 = table.Column<int>(type: "int", nullable: true)
+                    StayLengthInMonths3 = table.Column<int>(type: "int", nullable: true),
+                    HasTravel = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -951,14 +944,14 @@ namespace ntbs_service.Migrations
                 columns: table => new
                 {
                     NotificationId = table.Column<int>(type: "int", nullable: false),
-                    HasVisitor = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    Country2Id = table.Column<int>(type: "int", nullable: true),
+                    StayLengthInMonths1 = table.Column<int>(type: "int", nullable: true),
+                    Country3Id = table.Column<int>(type: "int", nullable: true),
+                    StayLengthInMonths2 = table.Column<int>(type: "int", nullable: true),
                     TotalNumberOfCountries = table.Column<int>(type: "int", nullable: true),
                     Country1Id = table.Column<int>(type: "int", nullable: true),
-                    StayLengthInMonths1 = table.Column<int>(type: "int", nullable: true),
-                    Country2Id = table.Column<int>(type: "int", nullable: true),
-                    StayLengthInMonths2 = table.Column<int>(type: "int", nullable: true),
-                    Country3Id = table.Column<int>(type: "int", nullable: true),
-                    StayLengthInMonths3 = table.Column<int>(type: "int", nullable: true)
+                    StayLengthInMonths3 = table.Column<int>(type: "int", nullable: true),
+                    HasVisitor = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1000,19 +993,19 @@ namespace ntbs_service.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NotificationId = table.Column<int>(type: "int", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TbServiceCode = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: true),
                     AlertStatus = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     ClosureDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ClosingUserId = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
                     AlertType = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    DuplicateId = table.Column<int>(type: "int", nullable: true),
-                    TransferReason = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     OtherReasonDescription = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    TransferReason = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     TransferRequestNote = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    TbServiceCode = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: true),
-                    CaseManagerId = table.Column<int>(type: "int", nullable: true),
                     RejectionReason = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    SpecimenId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     DecliningUserAndTbServiceString = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    SpecimenId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
+                    DuplicateId = table.Column<int>(type: "int", nullable: true),
+                    CaseManagerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1043,7 +1036,7 @@ namespace ntbs_service.Migrations
                 columns: table => new
                 {
                     TbServiceCode = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
-                    CaseManagerId = table.Column<int>(type: "int", nullable: false)
+                    CaseManagerId = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
@@ -1069,10 +1062,10 @@ namespace ntbs_service.Migrations
                 columns: table => new
                 {
                     HospitalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     CountryCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     TBServiceCode = table.Column<string>(type: "nvarchar(16)", nullable: true),
-                    IsLegacy = table.Column<bool>(type: "bit", nullable: false)
+                    IsLegacy = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -1174,8 +1167,8 @@ namespace ntbs_service.Migrations
                     YearOfExposure = table.Column<int>(type: "int", nullable: true),
                     ExposureSetting = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     ExposureNotificationId = table.Column<int>(type: "int", nullable: true),
-                    NotifiedToPheStatus = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    OtherDetails = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
+                    OtherDetails = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    NotifiedToPheStatus = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1255,11 +1248,11 @@ namespace ntbs_service.Migrations
                 columns: table => new
                 {
                     SocialRiskFactorsNotificationId = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "Drugs"),
                     Status = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     IsCurrent = table.Column<bool>(type: "bit", nullable: true),
                     InPastFiveYears = table.Column<bool>(type: "bit", nullable: true),
-                    MoreThanFiveYearsAgo = table.Column<bool>(type: "bit", nullable: true)
+                    MoreThanFiveYearsAgo = table.Column<bool>(type: "bit", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "Drugs")
                 },
                 constraints: table =>
                 {
@@ -1277,11 +1270,11 @@ namespace ntbs_service.Migrations
                 columns: table => new
                 {
                     SocialRiskFactorsNotificationId = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "Homelessness"),
                     Status = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     IsCurrent = table.Column<bool>(type: "bit", nullable: true),
                     InPastFiveYears = table.Column<bool>(type: "bit", nullable: true),
-                    MoreThanFiveYearsAgo = table.Column<bool>(type: "bit", nullable: true)
+                    MoreThanFiveYearsAgo = table.Column<bool>(type: "bit", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "Homelessness")
                 },
                 constraints: table =>
                 {
@@ -1299,11 +1292,11 @@ namespace ntbs_service.Migrations
                 columns: table => new
                 {
                     SocialRiskFactorsNotificationId = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "Imprisonment"),
                     Status = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     IsCurrent = table.Column<bool>(type: "bit", nullable: true),
                     InPastFiveYears = table.Column<bool>(type: "bit", nullable: true),
-                    MoreThanFiveYearsAgo = table.Column<bool>(type: "bit", nullable: true)
+                    MoreThanFiveYearsAgo = table.Column<bool>(type: "bit", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "Imprisonment")
                 },
                 constraints: table =>
                 {
@@ -1345,10 +1338,10 @@ namespace ntbs_service.Migrations
                     ManualTestResultId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NotificationId = table.Column<int>(type: "int", nullable: false),
-                    TestDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Result = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     ManualTestTypeId = table.Column<int>(type: "int", nullable: false),
-                    SampleTypeId = table.Column<int>(type: "int", nullable: true)
+                    SampleTypeId = table.Column<int>(type: "int", nullable: true),
+                    Result = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    TestDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: "0001-01-01T00:00:00.0000000")
                 },
                 constraints: table =>
                 {
@@ -1381,9 +1374,9 @@ namespace ntbs_service.Migrations
                 {
                     NotificationId = table.Column<int>(type: "int", nullable: false),
                     Consultant = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    CaseManagerId = table.Column<int>(type: "int", nullable: true),
                     TBServiceCode = table.Column<string>(type: "nvarchar(16)", nullable: true),
-                    HospitalId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    HospitalId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CaseManagerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1402,7 +1395,7 @@ namespace ntbs_service.Migrations
                         principalColumn: "NotificationId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_HospitalDetails_TbService_TBServiceCode",
+                        name: "FK_HospitalDetails_TbService_TbServiceCode",
                         column: x => x.TBServiceCode,
                         principalSchema: "ReferenceData",
                         principalTable: "TbService",
@@ -2121,6 +2114,56 @@ namespace ntbs_service.Migrations
                     { 6, 23 }
                 });
 
+            migrationBuilder.InsertData(
+                table: "FrequentlyAskedQuestion",
+                columns: new[] { "Question", "Answer", "AnchorLink", "OrderIndex" },
+                values: new object[,]
+                {
+                    {
+                        "What should I do if I want to notify a case of TB for a person who has had TB before?",
+                        @"You will be able to find the older case record when you perform a search, as this searches NTBS, ETS and LTBR.  Select the old case from the search results and then choose to import it into NTBS.  Choose 'New notification for this patient' from the 'manage notification' menu.  This will create a draft notification linked to the older case.
+
+You can watch a training video on this at: <a href=""https://phecloud.sharepoint.com/sites/NTBSResources/SitePages/Training-video-search-and-import-legacy-notifications.aspx"" target=""_blank"">https://phecloud.sharepoint.com/sites/NTBSResources/SitePages/Training-video-search-and-import-legacy-notifications.aspx</a>",
+                        "notify-case-for-previous-patient",
+                        1
+                    },
+                    {
+                        "Why must I perform a search before creating a new notification?",
+                        @"In NTBS, notifications which relate to the same person should be linked together.
+ 
+In order to avoid creating unlinked notifications, you need to perform a search before creating a new notification. This will enable you to confirm:
+
+* The case has not already been notified by another service
+* The patient has not had a previous occurence of TB",
+                        null,
+                        2
+                    },
+                    {
+                        "Why can’t I view the full details of a record?",
+                        @"You can’t view the full details of a record which:
+
+* does not belong to your TB service (if you work in a TB service)
+* is not being treated in your region (if you work for a PHE team)",
+                        "no-permission-to-view-a-record",
+                        3
+                    },
+                    {
+                        "Why do I not have permission to edit a record?",
+                        @"You won’t have permission to edit a record if:
+
+1. You are viewing a notification which is linked to a notification which you can edit. (The patient has been notified with TB on more than one occasion and these notifications are linked in the system.)
+2. You are a PHE user and the case belongs to your region by residence (the person lives within the region) but not treatment (the person is being treated in a different region).
+3. The notification has been transferred out of your service.
+
+You also cannot edit a notification if it is closed. A notification will be closed if it had a final treatment outcome recorded on it more than 12 months ago.
+
+If you have been configured for read-only access to the system you will not be able to edit any notification.",
+                        "no-permission-to-edit-a-record",
+                        4
+                    }
+                }
+            );
+
             migrationBuilder.CreateIndex(
                 name: "IX_Alert_AlertStatus_AlertType",
                 table: "Alert",
@@ -2169,7 +2212,7 @@ namespace ntbs_service.Migrations
                 column: "HospitalId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HospitalDetails_TBServiceCode",
+                name: "IX_HospitalDetails_TbServiceCode",
                 table: "HospitalDetails",
                 column: "TBServiceCode");
 
@@ -2269,6 +2312,11 @@ namespace ntbs_service.Migrations
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Notification_HospitalId",
+                table: "Notification",
+                column: "HospitalId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Notification_LTBRID",
                 table: "Notification",
                 column: "LTBRID",
@@ -2285,10 +2333,17 @@ namespace ntbs_service.Migrations
                 table: "Notification",
                 column: "NotificationStatus");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Notification_NotificationStatus_SubmissionDate",
-                table: "Notification",
-                columns: new[] { "NotificationStatus", "SubmissionDate" });
+            migrationBuilder.Sql(
+                "CREATE NONCLUSTERED INDEX [IX_Notification_RecentDrafts] " +
+                "    ON [dbo].[Notification] ([CreationDate] DESC)" +
+                "    INCLUDE ([NotificationDate])" +
+                "    WHERE ([NotificationStatus]='Draft');");
+
+            migrationBuilder.Sql(
+                "CREATE NONCLUSTERED INDEX [IX_Notification_RecentNotifications] " +
+                "    ON [dbo].[Notification] ([NotificationDate] DESC)" +
+                "    INCLUDE ([CreationDate])" +
+                "    WHERE ([NotificationStatus] IN ('Notified', 'Closed'));");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NotificationSite_SiteId",
@@ -2498,9 +2553,6 @@ namespace ntbs_service.Migrations
 
             migrationBuilder.DropTable(
                 name: "MDRDetails");
-
-            migrationBuilder.DropTable(
-                name: "NotificationAndDuplicateIds");
 
             migrationBuilder.DropTable(
                 name: "NotificationSite");
