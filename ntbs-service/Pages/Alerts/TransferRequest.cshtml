@@ -124,7 +124,7 @@
                 Add optional note to display to receiving case manager
             </label>
             <span id="optional-note-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferRequest.TransferRequestNote" has-error="@hasRequestNoteError"></span>
-            <input asp-for="TransferRequest.TransferRequestNote" nhs-input-type="Standard" is-error-input="@hasRequestNoteError" aria-describedby="note-error" />
+            <input asp-for="TransferRequest.TransferRequestNote" nhs-input-type="Standard" is-error-input="@hasRequestNoteError" aria-describedby="optional-note-error" />
         </nhs-form-group>
 
         <div class="flex-container">
