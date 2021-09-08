@@ -33,7 +33,7 @@
 
     public class YearComparisonValidationModel
     {
-        public int NewYear { get; set; }
+        public int? NewYear { get; set; }
         public int ExistingYear { get; set; }
         public string PropertyName { get; set; }
     }
