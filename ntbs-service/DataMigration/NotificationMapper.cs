@@ -686,7 +686,8 @@ namespace ntbs_service.DataMigration
 
             if (details.Postcode != null && details.PostcodeToLookup == null)
             {
-                await _logger.LogNotificationWarning(context, runId, legacyId, "invalid or unknown postcode");
+                var warningMessage = $"{typeof(PatientDetails).GetDisplayName()}: {ValidationMessages.PostcodeNotFound}";
+                await _logger.LogNotificationWarning(context, runId, legacyId, warningMessage);
             }
 
             ForceValidNhsNumber(details);
