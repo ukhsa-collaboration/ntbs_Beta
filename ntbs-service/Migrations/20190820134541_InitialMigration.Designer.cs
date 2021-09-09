@@ -10,7 +10,7 @@ using ntbs_service.DataAccess;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    [Migration("20210831150115_InitialMigration")]
+    [Migration("20190820134541_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

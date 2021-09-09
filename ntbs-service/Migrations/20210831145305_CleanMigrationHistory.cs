@@ -15,11 +15,11 @@ namespace ntbs_service.Migrations
                         FROM [__EFMigrationsHistory]
                         WHERE MigrationId <> '20200326094027_AddDataProtectionKeys'
                         AND MigrationId <> '20200311133500_AddSessionStateTable'
+                        AND MigrationId <> '20190820134541_InitialMigration'
                     )
                     DELETE
                     FROM Migrations
                     WHERE Row <= (SELECT Row FROM Migrations WHERE [MigrationId] = N'20210802135016_ChangeDidNotStartTreatmentToStartedTreatment');
-                    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20210831150115_InitialMigration', N'5.0.5');
                     END");
         }
 
