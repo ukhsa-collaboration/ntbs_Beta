@@ -85,10 +85,10 @@
                                         <span nhs-span-type="ErrorMessage" id="birth-country-error"
                                               ref="errorField" asp-validation-for="PreviousTbHistory.PreviousTreatmentCountryId" has-error="@hasCountryError">
                                         </span>
-                                        <autocomplete-select v-on:validate-input="validate" placeholder="Select country of treatment" validate="true" inline-template>
+                                        <autocomplete-select v-on:input-changed="validate" placeholder="Select country of treatment" emit-change-on="blur" inline-template>
                                             <select asp-for="PreviousTbHistory.PreviousTreatmentCountryId"
                                                     asp-items="Model.Countries" 
-                                                    ref="selectElement">
+                                                    ref="selectField">
                                                 <option value=""></option>
                                             </select>
                                         </autocomplete-select>

@@ -464,7 +464,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Null(notification.PatientDetails.PostcodeToLookup);
 
             _importLoggerMock.Verify(
-                s => s.LogNotificationWarning(null, runId, legacyId, "invalid or unknown postcode"),
+                s => s.LogNotificationWarning(null, runId, legacyId, "Personal details: Postcode is not found"),
                 Times.Once);
         }
 

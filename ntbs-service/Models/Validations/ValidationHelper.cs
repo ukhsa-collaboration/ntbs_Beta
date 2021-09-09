@@ -49,7 +49,7 @@
         // We think users trying to enter a monodigit nhs number are doing so because they do not know the nhs number.
         public const string NhsNumberMonodigit = "This NHS number is not valid. If you do not know the NHS number please select \"Not Known\"";
         public const string FieldRequired = "{0} is a mandatory field";
-        public const string PostcodeNotFound = "{0} is not found";
+        public const string PostcodeNotFound = "Postcode is not found";
         #endregion
 
         #region Clinical Details
