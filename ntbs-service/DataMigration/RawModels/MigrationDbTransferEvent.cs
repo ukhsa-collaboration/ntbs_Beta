@@ -10,5 +10,6 @@ namespace ntbs_service.DataMigration.RawModels
         public string TreatmentEventType { get; set; }
         public Guid? HospitalId { get; set; }
         public string CaseManager { get; set; }
+        public string Notes { get; set; }
     }
 }
