@@ -5,7 +5,7 @@ module.exports = {
   entry: { 'main': './wwwroot/source/app.ts'},
   output: {
     path: path.resolve(__dirname, 'wwwroot/dist'),
-    publicPath: 'dist/',
+    publicPath: '/dist/',
     filename: 'bundle.js'
   },
   plugins: [
@@ -46,13 +46,7 @@ module.exports = {
       },
       {
         test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-        use: {
-            loader: 'url-loader',
-            options: {
-              limit: 10_000, // bytes
-              publicPath: './'
-            }
-        }
+        type: "asset"
       }
     ]
   },

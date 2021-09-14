@@ -1337,6 +1337,12 @@ namespace ntbs_service.Migrations
                     b.Property<int>("DuplicateId")
                         .HasColumnType("int");
 
+                    b.Property<string>("DuplicateNhsNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NhsNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("NotificationId")
                         .HasColumnType("int");
 
@@ -4865,6 +4871,9 @@ namespace ntbs_service.Migrations
 
                     b.Property<int>("DuplicateId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("NhsNumberMismatch")
+                        .HasColumnType("bit");
 
                     b.HasDiscriminator().HasValue("DataQualityPotientialDuplicate");
                 });

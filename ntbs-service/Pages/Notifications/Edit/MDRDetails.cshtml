@@ -72,8 +72,8 @@
                                         ref="errorField" asp-validation-for="MDRDetails.CountryId" has-error="@hasCountryError">
                                     </span>
                                     <div ref="selectField" data-aria-controls="notified-to-phe-conditional" class=@countrySelectErrorClass>
-                                        <autocomplete-select v-on:validate-input="validate" placeholder="Select Country" validate="true" inline-template>
-                                            <select asp-for="MDRDetails.CountryId" asp-items="Model.Countries" ref="selectElement">
+                                        <autocomplete-select v-on:input-changed="validate" placeholder="Select Country" emit-change-on="blur" inline-template>
+                                            <select asp-for="MDRDetails.CountryId" asp-items="Model.Countries" ref="selectField">
                                                 <option value=""></option>
                                             </select>
                                         </autocomplete-select>

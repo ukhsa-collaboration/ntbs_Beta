@@ -15,21 +15,8 @@
     <form method="post" autocomplete="off">
         <h2> You are about to transfer this notification </h2>
         <div>
-            <cascading-dropdown filter-first-handler-path="FilteredTbServiceListsByPhecCode" 
-                filter-second-handler-path="FilteredCaseManagersListByTbServiceCode"
-                v-bind:hidden-first-dropdown-with-no-js="true"
-                :filtering-refs="['tbServices', 'caseManagers']" inline-template>
+            <filtered-dropdown filter-handler-path="FilteredCaseManagersListByTbServiceCode" :filtering-refs="['caseManagers']" inline-template>
                 <div>
-                    <nhs-form-group nhs-form-group-type="Standard" ref="firstFilterContainer" classes="hidden">
-                        <label nhs-label-type="Standard" for="PhecCode">
-                            PHEC
-                        </label>
-                        <select id="PhecCode" ref="selectField" nhs-select-type="@SelectType.Standard"
-                                asp-items="Model.Phecs" v-on:change="firstFilteringChanged">
-                            <option value="" selected>Please select</option>
-                        </select>
-                    </nhs-form-group>
-
                     @{
                         var hasTbServiceCodeError = !Model.ValidationService.IsValid("TransferRequest.TbServiceCode");
                         var tbServiceCodeGroupState = hasTbServiceCodeError ? Error : Standard;
@@ -40,11 +27,14 @@
                             @Html.DisplayNameFor(model => model.TransferRequest.TbServiceCode)
                         </label>
                         <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@hasTbServiceCodeError"
-                                ref="errorField" asp-validation-for="TransferRequest.TbServiceCode"></span>
-                        <select ref="selectField" nhs-select-type="@tbServiceCodeSelectErrorState" asp-for="TransferRequest.TbServiceCode"
-                                asp-items="Model.TbServices" v-on:change="secondFilteringChanged">
-                            <option value="" selected>Please select</option>
-                        </select>
+                              ref="errorField" asp-validation-for="TransferRequest.TbServiceCode"></span>
+                        <autocomplete-select ref="filterContainer" v-on:mounted="filteringMounted" v-on:input-changed="filteringChanged"
+                                             placeholder="Select TB service" emit-change-on="select" inline-template>
+                            <select ref="selectField" nhs-select-type="@tbServiceCodeSelectErrorState" asp-for="TransferRequest.TbServiceCode"
+                                asp-items="Model.TbServices">
+                                <option value=""></option>
+                            </select>
+                        </autocomplete-select>
                     </nhs-form-group>
                     @{
                         var hasCaseManagerError = !Model.ValidationService.IsValid("TransferRequest.CaseManagerId");
@@ -63,7 +53,7 @@
                         </select>
                     </nhs-form-group>
                 </div>
-            </cascading-dropdown>
+            </filtered-dropdown>
         </div>
 
         @{
@@ -134,7 +124,7 @@
                 Add optional note to display to receiving case manager
             </label>
             <span id="optional-note-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferRequest.TransferRequestNote" has-error="@hasRequestNoteError"></span>
-            <input asp-for="TransferRequest.TransferRequestNote" nhs-input-type="Standard" is-error-input="@hasRequestNoteError" aria-describedby="note-error" />
+            <input asp-for="TransferRequest.TransferRequestNote" nhs-input-type="Standard" is-error-input="@hasRequestNoteError" aria-describedby="optional-note-error" />
         </nhs-form-group>
 
         <div class="flex-container">
