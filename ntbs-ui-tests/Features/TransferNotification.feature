@@ -8,7 +8,7 @@ Feature: Transfer notification
 
     When I expand manage notification section
     And I click on the 'transfer-button' button
-    And I select LCHC (Leeds Community Healthcare NHS Trust) from input list 'TransferRequest_TbServiceCode'
+    And I select West Yorkshire from input list 'TransferRequest_TbServiceCode'
     And I select Leeds UITester for 'TransferRequest_CaseManagerId'
     And I check 'transfer-radio-Other'
     And I enter Patient likes travel into 'TransferRequest_OtherReasonDescription'
@@ -22,7 +22,7 @@ Feature: Transfer notification
     And I click on the 'transfer-button' button
 
     Then I can see the value Yorkshire and Humber for element with id 'transfer-phec'
-    Then I can see the value LCHC (Leeds Community Healthcare NHS Trust) for element with id 'transfer-tb-service'
+    Then I can see the value West Yorkshire for element with id 'transfer-tb-service'
     Then I can see the value Leeds UITester for element with id 'transfer-case-manager'
 
   Scenario: Accept transfer of notification between services
@@ -43,7 +43,7 @@ Feature: Transfer notification
     And I click on the 'return-to-notification' button
 
     Then I should see the Notification
-    Then I can see the value 'LCHC (Leeds Community Healthcare NHS Trust)' for the field 'tb-service' in the 'HospitalDetails' overview section
+    Then I can see the value 'West Yorkshire' for the field 'tb-service' in the 'HospitalDetails' overview section
     Then I can see no value for the field 'local-patient-id' in the 'PatientDetails' overview section
     Then I can see no value for the field 'consultant' in the 'HospitalDetails' overview section
 
