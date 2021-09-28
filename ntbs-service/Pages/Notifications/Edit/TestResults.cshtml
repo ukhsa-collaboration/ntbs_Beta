@@ -13,6 +13,9 @@
 <partial name="_SinglePageErrorSummaryPartial"/>
 
 <h2> @title </h2>
+<nhs-hint nhs-hint-type="Standard" id="id-types-hint" classes="search-hint">
+    Please verify the test results displayed against the clinical record to ensure correctness.  Please note that the primary clinical record should be used for patient care.
+</nhs-hint> <br>
 
 <partial name="_LabResults" for="@Model.CultureAndResistance" />
 

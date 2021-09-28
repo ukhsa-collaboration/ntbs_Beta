@@ -106,7 +106,7 @@ namespace ntbs_service_unit_tests.DataMigration
                 CaseManager = "miles.davis@columbia.nhs.uk",
                 HospitalId = new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7B"),
                 TreatmentEventType = "TransferIn",
-                Notes = "Dear Mrs Lucy Carmen-Minoe, \n This patient was moved from XYX hospital in London. This is very important information.\n"
+                Notes = "Dear Mrs Lucy Carmen-Minoe, \n You have been identified as the new case manager for the case below. This patient was moved from XYX hospital in London. This is very important information.\n"
                         + "Id: 134222 \n\n Patient: Harry Swingset  Case report date: 11/11/2009 \n Also they are allergic to mung beans"
             };
 
@@ -120,6 +120,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Contains("Also they are allergic to mung beans", mappedEvent.Note);
             Assert.DoesNotContain("Id: 134222", mappedEvent.Note);
             Assert.DoesNotContain("Dear Mrs Lucy Carmen-Minoe", mappedEvent.Note);
+            Assert.DoesNotContain("You have been identified as the new case manager for the case below.", mappedEvent.Note);
         }
 
         [Fact]

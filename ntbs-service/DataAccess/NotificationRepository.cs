@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
+using MoreLinq;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -285,13 +286,17 @@ namespace ntbs_service.DataAccess
 
         public async Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids)
         {
-            return (await GetBannerReadyNotificationsIQueryable()
+            // We split the query here into banner models, previous TB services and linked notifications because EF
+            // can't nicely split the queries over the collections, and doing as a single query can get complex
+            // enough to confuse the query optimiser, leading to bad plan choices.
+            var bannerModels = (await GetBannerReadyNotificationsIQueryable()
                 .Where(n => ids.Contains(n.NotificationId))
                 .Select(n => new NotificationForBannerModel
                     {
                         NotificationId = n.NotificationId,
                         CreationDate = n.CreationDate,
                         NotificationDate = n.NotificationDate,
+                        GroupId = n.GroupId,
                         TbService = n.HospitalDetails.TBServiceName,
                         TbServiceCode = n.HospitalDetails.TBServiceCode,
                         TbServicePHECCode = n.HospitalDetails.TBService.PHECCode,
@@ -308,16 +313,54 @@ namespace ntbs_service.DataAccess
                         NotificationStatus = n.NotificationStatus,
                         DrugResistance = n.DrugResistanceProfile.DrugResistanceProfileString,
                         TreatmentEvents = n.TreatmentEvents,
-                        PreviousTbServiceCodes = n.PreviousTbServices.Select(service => service.TbServiceCode),
-                        PreviousPhecCodes = n.PreviousTbServices.Select(service => service.PhecCode),
-                        LinkedNotificationPhecCodes = n.Group.Notifications.Select(no => no.HospitalDetails.TBService.PHECCode),
-                        LinkedNotificationTbServiceCodes = n.Group.Notifications.Select(no => no.HospitalDetails.TBServiceCode)
                     })
-                // Do not use query splitting as EFCore doesn't allow query splitting with a collection in the select
-                .AsSingleQuery()
                 .AsNoTracking()
-                .ToListAsync())
-                .Select(n => new NotificationBannerModel(n, showLink: true));
+                .ToListAsync());
+
+            var previousTbServices = _context.Notification
+                .Where(n => ids.Contains(n.NotificationId))
+                .Select(n => new
+                {
+                    n.NotificationId,
+                    PreviousTbServiceCodes = n.PreviousTbServices.Select(service => service.TbServiceCode),
+                    PreviousPhecCodes = n.PreviousTbServices.Select(service => service.PhecCode),
+                })
+                // Do not use query splitting as EFCore doesn't allow query splitting with a collection in the select
+                .AsSingleQuery();
+
+            var groupIds = bannerModels
+                .Select(model => model.GroupId)
+                .Distinct()
+                .ToList();
+
+            var linkedNotifications = _context.NotificationGroup
+                .Where(ng => groupIds.Contains(ng.NotificationGroupId))
+                .Select(ng => new
+                {
+                    GroupId = ng.NotificationGroupId,
+                    LinkedNotificationTbServiceCodes =
+                        ng.Notifications.Select(no => no.HospitalDetails.TBServiceCode),
+                    LinkedNotificationPhecCodes =
+                        ng.Notifications.Select(no => no.HospitalDetails.TBService.PHECCode),
+                })
+                // Do not use query splitting as EFCore doesn't allow query splitting with a collection in the select
+                .AsSingleQuery();
+
+            return bannerModels
+                .Select(model =>
+                {
+                    var previousTbService =
+                        previousTbServices.FirstOrDefault(previous => previous.NotificationId == model.NotificationId);
+                    model.PreviousTbServiceCodes = previousTbService?.PreviousTbServiceCodes;
+                    model.PreviousPhecCodes = previousTbService?.PreviousPhecCodes;
+
+                    var linkedNotification =
+                        linkedNotifications.FirstOrDefault(link => link.GroupId == model.GroupId);
+                    model.PreviousTbServiceCodes = linkedNotification?.LinkedNotificationTbServiceCodes;
+                    model.PreviousPhecCodes = linkedNotification?.LinkedNotificationPhecCodes;
+
+                    return new NotificationBannerModel(model, showLink: true);
+                });
         }
 
         public async Task<IEnumerable<Notification>> GetInactiveNotificationsToCloseAsync()
