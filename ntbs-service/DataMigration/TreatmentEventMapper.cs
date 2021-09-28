@@ -92,13 +92,14 @@ namespace ntbs_service.DataMigration
                 @"(Dear|Hi)[0-9a-zA-Z -]+,{0,1}[\n\r ]*(?<caseManagerText>[0-9a-zA-Z \/\-—,.'`@#&+;:$_()<>\\\[\]=\*\?\n\r]*)"
                 + @"(?<uselessInfo>Id: [0-9 ]+[\n\r ]*Patient: [a-zA-Z -]+[\n\r ]*Case report date: [0-9 ]{2}\/[0-9]{2}\/[0-9]{4})"
                 + @"(?<appendedNote>[0-9a-zA-Z \/\-—,.'`@#&+;:$_()<>\\\[\]=\*\?\n\r]*)";
-            var caseManagerPattern = @"You have been identified as the new case manager for the case below\.[\n\r]*";
+            var caseManagerPattern = @"You have been identified as the new case manager for the case below\.[\n\r ]*\z";
             var notePatternMatch = Regex.Match(trimmedNote, mainPattern);
             if (notePatternMatch.Success)
             {
                 var caseManagerText = notePatternMatch.Groups["caseManagerText"].Value;
                 var appendedNote = notePatternMatch.Groups["appendedNote"].Value;
-                var returnNote = Regex.IsMatch(caseManagerText, caseManagerPattern) ? appendedNote.Trim() : $"{caseManagerText.Trim()} {appendedNote.Trim()}";
+                var returnNote = Regex.IsMatch(caseManagerText, caseManagerPattern) ? appendedNote.Trim()
+                    : $"{caseManagerText.Replace("You have been identified as the new case manager for the case below.", "").Trim()} {appendedNote.Trim()}";
                 return returnNote.Length == 0 ? null : returnNote;
             }
             else
