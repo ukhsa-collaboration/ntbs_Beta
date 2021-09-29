@@ -351,13 +351,16 @@ namespace ntbs_service.DataAccess
                 {
                     var previousTbService =
                         previousTbServices.FirstOrDefault(previous => previous.NotificationId == model.NotificationId);
-                    model.PreviousTbServiceCodes = previousTbService?.PreviousTbServiceCodes;
-                    model.PreviousPhecCodes = previousTbService?.PreviousPhecCodes;
+                    model.PreviousTbServiceCodes =
+                        previousTbService?.PreviousTbServiceCodes ?? Enumerable.Empty<string>();
+                    model.PreviousPhecCodes = previousTbService?.PreviousPhecCodes ?? Enumerable.Empty<string>();
 
                     var linkedNotification =
                         linkedNotifications.FirstOrDefault(link => link.GroupId == model.GroupId);
-                    model.PreviousTbServiceCodes = linkedNotification?.LinkedNotificationTbServiceCodes;
-                    model.PreviousPhecCodes = linkedNotification?.LinkedNotificationPhecCodes;
+                    model.LinkedNotificationTbServiceCodes =
+                        linkedNotification?.LinkedNotificationTbServiceCodes ?? Enumerable.Empty<string>();
+                    model.LinkedNotificationPhecCodes =
+                        linkedNotification?.LinkedNotificationPhecCodes ?? Enumerable.Empty<string>();
 
                     return new NotificationBannerModel(model, showLink: true);
                 });
