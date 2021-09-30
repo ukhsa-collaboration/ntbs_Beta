@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using Hangfire.Server;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration.RawModels;
@@ -33,7 +34,8 @@ namespace ntbs_service.DataMigration
             var ev = new TreatmentEvent
             {
                 EventDate = rawEvent.EventDate,
-                TreatmentEventType = Converter.GetEnumValue<TreatmentEventType>(rawEvent.TreatmentEventType)
+                TreatmentEventType = Converter.GetEnumValue<TreatmentEventType>(rawEvent.TreatmentEventType),
+                Note = RemoveUnnecessaryNoteInfo(rawEvent.Notes)
             };
 
             await TryAddTbServiceAndCaseManagerToTreatmentEvent(ev, rawEvent.HospitalId, rawEvent.CaseManager, context, runId);
@@ -76,6 +78,33 @@ namespace ntbs_service.DataMigration
             {
                 await _caseManagerImportService.ImportOrUpdateLegacyUser(caseManagerUsername, ev.TbServiceCode, context, runId);
                 ev.CaseManagerId = (await _referenceDataRepository.GetUserByUsernameAsync(caseManagerUsername)).Id;
+            }
+        }
+
+        private string RemoveUnnecessaryNoteInfo(string note)
+        {
+            if (note.IsNullOrEmpty())
+            {
+                return null;
+            }
+            var trimmedNote = note.Trim();
+            var mainPattern =
+                @"(Dear|Hi)[0-9a-zA-Z -]+,{0,1}[\n\r ]*(?<caseManagerText>[0-9a-zA-Z \/\-—,.'`@#&+;:$_()<>\\\[\]=\*\?\n\r]*)"
+                + @"(?<uselessInfo>Id: [0-9 ]+[\n\r ]*Patient: [a-zA-Z -]+[\n\r ]*Case report date: [0-9 ]{2}\/[0-9]{2}\/[0-9]{4})"
+                + @"(?<appendedNote>[0-9a-zA-Z \/\-—,.'`@#&+;:$_()<>\\\[\]=\*\?\n\r]*)";
+            var caseManagerPattern = @"You have been identified as the new case manager for the case below\.[\n\r ]*\z";
+            var notePatternMatch = Regex.Match(trimmedNote, mainPattern);
+            if (notePatternMatch.Success)
+            {
+                var caseManagerText = notePatternMatch.Groups["caseManagerText"].Value;
+                var appendedNote = notePatternMatch.Groups["appendedNote"].Value;
+                var returnNote = Regex.IsMatch(caseManagerText, caseManagerPattern) ? appendedNote.Trim()
+                    : $"{caseManagerText.Replace("You have been identified as the new case manager for the case below.", "").Trim()} {appendedNote.Trim()}";
+                return returnNote.Length == 0 ? null : returnNote;
+            }
+            else
+            {
+                return trimmedNote;
             }
         }
     }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -357,8 +357,8 @@ namespace ntbs_ui_tests.Steps
             return tableId switch
             {
                 "PatientDetails" => new[] {"Name", "Sex", "NHS number", "Occupation", "Notification date",
-                    "Date of birth", "Age at notification", "Address", "Postcode", "Local authority", "Residence PHEC",
-                    "Ethnic group", "Birth country", "UK entry year", "Treatment PHEC", "Legacy IDs", "Local patient ID"},
+                    "Date of birth", "Age at notification", "Address", "Postcode", "Local authority", "Residence region",
+                    "Ethnic group", "Birth country", "UK entry year", "Treatment region", "Legacy IDs", "Local patient ID"},
                 "HospitalDetails" => new [] {"TB service", "Hospital", "Case Manager", "Consultant"},
                 "ClinicalDetails" => new [] { "Sites of disease", "Patient has symptoms", "Symptom onset date",
                     "Symptom onset to treatment start", "Presentation to any health service date",

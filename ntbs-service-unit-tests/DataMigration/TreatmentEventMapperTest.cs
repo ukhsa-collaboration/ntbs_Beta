@@ -72,6 +72,58 @@ namespace ntbs_service_unit_tests.DataMigration
         }
 
         [Fact]
+        public async Task MigrationTreatmentEventWithBoilerplateNoteMappedToNull()
+        {
+            // Arrange
+            GivenLegacyUserWithName("miles.davis@columbia.nhs.uk", "Miles", "Davis");
+            var migrationTransferEvent = new MigrationDbTransferEvent
+            {
+                EventDate = DateTime.Parse("12/12/2012"),
+                CaseManager = "miles.davis@columbia.nhs.uk",
+                HospitalId = new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7B"),
+                TreatmentEventType = "TransferIn",
+                Notes = "Dear Mrs Lucy Carmen-Minoe, \n You have been identified as the new case manager for the case below.\n"
+                    + "Id: 134222 \n\n Patient: Harry Swingset  Case report date: 11/11/2009"
+            };
+
+            // Act
+            var mappedEvent = await _treatmentEventMapper.AsTransferEvent(migrationTransferEvent, null, 1);
+
+            // Assert
+            Assert.Equal(DateTime.Parse("12/12/2012"), mappedEvent.EventDate);
+            Assert.Equal(TreatmentEventType.TransferIn, mappedEvent.TreatmentEventType);
+            Assert.Null(mappedEvent.Note);
+        }
+
+        [Fact]
+        public async Task MigrationTreatmentEventWithCustomNoteMappedToWithoutBoilerplateParts()
+        {
+            // Arrange
+            GivenLegacyUserWithName("miles.davis@columbia.nhs.uk", "Miles", "Davis");
+            var migrationTransferEvent = new MigrationDbTransferEvent
+            {
+                EventDate = DateTime.Parse("12/12/2012"),
+                CaseManager = "miles.davis@columbia.nhs.uk",
+                HospitalId = new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7B"),
+                TreatmentEventType = "TransferIn",
+                Notes = "Dear Mrs Lucy Carmen-Minoe, \n You have been identified as the new case manager for the case below. This patient was moved from XYX hospital in London. This is very important information.\n"
+                        + "Id: 134222 \n\n Patient: Harry Swingset  Case report date: 11/11/2009 \n Also they are allergic to mung beans"
+            };
+
+            // Act
+            var mappedEvent = await _treatmentEventMapper.AsTransferEvent(migrationTransferEvent, null, 1);
+
+            // Assert
+            Assert.Equal(DateTime.Parse("12/12/2012"), mappedEvent.EventDate);
+            Assert.Equal(TreatmentEventType.TransferIn, mappedEvent.TreatmentEventType);
+            Assert.Contains("This patient was moved from XYX hospital in London. This is very important information.", mappedEvent.Note);
+            Assert.Contains("Also they are allergic to mung beans", mappedEvent.Note);
+            Assert.DoesNotContain("Id: 134222", mappedEvent.Note);
+            Assert.DoesNotContain("Dear Mrs Lucy Carmen-Minoe", mappedEvent.Note);
+            Assert.DoesNotContain("You have been identified as the new case manager for the case below.", mappedEvent.Note);
+        }
+
+        [Fact]
         public async Task MigrationOutcomeEventMappedCorrectlyWithTbServiceAndCaseManagerAdded()
         {
             // Arrange
