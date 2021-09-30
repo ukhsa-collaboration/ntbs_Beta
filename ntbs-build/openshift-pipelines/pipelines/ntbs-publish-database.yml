@@ -1,0 +1,202 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+  name: ntbs-publish-database
+  namespace: ntbs-build
+spec:
+  params:
+    - default: 'yes'
+      description: Do you want to deploy the migration database?
+      name: deploy-migration
+      type: string
+    - default: 'yes'
+      description: Do you want to deploy the specimen-matching database?
+      name: deploy-specimen-matching
+      type: string
+    - default: 'yes'
+      description: Do you want to deploy the reporting database?
+      name: deploy-reporting
+      type: string
+    - default: uat
+      description: The environment you are deploying to (uat or live)
+      name: environment
+      type: string
+    - default: live
+      description: The branch to deploy
+      name: branch
+      type: string
+  tasks:
+    - name: git-clone-migration
+      params:
+        - name: url
+          value: 'git@github.com:publichealthengland/ntbs-data-migration.git'
+        - name: revision
+          value: $(params.branch)
+        - name: subdirectory
+          value: data-migration
+      taskRef:
+        kind: Task
+        name: git-clone-with-ssh
+      when:
+        - Input: $(params.deploy-migration)
+          Operator: in
+          Values:
+            - 'yes'
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: download-migration
+      params:
+        - name: database
+          value: migration
+        - name: container
+          value: data-migration
+        - name: commit_hash
+          value: $(tasks.git-clone-migration.results.commit)
+      runAfter:
+        - git-clone-migration
+      taskRef:
+        kind: Task
+        name: download-dacpac
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: publish-migration
+      params:
+        - name: checkout_directory
+          value: data-migration
+        - name: database
+          value: migration
+        - name: config_map
+          value: $(params.environment)
+        - name: publish_profile_key
+          value: databases.migration-publish-profile
+        - name: reference_dacpacs_path
+          value: ntbs-data-migration/data
+        - name: sql-user-secret
+          value: $(params.environment)-sql-keytab
+      runAfter:
+        - download-migration
+      taskRef:
+        kind: Task
+        name: publish-dacpac
+      workspaces:
+        - name: input
+          workspace: shared-workspace
+    - name: git-clone-specimen-matching
+      params:
+        - name: url
+          value: 'git@github.com:publichealthengland/ntbs-specimen-matching.git'
+        - name: revision
+          value: $(params.branch)
+        - name: subdirectory
+          value: specimen-matching
+      taskRef:
+        kind: Task
+        name: git-clone-with-ssh
+      when:
+        - Input: $(params.deploy-specimen-matching)
+          Operator: in
+          Values:
+            - 'yes'
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: download-specimen-matching
+      params:
+        - name: database
+          value: specimen-matching
+        - name: container
+          value: specimen-matching
+        - name: commit_hash
+          value: $(tasks.git-clone-specimen-matching.results.commit)
+      runAfter:
+        - git-clone-specimen-matching
+      taskRef:
+        kind: Task
+        name: download-dacpac
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: publish-specimen-matching
+      params:
+        - name: checkout_directory
+          value: specimen-matching
+        - name: database
+          value: specimen-matching
+        - name: config_map
+          value: $(params.environment)
+        - name: publish_profile_key
+          value: databases.specimen-matching-publish-profile
+        - name: reference_dacpacs_path
+          value: data/DACPAC
+        - name: sql-user-secret
+          value: $(params.environment)-sql-keytab
+      runAfter:
+        - download-specimen-matching
+        - publish-migration
+      taskRef:
+        kind: Task
+        name: publish-dacpac
+      workspaces:
+        - name: input
+          workspace: shared-workspace
+    - name: git-clone-reporting
+      params:
+        - name: url
+          value: 'git@github.com:publichealthengland/ntbs-reporting.git'
+        - name: revision
+          value: $(params.branch)
+        - name: subdirectory
+          value: reporting
+      taskRef:
+        kind: Task
+        name: git-clone-with-ssh
+      when:
+        - Input: $(params.deploy-reporting)
+          Operator: in
+          Values:
+            - 'yes'
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: download-reporting
+      params:
+        - name: database
+          value: reporting
+        - name: container
+          value: reporting
+        - name: commit_hash
+          value: $(tasks.git-clone-reporting.results.commit)
+      runAfter:
+        - git-clone-reporting
+      taskRef:
+        kind: Task
+        name: download-dacpac
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: publish-reporting
+      params:
+        - name: checkout_directory
+          value: reporting
+        - name: database
+          value: reporting
+        - name: config_map
+          value: $(params.environment)
+        - name: publish_profile_key
+          value: databases.reporting-publish-profile
+        - name: reference_dacpacs_path
+          value: data/DACPAC
+        - name: sql-user-secret
+          value: $(params.environment)-sql-keytab
+      runAfter:
+        - download-reporting
+        - publish-specimen-matching
+      taskRef:
+        kind: Task
+        name: publish-dacpac
+      workspaces:
+        - name: input
+          workspace: shared-workspace
+  workspaces:
+    - name: shared-workspace

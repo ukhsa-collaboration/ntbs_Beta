@@ -4,5 +4,10 @@ metadata:
   name: live
   namespace: ntbs-build
 data:
+  databases.migration-publish-profile: >-
+    ntbs-data-migration/Publish
+    Profiles/Production/phe-live-migration.publish.xml
+  databases.reporting-publish-profile: source/Publish Profiles/Production/phe-live-reporting.publish.xml
+  databases.specimen-matching-publish-profile: source/Publish Profiles/Production/phe-live-specimen-matching.publish.xml
   deployment.file: live.yml
   deployment.name: ntbs-live

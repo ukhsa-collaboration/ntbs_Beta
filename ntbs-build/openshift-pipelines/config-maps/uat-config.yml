@@ -4,5 +4,10 @@ metadata:
   name: uat
   namespace: ntbs-build
 data:
-  deployment.file: phe-uat.yml
+  databases.migration-publish-profile: >-
+    ntbs-data-migration/Publish
+    Profiles/Pre-production/phe-uat-migration.publish.xml
+  databases.reporting-publish-profile: source/Publish Profiles/Pre-production/phe-uat-reporting.publish.xml
+  databases.specimen-matching-publish-profile: source/Publish Profiles/Pre-production/phe-uat-specimen-matching.publish.xml
+  deployment.file: uat-phe.yml
   deployment.name: ntbs-uat
