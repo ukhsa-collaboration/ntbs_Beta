@@ -21,7 +21,7 @@ Feature: Transfer notification
     When I expand manage notification section
     And I click on the 'transfer-button' button
 
-    Then I can see the value Yorkshire and Humber for element with id 'transfer-phec'
+    Then I can see the value Yorkshire and Humber for element with id 'transfer-region'
     Then I can see the value West Yorkshire for element with id 'transfer-tb-service'
     Then I can see the value Leeds UITester for element with id 'transfer-case-manager'
 

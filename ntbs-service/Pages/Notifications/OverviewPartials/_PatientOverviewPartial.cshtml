@@ -71,8 +71,8 @@
             <div class="cell-min-height" id="@sectionId-local-authority"> @Model.Notification.PatientDetails.LocalAuthorityName </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> Residence PHEC </div>
-            <div class="cell-min-height" id="@sectionId-residence-phec"> @Model.Notification.PatientDetails.ResidencePHECName </div>
+            <div class="notification-details-label"> Residence region </div>
+            <div class="cell-min-height" id="@sectionId-residence-region"> @Model.Notification.PatientDetails.ResidencePHECName </div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row>
@@ -92,19 +92,19 @@
             <div class="cell-min-height" id="@sectionId-uk-entry"> @Model.Notification.PatientDetails?.YearOfUkEntry </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> Treatment PHEC </div>
-            <div class="cell-min-height" id="@sectionId-treatment-phec"> @Model.Notification.HospitalDetails.TreatmentPHECName </div>
+            <div class="notification-details-label"> Treatment region </div>
+            <div class="cell-min-height" id="@sectionId-treatment-region"> @Model.Notification.HospitalDetails.TreatmentPHECName </div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Legacy IDs </div>
-            <div class="cell-min-height" id="@sectionId-legacy-id"> 
+            <div class="cell-min-height" id="@sectionId-legacy-id">
                 <span>
                     @if (!String.IsNullOrEmpty(@Model.Notification.LTBRID))
                     {
-                        <span>LTBR: @Model.Notification.LTBRID</span> 
-                    } 
+                        <span>LTBR: @Model.Notification.LTBRID</span>
+                    }
                     @if (!String.IsNullOrEmpty(@Model.Notification.ETSID))
                     {
                         var deliminator = !String.IsNullOrEmpty(@Model.Notification.LTBRID) ? ", " : "";

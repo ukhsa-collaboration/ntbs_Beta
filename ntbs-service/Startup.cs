@@ -157,6 +157,7 @@ namespace ntbs_service
             {
                 options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
                 options.Conventions.AllowAnonymousToPage("/Logout");
+                options.Conventions.AllowAnonymousToPage("/PostLogout");
             });
 
             services.AddAuthorization(options =>
@@ -362,7 +363,7 @@ namespace ntbs_service
                         var username = context.Principal.Username();
                         if (username == null)
                         {
-                            username = context.Principal.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name");
+                            username = context.Principal.FindFirstValue(ClaimTypes.Email);
                         }
 
                         // add group claims.
