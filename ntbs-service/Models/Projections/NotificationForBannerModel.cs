@@ -10,6 +10,7 @@ namespace ntbs_service.Models.Projections
         public int NotificationId { get; set; }
         public DateTime? CreationDate { get; set; }
         public DateTime? NotificationDate { get; set; }
+        public int? GroupId { get; set; }
         public string TbService { get; set; }
         public string TbServiceCode { get; set; }
         public string TbServicePHECCode { get; set; }

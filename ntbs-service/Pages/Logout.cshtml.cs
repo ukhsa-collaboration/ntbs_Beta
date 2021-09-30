@@ -12,7 +12,7 @@ namespace ntbs_service.Pages
         private readonly IOptionsMonitor<AzureAdOptions> _azureAdOptions;
         private readonly IOptionsMonitor<AdfsOptions> _adfsOptions;
 
-        private string IndexUrl => $"{Request.Scheme}://{Request.Host}/Index";
+        private string IndexUrl => $"{Request.Scheme}://{Request.Host}/PostLogout";
 
         public LogoutModel(IOptionsMonitor<AdfsOptions> adfsOptions, IOptionsMonitor<AzureAdOptions> azureAdOptions)
         {

@@ -99,6 +99,7 @@ namespace ntbs_ui_tests.Steps
         {
             WithErrorLogging(() =>
             {
+                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}");
                 HtmlElementHelper.FindElementById(Browser, "otherTile").Click();
             });
         }
