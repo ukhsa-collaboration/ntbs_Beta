@@ -24,19 +24,19 @@ namespace ntbs_service.Jobs
 
             try
             {
-                LogInfo(context, "Starting specimen-matching uspGenerate");
+                LogInfo(context, "Starting migration uspGenerate");
                 var stepOneResults =
-                    await _externalStoredProcedureRepository.ExecuteSpecimenMatchingGenerateStoredProcedure();
+                    await _externalStoredProcedureRepository.ExecuteMigrationGenerateStoredProcedure();
                 AssertSuccessfulExecution(context, stepOneResults);
 
-                LogInfo(context, "Starting reporting uspGenerate");
+                LogInfo(context, "Starting specimen-matching uspGenerate");
                 var stepTwoResults =
-                    await _externalStoredProcedureRepository.ExecuteReportingGenerateStoredProcedure();
+                    await _externalStoredProcedureRepository.ExecuteSpecimenMatchingGenerateStoredProcedure();
                 AssertSuccessfulExecution(context, stepTwoResults);
 
-                LogInfo(context, "Starting migration uspGenerate");
+                LogInfo(context, "Starting reporting uspGenerate");
                 var stepThreeResults =
-                    await _externalStoredProcedureRepository.ExecuteMigrationGenerateStoredProcedure();
+                    await _externalStoredProcedureRepository.ExecuteReportingGenerateStoredProcedure();
                 AssertSuccessfulExecution(context, stepThreeResults);
             }
             catch (Exception ex)
