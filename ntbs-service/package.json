@@ -28,7 +28,7 @@
     "file-loader": "6.2.0",
     "formdata-polyfill": "4.0.6",
     "govuk-frontend": "3.13.0",
-    "nhsuk-frontend": "5.1.0",
+    "nhsuk-frontend": "5.2.0",
     "qs": "6.10.1",
     "sass": "1.38.2",
     "url-loader": "4.1.1",
