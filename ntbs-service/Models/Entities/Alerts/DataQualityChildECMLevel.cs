@@ -12,7 +12,7 @@ namespace ntbs_service.Models.Entities.Alerts
 
         public static readonly Expression<Func<Notification, bool>> NotificationQualifiesExpression =
             n => n.NotificationStatus == NotificationStatus.Notified
-                 && n.CreationDate < DateTime.Now.AddDays(-MinNumberDaysDraftForAlert)
+                 && n.NotificationDate < DateTime.Now.AddDays(-MinNumberDaysDraftForAlert)
                  && n.NotificationDate.Value < n.PatientDetails.Dob.Value.AddYears(16)
                  && n.ClinicalDetails.EnhancedCaseManagementLevel == 0;
 
