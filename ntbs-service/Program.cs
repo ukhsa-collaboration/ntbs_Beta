@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
+using Sentry;
 using Serilog;
 using Serilog.Events;
 
@@ -65,7 +66,13 @@ namespace ntbs_service
         private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseSentry(o => o.Release = Environment.GetEnvironmentVariable(Constants.Release))
+                .UseSentry(o =>
+                {
+                    o.Release = Environment.GetEnvironmentVariable(Constants.Release);
+                    // This is a workaround for a known issue in Sentry.
+                    // See https://github.com/getsentry/sentry-dotnet/issues/1210
+                    o.DisableDiagnosticSourceIntegration();
+                })
                 .UseSerilog();
 
         private static void MigrateAppDb(IServiceProvider services)
