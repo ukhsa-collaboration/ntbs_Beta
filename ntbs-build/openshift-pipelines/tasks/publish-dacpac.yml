@@ -11,11 +11,11 @@ spec:
     - description: The name of the database to deploy.
       name: database
       type: string
-    - description: The config map containing the publish profile loction
+    - description: The config map containing the publish profile location
       name: config_map
       type: string
     - description: >-
-        The key withing the config map containing the relative path of the
+        The key within the config map containing the relative path of the
         publish profile within the checkout directory
       name: publish_profile_key
       type: string
@@ -24,7 +24,8 @@ spec:
       type: string
     - description: >-
         The name of the secret containing a keytab for the SQL identity used to
-        run the deployment
+        run the deployment, or a password for the SQL user in the connection
+        string.
       name: sql-user-secret
       type: string
   steps:
@@ -36,17 +37,27 @@ spec:
       name: ''
       resources: {}
       script: >
-        klist -k $KRB5_CLIENT_KTNAME
-
         publish_profile_path=$(cat /config/$(params.publish_profile_key))
 
         cp
         $(workspaces.input.path)/$(params.checkout_directory)/$(params.reference_dacpacs_path)/*.dacpac
         $(workspaces.input.path)/dacpacs/$(params.database)
 
-        /bin/sqlpackage/sqlpackage -Action:Publish
-        -SourceFile:"$(workspaces.input.path)/dacpacs/$(params.database)/$(params.database).dacpac"
-        -Profile:"$(workspaces.input.path)/$(params.checkout_directory)/$publish_profile_path"
+        if [ -f "$KRB5_CLIENT_KTNAME" ]; then
+
+          klist -k $KRB5_CLIENT_KTNAME
+
+          /bin/sqlpackage/sqlpackage -Action:Publish -SourceFile:"$(workspaces.input.path)/dacpacs/$(params.database)/$(params.database).dacpac" -Profile:"$(workspaces.input.path)/$(params.checkout_directory)/$publish_profile_path"
+
+        else
+
+          sqlUser="$(cat /krbtab/username)"
+
+          sqlPassword="$(cat /krbtab/password)"
+
+          /bin/sqlpackage/sqlpackage -Action:Publish -SourceFile:"$(workspaces.input.path)/dacpacs/$(params.database)/$(params.database).dacpac" -Profile:"$(workspaces.input.path)/$(params.checkout_directory)/$publish_profile_path" -TargetPassword:"$sqlPassword" -TargetUser:"$sqlUser"
+
+        fi
       volumeMounts:
         - mountPath: /krbtab
           name: keytab-secret

@@ -1,5 +1,6 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
+metadata:
   name: ntbs-publish-database
   namespace: ntbs-build
 spec:
@@ -133,7 +134,6 @@ spec:
           value: $(params.environment)-sql-keytab
       runAfter:
         - download-specimen-matching
-        - publish-migration
       taskRef:
         kind: Task
         name: publish-dacpac
@@ -191,7 +191,6 @@ spec:
           value: $(params.environment)-sql-keytab
       runAfter:
         - download-reporting
-        - publish-specimen-matching
       taskRef:
         kind: Task
         name: publish-dacpac

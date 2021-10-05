@@ -20,7 +20,8 @@ spec:
     - description: The precise commit SHA that was fetched by this Task
       name: commit
   steps:
-    - image: 'image-registry.openshift-image-registry.svc:5000/ntbs-build/ntbs-image-stream:alpine-git'
+    - image: >-
+        image-registry.openshift-image-registry.svc:5000/ntbs-build/ntbs-image-stream:alpine-git
       name: clone
       resources: {}
       script: >
@@ -36,8 +37,6 @@ spec:
 
         echo -e 'Host github.com\nHostname ssh.github.com\nPort 443' >
         ~/.ssh/config
-
-        ls -la /dev/tty
 
         chmod 700 ~/.ssh
 
@@ -64,8 +63,8 @@ spec:
 
         ssh-add ~/.ssh/id_ed25519
 
-        GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -vvv" git clone --depth
-        1 --branch "$(params.revision)" "$(params.url)" "$CHECKOUT_DIR"
+        GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone --depth 1
+        --branch "$(params.revision)" "$(params.url)" "$CHECKOUT_DIR"
 
         cd "$CHECKOUT_DIR"
 
