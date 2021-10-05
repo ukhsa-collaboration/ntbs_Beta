@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using ntbs_service.Helpers;
-using ntbs_service.Migrations;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.Models.Entities
 {
     public partial class Notification
     {
         public string SitesOfDiseaseList => CreateSitesOfDiseaseString();
-        [Display(Name = "Date created")]
-        public string FormattedCreationDate => CreationDate.ConvertToString();
-        [Display(Name = "Date notified")]
-        public string FormattedNotificationDate => NotificationDate.ConvertToString();
+        [Display(Name = "Date created")] public string FormattedCreationDate => CreationDate.ConvertToString();
+        [Display(Name = "Date notified")] public string FormattedNotificationDate => NotificationDate.ConvertToString();
         public int? AgeAtNotification => GetAgeAtTimeOfNotification();
+
         public string LegacyId
         {
             get
@@ -32,7 +31,9 @@ namespace ntbs_service.Models.Entities
             }
         }
 
-        public bool TransferRequestPending => Alerts?.Any(x => x.AlertType == AlertType.TransferRequest && x.AlertStatus == AlertStatus.Open) == true;
+        public bool TransferRequestPending =>
+            Alerts?.Any(x => x.AlertType == AlertType.TransferRequest && x.AlertStatus == AlertStatus.Open) == true;
+
         public bool IsLastLinkedNotificationOverOneYearOld => GetIsLastLinkedNotificationOverOneYearOld();
 
         public bool IsMdr => DrugResistanceHelper.IsMdr(
@@ -69,6 +70,7 @@ namespace ntbs_service.Models.Entities
 
             var siteNames = NotificationSites.Select(ns => ns.Site)
                 .Where(ns => ns != null)
+                .OrderBy(SiteOrdering)
                 .Select(s => s.Description);
             return string.Join(", ", siteNames);
         }
@@ -96,7 +98,33 @@ namespace ntbs_service.Models.Entities
             {
                 yearDiff -= 1;
             }
+
             return yearDiff;
+        }
+
+        private int SiteOrdering(Site site)
+        {
+            switch (site.SiteId)
+            {
+                case 1: return 1;
+                case 12: return 2;
+                case 13: return 3;
+                case 2: return 4;
+                case 3: return 5;
+                case 4: return 6;
+                case 5: return 7;
+                case 10: return 8;
+                case 11: return 9;
+                case 7: return 10;
+                case 8: return 11;
+                case 9: return 12;
+                case 6: return 13;
+                case 14: return 14;
+                case 15: return 15;
+                case 16: return 16;
+                case 17: return 17;
+                default: return 18;
+            }
         }
     }
 }
