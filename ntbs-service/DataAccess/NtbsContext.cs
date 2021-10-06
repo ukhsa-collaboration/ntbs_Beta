@@ -511,23 +511,23 @@ namespace ntbs_service.DataAccess
                 entity.ToTable(nameof(Site), ReferenceDataSchemaName);
 
                 entity.HasData(
-                    new Site { SiteId = (int)SiteId.PULMONARY, Description = "Pulmonary" },
-                    new Site { SiteId = (int)SiteId.BONE_SPINE, Description = "Spine" },
-                    new Site { SiteId = (int)SiteId.BONE_OTHER, Description = "Bone/joint: Other" },
-                    new Site { SiteId = (int)SiteId.CNS_MENINGITIS, Description = "Meningitis" },
-                    new Site { SiteId = (int)SiteId.CNS_OTHER, Description = "CNS: Other" },
-                    new Site { SiteId = (int)SiteId.OCULAR, Description = "Ocular" },
-                    new Site { SiteId = (int)SiteId.CRYPTIC, Description = "Cryptic disseminated" },
-                    new Site { SiteId = (int)SiteId.GASTROINTESTINAL, Description = "Gastrointestinal/peritoneal" },
-                    new Site { SiteId = (int)SiteId.GENITOURINARY, Description = "Genitourinary" },
-                    new Site { SiteId = (int)SiteId.LYMPH_INTRA, Description = "Lymph nodes: Intra-thoracic" },
-                    new Site { SiteId = (int)SiteId.LYMPH_EXTRA, Description = "Lymph nodes: Extra-thoracic" },
-                    new Site { SiteId = (int)SiteId.LARYNGEAL, Description = "Laryngeal" },
-                    new Site { SiteId = (int)SiteId.MILIARY, Description = "Miliary" },
-                    new Site { SiteId = (int)SiteId.PLEURAL, Description = "Pleural" },
-                    new Site { SiteId = (int)SiteId.PERICARDIAL, Description = "Pericardial" },
-                    new Site { SiteId = (int)SiteId.SKIN, Description = "Soft tissue/Skin" },
-                    new Site { SiteId = (int)SiteId.OTHER, Description = "Other extra-pulmonary" }
+                    new Site { SiteId = (int)SiteId.PULMONARY, Description = "Pulmonary", OrderIndex = 1 },
+                    new Site { SiteId = (int)SiteId.BONE_SPINE, Description = "Spine", OrderIndex = 4 },
+                    new Site { SiteId = (int)SiteId.BONE_OTHER, Description = "Bone/joint: Other", OrderIndex = 5 },
+                    new Site { SiteId = (int)SiteId.CNS_MENINGITIS, Description = "Meningitis", OrderIndex = 6 },
+                    new Site { SiteId = (int)SiteId.CNS_OTHER, Description = "CNS: Other", OrderIndex = 7 },
+                    new Site { SiteId = (int)SiteId.OCULAR, Description = "Ocular", OrderIndex = 13 },
+                    new Site { SiteId = (int)SiteId.CRYPTIC, Description = "Cryptic disseminated", OrderIndex = 10 },
+                    new Site { SiteId = (int)SiteId.GASTROINTESTINAL, Description = "Gastrointestinal/peritoneal", OrderIndex = 11 },
+                    new Site { SiteId = (int)SiteId.GENITOURINARY, Description = "Genitourinary", OrderIndex = 12 },
+                    new Site { SiteId = (int)SiteId.LYMPH_INTRA, Description = "Lymph nodes: Intra-thoracic", OrderIndex = 8 },
+                    new Site { SiteId = (int)SiteId.LYMPH_EXTRA, Description = "Lymph nodes: Extra-thoracic", OrderIndex = 9 },
+                    new Site { SiteId = (int)SiteId.LARYNGEAL, Description = "Laryngeal", OrderIndex = 2 },
+                    new Site { SiteId = (int)SiteId.MILIARY, Description = "Miliary", OrderIndex = 3 },
+                    new Site { SiteId = (int)SiteId.PLEURAL, Description = "Pleural", OrderIndex = 14 },
+                    new Site { SiteId = (int)SiteId.PERICARDIAL, Description = "Pericardial", OrderIndex = 15 },
+                    new Site { SiteId = (int)SiteId.SKIN, Description = "Soft tissue/Skin", OrderIndex = 16 },
+                    new Site { SiteId = (int)SiteId.OTHER, Description = "Other extra-pulmonary", OrderIndex = 17 }
                 );
             });
 

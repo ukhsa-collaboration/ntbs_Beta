@@ -7,6 +7,7 @@ namespace ntbs_service.Models.ReferenceEntities
     {
         public int SiteId { get; set; }
         public string Description { get; set; }
+        public int OrderIndex { get; set; }
         public virtual List<NotificationSite> NotificationSites { get; set; }
     }
 

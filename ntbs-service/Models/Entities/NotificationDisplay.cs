@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using ntbs_service.Helpers;
-using ntbs_service.Migrations;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Models.Entities
@@ -11,11 +10,10 @@ namespace ntbs_service.Models.Entities
     public partial class Notification
     {
         public string SitesOfDiseaseList => CreateSitesOfDiseaseString();
-        [Display(Name = "Date created")]
-        public string FormattedCreationDate => CreationDate.ConvertToString();
-        [Display(Name = "Date notified")]
-        public string FormattedNotificationDate => NotificationDate.ConvertToString();
+        [Display(Name = "Date created")] public string FormattedCreationDate => CreationDate.ConvertToString();
+        [Display(Name = "Date notified")] public string FormattedNotificationDate => NotificationDate.ConvertToString();
         public int? AgeAtNotification => GetAgeAtTimeOfNotification();
+
         public string LegacyId
         {
             get
@@ -32,7 +30,9 @@ namespace ntbs_service.Models.Entities
             }
         }
 
-        public bool TransferRequestPending => Alerts?.Any(x => x.AlertType == AlertType.TransferRequest && x.AlertStatus == AlertStatus.Open) == true;
+        public bool TransferRequestPending =>
+            Alerts?.Any(x => x.AlertType == AlertType.TransferRequest && x.AlertStatus == AlertStatus.Open) == true;
+
         public bool IsLastLinkedNotificationOverOneYearOld => GetIsLastLinkedNotificationOverOneYearOld();
 
         public bool IsMdr => DrugResistanceHelper.IsMdr(
@@ -69,6 +69,7 @@ namespace ntbs_service.Models.Entities
 
             var siteNames = NotificationSites.Select(ns => ns.Site)
                 .Where(ns => ns != null)
+                .OrderBy(ns => ns.OrderIndex)
                 .Select(s => s.Description);
             return string.Join(", ", siteNames);
         }
@@ -96,6 +97,7 @@ namespace ntbs_service.Models.Entities
             {
                 yearDiff -= 1;
             }
+
             return yearDiff;
         }
     }

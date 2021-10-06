@@ -6,6 +6,8 @@ namespace load_test_data_generation
     {
         static void Main(string[] args)
         {
+            // Disable auditing so we don't run into possible object cycle errors
+            Audit.Core.Configuration.AuditDisabled = true;
             var config = new Config();
             var contextProvider = new ContextProvider(config.ConnectionString);
             var userGenerator = new UserGenerator(contextProvider);
