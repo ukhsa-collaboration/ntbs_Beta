@@ -1,0 +1,41 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: ntbs-image-stream
+  namespace: ntbs-build
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: alpine-git
+      from:
+        kind: DockerImage
+        name: 'alpine/git:latest'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Local
+    - name: azure-cli
+      from:
+        kind: DockerImage
+        name: 'mcr.microsoft.com/azure-cli:latest'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Local
+    - name: openshift-cli
+      from:
+        kind: DockerImage
+        name: 'quay.io/openshift/origin-cli:latest'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Local
+    - name: publish-dacpac
+      from:
+        kind: DockerImage
+        name: 'ntbscontainerregistry.azurecr.io/publish-dacpac:latest'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Local
