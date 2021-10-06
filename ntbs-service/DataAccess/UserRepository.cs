@@ -148,7 +148,7 @@ namespace ntbs_service.DataAccess
             await _context.SaveChangesAsync();
         }
 
-        private static void SyncCaseManagerTbServices(User user, IEnumerable<TBService> tbServices)
+        private void SyncCaseManagerTbServices(User user, IEnumerable<TBService> tbServices)
         {
             var caseManagerTbServices = tbServices
                 .Select(tb => new CaseManagerTbService
@@ -176,21 +176,16 @@ namespace ntbs_service.DataAccess
             }
         }
 
-        private static void RemoveUnmatchedCaseManagerTbServices(
+        private void RemoveUnmatchedCaseManagerTbServices(
             ICollection<CaseManagerTbService> userCaseManagerTbServices,
             IList<CaseManagerTbService> adCaseManagerTbServices)
         {
-            var caseManagerTbServicesToRemove = new List<CaseManagerTbService>();
             foreach (var caseManagerTbService in userCaseManagerTbServices)
             {
                 if (!adCaseManagerTbServices.Any(c => caseManagerTbService.Equals(c)))
                 {
-                    caseManagerTbServicesToRemove.Add(caseManagerTbService);
+                    _context.Remove(caseManagerTbService);
                 }
-            }
-            foreach (var caseManagerTbService in caseManagerTbServicesToRemove)
-            {
-                userCaseManagerTbServices.Remove(caseManagerTbService);
             }
         }
     }

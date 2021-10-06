@@ -4,5 +4,10 @@ metadata:
   name: dev
   namespace: ntbs-build
 data:
+  databases.migration-publish-profile: >-
+    ntbs-data-migration/Publish
+    Profiles/Pre-production/phe-dev-migration.publish.xml
+  databases.reporting-publish-profile: source/Publish Profiles/Pre-production/phe-dev-reporting.publish.xml
+  databases.specimen-matching-publish-profile: source/Publish Profiles/Pre-production/phe-dev-specimen-matching.publish.xml
   deployment.file: dev.yml
   deployment.name: ntbs-dev

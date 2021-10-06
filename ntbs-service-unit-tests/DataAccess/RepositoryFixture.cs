@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
+using ntbs_service.Models.ReferenceEntities;
 using Xunit;
 
 namespace ntbs_service_unit_tests.DataAccess
@@ -9,14 +10,15 @@ namespace ntbs_service_unit_tests.DataAccess
     public class RepositoryFixture<T> : IAsyncLifetime
     {
         public NtbsContext Context;
+        public DbContextOptions<NtbsContext> ContextOptions;
 
         public async Task InitializeAsync()
         {
-            var contextOptions = new DbContextOptionsBuilder<NtbsContext>()
+            ContextOptions = new DbContextOptionsBuilder<NtbsContext>()
                 .UseSqlite($"Filename={typeof(T)}.db")
                 .Options;
 
-            Context = new NtbsContext(contextOptions);
+            Context = new NtbsContext(ContextOptions);
             await Context.Database.EnsureDeletedAsync();
             await Context.Database.EnsureCreatedAsync();
         }

@@ -1,0 +1,45 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: download-dacpac
+  namespace: ntbs-build
+spec:
+  params:
+    - description: >-
+        The name of the database to deploy. The dacpac name should be of the
+        form <database>-<commit_hash>.dacpac
+      name: database
+      type: string
+    - description: The name of the storage container in which the dacpac is found.
+      name: container
+      type: string
+    - description: >-
+        The hash of the commit (in git) which represents the version of the
+        dacpac to download.
+      name: commit_hash
+      type: string
+  steps:
+    - image: >-
+        image-registry.openshift-image-registry.svc:5000/ntbs-build/ntbs-image-stream:azure-cli
+      name: download-dacpac
+      resources: {}
+      script: >-
+        mkdir -p $(workspaces.output.path)/dacpacs/$(params.database)
+
+        dacpac_registry_key=$(cat /azure/dacpac_registry_key)
+
+        az storage blob download --container-name $(params.container) --name
+        $(params.database)-$(params.commit_hash).dacpac --file
+        $(workspaces.output.path)/dacpacs/$(params.database)/$(params.database).dacpac
+        --account-name dacpacregistry --account-key $dacpac_registry_key
+        --auth-mode key
+      volumeMounts:
+        - mountPath: /azure
+          name: azure-secrets
+  volumes:
+    - name: azure-secrets
+      secret:
+        secretName: azure-secrets
+  workspaces:
+    - description: The dacpac will be saved onto the volume backing this workspace
+      name: output

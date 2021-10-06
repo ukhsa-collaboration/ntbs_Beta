@@ -1,0 +1,75 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: publish-dacpac
+  namespace: ntbs-build
+spec:
+  params:
+    - description: Directory containing checkout of repository
+      name: checkout_directory
+      type: string
+    - description: The name of the database to deploy.
+      name: database
+      type: string
+    - description: The config map containing the publish profile location
+      name: config_map
+      type: string
+    - description: >-
+        The key within the config map containing the relative path of the
+        publish profile within the checkout directory
+      name: publish_profile_key
+      type: string
+    - description: The relative path of the reference DACPACs within the checkout directory
+      name: reference_dacpacs_path
+      type: string
+    - description: >-
+        The name of the secret containing a keytab for the SQL identity used to
+        run the deployment, or a password for the SQL user in the connection
+        string.
+      name: sql-user-secret
+      type: string
+  steps:
+    - env:
+        - name: KRB5_CLIENT_KTNAME
+          value: /krbtab/keytab
+      image: >-
+        image-registry.openshift-image-registry.svc:5000/ntbs-build/ntbs-image-stream:publish-dacpac
+      name: ''
+      resources: {}
+      script: >
+        publish_profile_path=$(cat /config/$(params.publish_profile_key))
+
+        cp
+        $(workspaces.input.path)/$(params.checkout_directory)/$(params.reference_dacpacs_path)/*.dacpac
+        $(workspaces.input.path)/dacpacs/$(params.database)
+
+        if [ -f "$KRB5_CLIENT_KTNAME" ]; then
+
+          klist -k $KRB5_CLIENT_KTNAME
+
+          /bin/sqlpackage/sqlpackage -Action:Publish -SourceFile:"$(workspaces.input.path)/dacpacs/$(params.database)/$(params.database).dacpac" -Profile:"$(workspaces.input.path)/$(params.checkout_directory)/$publish_profile_path"
+
+        else
+
+          sqlUser="$(cat /krbtab/username)"
+
+          sqlPassword="$(cat /krbtab/password)"
+
+          /bin/sqlpackage/sqlpackage -Action:Publish -SourceFile:"$(workspaces.input.path)/dacpacs/$(params.database)/$(params.database).dacpac" -Profile:"$(workspaces.input.path)/$(params.checkout_directory)/$publish_profile_path" -TargetPassword:"$sqlPassword" -TargetUser:"$sqlUser"
+
+        fi
+      volumeMounts:
+        - mountPath: /krbtab
+          name: keytab-secret
+        - mountPath: /config
+          name: config
+  volumes:
+    - name: keytab-secret
+      secret:
+        secretName: $(params.sql-user-secret)
+    - configMap:
+        name: $(params.config_map)
+      name: config
+  workspaces:
+    - description: The volume storing the dacpac and the publish profiles
+      name: input
