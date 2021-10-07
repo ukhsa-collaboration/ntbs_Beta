@@ -197,8 +197,8 @@ namespace ntbs_service.Services
                && group.All(log => log.EntityType == nameof(TreatmentEvent))
                && group.All(log => log.EventType == "Insert")
                && group.All(log => log.AuditDetails == "SystemEdited")
-               && group.Any(log => log.AuditData.Contains("\"TreatmentEventType\":\"TransferIn\""))
-               && group.Any(log => log.AuditData.Contains("\"TreatmentEventType\":\"TransferOut\"")))
+               && group.Any(log => log.AuditData.Contains("TransferIn"))
+               && group.Any(log => log.AuditData.Contains("TransferOut")))
             {
                 // We only need one log for the pair
                 var log = group.First();
