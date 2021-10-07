@@ -196,10 +196,15 @@ namespace ntbs_service.Services
             if(group.Count == 2
                && group.All(log => log.EntityType == nameof(TreatmentEvent))
                && group.All(log => log.EventType == "Insert")
-               && group.All(log => log.AuditDetails == "SystemEdited"))
+               && group.All(log => log.AuditDetails == "SystemEdited")
+               && group.Any(log => log.AuditData.Contains("\"TreatmentEventType\":\"TransferIn\""))
+               && group.Any(log => log.AuditData.Contains("\"TreatmentEventType\":\"TransferOut\"")))
             {
                 // We only need one log for the pair
-                return group.Take(1);
+                var log = group.First();
+                // Set entity type to TransferAlert so the log subject is mapped to "Transfer"
+                log.EntityType = nameof(TransferAlert);
+                return new[] { log };
             }
 
             // We want this check at the end, since some of the group checks above may have a single member but still
