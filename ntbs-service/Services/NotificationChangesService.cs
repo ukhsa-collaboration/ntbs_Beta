@@ -22,7 +22,7 @@ namespace ntbs_service.Services
     {
         // This number has been somewhat arbitrarily picked to be
         // - large enough that the audits created as part of a single user-generated request are grouped together, but
-        // - small enough that user quickly editing different pages isn't likely to complete two saves within it 
+        // - small enough that user quickly editing different pages isn't likely to complete two saves within it
         private const double MaxTimeBetweenEventsInTheSameGroupInSecond = 1.5;
         private readonly IAuditService _auditService;
         private readonly IUserRepository _userRepository;
@@ -68,7 +68,7 @@ namespace ntbs_service.Services
         ///
         /// In its current form, the "canonical" events produced by this method are enough to identify the type of the
         /// event. As we implement more detailed options for the events, it will need to do more to combine the data
-        /// from the multiple events, rather than just picking a "recognizable" one to act as the summary for the group. 
+        /// from the multiple events, rather than just picking a "recognizable" one to act as the summary for the group.
         /// </summary>
         private IEnumerable<AuditLog> GetCanonicalLogs(List<AuditLog> group)
         {
@@ -119,7 +119,7 @@ namespace ntbs_service.Services
             }
 
             // Transferring creates a flurry of related events.
-            // For each of these events we just want to have a single item in the history view 
+            // For each of these events we just want to have a single item in the history view
 
             // Rejection creates:
             //   - TransferAlert - Update
@@ -189,6 +189,17 @@ namespace ntbs_service.Services
                && group.Any(log => log.EntityType == nameof(ClinicalDetails)))
             {
                 return group;
+            }
+
+            // Standalone transfers, created when backfilling NTBS-2693
+            // These are just two treatment events (transfer out and in), no transfer alerts
+            if(group.Count == 2
+               && group.All(log => log.EntityType == nameof(TreatmentEvent))
+               && group.All(log => log.EventType == "Insert")
+               && group.All(log => log.AuditDetails == "SystemEdited"))
+            {
+                // We only need one log for the pair
+                return group.Take(1);
             }
 
             // We want this check at the end, since some of the group checks above may have a single member but still
