@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
@@ -120,6 +121,29 @@ namespace ntbs_integration_tests.NotificationPages
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 var document = await GetDocumentAsync(response);
                 Assert.True(document.GetElementsByClassName("notification-overview-type-and-edit-container").Length > 0);
+            }
+        }
+
+        [Fact]
+        public async Task Get_RendersCorrectNavigationLinks()
+        {
+            // Arrange
+            using (var client = Factory
+                .WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+                .WithNotificationAndTbServiceConnected(Utilities.LINKED_NOTIFICATION_ABINGDON_TB_SERVICE, Utilities.PERMITTED_SERVICE_CODE)
+                .CreateClientWithoutRedirects())
+            {
+                // Act
+                var changesPath = GetPathForId(NotificationSubPaths.Overview, Utilities.LINKED_NOTIFICATION_ABINGDON_TB_SERVICE);
+                var response = await client.GetAsync(changesPath);
+                var document = await GetDocumentAsync(response);
+
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                var navLinks = document.GetElementsByClassName("app-subnav__link");
+                Assert.NotNull(navLinks.SingleOrDefault(elem => elem.TextContent.Contains("Notification details")));
+                Assert.NotNull(navLinks.SingleOrDefault(elem => elem.TextContent.Contains("Linked notifications (1)")));
+                Assert.NotNull(navLinks.SingleOrDefault(elem => elem.TextContent.Contains("Notification changes")));
             }
         }
 
