@@ -33,7 +33,7 @@ namespace ntbs_service.Models.Entities
 
         [MaxLength(50)]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
+            ValidationRegexes.CharacterValidationLocalPatientId,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Local patient ID")]
         public string LocalPatientId { get; set; }
