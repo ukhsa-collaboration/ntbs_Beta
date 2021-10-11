@@ -362,7 +362,7 @@ namespace ntbs_service.DataMigration
             {
                 HospitalId = rawNotification.NtbsHospitalId
             };
-            var consultant = RemoveCharactersNotIn(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, rawNotification.Consultant);
+            var consultant = RemoveCharactersNotIn(ValidationRegexes.CharacterValidationAsciiBasic, rawNotification.Consultant);
             details.Consultant = consultant;
             // details.TBServiceCode is set below, based on the hospital
 
@@ -446,7 +446,7 @@ namespace ntbs_service.DataMigration
             details.HasTransplantation = Converter.GetNullableBoolValue(notification.HasTransplantation);
             details.HasOther = Converter.GetNullableBoolValue(notification.HasOther);
             details.OtherDescription = RemoveCharactersNotIn(
-                ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
+                ValidationRegexes.CharacterValidationAsciiBasic,
                 notification.OtherDescription);
 
             if (details.HasOther == true && string.IsNullOrWhiteSpace(details.OtherDescription))
@@ -658,7 +658,7 @@ namespace ntbs_service.DataMigration
             var givenName = RemoveCharactersNotIn(ValidationRegexes.CharacterValidation, notification.GivenName);
             var familyName = RemoveCharactersNotIn(ValidationRegexes.CharacterValidation, notification.FamilyName);
             var localPatientId = RemoveCharactersNotIn(
-                ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
+                ValidationRegexes.CharacterValidationAsciiBasic,
                 notification.LocalPatientId);
 
             var details = new PatientDetails
@@ -681,7 +681,7 @@ namespace ntbs_service.DataMigration
             details.SexId = notification.NtbsSexId ?? Sexes.UnknownId;
             details.OccupationId = notification.NtbsOccupationId;
             details.OccupationOther = RemoveCharactersNotIn(
-                ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
+                ValidationRegexes.CharacterValidationAsciiBasic,
                 notification.OccupationFreetext);
 
             if (details.Postcode != null && details.PostcodeToLookup == null)
@@ -793,7 +793,7 @@ namespace ntbs_service.DataMigration
                 DateFrom = rawVenue.DateFrom,
                 DateTo = rawVenue.DateTo
             };
-            var details = RemoveCharactersNotIn(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, rawVenue.Details);
+            var details = RemoveCharactersNotIn(ValidationRegexes.CharacterValidationAsciiBasic, rawVenue.Details);
             venue.Details = details;
             return venue;
         }
@@ -807,7 +807,7 @@ namespace ntbs_service.DataMigration
                 DateFrom = rawAddress.DateFrom,
                 DateTo = rawAddress.DateTo
             };
-            var details = RemoveCharactersNotIn(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, rawAddress.Details);
+            var details = RemoveCharactersNotIn(ValidationRegexes.CharacterValidationAsciiBasic, rawAddress.Details);
             address.Details = details;
             return address;
         }

@@ -88,7 +88,7 @@ namespace ntbs_service.Models.Entities
         public virtual Occupation Occupation { get; set; }
 
         [MaxLength(150)]
-        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [RegularExpression(ValidationRegexes.CharacterValidationAsciiBasic, ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Occupation")]
         public string OccupationOther { get; set; }
 

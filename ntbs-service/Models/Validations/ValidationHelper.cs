@@ -176,9 +176,9 @@
         public const string CharacterValidation = @"[a-zA-Z \-—,.']+";
         public const string CharacterValidationWithNumbers = @"[0-9a-zA-z \-—,.']+";
         public const string CharacterValidationWithNumbersForwardSlashAndNewLine = @"[0-9a-zA-Z \/\-—,.'\n\r]+";
-        public const string CharacterValidationLocalPatientId = @"[0-9a-zA-Z #$&'()*+,-\/\\.:;=?\[\]_`]";
-        public const string CharacterValidationWithNumbersForwardSlashExtended = @"[ -~—]+"; // Any basic printable ASCII character and em dash
-        public const string CharacterValidationWithNumbersForwardSlashExtendedWithNewLine = @"[ -~—\n\r]+";
+        public const string CharacterValidationLocalPatientId = @"[0-9a-zA-Z #$&'()*+,-\/\\.:;=?\[\]_`]+";
+        public const string CharacterValidationAsciiBasic = @"[ -~—]+"; // Any basic printable ASCII character and em dash
+        public const string CharacterValidationAsciiBasicWithNewline = @"[ -~—\n\r]+";
         public const string NumbersValidation = @"[0-9]+";
         public const string NumbersHyphenAndSpaceValidation = @"[0-9\- ]+";
         // Taken from https://stackoverflow.com/a/164994/2363767
