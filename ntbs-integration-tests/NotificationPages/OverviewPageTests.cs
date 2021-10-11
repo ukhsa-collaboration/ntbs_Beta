@@ -44,7 +44,8 @@ namespace ntbs_integration_tests.NotificationPages
                     GroupId = Utilities.OVERVIEW_NOTIFICATION_GROUP_ID,
                     HospitalDetails = new HospitalDetails
                     {
-                        TBServiceCode = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID
+                        TBServiceCode = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                        CaseManagerId = Utilities.CASEMANAGER_ABINGDON_ID
                     }
                 },
                 new Notification
@@ -144,6 +145,7 @@ namespace ntbs_integration_tests.NotificationPages
                 Assert.NotNull(navLinks.SingleOrDefault(elem => elem.TextContent.Contains("Notification details")));
                 Assert.NotNull(navLinks.SingleOrDefault(elem => elem.TextContent.Contains("Linked notifications (1)")));
                 Assert.NotNull(navLinks.SingleOrDefault(elem => elem.TextContent.Contains("Notification changes")));
+                Assert.NotNull(navLinks.SingleOrDefault(elem => elem.TextContent.Contains("Case manager details")));
             }
         }
 

@@ -53,6 +53,7 @@ namespace ntbs_integration_tests.NotificationPages
                 Assert.NotNull(navLinks.SingleOrDefault(elem => elem.TextContent.Contains("Notification details")));
                 Assert.NotNull(navLinks.SingleOrDefault(elem => elem.TextContent.Contains("Linked notifications (1)")));
                 Assert.NotNull(navLinks.SingleOrDefault(elem => elem.TextContent.Contains("Notification changes")));
+                Assert.NotNull(navLinks.SingleOrDefault(elem => elem.TextContent.Contains("Case manager details")));
             }
         }
 
