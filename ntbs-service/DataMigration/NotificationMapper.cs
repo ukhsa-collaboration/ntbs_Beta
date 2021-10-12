@@ -658,7 +658,7 @@ namespace ntbs_service.DataMigration
             var givenName = RemoveCharactersNotIn(ValidationRegexes.CharacterValidation, notification.GivenName);
             var familyName = RemoveCharactersNotIn(ValidationRegexes.CharacterValidation, notification.FamilyName);
             var localPatientId = RemoveCharactersNotIn(
-                ValidationRegexes.CharacterValidationAsciiBasic,
+                ValidationRegexes.CharacterValidationLocalPatientId,
                 notification.LocalPatientId);
 
             var details = new PatientDetails
