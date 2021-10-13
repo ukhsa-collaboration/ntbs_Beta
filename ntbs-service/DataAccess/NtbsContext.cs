@@ -493,7 +493,7 @@ namespace ntbs_service.DataAccess
                 entity.HasData(
                     new Sex { SexId = 1, Label = "Male" },
                     new Sex { SexId = 2, Label = "Female" },
-                    new Sex { SexId = Sexes.UnknownId, Label = "Unknown" }
+                    new Sex { SexId = Sexes.UnknownId, Label = Sexes.UnknownLabel }
                 );
             });
 
