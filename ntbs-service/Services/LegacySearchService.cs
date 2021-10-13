@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -160,7 +160,7 @@ namespace ntbs_service.Services
                 NotificationStatusString = "Legacy",
                 NotificationDate = (result.NotificationDate as DateTime?).ConvertToString(),
                 Source = result.PrimarySource,
-                Sex = Sexes.Single(s => s.SexId == result.NtbsSexId).Label,
+                Sex = Sexes.SingleOrDefault(s => s.SexId == result.NtbsSexId)?.Label ?? Models.Sexes.UnknownLabel,
                 SortByDate = result.NotificationDate,
                 Name = result.FamilyName.ToUpper() + ", " + result.GivenName,
                 CountryOfBirth = result.BirthCountryName,

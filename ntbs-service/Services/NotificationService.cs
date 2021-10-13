@@ -85,6 +85,7 @@ namespace ntbs_service.Services
 
             await _notificationRepository.SaveChangesAsync();
             await _alertService.AutoDismissAlertAsync<DataQualityBirthCountryAlert>(notification);
+            await _alertService.AutoDismissAlertAsync<DataQualityChildECMLevel>(notification);
         }
 
         public void UpdatePatientDetailsWithoutSave(Notification notification, PatientDetails patient)
@@ -152,6 +153,7 @@ namespace ntbs_service.Services
 
             await _alertService.AutoDismissAlertAsync<DataQualityClinicalDatesAlert>(notification);
             await _alertService.AutoDismissAlertAsync<DataQualityDotVotAlert>(notification);
+            await _alertService.AutoDismissAlertAsync<DataQualityChildECMLevel>(notification);
         }
 
         public async Task UpdateTestDataAsync(Notification notification, TestData testData)

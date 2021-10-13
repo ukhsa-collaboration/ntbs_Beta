@@ -1,0 +1,89 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: git-clone-with-ssh
+  namespace: ntbs-build
+spec:
+  params:
+    - description: git url to clone
+      name: url
+      type: string
+    - default: ''
+      description: 'git revision to checkout (branch, tag, sha, ref…)'
+      name: revision
+      type: string
+    - default: ''
+      description: subdirectory inside the "output" workspace to clone the git repo into
+      name: subdirectory
+      type: string
+  results:
+    - description: The precise commit SHA that was fetched by this Task
+      name: commit
+  steps:
+    - image: >-
+        image-registry.openshift-image-registry.svc:5000/ntbs-build/ntbs-image-stream:alpine-git
+      name: clone
+      resources: {}
+      script: >
+        #!/bin/sh
+
+        set -eu -o pipefail
+
+        set -x
+
+        CHECKOUT_DIR="$(workspaces.output.path)/$(params.subdirectory)"
+
+        cp -R "/ssh-credentials" ~/.ssh
+
+        echo -e 'Host github.com\nHostname ssh.github.com\nPort 443' >
+        ~/.ssh/config
+
+        chmod 700 ~/.ssh
+
+        chmod -R 400 ~/.ssh/*
+
+        cleandir() {
+          # Delete any existing contents of the repo directory if it exists.
+          #
+          # We don't just "rm -rf $CHECKOUT_DIR" because $CHECKOUT_DIR might be "/"
+          # or the root of a mounted volume.
+          if [[ -d "$CHECKOUT_DIR" ]] ; then
+            # Delete non-hidden files and directories
+            rm -rf "$CHECKOUT_DIR"/*
+            # Delete files and directories starting with . but excluding ..
+            rm -rf "$CHECKOUT_DIR"/.[!.]*
+            # Delete files and directories starting with .. plus any other character
+            rm -rf "$CHECKOUT_DIR"/..?*
+          fi
+        }
+
+        cleandir
+
+        eval `ssh-agent -s`
+
+        ssh-add ~/.ssh/id_ed25519
+
+        GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone --depth 1
+        --branch "$(params.revision)" "$(params.url)" "$CHECKOUT_DIR"
+
+        cd "$CHECKOUT_DIR"
+
+        RESULT_SHA="$(git rev-parse HEAD)"
+
+        EXIT_CODE="$?"
+
+        if [ "$EXIT_CODE" != 0 ] ; then
+          exit $EXIT_CODE
+        fi
+
+        echo -n "$RESULT_SHA" > $(results.commit.path)
+      volumeMounts:
+        - mountPath: /ssh-credentials
+          name: ssh-credentials
+  volumes:
+    - name: ssh-credentials
+      secret:
+        secretName: ntbs-ssh-credentials
+  workspaces:
+    - description: The git repo will be cloned onto the volume backing this workspace
+      name: output
