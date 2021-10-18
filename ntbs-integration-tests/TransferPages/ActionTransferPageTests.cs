@@ -62,7 +62,7 @@ namespace ntbs_integration_tests.TransferPage
             var formData = new Dictionary<string, string>
             {
                 ["AcceptTransfer"] = "false",
-                ["DeclineTransferReason"] = "|||",
+                ["DeclineTransferReason"] = "£££",
             };
 
             // Act
@@ -70,7 +70,7 @@ namespace ntbs_integration_tests.TransferPage
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            resultDocument.AssertErrorMessage("comment", "Explanatory comment can only contain letters, numbers and the symbols ' - . , /");
+            resultDocument.AssertErrorMessage("comment", "Invalid character found in Explanatory comment");
         }
 
         [Fact]

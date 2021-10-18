@@ -38,7 +38,7 @@ namespace ntbs_service.Models.Entities
         [MaxLength(250)]
         [ContainsNoTabs]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
+            ValidationRegexes.CharacterValidationAsciiBasicWithNewline,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Comments")]
         public string Details { get; set; }

@@ -30,8 +30,8 @@ namespace ntbs_service.Pages.Alerts
         public bool? AcceptTransfer { get; set; }
         [BindProperty]
         [MaxLength(200)]
-        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
-            ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
+        [RegularExpression(ValidationRegexes.CharacterValidationAsciiBasic,
+            ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Explanatory comment")]
         public string DeclineTransferReason { get; set; }
 

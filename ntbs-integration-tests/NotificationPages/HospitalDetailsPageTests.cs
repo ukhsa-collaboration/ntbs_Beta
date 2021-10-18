@@ -239,7 +239,7 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
-                ["HospitalDetails.Consultant"] = "Name-1|"
+                ["HospitalDetails.Consultant"] = "Name-1£"
             };
 
             // Act

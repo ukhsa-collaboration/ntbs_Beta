@@ -15,7 +15,7 @@ namespace ntbs_service.Models.Entities
     public partial class HospitalDetails : ModelBase, IOwnedEntityForAuditing
     {
         [MaxLength(200)]
-        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, ErrorMessage = ValidationMessages.InvalidCharacter)]
+        [RegularExpression(ValidationRegexes.CharacterValidationAsciiBasic, ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Consultant")]
         public string Consultant { get; set; }
 
