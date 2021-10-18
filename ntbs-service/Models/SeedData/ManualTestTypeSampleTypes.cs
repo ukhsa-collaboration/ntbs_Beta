@@ -113,6 +113,8 @@ namespace ntbs_service.Models.SeedData
                 (int)SampleTypeId.NotKnown,
             };
 
+            var chestCTSampleTypes = new int[] { };
+
             var joinData = new List<ManualTestTypeSampleType>();
             joinData.AddRange(smearSampleTypes.Select(sampleType => new ManualTestTypeSampleType { ManualTestTypeId = (int)ManualTestTypeId.Smear, SampleTypeId = sampleType }));
             joinData.AddRange(cultureSampleTypes.Select(sampleType => new ManualTestTypeSampleType { ManualTestTypeId = (int)ManualTestTypeId.Culture, SampleTypeId = sampleType }));
@@ -120,6 +122,7 @@ namespace ntbs_service.Models.SeedData
             joinData.AddRange(chestXRaySampleTypes.Select(sampleType => new ManualTestTypeSampleType { ManualTestTypeId = (int)ManualTestTypeId.ChestXRay, SampleTypeId = sampleType }));
             joinData.AddRange(pcrSampleTypes.Select(sampleType => new ManualTestTypeSampleType { ManualTestTypeId = (int)ManualTestTypeId.Pcr, SampleTypeId = sampleType }));
             joinData.AddRange(lineProbeAssaySampleTypes.Select(sampleType => new ManualTestTypeSampleType { ManualTestTypeId = (int)ManualTestTypeId.LineProbeAssay, SampleTypeId = sampleType }));
+            joinData.AddRange(chestCTSampleTypes.Select(sampleType => new ManualTestTypeSampleType { ManualTestTypeId = (int)ManualTestTypeId.ChestCT, SampleTypeId = sampleType }));
 
             return joinData;
         }
