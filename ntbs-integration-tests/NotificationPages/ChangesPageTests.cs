@@ -34,6 +34,30 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
+        public async Task Get_RendersCorrectNavigationLinks()
+        {
+            // Arrange
+            using (var client = Factory
+                .WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+                .WithNotificationAndTbServiceConnected(Utilities.LINKED_NOTIFICATION_ABINGDON_TB_SERVICE, Utilities.PERMITTED_SERVICE_CODE)
+                .CreateClientWithoutRedirects())
+            {
+                // Act
+                var changesPath = GetPathForId(NotificationSubPaths.NotificationChanges, Utilities.LINKED_NOTIFICATION_ABINGDON_TB_SERVICE);
+                var response = await client.GetAsync(changesPath);
+                var document = await GetDocumentAsync(response);
+
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                var navLinks = document.GetElementsByClassName("app-subnav__link");
+                Assert.NotNull(navLinks.SingleOrDefault(elem => elem.TextContent.Contains("Notification details")));
+                Assert.NotNull(navLinks.SingleOrDefault(elem => elem.TextContent.Contains("Linked notifications (1)")));
+                Assert.NotNull(navLinks.SingleOrDefault(elem => elem.TextContent.Contains("Notification changes")));
+                Assert.NotNull(navLinks.SingleOrDefault(elem => elem.TextContent.Contains("Case manager details")));
+            }
+        }
+
+        [Fact]
         public async Task Get_ReturnsRedirectToOverview_ForUserWithoutAccessToNotification()
         {
             // Arrange

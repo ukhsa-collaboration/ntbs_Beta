@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -42,6 +42,8 @@ namespace ntbs_service.Services
                      n.NotificationDate,
                      n.PrimarySource,
                      n.NtbsHospitalId,
+                     lu.GivenName AS CaseManagerGivenName,
+                     lu.FamilyName AS CaseManagerFamilyName,
                      dmg.NtbsSexId,
                      dmg.GivenName,
                      dmg.FamilyName,
@@ -56,6 +58,7 @@ namespace ntbs_service.Services
             FROM MergedNotifications n 
             LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.PrimaryNotificationId
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.PrimaryNotificationId
+            LEFT JOIN LegacyUser lu ON lu.Username = n.CaseManager
             WHERE NOT EXISTS ({_notificationImportHelper.SelectImportedNotificationWhereIdEquals("n.PrimaryNotificationId")})
             ";
 
@@ -160,13 +163,15 @@ namespace ntbs_service.Services
                 NotificationStatusString = "Legacy",
                 NotificationDate = (result.NotificationDate as DateTime?).ConvertToString(),
                 Source = result.PrimarySource,
-                Sex = Sexes.Single(s => s.SexId == result.NtbsSexId).Label,
+                Sex = Sexes.SingleOrDefault(s => s.SexId == result.NtbsSexId)?.Label ?? Models.Sexes.UnknownLabel,
                 SortByDate = result.NotificationDate,
                 Name = result.FamilyName.ToUpper() + ", " + result.GivenName,
                 CountryOfBirth = result.BirthCountryName,
                 TbService = tbService?.Name,
                 TbServiceCode = tbService?.Code,
                 TbServicePHECCode = tbService?.PHECCode,
+                // Currently it is never the case that given name exists and family name doesn't or vice versa.
+                CaseManager = result.CaseManagerGivenName != null ? $"{result.CaseManagerGivenName} {result.CaseManagerFamilyName}" : null,
                 LocationPHECCode = locationPhecCode,
                 Postcode = (result.Postcode as string).FormatStringToPostcodeFormat(),
                 NhsNumber = (result.NhsNumber as string).FormatStringToNhsNumberFormat(),

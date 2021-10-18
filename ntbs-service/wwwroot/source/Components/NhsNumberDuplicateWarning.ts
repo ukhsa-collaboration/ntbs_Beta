@@ -46,7 +46,7 @@ const NhsNumberDuplicateWarning = Vue.extend({
                         // New lines required to match output from .cshtml
                         warningContainer.appendChild(document.createTextNode("\r\n,\r\n"));
                     }
-                    if (url.includes("Legacy")) {
+                    if (url.indexOf("Legacy") > -1) {
                         warningContainer.appendChild(this.createAnchorLegacyTag(id, url));
                     }
                     else {

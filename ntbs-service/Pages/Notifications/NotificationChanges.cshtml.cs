@@ -37,6 +37,7 @@ namespace ntbs_service.Pages.Notifications
                 return NotFound();
             }
 
+            await TryGetLinkedNotificationsAsync();
             await AuthorizeAndSetBannerAsync();
             if (PermissionLevel == PermissionLevel.None)
             {
