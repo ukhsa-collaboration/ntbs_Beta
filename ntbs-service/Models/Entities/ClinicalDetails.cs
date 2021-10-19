@@ -73,6 +73,11 @@ namespace ntbs_service.Models.Entities
         [AssertThat(@"AfterDob(MDRTreatmentStartDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? MDRTreatmentStartDate { get; set; }
 
+        [MaxLength(10)]
+        [ValidDuration]
+        [Display(Name = "Expected treatment duration")]
+        public string MDRExpectedTreatmentDurationInMonths { get; set; }
+
         [MaxLength(100)]
         [Display(Name = "Treatment regimen other description")]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]

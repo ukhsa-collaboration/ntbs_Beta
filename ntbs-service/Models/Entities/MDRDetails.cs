@@ -38,6 +38,9 @@ namespace ntbs_service.Models.Entities
         public int? CountryId { get; set; }
         public virtual Country Country { get; set; }
 
+        [Display(Name = "Discussed at the British Thoracic Society MDR forum?")]
+        public Status? DiscussedAtMDRForum { get; set; }
+
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
 }

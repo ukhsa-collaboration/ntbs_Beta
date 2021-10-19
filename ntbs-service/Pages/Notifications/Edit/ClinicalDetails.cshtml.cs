@@ -223,6 +223,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (!ClinicalDetails.IsMDRTreatment)
             {
                 ClinicalDetails.MDRTreatmentStartDate = null;
+                ClinicalDetails.MDRExpectedTreatmentDurationInMonths = null;
                 FormattedMdrTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
                 ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
             }
