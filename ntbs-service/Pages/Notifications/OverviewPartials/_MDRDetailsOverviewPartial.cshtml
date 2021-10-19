@@ -38,13 +38,19 @@
             <div class="cell-min-height" id="@sectionId-related-notification-id">
                 @if (Model.Notification.MDRDetails.IsCountryUK && Model.Notification.MDRDetails.NotifiedToPheStatus == Status.Yes)
                 {
-                     @Model.Notification.MDRDetails.RelatedNotificationId
+                    @Model.Notification.MDRDetails.RelatedNotificationId
                 }
                 else if (Model.Notification.MDRDetails.NotifiedToPheStatus != null)
                 {
                     @:Case not notified to PHE
                 }
             </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> @Html.DisplayNameFor(x => x.Notification.MDRDetails.DiscussedAtMDRForum) </div>
+            <div class="cell-min-height" id="@sectionId-discussed-at-forum"> @Model.Notification.MDRDetails.DiscussedAtMDRForum </div>
         </nhs-grid-column>
     </nhs-grid-row>
 </div>
