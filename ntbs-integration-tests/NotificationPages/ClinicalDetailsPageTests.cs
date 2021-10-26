@@ -61,7 +61,7 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
                 ["NotificationSiteMap[OTHER]"] = "true",
-                ["OtherSite.SiteDescription"] = "<123>",
+                ["OtherSite.SiteDescription"] = "£123£",
                 ["ClinicalDetails.BCGVaccinationState"] = "Yes",
                 ["ClinicalDetails.BCGVaccinationYear"] = "1",
                 ["ClinicalDetails.IsSymptomatic"] = "true",
@@ -483,7 +483,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Theory]
-        [InlineData(false, "<123>", "Invalid character found in Site name")]
+        [InlineData(false, "£123£", "Invalid character found in Site name")]
         [InlineData(true, "", "Site name is a mandatory field")]
         [InlineData(false, "", "")]
         public async Task ValidateNotificationSiteProperty_ReturnsExpectedResult(bool shouldValidateFull, string value, string validationResult)

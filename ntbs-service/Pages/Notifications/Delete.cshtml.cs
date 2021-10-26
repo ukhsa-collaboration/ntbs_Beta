@@ -57,6 +57,11 @@ namespace ntbs_service.Pages.Notifications
                 return Page();
             }
 
+            if (Notification == null)
+            {
+                return NotFound();
+            }
+
             if (Notification.NotificationStatus == NotificationStatus.Draft)
             {
                 await Service.DeleteNotificationAsync(NotificationId, DeletionReason);

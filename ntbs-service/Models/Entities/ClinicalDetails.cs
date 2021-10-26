@@ -82,7 +82,7 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Notes")]
         [MaxLength(1000, ErrorMessage = ValidationMessages.MaximumTextLength)]
         [ContainsNoTabs]
-        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
+        [RegularExpression(ValidationRegexes.CharacterValidationAsciiBasicWithNewline,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string Notes { get; set; }
 

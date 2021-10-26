@@ -14,7 +14,7 @@ namespace ntbs_service_unit_tests.Models.Entities
         {
             // Arrange
             var validationResults = new List<ValidationResult>();
-            var details = new User { JobTitle = "!!Job title~" };
+            var details = new User { JobTitle = "££Job title~" };
 
             // Act
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
@@ -46,7 +46,7 @@ namespace ntbs_service_unit_tests.Models.Entities
         {
             // Arrange
             var validationResults = new List<ValidationResult>();
-            var details = new User { PhoneNumberSecondary = "!!077121901231~" };
+            var details = new User { PhoneNumberSecondary = "¬£077121901231~" };
 
             // Act
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
@@ -62,7 +62,7 @@ namespace ntbs_service_unit_tests.Models.Entities
         {
             // Arrange
             var validationResults = new List<ValidationResult>();
-            var details = new User { EmailPrimary = "!primay@email~" };
+            var details = new User { EmailPrimary = "££primay@email~" };
 
             // Act
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
@@ -78,7 +78,7 @@ namespace ntbs_service_unit_tests.Models.Entities
         {
             // Arrange
             var validationResults = new List<ValidationResult>();
-            var details = new User { EmailSecondary = "!!seconday@email~" };
+            var details = new User { EmailSecondary = "££seconday@email~" };
 
             // Act
             var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);

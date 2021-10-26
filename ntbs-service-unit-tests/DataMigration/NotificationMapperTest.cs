@@ -624,7 +624,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.True(notification.ImmunosuppressionDetails.HasBioTherapy);
             Assert.True(notification.ImmunosuppressionDetails.HasTransplantation);
             Assert.True(notification.ImmunosuppressionDetails.HasOther);
-            Assert.Equal("Some invalid characters", notification.ImmunosuppressionDetails.OtherDescription);
+            Assert.Equal("Some invalid ~characters{}", notification.ImmunosuppressionDetails.OtherDescription);
         }
 
         // Data for this has been taken from an edited test notification, relating to NTBS-2478
