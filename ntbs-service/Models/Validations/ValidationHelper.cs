@@ -57,7 +57,7 @@
         public const string DiseaseSiteIsRequired = "Please choose at least one site of disease";
         public const string ValidTreatmentOptions = "Short course and MDR treatment cannot both be true";
         public const string MDRCantChange = "You cannot change the value of this field because an MDR Enhanced Surveillance Questionnaire exists. Please contact NTBS@phe.gov.uk";
-        public const string MDRDuration = "Please enter a positive number or range of months";
+        public const string MDRDuration = "Please enter a whole number of months, or a range, for example, 12, 12-18 or 24+";
         #endregion
 
         #region Test Results

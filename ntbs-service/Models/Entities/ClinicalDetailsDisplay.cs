@@ -32,9 +32,13 @@ namespace ntbs_service.Models.Entities
                 case Enums.TreatmentRegimen.MdrTreatment:
                     var displayString = TreatmentRegimen.GetDisplayName();
                     if (MDRTreatmentStartDate != null)
+                    {
                         displayString += $" - from {MDRTreatmentStartDate.ConvertToString()}";
+                    }
                     if (MDRExpectedTreatmentDurationInMonths != null)
+                    {
                         displayString += $" for {MDRExpectedTreatmentDurationInMonths} months (expected)";
+                    }
                     return displayString;
                 case Enums.TreatmentRegimen.Other:
                     return TreatmentRegimenOtherDescription == null

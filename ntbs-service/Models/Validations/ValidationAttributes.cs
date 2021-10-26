@@ -129,7 +129,7 @@ namespace ntbs_service.Models.Validations
         }
     }
 
-    public class ValidDuration : ValidationAttribute
+    public class ValidDurationAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
