@@ -138,7 +138,7 @@ namespace ntbs_service.Models.Validations
                 return null;
             }
 
-            var duration = (string)value;
+            var duration = ((string)value).Trim();
             if (duration.Contains("+"))
             {
                 var numbers = duration.Split("+").Where(x => x != "");

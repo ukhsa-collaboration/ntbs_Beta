@@ -7,8 +7,11 @@ namespace ntbs_service_unit_tests.Models
     {
         [Theory]
         [InlineData("12", true)]
+        [InlineData(" 12 ", true)]
         [InlineData("12-36", true)]
+        [InlineData("12- 36", true)]
         [InlineData("11+", true)]
+        [InlineData("11 +", true)]
         [InlineData("12 55 ", false)]
         [InlineData("12-36-12", false)]
         [InlineData("10-", false)]

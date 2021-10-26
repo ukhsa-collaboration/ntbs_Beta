@@ -227,6 +227,11 @@ namespace ntbs_service.Pages.Notifications.Edit
                 FormattedMdrTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
                 ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
             }
+            else
+            {
+                ClinicalDetails.MDRExpectedTreatmentDurationInMonths =
+                    ClinicalDetails.MDRExpectedTreatmentDurationInMonths.Replace(" ", "");
+            }
 
             if (ClinicalDetails.TreatmentRegimen != TreatmentRegimen.Other)
             {
