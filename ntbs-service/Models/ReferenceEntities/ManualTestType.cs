@@ -17,6 +17,7 @@ namespace ntbs_service.Models.ReferenceEntities
         Histology = 3,
         ChestXRay = 4,
         Pcr = 5,
-        LineProbeAssay = 6
+        LineProbeAssay = 6,
+        ChestCT = 7
     }
 }
