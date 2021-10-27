@@ -164,27 +164,33 @@ namespace ntbs_service.DataAccess
             }
             else
             {
-                RemoveUnmatchedCaseManagerTbServices(user.CaseManagerTbServices, caseManagerTbServices);
+                RemoveUnmatchedTbServicesFromCaseManager(user.CaseManagerTbServices, caseManagerTbServices);
+                AddNewTbServicesToCaseManager(user.CaseManagerTbServices, caseManagerTbServices);
+            }
+        }
 
-                foreach (var caseManagerTbService in caseManagerTbServices)
+        private void RemoveUnmatchedTbServicesFromCaseManager(
+            ICollection<CaseManagerTbService> existingTbServices,
+            IList<CaseManagerTbService> newTbServices)
+        {
+            foreach (var caseManagerTbService in existingTbServices)
+            {
+                if (!newTbServices.Any(c => c.TbServiceCode == caseManagerTbService.TbServiceCode))
                 {
-                    if (!user.CaseManagerTbServices.Any(c => c.Equals(caseManagerTbService)))
-                    {
-                        user.CaseManagerTbServices.Add(caseManagerTbService);
-                    }
+                    _context.Remove(caseManagerTbService);
                 }
             }
         }
 
-        private void RemoveUnmatchedCaseManagerTbServices(
-            ICollection<CaseManagerTbService> userCaseManagerTbServices,
-            IList<CaseManagerTbService> adCaseManagerTbServices)
+        private static void AddNewTbServicesToCaseManager(
+            ICollection<CaseManagerTbService> existingTbServices,
+            IList<CaseManagerTbService> newTbServices)
         {
-            foreach (var caseManagerTbService in userCaseManagerTbServices)
+            foreach (var caseManagerTbService in newTbServices)
             {
-                if (!adCaseManagerTbServices.Any(c => caseManagerTbService.Equals(c)))
+                if (!existingTbServices.Any(c => c.TbServiceCode == caseManagerTbService.TbServiceCode))
                 {
-                    _context.Remove(caseManagerTbService);
+                    existingTbServices.Add(caseManagerTbService);
                 }
             }
         }
