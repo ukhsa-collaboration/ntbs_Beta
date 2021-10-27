@@ -176,8 +176,10 @@
         public const string CharacterValidation = @"[a-zA-Z \-—,.']+";
         public const string CharacterValidationWithNumbers = @"[0-9a-zA-z \-—,.']+";
         public const string CharacterValidationWithNumbersForwardSlashAndNewLine = @"[0-9a-zA-Z \/\-—,.'\n\r]+";
-        public const string CharacterValidationWithNumbersForwardSlashExtended = @"[0-9a-zA-Z \/\-—,.'`@#&+;:$_()\\\[\]=\*\?]+";
-        public const string CharacterValidationWithNumbersForwardSlashExtendedWithNewLine = @"[0-9a-zA-Z \/\-—,.'`@#&+;:$_()<>\\\[\]=\*\?\n\r]+";
+        // Taken from https://airelogic-nis.atlassian.net/wiki/spaces/R2/pages/158957672/Allowed+character+set+for+local+patient+ID
+        public const string CharacterValidationLocalPatientId = @"[0-9a-zA-Z #$&'()*+,-\/\\.:;=?\[\]_`]+";
+        public const string CharacterValidationAsciiBasic = @"[ -~—]+"; // Any basic printable ASCII character and em dash
+        public const string CharacterValidationAsciiBasicWithNewline = @"[ -~—\n\r]+";
         public const string NumbersValidation = @"[0-9]+";
         public const string NumbersHyphenAndSpaceValidation = @"[0-9\- ]+";
         // Taken from https://stackoverflow.com/a/164994/2363767

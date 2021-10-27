@@ -46,9 +46,9 @@ namespace ntbs_service_unit_tests.DataMigration
             notification.ImmunosuppressionDetails = new ImmunosuppressionDetails
             {
                 HasOther = true,
-                OtherDescription = "<><>"
+                OtherDescription = "<>££<>"
             };
-            notification.HospitalDetails = new HospitalDetails { Consultant = "<>Fred<>" };
+            notification.HospitalDetails = new HospitalDetails { Consultant = "<>£Fred£<>" };
             notification.VisitorDetails = new VisitorDetails{ HasVisitor = Status.Yes, StayLengthInMonths1 = 3 };
             notification.ContactTracing = new ContactTracing { AdultsIdentified = -1 };
             notification.PreviousTbHistory = new PreviousTbHistory { PreviousTbDiagnosisYear = 1899 };

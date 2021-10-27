@@ -33,7 +33,7 @@ namespace ntbs_service.Models.Entities
 
         [MaxLength(50)]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
+            ValidationRegexes.CharacterValidationLocalPatientId,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Local patient ID")]
         public string LocalPatientId { get; set; }
@@ -88,7 +88,7 @@ namespace ntbs_service.Models.Entities
         public virtual Occupation Occupation { get; set; }
 
         [MaxLength(150)]
-        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [RegularExpression(ValidationRegexes.CharacterValidationAsciiBasic, ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Occupation")]
         public string OccupationOther { get; set; }
 

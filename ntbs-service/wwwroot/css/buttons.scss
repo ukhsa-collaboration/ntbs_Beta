@@ -2,7 +2,7 @@
 
 .ntbsuk-button--primary {
     background-color: $primary-button;
-    box-shadow: 0 4px 0 $button-drop-shadow;
+    box-shadow: 0 4px 0 $primary-button-drop-shadow;
     margin-bottom: 24px;
 
     &:hover {
@@ -12,7 +12,7 @@
 
 .ntbsuk-button--secondary {
     background-color: $secondary-button;
-    box-shadow: 0 4px 0 $button-drop-shadow;
+    box-shadow: 0 4px 0 $secondary-button-drop-shadow;
     margin-bottom: 24px;
 
     &:hover {
@@ -22,7 +22,7 @@
 
 .ntbsuk-button--warning {
     background-color: $warning-button;
-    box-shadow: 0 4px 0 $button-drop-shadow;
+    box-shadow: 0 4px 0 $warning-button-drop-shadow;
 
     &:hover {
         background-color: $warning-button-focus;

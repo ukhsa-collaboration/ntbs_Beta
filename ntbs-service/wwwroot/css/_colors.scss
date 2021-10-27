@@ -9,11 +9,13 @@ $shaded-background-color: #F0F4F5;
 
 $primary-button: $phe-red;
 $primary-button-focus: $phe-red-dull;
+$primary-button-drop-shadow: shade($primary-button, 50%);
 $secondary-button: #425563;
 $secondary-button-focus: #384854;
-$button-drop-shadow: #003317;
+$secondary-button-drop-shadow: shade($secondary-button, 50%);
 $warning-button: #d4351c;
 $warning-button-focus: #aa2a16;
+$warning-button-drop-shadow: shade($warning-button, 50%);
 
 $manage-notification-circle: $phe-red;
 $manage-notification-expander-background: #ececec;

@@ -17,7 +17,7 @@ namespace ntbs_service.Models.Entities.Alerts
         [MaxLength(200)]
         [ContainsNoTabs]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
+            ValidationRegexes.CharacterValidationAsciiBasicWithNewline,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Rejection reason")]
         public string RejectionReason { get; set; }

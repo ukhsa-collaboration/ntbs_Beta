@@ -15,7 +15,7 @@ namespace ntbs_service.Models.Entities
 
         [Display(Name = "Site name")]
         [RequiredIf("ShouldValidateFull && SiteId == SiteId.OTHER", ErrorMessage = ValidationMessages.FieldRequired)]
-        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, ErrorMessage = ValidationMessages.InvalidCharacter)]
+        [RegularExpression(ValidationRegexes.CharacterValidationAsciiBasic, ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string SiteDescription { get; set; }
 
         string IHasRootEntityForAuditing.RootEntityType => RootEntities.Notification;
