@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20211018141516_AddNewManualTestType")]
+    partial class AddNewManualTestType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5209,10 +5211,6 @@ namespace ntbs_service.Migrations
                             b1.Property<bool?>("IsSymptomatic")
                                 .HasColumnType("bit");
 
-                            b1.Property<string>("MDRExpectedTreatmentDurationInMonths")
-                                .HasMaxLength(10)
-                                .HasColumnType("nvarchar(10)");
-
                             b1.Property<DateTime?>("MDRTreatmentStartDate")
                                 .HasColumnType("datetime2");
 
@@ -5441,9 +5439,6 @@ namespace ntbs_service.Migrations
                                 .HasColumnType("int");
 
                             b1.Property<int?>("CountryId")
-                                .HasColumnType("int");
-
-                            b1.Property<int?>("DiscussedAtMDRForum")
                                 .HasColumnType("int");
 
                             b1.Property<string>("ExposureToKnownCaseStatus")

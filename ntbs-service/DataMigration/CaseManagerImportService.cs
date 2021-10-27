@@ -67,9 +67,16 @@ namespace ntbs_service.DataMigration
                 var legacyUserTbServices =
                     await _referenceDataRepository.GetTbServicesFromHospitalIdsAsync(legacyUserHospitals);
                 var legacyMatchingTbService = legacyUserTbServices.SingleOrDefault(tb => tb.Code == legacyTbServiceCode);
-                if (legacyMatchingTbService != null) {
+                if (legacyMatchingTbService != null)
+                {
                     ntbsCaseManager.IsCaseManager = true;
-                    ntbsCaseManager.CaseManagerTbServices.Add(new CaseManagerTbService{TbService = legacyMatchingTbService});
+                    ntbsCaseManager.CaseManagerTbServices.Add(new CaseManagerTbService
+                    {
+                        TbService = legacyMatchingTbService,
+                        // We need the TB service code as well as the TB Service at this point, because it is
+                        // used in subsequent code before the object is saved and re-fetched from the context.
+                        TbServiceCode = legacyMatchingTbService.Code
+                    });
                 }
             }
         }

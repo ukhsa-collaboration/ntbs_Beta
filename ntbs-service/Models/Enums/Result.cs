@@ -33,10 +33,10 @@ namespace ntbs_service.Models.Enums
                 case Result.ConsistentWithTbCavities:
                 case Result.ConsistentWithTbOther:
                 case Result.NotConsistentWithTb:
-                    return testTypeId == (int)ManualTestTypeId.ChestXRay;
+                    return testTypeId == (int)ManualTestTypeId.ChestXRay || testTypeId == (int)ManualTestTypeId.ChestCT;
                 case Result.Positive:
                 case Result.Negative:
-                    return testTypeId != (int)ManualTestTypeId.ChestXRay;
+                    return testTypeId != (int)ManualTestTypeId.ChestXRay && testTypeId != (int)ManualTestTypeId.ChestCT;
                 default: return false;
             }
         }
