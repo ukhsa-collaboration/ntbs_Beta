@@ -175,7 +175,7 @@
                                 Expected treatment duration in months
                             </label>
                             <input nhs-input-type="Standard" asp-for="ClinicalDetails.MDRExpectedTreatmentDurationInMonths" is-error-input="@hasMdrExpectedTreatmentError"
-                                 v-on:blur="validate" ref="inputField" fixed-width="Five" id="expected-treatment-duration" aria-describedby="expected-treatment-duration-error" />
+                                 v-on:blur="validate" ref="inputField" fixed-width="Five" aria-describedby="expected-treatment-duration-error" />
                         </nhs-form-group>
                     </validate-input>
                 </div>
