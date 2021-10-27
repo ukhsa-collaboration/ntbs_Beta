@@ -495,6 +495,7 @@ namespace ntbs_service.DataMigration
                 StartedTreatment = !Converter.GetNullableBoolValue(notification.DidNotStartTreatment),
                 TreatmentStartDate = notification.StartOfTreatmentDate,
                 MDRTreatmentStartDate = notification.MDRTreatmentStartDate,
+                MDRExpectedTreatmentDurationInMonths = notification.MDRExpectedDuration,
                 IsSymptomatic = Converter.GetNullableBoolValue(notification.IsSymptomatic),
                 HomeVisitCarriedOut = Converter.GetStatusFromString(notification.HomeVisitCarriedOut),
                 FirstHomeVisitDate = notification.FirstHomeVisitDate,

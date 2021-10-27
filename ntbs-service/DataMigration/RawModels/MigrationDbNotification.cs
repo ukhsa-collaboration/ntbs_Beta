@@ -123,5 +123,6 @@ namespace ntbs_service.DataMigration.RawModels
         public string mdr_CaseInUKStatus { get; set; }
         public string mdr_RelatedNotificationId { get; set; }
         public int? mdr_CountryId { get; set; }
+        public string MDRExpectedDuration { get; set; }
     }
 }
