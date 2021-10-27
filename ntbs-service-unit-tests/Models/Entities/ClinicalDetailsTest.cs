@@ -51,9 +51,10 @@ namespace ntbs_service_unit_tests.Models.Entities
         }
 
         [Theory]
-        [InlineData(2019, 1, 1, "RR/MDR/XDR treatment - 01 Jan 2019")]
-        [InlineData(null, null, null, "RR/MDR/XDR treatment")]
-        public void CreatesMdrTreatmentStringCorrectly(int? year, int? month, int? day, string expectedResult)
+        [InlineData(null, 2019, 1, 1, "RR/MDR/XDR treatment - from 01 Jan 2019")]
+        [InlineData("12-13", 2019, 1, 1, "RR/MDR/XDR treatment - from 01 Jan 2019 for 12-13 months (expected)")]
+        [InlineData(null, null, null, null, "RR/MDR/XDR treatment")]
+        public void CreatesMdrTreatmentStringCorrectly(string duration, int? year, int? month, int? day, string expectedResult)
         {
 
             // Arrange
@@ -62,6 +63,11 @@ namespace ntbs_service_unit_tests.Models.Entities
             {
                 var dateTime = new DateTime((int)year, (int)month, (int)day);
                 clinicalDetails.MDRTreatmentStartDate = dateTime;
+            }
+
+            if (duration != null)
+            {
+                clinicalDetails.MDRExpectedTreatmentDurationInMonths = duration;
             }
 
             clinicalDetails.TreatmentRegimen = TreatmentRegimen.MdrTreatment;

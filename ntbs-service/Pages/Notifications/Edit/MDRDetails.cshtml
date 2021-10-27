@@ -69,7 +69,7 @@
                                         @Html.DisplayNameFor(x => x.MDRDetails.CountryId)
                                     </label>
                                     <span nhs-span-type="ErrorMessage" id="exposure-country-error"
-                                        ref="errorField" asp-validation-for="MDRDetails.CountryId" has-error="@hasCountryError">
+                                          ref="errorField" asp-validation-for="MDRDetails.CountryId" has-error="@hasCountryError">
                                     </span>
                                     <div ref="selectField" data-aria-controls="notified-to-phe-conditional" class=@countrySelectErrorClass>
                                         <autocomplete-select v-on:input-changed="validate" placeholder="Select Country" emit-change-on="blur" inline-template>
@@ -153,6 +153,33 @@
                             </div>
                         </nhs-fieldset>
                     </conditional-select-wrapper>
+                    <br/>
+
+                    <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-HomeVisitDate">
+                        <nhs-fieldset>
+                            <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(x => x.MDRDetails.DiscussedAtMDRForum)</nhs-fieldset-legend>
+                            <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                                <div class="nhsuk-radios__item">
+                                    <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-home-visit-conditional">
+                                    <label class="nhsuk-label nhsuk-radios__label" for="discussed-at-forum-yes">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="nhsuk-radios__item">
+                                    <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
+                                    <label class="nhsuk-label nhsuk-radios__label" for="discussed-at-forum-no">
+                                        No
+                                    </label>
+                                </div>
+                                <div class="nhsuk-radios__item">
+                                    <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
+                                    <label class="nhsuk-label nhsuk-radios__label" for="discussed-at-forum-unknown">
+                                        Unknown
+                                    </label>
+                                </div>
+                            </div>
+                        </nhs-fieldset>
+                    </nhs-form-group>
                 </div>
                 <div class="nhsuk-radios__item">
                     <input asp-for="MDRDetails.ExposureToKnownCaseStatus" id="exposure-no" class="nhsuk-radios__input" type="radio" value="@Status.No">

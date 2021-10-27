@@ -162,6 +162,22 @@
                             </nhs-fieldset>
                         </nhs-form-group>
                     </validate-date>
+
+                    <validate-input model="ClinicalDetails" property="MDRExpectedTreatmentDurationInMonths" inline-template>
+                        @{
+                            var hasMdrExpectedTreatmentError = !Model.IsValid("ClinicalDetails.MDRExpectedTreatmentDurationInMonths");
+                        }
+                        <nhs-form-group nhs-form-group-type=@mdrTreatmentGroupState id="ClinicalDetails-MDRExpectedTreatmentDurationInMonths">
+                            <span nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.MDRExpectedTreatmentDurationInMonths"
+                                  has-error="@hasMdrExpectedTreatmentError" ref="errorField" id="expected-treatment-duration-error">
+                            </span>
+                            <label asp-for="ClinicalDetails.MDRExpectedTreatmentDurationInMonths" nhs-label-type="Standard">
+                                Expected treatment duration in months
+                            </label>
+                            <input nhs-input-type="Standard" asp-for="ClinicalDetails.MDRExpectedTreatmentDurationInMonths" is-error-input="@hasMdrExpectedTreatmentError"
+                                 v-on:blur="validate" ref="inputField" fixed-width="Five" aria-describedby="expected-treatment-duration-error" />
+                        </nhs-form-group>
+                    </validate-input>
                 </div>
 
                 <div class="nhsuk-radios__item">

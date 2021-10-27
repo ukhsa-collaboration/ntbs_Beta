@@ -30,9 +30,16 @@ namespace ntbs_service.Models.Entities
             switch (TreatmentRegimen)
             {
                 case Enums.TreatmentRegimen.MdrTreatment:
-                    return MDRTreatmentStartDate == null
-                        ? TreatmentRegimen.GetDisplayName()
-                        : $"{TreatmentRegimen.GetDisplayName()} - {MDRTreatmentStartDate.ConvertToString()}";
+                    var displayString = TreatmentRegimen.GetDisplayName();
+                    if (MDRTreatmentStartDate != null)
+                    {
+                        displayString += $" - from {MDRTreatmentStartDate.ConvertToString()}";
+                    }
+                    if (MDRExpectedTreatmentDurationInMonths != null)
+                    {
+                        displayString += $" for {MDRExpectedTreatmentDurationInMonths} months (expected)";
+                    }
+                    return displayString;
                 case Enums.TreatmentRegimen.Other:
                     return TreatmentRegimenOtherDescription == null
                         ? TreatmentRegimen.GetDisplayName()
