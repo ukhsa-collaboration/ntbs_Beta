@@ -219,6 +219,9 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.Remove("ClinicalDetails.BCGVaccinationYear");
             }
 
+            // This line is needed as the property is being validated by the framework before reaching our code.
+            // Because the date is always null at this point there is always a validation error here so removing it from
+            // the model suppresses this
             ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
             if (!ClinicalDetails.IsMDRTreatment)
             {
@@ -226,11 +229,12 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ClinicalDetails.MDRExpectedTreatmentDurationInMonths = null;
                 FormattedMdrTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
                 ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
+                ModelState.Remove("ClinicalDetails.MDRExpectedTreatmentDurationInMonths");
             }
             else
             {
                 ClinicalDetails.MDRExpectedTreatmentDurationInMonths =
-                    ClinicalDetails.MDRExpectedTreatmentDurationInMonths.Replace(" ", "");
+                    ClinicalDetails.MDRExpectedTreatmentDurationInMonths?.Replace(" ", "");
             }
 
             if (ClinicalDetails.TreatmentRegimen != TreatmentRegimen.Other)
