@@ -138,17 +138,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task ValidateAndSave()
         {
             UpdateFlags();
-            new List<(string key, FormattedDate date)> {
-                (nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate),
-                (nameof(ClinicalDetails.FirstPresentationDate), FormattedFirstPresentationDate),
-                (nameof(ClinicalDetails.TBServicePresentationDate), FormattedTbServicePresentationDate),
-                (nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate),
-                (nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate),
-                (nameof(ClinicalDetails.FirstHomeVisitDate), FormattedHomeVisitDate),
-                (nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMdrTreatmentDate)
-            }.ForEach(item =>
-                ValidationService.TrySetFormattedDate(ClinicalDetails, "ClinicalDetails", item.key, item.date)
-            );
+            SetDatesOnClinicalDetails();
 
             if (ClinicalDetails.BCGVaccinationYear != null)
             {
@@ -197,6 +187,23 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
+        private void SetDatesOnClinicalDetails()
+        {
+            new List<(string key, FormattedDate date)>
+            {
+                (nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate),
+                (nameof(ClinicalDetails.FirstPresentationDate), FormattedFirstPresentationDate),
+                (nameof(ClinicalDetails.TBServicePresentationDate), FormattedTbServicePresentationDate),
+                (nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate),
+                (nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate),
+                (nameof(ClinicalDetails.FirstHomeVisitDate), FormattedHomeVisitDate),
+                (nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMdrTreatmentDate)
+            }.ForEach(item =>
+                ValidationService.TrySetFormattedDate(ClinicalDetails, "ClinicalDetails", item.key, item.date)
+            );
+            ClinicalDetails.DatesHaveBeenSet = true;
+        }
+
         private void UpdateFlags()
         {
             if (ClinicalDetails.IsSymptomatic == false)
@@ -219,10 +226,6 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.Remove("ClinicalDetails.BCGVaccinationYear");
             }
 
-            // This line is needed as the property is being validated by the framework before reaching our code.
-            // Because the date is always null at this point there is always a validation error here so removing it from
-            // the model suppresses this
-            ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
             if (!ClinicalDetails.IsMDRTreatment)
             {
                 ClinicalDetails.MDRTreatmentStartDate = null;

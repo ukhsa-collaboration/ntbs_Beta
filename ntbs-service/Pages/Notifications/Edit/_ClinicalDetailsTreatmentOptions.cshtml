@@ -129,9 +129,9 @@
                     <validate-date model="ClinicalDetails" property="MDRTreatmentStartDate" inline-template>
                         @{
                             var hasMdrTreatmentDateError = !Model.IsValid("ClinicalDetails.MDRTreatmentStartDate");
-                            var mdrTreatmentGroupState = hasMdrTreatmentDateError ? Error : Standard;
+                            var mdrTreatmentDateState = hasMdrTreatmentDateError ? Error : Standard;
                         }
-                        <nhs-form-group nhs-form-group-type=@mdrTreatmentGroupState id="ClinicalDetails-MDRTreatmentStartDate">
+                        <nhs-form-group nhs-form-group-type=@mdrTreatmentDateState id="ClinicalDetails-MDRTreatmentStartDate">
                             <nhs-fieldset aria-describedby="mdr-treatment-date-error" role="group">
                                 <nhs-fieldset-legend nhs-legend-size="Standard">Treatment date</nhs-fieldset-legend>
                                 <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.MDRTreatmentStartDate"
@@ -165,16 +165,17 @@
 
                     <validate-input model="ClinicalDetails" property="MDRExpectedTreatmentDurationInMonths" inline-template>
                         @{
-                            var hasMdrExpectedTreatmentError = !Model.IsValid("ClinicalDetails.MDRExpectedTreatmentDurationInMonths");
+                            var hasMdrExpectedDurationError = !Model.IsValid("ClinicalDetails.MDRExpectedTreatmentDurationInMonths");
+                            var mdrExpectedDurationState = hasMdrExpectedDurationError ? Error : Standard;
                         }
-                        <nhs-form-group nhs-form-group-type=@mdrTreatmentGroupState id="ClinicalDetails-MDRExpectedTreatmentDurationInMonths">
+                        <nhs-form-group nhs-form-group-type=@mdrExpectedDurationState id="ClinicalDetails-MDRExpectedTreatmentDurationInMonths">
                             <span nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.MDRExpectedTreatmentDurationInMonths"
-                                  has-error="@hasMdrExpectedTreatmentError" ref="errorField" id="expected-treatment-duration-error">
+                                  has-error="@hasMdrExpectedDurationError" ref="errorField" id="expected-treatment-duration-error">
                             </span>
                             <label asp-for="ClinicalDetails.MDRExpectedTreatmentDurationInMonths" nhs-label-type="Standard">
                                 Expected treatment duration in months
                             </label>
-                            <input nhs-input-type="Standard" asp-for="ClinicalDetails.MDRExpectedTreatmentDurationInMonths" is-error-input="@hasMdrExpectedTreatmentError"
+                            <input nhs-input-type="Standard" asp-for="ClinicalDetails.MDRExpectedTreatmentDurationInMonths" is-error-input="@hasMdrExpectedDurationError"
                                  v-on:blur="validate" ref="inputField" fixed-width="Five" aria-describedby="expected-treatment-duration-error" />
                         </nhs-form-group>
                     </validate-input>

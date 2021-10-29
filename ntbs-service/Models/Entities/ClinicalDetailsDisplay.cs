@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 
@@ -19,6 +20,9 @@ namespace ntbs_service.Models.Entities
         public string DaysFromTBServicePresentationToDiagnosis => FormatNullableDateDifference(DiagnosisDate, TBServicePresentationDate);
         public string DaysFromDiagnosisToTreatment => FormatNullableDateDifference(TreatmentStartDate, DiagnosisDate);
         public string BCGVaccinationStateAndYear => FormatStateAndYear(BCGVaccinationState, BCGVaccinationYear);
+
+        [NotMapped]
+        public bool DatesHaveBeenSet { get; set; }
 
         private string GetFormattedTreatmentRegimen()
         {
