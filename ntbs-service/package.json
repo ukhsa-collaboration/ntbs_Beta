@@ -39,7 +39,7 @@
     "@sentry/webpack-plugin": "1.17.1",
     "@types/node": "16.10.2",
     "@types/webpack-env": "1.16.2",
-    "css-loader": "6.2.0",
+    "css-loader": "6.5.0",
     "mini-css-extract-plugin": "2.2.1",
     "sass-loader": "12.1.0",
     "ts-loader": "9.2.5",
