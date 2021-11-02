@@ -107,10 +107,10 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             return ValidationService.GetDateValidationResult<T>(validationData.Key, validationData.Day, validationData.Month, validationData.Year, isLegacy);
         }
 
-        public ContentResult OnGetValidateSocialContextDates(IEnumerable<Dictionary<string, string>> keyValuePairs)
+        public ContentResult OnPostValidateSocialContextDates([FromBody]DatesValidationModel validationData)
         {
             List<(string, object)> propertyValueTuples = new List<(string key, object property)>();
-            foreach (var keyValuePair in keyValuePairs)
+            foreach (var keyValuePair in validationData.KeyValuePairs)
             {
                 var formattedDate = new FormattedDate() { Day = keyValuePair["day"], Month = keyValuePair["month"], Year = keyValuePair["year"] };
                 if (formattedDate.TryConvertToDateTime(out var convertedDob))
