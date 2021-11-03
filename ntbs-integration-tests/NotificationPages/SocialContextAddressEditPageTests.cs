@@ -224,21 +224,29 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task ValidateSocialContextDates_ReturnsErrorIfDateToBeforeDateFrom()
         {
             // Arrange
-            var keyValuePairs = new string[]
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(Utilities.NOTIFICATION_WITH_ADDRESSES) + ADDRESS_ID);
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var keyValuePairs = new DatesValidationModel
             {
-                "keyValuePairs[0][key]=DateFrom",
-                "keyValuePairs[0][day]=1",
-                "keyValuePairs[0][month]=1",
-                "keyValuePairs[0][year]=2000",
-                "keyValuePairs[1][key]=DateTo",
-                "keyValuePairs[1][day]=1",
-                "keyValuePairs[1][month]=1",
-                "keyValuePairs[1][year]=1999",
+                KeyValuePairs = new List<Dictionary<string, string>>()
+                {
+                    new Dictionary<string, string>()
+                    {
+                        {"key", "DateFrom"}, {"day", "1"}, {"month", "1"}, {"year", "2000"}
+                    },
+                    new Dictionary<string, string>()
+                    {
+                        {"key", "DateTo"}, {"day", "1"}, {"month", "1"}, {"year", "1999"}
+                    }
+                }
             };
 
             // Act
-            var url = GetCurrentPathForId(0) + ADDRESS_ID;
-            var response = await Client.GetAsync($"{url}/ValidateSocialContextDates?{string.Join("&", keyValuePairs)}");
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetCurrentPathForId(Utilities.NOTIFICATION_WITH_ADDRESSES) + ADDRESS_ID + "/ValidateSocialContextDates",
+                keyValuePairs);
 
             // Assert check just response.Content
             var result = await response.Content.ReadAsStringAsync();
