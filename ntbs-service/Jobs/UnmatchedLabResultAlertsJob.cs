@@ -31,10 +31,10 @@ namespace ntbs_service.Jobs
             var dbPotentialMatches =
                 await _specimenService.GetAllSpecimenPotentialMatchesAsync();
 
-            var currentUnmatchedLabResultAlerts =
+            var currentOpenUnmatchedLabResultAlerts =
                 await _alertRepository.GetAllOpenUnmatchedLabResultAlertsAsync();
 
-            var unneededAlerts = currentUnmatchedLabResultAlerts.Where(
+            var unneededAlerts = currentOpenUnmatchedLabResultAlerts.Where(
                 alert => !dbPotentialMatches.Any(dbMatch =>
                     dbMatch.NotificationId == alert.NotificationId &&
                     dbMatch.ReferenceLaboratoryNumber == alert.SpecimenId)).ToList();
@@ -42,13 +42,13 @@ namespace ntbs_service.Jobs
             Log.Debug($"Number of redundant unmatched lab result alerts to be closed: {unneededAlerts.Count}");
             await _alertRepository.CloseAlertRangeAsync(unneededAlerts);
 
-            var dbMatchesRequiringAlerts = dbPotentialMatches.Where(
-                dbMatch => !currentUnmatchedLabResultAlerts.Any(alert =>
+            var dbMatchesWithoutOpenAlert = dbPotentialMatches.Where(
+                dbMatch => !currentOpenUnmatchedLabResultAlerts.Any(alert =>
                     alert.NotificationId == dbMatch.NotificationId &&
                     alert.SpecimenId == dbMatch.ReferenceLaboratoryNumber)).ToList();
 
-            Log.Debug($"Number of unmatched lab result alerts to be created: {dbMatchesRequiringAlerts.Count}");
-            await _alertService.CreateAlertsForUnmatchedLabResults(dbMatchesRequiringAlerts);
+            Log.Debug($"Number of unmatched lab results without an open alert: {dbMatchesWithoutOpenAlert.Count}");
+            await _alertService.CreateAlertsForUnmatchedLabResults(dbMatchesWithoutOpenAlert);
 
             Log.Information($"Finishing unmatched lab results alert job");
         }

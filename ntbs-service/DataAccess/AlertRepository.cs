@@ -12,6 +12,8 @@ namespace ntbs_service.DataAccess
     {
         Task<Alert> GetOpenAlertByIdAsync(int? alertId);
         Task<T> GetAlertByNotificationIdAndTypeAsync<T>(int notificationId) where T : Alert;
+        Task<UnmatchedLabResultAlert> GetUnmatchedLabResultAlertForNotificationAndSpecimenAsync(int notificationId,
+            string specimenId);
         Task<T> GetOpenAlertByNotificationId<T>(int notificationId) where T : Alert;
         Task<List<Alert>> GetAllOpenAlertsByNotificationId(int notificationId);
         Task<TransferAlert> GetOpenTransferAlertByNotificationId(int notificationId);
@@ -51,6 +53,15 @@ namespace ntbs_service.DataAccess
             return await _context.Alert
                 .OfType<T>()
                 .SingleOrDefaultAsync(m => m.NotificationId == notificationId);
+        }
+
+        public async Task<UnmatchedLabResultAlert> GetUnmatchedLabResultAlertForNotificationAndSpecimenAsync(
+            int notificationId,
+            string specimenId)
+        {
+            return await _context.Alert
+                .OfType<UnmatchedLabResultAlert>()
+                .SingleOrDefaultAsync(a => a.NotificationId == notificationId && a.SpecimenId == specimenId);
         }
 
         public async Task<T> GetOpenAlertByNotificationId<T>(int notificationId) where T : Alert
