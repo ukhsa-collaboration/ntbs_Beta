@@ -147,6 +147,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal(new DateTime(2015, 03, 25, 00, 00, 00), notification.ClinicalDetails.FirstHomeVisitDate);
             Assert.Equal("Patient did not begin course of treatment under DOT", notification.ClinicalDetails.Notes);
             Assert.Equal("12-13", notification.ClinicalDetails.MDRExpectedTreatmentDurationInMonths);
+            Assert.Equal("TestRefX019", notification.ClinicalDetails.HealthProtectionTeamReferenceNumber);
 
             Assert.Equal(Status.Yes, notification.ImmunosuppressionDetails.Status);
             Assert.False(notification.ImmunosuppressionDetails.HasBioTherapy);

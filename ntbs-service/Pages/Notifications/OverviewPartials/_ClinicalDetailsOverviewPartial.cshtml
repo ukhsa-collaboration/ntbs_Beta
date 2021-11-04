@@ -131,6 +131,12 @@
     </nhs-grid-row>
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="Full">
+            <div class="notification-details-label"> Health Protection Team reference number </div>
+            <div class="cell-min-height" id="@sectionId-htp-ref"> @Model.Notification.ClinicalDetails?.HealthProtectionTeamReferenceNumber </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="Full">
             <div class="notification-details-label"> Notes </div>
             <div class="cell-min-height" id="@sectionId-notes"> @Model.Notification.ClinicalDetails?.Notes </div>
         </nhs-grid-column>
