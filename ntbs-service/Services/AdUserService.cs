@@ -26,7 +26,7 @@ namespace ntbs_service.Services
             foreach (var (user, tbServicesMatchingGroups) in usersInAd)
             {
                 Log.Information($"Updating user {user.Username}");
-                await _userRepository.AddOrUpdateUser(user, tbServicesMatchingGroups);
+                await _userRepository.AddOrUpdateUser(user, tbServicesMatchingGroups, allowIsCaseManagerUpdate: false);
             }
 
             var ntbsUsersNotInAd = this._userRepository.GetUserQueryable()

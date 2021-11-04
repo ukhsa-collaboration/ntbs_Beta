@@ -32,14 +32,14 @@
             }
             <validate-input model="CaseManager" property="JobTitle" inline-template>
                 <nhs-form-group nhs-form-group-type="@jobTitleState" 
-                    id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.JobTitle)}")">
+                                id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.JobTitle)}")">
                     <label nhs-label-type="Standard" asp-for="ContactDetails.JobTitle">
                         @Html.DisplayNameFor(x => x.ContactDetails.JobTitle)
                     </label>
                     <span ref="errorField" id="job-title-error" nhs-span-type="ErrorMessage" 
-                        asp-validation-for="ContactDetails.JobTitle" has-error="@jobTitleError"></span>
+                          asp-validation-for="ContactDetails.JobTitle" has-error="@jobTitleError"></span>
                     <input ref="inputField" v-on:blur="validate" is-error-input="@jobTitleError" fixed-width="Twenty"
-                        nhs-input-type="Standard" asp-for="ContactDetails.JobTitle"/>
+                           nhs-input-type="Standard" asp-for="ContactDetails.JobTitle"/>
                 </nhs-form-group>
             </validate-input>
             
@@ -111,6 +111,30 @@
                         nhs-input-type="Standard" fixed-width="Twenty" asp-for="ContactDetails.EmailSecondary"/>
                 </nhs-form-group>
             </validate-input>
+            
+            @if (Model.ContactDetails.CaseManagerTbServices?.Any() ?? false)
+            {
+                <nhs-form-group nhs-form-group-type="@jobTitleState"
+                                id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.IsCaseManager)}")">
+                    <label nhs-label-type="Standard" asp-for="ContactDetails.JobTitle">
+                        Is a case manager?
+                    </label>
+                    <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                        <div class="nhsuk-radios__item">
+                            <input asp-for="ContactDetails.IsCaseManager" id="iscasemanager-yes" class="nhsuk-radios__input" type="radio" value="true" disabled="@Model.UserHasNotification">
+                            <label class="nhsuk-label nhsuk-radios__label" for="iscasemanager-yes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="nhsuk-radios__item">
+                            <input asp-for="ContactDetails.IsCaseManager" id="iscasemanager-no" class="nhsuk-radios__input" type="radio" value="false" disabled="@Model.UserHasNotification">
+                            <label class="nhsuk-label nhsuk-radios__label" for="iscasemanager-no">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </nhs-form-group>
+            }
             
             @{
                 var notesError = !Model.IsValid("ContactDetails.Notes");
