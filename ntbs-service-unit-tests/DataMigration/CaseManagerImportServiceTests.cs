@@ -90,7 +90,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal("John", addedUser.GivenName);
             Assert.Equal("Johnston", addedUser.FamilyName);
             Assert.False(addedUser.IsActive);
-            Assert.False(addedUser.IsCaseManager);
+            Assert.True(addedUser.IsCaseManager);
             Assert.DoesNotContain("TBS00TEST", addedUser.CaseManagerTbServices.Select(cmtb => cmtb.TbServiceCode));
         }
 
