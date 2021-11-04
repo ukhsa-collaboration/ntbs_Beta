@@ -1,8 +1,6 @@
 import Vue from "vue";
 import { getHeaders, getValidationPath } from "../helpers";
-import axios from "axios";
-
-const qs = require("qs");
+import axios, {Method} from "axios";
 
 const ValidateMultiple = Vue.extend({
     props: {
@@ -21,7 +19,7 @@ const ValidateMultiple = Vue.extend({
         // Each error message will be mapped to the corresponding field.
         validate: function () {
             const inputs = this.createArrayFromRefElements("input");
-            let queryString: string;
+            let requestData: KeyValuePairs;
             if (this.isDateValidation) {
                 // In the case of data validation, inputs will be vue components (ValidateDate.ts)
                 const vueInputs: Array<Vue> = inputs;
@@ -37,18 +35,27 @@ const ValidateMultiple = Vue.extend({
                 if (arrayContainsEmptyValues(yearInputs)) {
                     return;
                 }
-                queryString = buildKeyDateValuesQueryString(this.properties, dayInputs, monthInputs, yearInputs);
+                requestData = buildKeyDateValuePairs(this.properties, dayInputs, monthInputs, yearInputs);
                 this.errorFields = inputs.map((i: any) => i.$refs.errorField);
             }
             else if (inputs[0].type === "radio") {
                 // TODO: Do this mapping for other types if element is reused for non-radio inputs.
                 const radioInputs: Array<HTMLInputElement> = inputs;
                 const inputValues = radioInputs.map(i => i.checked);
-                queryString = buildKeyValuePairsQueryString(this.properties, inputValues);
+                requestData = buildKeyValuePairs(this.properties, inputValues);
                 this.errorFields = this.createArrayFromRefElements("errorField");
             }
 
-            axios.get(`${getValidationPath(this.$props.model)}${this.isDateValidation ? 'Dates' : 'Properties'}?${queryString}`, { headers: getHeaders() })
+            let requestConfig = {
+                method: "post" as Method,
+                url: `${getValidationPath(this.$props.model)}${this.isDateValidation ? 'Dates' : 'Properties'}`,
+                headers: getHeaders(),
+                data: {
+                    "KeyValuePairs": requestData
+                }
+            }
+
+            axios.request(requestConfig)
                 .then((response: any) => {
                     const errorMessages = response.data;
                     this.hasError = !!errorMessages;
@@ -81,20 +88,20 @@ const ValidateMultiple = Vue.extend({
 
 type KeyValuePairs = Array<{[key: string]: string}>
 
-function buildKeyValuePairsQueryString(keys: Array<string>, values: Array<boolean>): string {
+function buildKeyValuePairs(keys: Array<string>, values: Array<boolean>): KeyValuePairs {
     const keyValuePairs: KeyValuePairs = [];
     for (let i = 0; i < keys.length; i++) {
         keyValuePairs.push({ key: keys[i], value: values[i].toString() });
     }
-    return qs.stringify({keyValuePairs});
+    return keyValuePairs;
 };
 
-function buildKeyDateValuesQueryString(keys: Array<string>, days: Array<string>, months: Array<string>, years: Array<string>): string {
+function buildKeyDateValuePairs(keys: Array<string>, days: Array<string>, months: Array<string>, years: Array<string>): KeyValuePairs {
     const keyValuePairs: KeyValuePairs = [];
     for (let i = 0; i < keys.length; i++) {
         keyValuePairs.push({ key: keys[i], day: days[i], month: months[i], year: years[i] });
     }
-    return qs.stringify({keyValuePairs});
+    return keyValuePairs;
 };
 
 function arrayContainsEmptyValues(array: Array<string>): boolean {
