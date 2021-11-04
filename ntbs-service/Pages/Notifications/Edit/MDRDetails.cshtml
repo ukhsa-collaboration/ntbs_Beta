@@ -153,33 +153,6 @@
                             </div>
                         </nhs-fieldset>
                     </conditional-select-wrapper>
-                    <br/>
-
-                    <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-HomeVisitDate">
-                        <nhs-fieldset>
-                            <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(x => x.MDRDetails.DiscussedAtMDRForum)</nhs-fieldset-legend>
-                            <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
-                                <div class="nhsuk-radios__item">
-                                    <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-home-visit-conditional">
-                                    <label class="nhsuk-label nhsuk-radios__label" for="discussed-at-forum-yes">
-                                        Yes
-                                    </label>
-                                </div>
-                                <div class="nhsuk-radios__item">
-                                    <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
-                                    <label class="nhsuk-label nhsuk-radios__label" for="discussed-at-forum-no">
-                                        No
-                                    </label>
-                                </div>
-                                <div class="nhsuk-radios__item">
-                                    <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
-                                    <label class="nhsuk-label nhsuk-radios__label" for="discussed-at-forum-unknown">
-                                        Unknown
-                                    </label>
-                                </div>
-                            </div>
-                        </nhs-fieldset>
-                    </nhs-form-group>
                 </div>
                 <div class="nhsuk-radios__item">
                     <input asp-for="MDRDetails.ExposureToKnownCaseStatus" id="exposure-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
@@ -193,7 +166,30 @@
                         Unknown
                     </label>
                 </div>
-            </div>
+            </div> <br/>
+            <nhs-fieldset>
+                <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(x => x.MDRDetails.DiscussedAtMDRForum)</nhs-fieldset-legend>
+                <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                    <div class="nhsuk-radios__item">
+                        <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes">
+                        <label class="nhsuk-label nhsuk-radios__label" for="discussed-at-forum-yes">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="nhsuk-radios__item">
+                        <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
+                        <label class="nhsuk-label nhsuk-radios__label" for="discussed-at-forum-no">
+                            No
+                        </label>
+                    </div>
+                    <div class="nhsuk-radios__item">
+                        <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
+                        <label class="nhsuk-label nhsuk-radios__label" for="discussed-at-forum-unknown">
+                            Unknown
+                        </label>
+                    </div>
+                </div>
+            </nhs-fieldset>
         </nhs-fieldset>
     </nhs-form-group>
 </div>
