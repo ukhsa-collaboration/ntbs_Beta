@@ -153,8 +153,7 @@ namespace ntbs_service.DataAccess
                             : alert.Notification.HospitalDetails.TBService.Name,
                         CaseManagerName = alert is TransferAlert
                             ? ((TransferAlert)alert).CaseManager.DisplayName
-                            : alert.Notification.HospitalDetails.CaseManager.IsActive
-                                ? alert.Notification.HospitalDetails.CaseManager.DisplayName : null,
+                            : alert.Notification.HospitalDetails.CaseManager.DisplayName,
                         AlertType = alert.AlertType,
                         Action = alert.Action,
                         ActionLink = alert.ActionLink,
