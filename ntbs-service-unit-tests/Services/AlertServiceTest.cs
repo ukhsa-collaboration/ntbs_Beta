@@ -8,6 +8,7 @@ using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.QueryEntities;
 using ntbs_service.Services;
 using Xunit;
 
@@ -18,18 +19,17 @@ namespace ntbs_service_unit_tests.Services
         private readonly IAlertService _alertService;
         private readonly Mock<IAlertRepository> _mockAlertRepository;
         private readonly Mock<INotificationRepository> _mockNotificationRepository;
-        private readonly Mock<IAuthorizationService> _mockAuthorizationService;
 
         public AlertServiceTest()
         {
             _mockAlertRepository = new Mock<IAlertRepository>();
             _mockNotificationRepository = new Mock<INotificationRepository>();
-            _mockAuthorizationService = new Mock<IAuthorizationService>();
+            var mockAuthorizationService = new Mock<IAuthorizationService>();
 
             _alertService = new AlertService(
                 _mockAlertRepository.Object,
                 _mockNotificationRepository.Object,
-                _mockAuthorizationService.Object);
+                mockAuthorizationService.Object);
         }
 
         [Fact]
@@ -87,10 +87,10 @@ namespace ntbs_service_unit_tests.Services
                 new SpecimenMatchPairing {NotificationId = 1, ReferenceLaboratoryNumber = "1"}
             };
 
-            List<Alert> alertsToBeAdded = null;
+            var alertsToBeAdded = new List<Alert>();
             _mockAlertRepository
-                .Setup(r => r.AddAlertRangeAsync(It.IsAny<IEnumerable<Alert>>()))
-                .Callback<IEnumerable<Alert>>(param => alertsToBeAdded = param.ToList());
+                .Setup(r => r.AddAlertAsync(It.IsAny<Alert>()))
+                .Callback<Alert>(param => alertsToBeAdded.Add(param));
 
             // Act
             await _alertService.CreateAlertsForUnmatchedLabResults(matchesRequiringAlerts);
@@ -239,10 +239,38 @@ namespace ntbs_service_unit_tests.Services
             await _alertService.CreateAlertsForUnmatchedLabResults(pairings);
 
             // Assert
-            _mockAlertRepository.Verify(x => x.AddAlertRangeAsync(
-                It.Is<IEnumerable<Alert>>(alerts =>
-                    alerts.Single().CreationDate < DateTime.Now
-                        && alerts.Single().CreationDate > DateTime.Now.Subtract(TimeSpan.FromSeconds(1)))));
+            _mockAlertRepository.Verify(x => x.AddAlertAsync(
+                It.Is<Alert>(alert =>
+                    alert.CreationDate < DateTime.Now
+                        && alert.CreationDate > DateTime.Now.Subtract(TimeSpan.FromSeconds(1)))));
+        }
+
+        [Fact]
+        public async Task CreateAlertsForUnmatchedLabResults_DoesNotCreateNewAlertIfClosedAlertAlreadyExistsForSpecimen()
+        {
+            // Arrange
+            const int notificationId = 1;
+            const string specimenId = "A123";
+            _mockNotificationRepository.Setup(x => x.GetNotificationForAlertCreationAsync(It.IsAny<int>()))
+                .Returns(Task.FromResult(new Notification { NotificationId = notificationId }));
+            _mockAlertRepository.Setup(x =>
+                    x.GetUnmatchedLabResultAlertForNotificationAndSpecimenAsync(notificationId, specimenId))
+                        .Returns(Task.FromResult(new UnmatchedLabResultAlert
+                        {
+                            NotificationId = notificationId,
+                            SpecimenId = specimenId,
+                            AlertStatus = AlertStatus.Closed
+                        }));
+            var pairings = new List<SpecimenMatchPairing>
+            {
+                new SpecimenMatchPairing {NotificationId = notificationId, ReferenceLaboratoryNumber = specimenId}
+            };
+
+            // Act
+            await _alertService.CreateAlertsForUnmatchedLabResults(pairings);
+
+            // Assert
+            _mockAlertRepository.Verify(x => x.AddAlertAsync(It.IsAny<Alert>()), Times.Never);
         }
 
         private void AssertAlertClosedRecently(Alert alert)
