@@ -116,18 +116,18 @@
             {
                 <nhs-form-group nhs-form-group-type="@jobTitleState"
                                 id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.IsCaseManager)}")">
-                    <label nhs-label-type="Standard" asp-for="ContactDetails.JobTitle">
+                    <label nhs-label-type="Standard" asp-for="ContactDetails.IsCaseManager">
                         Is a case manager?
                     </label>
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
-                            <input asp-for="ContactDetails.IsCaseManager" id="iscasemanager-yes" class="nhsuk-radios__input" type="radio" value="true" disabled="@Model.UserHasNotification">
+                            <input asp-for="ContactDetails.IsCaseManager" id="iscasemanager-yes" class="nhsuk-radios__input" type="radio" value="true" disabled="@(Model.UserHasNotification && Model.ContactDetails.IsCaseManager)">
                             <label class="nhsuk-label nhsuk-radios__label" for="iscasemanager-yes">
                                 Yes
                             </label>
                         </div>
                         <div class="nhsuk-radios__item">
-                            <input asp-for="ContactDetails.IsCaseManager" id="iscasemanager-no" class="nhsuk-radios__input" type="radio" value="false" disabled="@Model.UserHasNotification">
+                            <input asp-for="ContactDetails.IsCaseManager" id="iscasemanager-no" class="nhsuk-radios__input" type="radio" value="false" disabled="@(Model.UserHasNotification && Model.ContactDetails.IsCaseManager)">
                             <label class="nhsuk-label nhsuk-radios__label" for="iscasemanager-no">
                                 No
                             </label>
