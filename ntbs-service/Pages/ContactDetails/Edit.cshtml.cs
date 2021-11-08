@@ -32,7 +32,7 @@ namespace ntbs_service.Pages.ContactDetails
         [BindProperty(SupportsGet = true)]
         public int UserId { get; set; }
         
-        public bool UserHasNotification { get; set; }
+        public bool UserHasNotificationAndIsCaseManager { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -42,7 +42,7 @@ namespace ntbs_service.Pages.ContactDetails
                 .ThenBy(x => x.TbService.PHEC.Name)
                 .ToList();
 
-            UserHasNotification = await _notificationRepository.AnyNotificationsForUser(UserId);
+            UserHasNotificationAndIsCaseManager = await _notificationRepository.AnyNotificationsForUser(UserId) && ContactDetails.IsCaseManager;
 
             return Page();
         }
