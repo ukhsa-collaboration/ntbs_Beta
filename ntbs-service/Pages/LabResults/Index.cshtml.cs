@@ -143,6 +143,21 @@ namespace ntbs_service.Pages.LabResults
                 ViewData = new ViewDataDictionary<SpecimenPotentialMatch>(ViewData, potentialMatch)
             };
         }
+        
+        public async Task<IActionResult> OnPostUnmatchPotential()
+        {
+            var (laboratoryReferenceNumber, value) = PotentialMatchSelections.Single();
+            
+            if (!ModelState.IsValid || !value.NotificationId.HasValue)
+            {
+                await PreparePageForGetAsync();
+                return Page();
+            }
+            
+            var userName = User.Username();
+            await _specimenService.UnmatchSpecimenAsync((int)value.NotificationId, laboratoryReferenceNumber, userName);
+            return RedirectToPage("/LabResults/Index");
+        }
 
         private async Task PreparePageForGetAsync()
         {
