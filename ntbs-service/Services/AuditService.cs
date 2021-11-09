@@ -17,6 +17,10 @@ namespace ntbs_service.Services
             string labReferenceNumber,
             string userName,
             NotificationAuditType auditType);
+        Task AuditRejectPotentialSpecimen(int notificationId,
+            string labReferenceNumber,
+            string userName,
+            NotificationAuditType auditType);
         Task AuditMatchSpecimen(int notificationId,
             string labReferenceNumber,
             string userName,
@@ -63,6 +67,21 @@ namespace ntbs_service.Services
                 SPECIMEN_ENTITY_TYPE,
                 auditType.ToString(),
                 AuditEventType.UNMATCH_EVENT,
+                userName,
+                RootEntities.Notification,
+                notificationId.ToString());
+        }
+
+        public async Task AuditRejectPotentialSpecimen(int notificationId,
+            string labReferenceNumber,
+            string userName,
+            NotificationAuditType auditType)
+        {
+            await _auditContext.AuditOperationAsync(
+                labReferenceNumber,
+                SPECIMEN_ENTITY_TYPE,
+                auditType.ToString(),
+                AuditEventType.REJECT_POTENTIAL,
                 userName,
                 RootEntities.Notification,
                 notificationId.ToString());

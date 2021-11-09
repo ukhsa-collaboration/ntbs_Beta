@@ -8,6 +8,7 @@ using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.SeedData;
 using ntbs_service.TagHelpers;
 using Serilog;
 
@@ -205,6 +206,11 @@ namespace ntbs_service.Services
                 // Set entity type to TransferAlert so the log subject is mapped to "Transfer"
                 log.EntityType = nameof(TransferAlert);
                 return new[] { log };
+            }
+
+            if (group.Count == 1 && group.Single().EventType == AuditEventType.REJECT_POTENTIAL)
+            {
+                return new List<AuditLog>();
             }
 
             // We want this check at the end, since some of the group checks above may have a single member but still

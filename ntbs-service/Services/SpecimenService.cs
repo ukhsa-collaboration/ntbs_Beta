@@ -35,7 +35,7 @@ namespace ntbs_service.Services
         /// <param name="labReferenceNumber">identifier of the specimen</param>
         /// <param name="userName">username to record in the audit trail</param>
         /// <returns>boolean that's true when the proc returned a success flag</returns>
-        Task<bool> UnmatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName);
+        Task<bool> UnmatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName, bool isPotential = false);
 
         /// <summary>
         /// Calls stored proc which records the match
@@ -185,7 +185,7 @@ namespace ntbs_service.Services
                 });
         }
 
-        public async Task<bool> UnmatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName)
+        public async Task<bool> UnmatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName, bool isPotential = false)
         {
             using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
             {
@@ -200,10 +200,20 @@ namespace ntbs_service.Services
 
                 if (success)
                 {
-                    await _auditService.AuditUnmatchSpecimen(notificationId,
-                        labReferenceNumber,
-                        userName,
-                        NotificationAuditType.Edited);
+                    if (isPotential)
+                    {
+                        await _auditService.AuditRejectPotentialSpecimen(notificationId,
+                            labReferenceNumber,
+                            userName,
+                            NotificationAuditType.Edited);
+                    }
+                    else
+                    {
+                        await _auditService.AuditUnmatchSpecimen(notificationId,
+                            labReferenceNumber,
+                            userName,
+                            NotificationAuditType.Edited);
+                    }
                 }
 
                 return success;

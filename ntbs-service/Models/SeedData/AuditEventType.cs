@@ -4,6 +4,7 @@
     {
         public static string READ_EVENT = "Read";
         public static string UNMATCH_EVENT = "Unmatch";
+        public static string REJECT_POTENTIAL = "RejectPotentialMatch";
         public static string MATCH_EVENT = "Match";
         public static string PRINT_EVENT = "Print";
         public static string SEARCH_EVENT = "Search";

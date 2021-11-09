@@ -155,7 +155,7 @@ namespace ntbs_service.Pages.LabResults
             }
             
             var userName = User.Username();
-            await _specimenService.UnmatchSpecimenAsync((int)value.NotificationId, laboratoryReferenceNumber, userName);
+            await _specimenService.UnmatchSpecimenAsync((int)value.NotificationId, laboratoryReferenceNumber, userName, isPotential: true);
             return RedirectToPage("/LabResults/Index");
         }
 
