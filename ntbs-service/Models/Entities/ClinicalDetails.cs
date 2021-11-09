@@ -120,6 +120,11 @@ namespace ntbs_service.Models.Entities
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string HealthcareDescription { get; set; }
 
+        [MaxLength(40, ErrorMessage = ValidationMessages.MaximumTextLength)]
+        [Display(Name = "Health Protection Team reference number")]
+        [RegularExpression(ValidationRegexes.CharacterValidationLocalPatientId, ErrorMessage = ValidationMessages.InvalidCharacter)]
+        public string HealthProtectionTeamReferenceNumber { get; set; }
+
         #endregion
 
         [NotMapped]
