@@ -30,8 +30,10 @@ namespace ntbs_integration_tests.NotificationPages
                 {
                     NotificationId = Utilities.NOTIFICATION_WITH_VENUES,
                     NotificationStatus = NotificationStatus.Notified,
-                    SocialContextVenues = new List<SocialContextVenue> () {
-                        new SocialContextVenue {
+                    SocialContextVenues = new List<SocialContextVenue>()
+                    {
+                        new SocialContextVenue
+                        {
                             SocialContextVenueId = VENUE_ID,
                             DateFrom = new DateTime(2012, 1, 1),
                             DateTo = new DateTime(2013, 1, 1),
@@ -39,7 +41,8 @@ namespace ntbs_integration_tests.NotificationPages
                             Address = "Test address",
                             VenueTypeId = 1
                         },
-                        new SocialContextVenue {
+                        new SocialContextVenue
+                        {
                             SocialContextVenueId = VENUE_TO_DELETE_ID,
                             DateFrom = new DateTime(2012, 1, 1),
                             DateTo = new DateTime(2013, 1, 1),
@@ -77,7 +80,8 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
-            var socialContextVenuesPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
+            var socialContextVenuesPage = await AssertAndFollowRedirect(result,
+                GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
             // Follow the redirect to see results table
             var resultDocument = await GetDocumentAsync(socialContextVenuesPage);
             // We can't pick based on id, as we don't know the id created
@@ -119,7 +123,8 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await Client.SendPostFormWithData(editDocument, formData, editUrl);
 
             // Assert
-            var socialContextVenuesPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
+            var socialContextVenuesPage = await AssertAndFollowRedirect(result,
+                GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
             // Follow the redirect to see results table
             var resultDocument = await GetDocumentAsync(socialContextVenuesPage);
             var venueHeadingTextContent = resultDocument.GetElementById($"venue-heading-{VENUE_ID}").TextContent;
@@ -156,7 +161,6 @@ namespace ntbs_integration_tests.NotificationPages
             resultDocument.AssertErrorSummaryMessage("Venue",
                 null,
                 "Please supply at least one of venue type, name, address, postcode or comments");
-
         }
 
         [Fact]
@@ -218,7 +222,8 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await Client.SendPostFormWithData(editDocument, formData, editUrl, "Delete");
 
             // Assert;
-            var socialContextVenuesPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
+            var socialContextVenuesPage = await AssertAndFollowRedirect(result,
+                GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
             // Follow the redirect to see results table
             var resultDocument = await GetDocumentAsync(socialContextVenuesPage);
             Assert.Null(resultDocument.GetElementById($"social-context-venue-{VENUE_TO_DELETE_ID}"));
@@ -228,25 +233,77 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task ValidateSocialContextDates_ReturnsErrorIfDateToBeforeDateFrom()
         {
             // Arrange
-            var keyValuePairs = new string[]
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(Utilities.NOTIFICATION_WITH_VENUES) + VENUE_ID);
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var keyValuePairs = new DatesValidationModel
             {
-                "keyValuePairs[0][key]=DateFrom",
-                "keyValuePairs[0][day]=1",
-                "keyValuePairs[0][month]=1",
-                "keyValuePairs[0][year]=2000",
-                "keyValuePairs[1][key]=DateTo",
-                "keyValuePairs[1][day]=1",
-                "keyValuePairs[1][month]=1",
-                "keyValuePairs[1][year]=1999",
+                KeyValuePairs = new List<Dictionary<string, string>>()
+                {
+                    new Dictionary<string, string>()
+                    {
+                        {"key", "DateFrom"},
+                        {"day", "1"},
+                        {"month", "1"},
+                        {"year", "2000"}
+                    },
+                    new Dictionary<string, string>()
+                    {
+                        {"key", "DateTo"},
+                        {"day", "1"},
+                        {"month", "1"},
+                        {"year", "1999"}
+                    }
+                }
             };
 
             // Act
-            var url = GetCurrentPathForId(0) + VENUE_ID;
-            var response = await Client.GetAsync($"{url}/ValidateSocialContextDates?{string.Join("&", keyValuePairs)}");
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetCurrentPathForId(Utilities.NOTIFICATION_WITH_VENUES) + VENUE_ID + "/ValidateSocialContextDates",
+                keyValuePairs);
 
             // Assert check just response.Content
             var result = await response.Content.ReadAsStringAsync();
             Assert.Contains(ValidationMessages.VenueDateToShouldBeLaterThanDateFrom, result);
+        }
+
+        [Fact]
+        public async Task ValidateSocialContextDatesRequest_ReturnsBadRequestIfDateInvalid()
+        {
+            // Arrange
+            var initialPage = await Client.GetAsync(GetCurrentPathForId(Utilities.NOTIFICATION_WITH_VENUES) + VENUE_ID);
+            var initialDocument = await GetDocumentAsync(initialPage);
+            var keyValuePairs = new DatesValidationModel
+            {
+                KeyValuePairs = new List<Dictionary<string, string>>()
+                {
+                    new Dictionary<string, string>()
+                    {
+                        {"key", "DateFrom"},
+                        {"day", "1"},
+                        {"month", "1"},
+                        {"year", "2000"}
+                    },
+                    new Dictionary<string, string>()
+                    {
+                        {"key", "DateTo"},
+                        {"day", "1"},
+                        {"month", "1"},
+                        {"year", "1999901"}
+                    }
+                }
+            };
+
+            // Act
+            var response = await Client.SendVerificationPostAsync(
+                initialPage,
+                initialDocument,
+                GetCurrentPathForId(Utilities.NOTIFICATION_WITH_VENUES) + VENUE_ID + "/ValidateSocialContextDates",
+                keyValuePairs);
+
+            // Assert check just response.Content
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Fact]
