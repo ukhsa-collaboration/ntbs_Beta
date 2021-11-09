@@ -20,6 +20,12 @@ namespace ntbs_service.Migrations
                 type: "datetime2",
                 nullable: true);
 
+            migrationBuilder.Sql(
+                @"UPDATE MDRDetails SET ExpectedTreatmentDurationInMonths = cd.MDRExpectedTreatmentDurationInMonths,
+                    MDRTreatmentStartDate = cd.MDRTreatmentStartDate
+                FROM ClinicalDetails cd
+                WHERE cd.NotificationId = MDRDetails.NotificationId");
+
             migrationBuilder.DropColumn(
                 name: "MDRExpectedTreatmentDurationInMonths",
                 table: "ClinicalDetails");
@@ -31,13 +37,6 @@ namespace ntbs_service.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "ExpectedTreatmentDurationInMonths",
-                table: "MDRDetails");
-
-            migrationBuilder.DropColumn(
-                name: "MDRTreatmentStartDate",
-                table: "MDRDetails");
 
             migrationBuilder.AddColumn<string>(
                 name: "MDRExpectedTreatmentDurationInMonths",
@@ -51,6 +50,20 @@ namespace ntbs_service.Migrations
                 table: "ClinicalDetails",
                 type: "datetime2",
                 nullable: true);
+
+            migrationBuilder.Sql(
+                @"UPDATE ClinicalDetails SET MDRExpectedTreatmentDurationInMonths = mdr.ExpectedTreatmentDurationInMonths,
+                    MDRTreatmentStartDate = mdr.MDRTreatmentStartDate
+                FROM MDRDetails mdr
+                WHERE mdr.NotificationId = ClinicalDetails.NotificationId");
+
+            migrationBuilder.DropColumn(
+                name: "ExpectedTreatmentDurationInMonths",
+                table: "MDRDetails");
+
+            migrationBuilder.DropColumn(
+                name: "MDRTreatmentStartDate",
+                table: "MDRDetails");
         }
     }
 }

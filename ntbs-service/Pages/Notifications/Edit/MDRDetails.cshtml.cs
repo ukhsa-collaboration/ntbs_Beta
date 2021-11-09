@@ -60,7 +60,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             Countries = new SelectList(countries, nameof(Country.CountryId), nameof(Country.Name));
 
             MDRDetails = Notification.MDRDetails;
-            MDRDetails.Treatment = Notification.ClinicalDetails.TreatmentRegimen;
             FormattedMdrTreatmentDate = MDRDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
             await SetNotificationProperties(isBeingSubmitted, MDRDetails);
 
@@ -103,7 +102,6 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             // Add additional field required for date validation
             MDRDetails.Dob = Notification.PatientDetails.Dob;
-            MDRDetails.Treatment = Notification.ClinicalDetails.TreatmentRegimen;
 
             MDRDetails.SetValidationContext(Notification);
 

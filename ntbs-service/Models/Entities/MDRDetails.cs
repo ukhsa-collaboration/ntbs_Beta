@@ -14,16 +14,12 @@ namespace ntbs_service.Models.Entities
     [Display(Name = "MDR details")]
     public partial class MDRDetails : ModelBase, IOwnedEntityForAuditing
     {
-        [NotMapped]
-        public TreatmentRegimen? Treatment { get; set; }
-        public bool IsMDRTreatment => Treatment == Enums.TreatmentRegimen.MdrTreatment;
-        
         [Display(Name = "MDR treatment start date")]
         // This use of the DatesHaveBeenSet property is a bit hacky - we want to make sure that the property is
         // only "required" after it has been set (from the formatted date). If we don't do this, then an error
         // will be produced when the form data is initially validated by the framework, whether or not a valid
         // date has actually been provided.
-        [RequiredIf(@"DatesHaveBeenSet && IsMDRTreatment && IsLegacy != true", ErrorMessage = ValidationMessages.FieldRequired)]
+        [RequiredIf(@"DatesHaveBeenSet && IsLegacy != true", ErrorMessage = ValidationMessages.FieldRequired)]
         [AssertThat(@"AfterDob(MDRTreatmentStartDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         [ValidClinicalDate]
         public DateTime? MDRTreatmentStartDate { get; set; }
