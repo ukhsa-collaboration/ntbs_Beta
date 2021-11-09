@@ -8,7 +8,5 @@ namespace ntbs_service.Pages.ServiceDirectory.Partials
         public IList<User> Users;
 
         public string TableId;
-
-        public string TableCaption;
     }
 }

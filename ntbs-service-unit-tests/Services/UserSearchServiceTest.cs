@@ -289,7 +289,11 @@ namespace ntbs_service_unit_tests.Services
             const string searchString = "Frank";
 
             _mockReferenceDataRepository.Setup(r => r.GetAllPhecs()).ReturnsAsync(new List<PHEC>());
-            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(new List<User> {new User {DisplayName = "Frank Ma"}});
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(new List<User>
+            {
+                new User {DisplayName = "Frank Ma"},
+                CreateDefaultCaseManager("Rufus Hound", "Rufus", "Hound", new List<CaseManagerTbService>())
+            });
 
             // Act
             var results = await _service.OrderAndPaginateQueryableAsync(searchString, DefaultPaginationParameters);
@@ -323,12 +327,21 @@ namespace ntbs_service_unit_tests.Services
             string familyName = null,
             List<CaseManagerTbService> caseManagerTbServices = null)
         {
+            var defaultTbService = new TBService { Name = "Test service", Code = "TTT001" };
             return new User
             {
                 DisplayName = displayName,
                 GivenName = givenName,
                 FamilyName = familyName,
-                CaseManagerTbServices = caseManagerTbServices ?? new List<CaseManagerTbService>(),
+                CaseManagerTbServices = caseManagerTbServices ?? new List<CaseManagerTbService>
+                {
+                    new CaseManagerTbService
+                    {
+                        TbService = defaultTbService,
+                        TbServiceCode = defaultTbService.Code,
+                        CaseManagerId = 1
+                    }
+                },
                 IsCaseManager = true,
                 IsActive = true
             };

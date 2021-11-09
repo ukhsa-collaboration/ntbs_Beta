@@ -12,7 +12,7 @@ namespace ntbs_service.DataAccess
 {
     public interface IUserRepository
     {
-        Task AddOrUpdateUser(User user, IEnumerable<TBService> tbServices);
+        Task AddOrUpdateUser(User user, IEnumerable<TBService> tbServices, bool allowIsCaseManagerUpdate = true);
         Task AddUserLoginEvent(UserLoginEvent userLoginEvent);
         Task<User> GetUserByUsername(string username);
         Task<User> GetUserById(int id);
@@ -42,7 +42,7 @@ namespace ntbs_service.DataAccess
                 .ThenInclude(tb => tb.PHEC);
         }
 
-        public async Task AddOrUpdateUser(User user, IEnumerable<TBService> tbServices)
+        public async Task AddOrUpdateUser(User user, IEnumerable<TBService> tbServices, bool allowIsCaseManagerUpdate = true)
         {
             var existingUser = await GetUserQueryable()
                 .SingleOrDefaultAsync(u => u.Username == user.Username);
@@ -50,7 +50,7 @@ namespace ntbs_service.DataAccess
 
             if (existingUser != null)
             {
-                await UpdateUserAdDetails(existingUser, user, tbServices);
+                await UpdateUserAdDetails(existingUser, user, tbServices, allowIsCaseManagerUpdate);
             }
             else
             {
@@ -102,6 +102,7 @@ namespace ntbs_service.DataAccess
             existingUser.EmailPrimary = user.EmailPrimary;
             existingUser.EmailSecondary = user.EmailSecondary;
             existingUser.Notes = user.Notes;
+            existingUser.IsCaseManager = user.IsCaseManager;
             await _context.SaveChangesAsync();
         }
 
@@ -135,15 +136,18 @@ namespace ntbs_service.DataAccess
         ///
         /// See also UpdateUserContactDetails method in this class
         /// </summary>
-        private async Task UpdateUserAdDetails(User existingUser, User newUser, IEnumerable<TBService> tbServices)
+        private async Task UpdateUserAdDetails(User existingUser, User newUser, IEnumerable<TBService> tbServices, bool allowIsCaseManagerUpdate = true)
         {
             existingUser.GivenName = newUser.GivenName;
             existingUser.FamilyName = newUser.FamilyName;
             existingUser.DisplayName = newUser.DisplayName;
             existingUser.AdGroups = newUser.AdGroups;
             existingUser.IsActive = newUser.IsActive;
-            existingUser.IsCaseManager = newUser.IsCaseManager;
             existingUser.IsReadOnly = newUser.IsReadOnly;
+            if (allowIsCaseManagerUpdate)
+            {
+                existingUser.IsCaseManager = newUser.IsCaseManager;
+            }
             SyncCaseManagerTbServices(existingUser, tbServices);
             await _context.SaveChangesAsync();
         }

@@ -39,7 +39,7 @@ namespace ntbs_service.Services
                 .Where(phec => searchKeywords.Any(s => phec.Name.ToLower().Contains(s)));
 
             var caseManagersAndRegionalUsers = (await _userRepository.GetOrderedUsers())
-                .Where(u => u.IsActive && (u.IsCaseManager
+                .Where(u => u.IsActive && (u.CaseManagerTbServices.Any()
                             || (u.AdGroups != null && allPhecs.Any(phec => u.AdGroups.Split(",").Contains(phec.AdGroup)))));
 
             // This query is too complex to translate to sql, so we explicitly work on an in-memory list.

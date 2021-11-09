@@ -47,6 +47,7 @@ namespace ntbs_service.DataMigration
             ntbsCaseManager.GivenName = legacyCaseManager.GivenName;
             ntbsCaseManager.FamilyName = legacyCaseManager.FamilyName;
             ntbsCaseManager.DisplayName = $"{ntbsCaseManager.GivenName} {ntbsCaseManager.FamilyName}";
+            ntbsCaseManager.IsCaseManager = true;
 
             await AddTbServiceToUserBasedOnLegacyPermissions(ntbsCaseManager, legacyTbServiceCode);
 
@@ -69,7 +70,6 @@ namespace ntbs_service.DataMigration
                 var legacyMatchingTbService = legacyUserTbServices.SingleOrDefault(tb => tb.Code == legacyTbServiceCode);
                 if (legacyMatchingTbService != null)
                 {
-                    ntbsCaseManager.IsCaseManager = true;
                     ntbsCaseManager.CaseManagerTbServices.Add(new CaseManagerTbService
                     {
                         TbService = legacyMatchingTbService,
