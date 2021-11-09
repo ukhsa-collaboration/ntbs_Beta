@@ -494,8 +494,6 @@ namespace ntbs_service.DataMigration
                 DiagnosisDate = notification.DiagnosisDate ?? notification.StartOfTreatmentDate ?? notification.NotificationDate,
                 StartedTreatment = !Converter.GetNullableBoolValue(notification.DidNotStartTreatment),
                 TreatmentStartDate = notification.StartOfTreatmentDate,
-                MDRTreatmentStartDate = notification.MDRTreatmentStartDate,
-                MDRExpectedTreatmentDurationInMonths = notification.MDRExpectedDuration,
                 IsSymptomatic = Converter.GetNullableBoolValue(notification.IsSymptomatic),
                 HomeVisitCarriedOut = Converter.GetStatusFromString(notification.HomeVisitCarriedOut),
                 FirstHomeVisitDate = notification.FirstHomeVisitDate,
@@ -873,6 +871,8 @@ namespace ntbs_service.DataMigration
         {
             var mdr = new MDRDetails
             {
+                MDRTreatmentStartDate = rawNotification.MDRTreatmentStartDate,
+                ExpectedTreatmentDurationInMonths = rawNotification.MDRExpectedDuration,
                 ExposureToKnownCaseStatus = Converter.GetStatusFromString(rawNotification.mdr_ExposureToKnownTbCase),
                 RelationshipToCase = rawNotification.mdr_RelationshipToCase,
                 // Notification.mdr_CaseInUKStatus is not used, as in NTBS it's calculated on the fly

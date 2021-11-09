@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
-using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
@@ -13,6 +14,25 @@ namespace ntbs_service.Models.Entities
     [Display(Name = "MDR details")]
     public partial class MDRDetails : ModelBase, IOwnedEntityForAuditing
     {
+        [NotMapped]
+        public TreatmentRegimen? Treatment { get; set; }
+        public bool IsMDRTreatment => Treatment == Enums.TreatmentRegimen.MdrTreatment;
+        
+        [Display(Name = "RR/MDR/XDR treatment date")]
+        // This use of the DatesHaveBeenSet property is a bit hacky - we want to make sure that the property is
+        // only "required" after it has been set (from the formatted date). If we don't do this, then an error
+        // will be produced when the form data is initially validated by the framework, whether or not a valid
+        // date has actually been provided.
+        [RequiredIf(@"DatesHaveBeenSet && IsMDRTreatment && IsLegacy != true", ErrorMessage = ValidationMessages.FieldRequired)]
+        [AssertThat(@"AfterDob(MDRTreatmentStartDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
+        [ValidClinicalDate]
+        public DateTime? MDRTreatmentStartDate { get; set; }
+
+        [MaxLength(10)]
+        [ValidDuration]
+        [Display(Name = "Expected treatment duration")]
+        public string ExpectedTreatmentDurationInMonths { get; set; }
+
         [Display(Name = "Has the patient been exposed to a known RR/MDR/XDR case?")]
         public Status? ExposureToKnownCaseStatus { get; set; }
 
@@ -40,6 +60,10 @@ namespace ntbs_service.Models.Entities
 
         [Display(Name = "Discussed at the British Thoracic Society MDR forum?")]
         public Status? DiscussedAtMDRForum { get; set; }
+
+        [NotMapped]
+        public DateTime? Dob { get; set; }
+        public bool AfterDob(DateTime date) => Dob == null || date >= Dob;
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
