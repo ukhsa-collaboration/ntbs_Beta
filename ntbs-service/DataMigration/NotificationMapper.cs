@@ -507,6 +507,7 @@ namespace ntbs_service.DataMigration
                 BCGVaccinationState = Converter.GetStatusFromString(notification.BCGVaccinationState),
                 BCGVaccinationYear = notification.BCGVaccinationYear,
                 TreatmentRegimen = Converter.GetEnumValue<TreatmentRegimen>(notification.TreatmentRegimen),
+                HealthProtectionTeamReferenceNumber = RemoveCharactersNotIn(ValidationRegexes.CharacterValidationLocalPatientId, notification.HealthProtectionTeamReferenceNumber),
                 Notes = notification.Notes
             };
             return details;
