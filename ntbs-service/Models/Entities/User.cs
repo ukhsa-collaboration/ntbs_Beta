@@ -62,9 +62,5 @@ namespace ntbs_service.Models.Entities
         public string Notes { get; set; }
 
         public virtual ICollection<CaseManagerTbService> CaseManagerTbServices { get; set; }
-
-        public bool ArePrimaryContactDetailsMissing => string.IsNullOrEmpty(JobTitle)
-                                                       && string.IsNullOrEmpty(PhoneNumberPrimary)
-                                                       && string.IsNullOrEmpty(EmailPrimary);
     }
 }

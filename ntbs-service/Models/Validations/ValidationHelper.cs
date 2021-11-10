@@ -29,7 +29,6 @@
         public const string YearAfter1900 = "Year field must be at last 1900";
         public const string SupplyAParameter = "Please supply at least one of these fields";
         public const string SupplyAModelParameter = "Please supply at least one of {0} fields";
-        public const string SupplyCaseManagerPrimaryParameter = "Please supply at least one of Job Title, Phone number #1, Email #1 fields";
         public const string Mandatory = "{0} is a mandatory field";
         public const string RequiredEnter = "Please enter {0}";
         public const string RequiredSelect = "Please select {0}";
