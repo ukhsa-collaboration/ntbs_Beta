@@ -205,7 +205,6 @@ namespace ntbs_service.Services
 
         public async Task CreateAlertsForUnmatchedLabResults(IEnumerable<SpecimenMatchPairing> specimenMatchPairings)
         {
-            var alerts = new List<UnmatchedLabResultAlert>();
             foreach (var specimenMatchPairing in specimenMatchPairings)
             {
                 var notification = await _notificationRepository.GetNotificationForAlertCreationAsync(
@@ -217,16 +216,22 @@ namespace ntbs_service.Services
                         $"Reporting database sourced NotificationId {specimenMatchPairing.NotificationId} was not found in NTBS database.");
                 }
 
-                alerts.Add(new UnmatchedLabResultAlert
+                var alert = new UnmatchedLabResultAlert
                 {
                     AlertStatus = AlertStatus.Open,
                     NotificationId = notification.NotificationId,
-                    SpecimenId = specimenMatchPairing.ReferenceLaboratoryNumber,
-                    CreationDate = DateTime.Now
-                });
-            }
+                    SpecimenId = specimenMatchPairing.ReferenceLaboratoryNumber
+                };
 
-            await _alertRepository.AddAlertRangeAsync(alerts);
+                var existingAlert = await _alertRepository.GetUnmatchedLabResultAlertForNotificationAndSpecimenAsync(
+                    alert.NotificationId.Value,
+                    alert.SpecimenId);
+
+                if (existingAlert == null)
+                {
+                    await PopulateAndAddAlertAsync(alert);
+                }
+            }
         }
 
         private async Task PopulateAndAddAlertAsync(Alert alert)

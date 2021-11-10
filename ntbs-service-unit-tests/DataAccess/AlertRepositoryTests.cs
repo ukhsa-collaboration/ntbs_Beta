@@ -65,7 +65,7 @@ namespace ntbs_service_unit_tests.DataAccess
 
         [Theory]
         [InlineData(true, true, "Pharoah Sanders")]
-        [InlineData(true, false, null)]
+        [InlineData(true, false, "Pharoah Sanders")]
         [InlineData(false, false, null)]
         public async void CorrectlyMapsUserOnNonTransferAlertToDisplayAlert
             (bool hasCaseManager, bool caseManagerIsActive, string expectedCaseManagerName)
