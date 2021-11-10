@@ -366,7 +366,7 @@ namespace ntbs_ui_tests.Steps
                     "Health service to TB service presentation", "Diagnosis date", "TB service presentation to diagnosis",
                     "Treatment start date", "Diagnosis to treatment start", "Postmortem diagnosis", "Home visit",
                     "HIV test offered", "DOT offered", "BCG vaccination", "Enhanced case management",
-                    "Planned treatment regimen", "Notes"},
+                    "Planned treatment regimen", "Health Protection Team reference number", "Notes"},
                 "ContactTracing" => new [] {"Number of contacts identified for screening",
                     "Number of contacts screened and found to have latent TB", "Number of contacts screened for TB",
                     "Number of contacts that have started treatment for latent TB",
