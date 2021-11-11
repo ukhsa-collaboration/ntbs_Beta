@@ -337,10 +337,14 @@ Feature: Notification editing
     When I go to edit the 'MDRDetails' section
     Then I should be on the MDRDetails page
     When I check 'exposure-yes'
+    And I enter '12-12-2020' into date fields with id 'FormattedMdrTreatmentDate'
+    And I enter 25+ into 'MDRDetails_ExpectedTreatmentDurationInMonths'
     And I enter Chauffeur into 'MDRDetails_RelationshipToCase'
     And I enter Guyana into 'MDRDetails_CountryId'
     And I click on the 'save-button' button
 
     Then I can see the value 'Yes' for the field 'known-case-exposure' in the 'MDRDetails' overview section
+    And I can see the value '12 Dec 2020' for the field 'treatment-start-date' in the 'MDRDetails' overview section
+    And I can see the value '25+' for the field 'expected-duration' in the 'MDRDetails' overview section
     And I can see the value 'Chauffeur' for the field 'relationship-to-case' in the 'MDRDetails' overview section
     And I can see the value 'Guyana' for the field 'country-name' in the 'MDRDetails' overview section
