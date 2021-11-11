@@ -82,7 +82,7 @@ namespace ntbs_ui_tests.Helpers
                             HomeVisitCarriedOut = Status.No, HealthcareDescription = "Been giving lots of paracetamol",
                             HealthcareSetting = HealthcareSetting.GP, HIVTestState = HIVTestStatus.OfferedButRefused,
                             IsSymptomatic = true, IsDotOffered = Status.Unknown,
-                            IsPostMortem = false, MDRTreatmentStartDate = new DateTime(2013, 1, 2),
+                            IsPostMortem = false,
                             Notes = "Patient has cool hats", SymptomStartDate = new DateTime(2010, 12, 20),
                             TreatmentRegimen = TreatmentRegimen.MdrTreatment, TreatmentStartDate = new DateTime(2011, 4, 1),
                             TBServicePresentationDate = new DateTime(2010, 12, 30)
@@ -175,7 +175,8 @@ namespace ntbs_ui_tests.Helpers
                         MDRDetails = new MDRDetails
                         {
                             RelationshipToCase = "Godmother", CountryId = 38,
-                            ExposureToKnownCaseStatus = Status.Yes, NotifiedToPheStatus = Status.Yes
+                            ExposureToKnownCaseStatus = Status.Yes, NotifiedToPheStatus = Status.Yes,
+                            MDRTreatmentStartDate = new DateTime(2013, 1, 2), ExpectedTreatmentDurationInMonths = "12-14"
                         },
                         NotificationDate = new DateTime(2011, 1, 1),
                         NotificationStatus = NotificationStatus.Notified,
