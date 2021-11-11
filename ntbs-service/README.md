@@ -134,8 +134,8 @@ docker run -it --rm -p 8000:80 --name ntbs ntbs
 Publishing current image
 ```
 docker build -t ntbs .
-docker tag ntbs ntbscontainerregistry.azurecr.io/ntbs-service
-docker push ntbscontainerregistry.azurecr.io/ntbs-service
+docker tag ntbs ghcr.io/publichealthengland/ntbs-service
+docker push ghcr.io/publichealthengland/ntbs-service
 ```
 
 ## Azure Active Directory Setup

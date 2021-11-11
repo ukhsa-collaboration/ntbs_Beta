@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: ntbs-dev
-          image: "ntbscontainerregistry.azurecr.io/ntbs-service:dev"
+          image: "ghcr.io/publichealthengland/ntbs-service:dev"
           imagePullPolicy: Always
           resources:
             requests:
@@ -86,7 +86,6 @@ spec:
             - name: ScheduledJobsConfig__UserSyncCron
               value: "00 21 * * *"
       imagePullSecrets:
-        - name: registery-password
         - name: default-dockercfg-bs7wj
 ---
 apiVersion: v1
