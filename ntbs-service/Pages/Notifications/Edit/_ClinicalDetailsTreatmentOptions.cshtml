@@ -129,6 +129,13 @@
                     Please provide the start date and expected duration of treatment on the MDR questionnaire
                 </div>
 
+                <div class="nhsuk-radios__item">
+                    <input asp-for="ClinicalDetails.TreatmentRegimen" id="regimen-other" class="nhsuk-radios__input" type="radio" value="@TreatmentRegimen.Other"
+                        data-aria-controls="conditional-regimen-other-conditional">
+                    <label class="nhsuk-label nhsuk-radios__label" for="regimen-other">
+                        Other
+                    </label>
+                </div>
 
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-regimen-other-conditional">
                     <validate-input model="ClinicalDetails" property="TreatmentRegimenOtherDescription" inline-template>
