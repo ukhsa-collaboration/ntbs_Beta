@@ -67,21 +67,6 @@ namespace ntbs_service.Models.Entities
         public TreatmentRegimen? TreatmentRegimen { get; set; }
         public bool IsMDRTreatment => TreatmentRegimen == Enums.TreatmentRegimen.MdrTreatment;
 
-        [Display(Name = "RR/MDR/XDR treatment date")]
-        // This use of the DatesHaveBeenSet property is a bit hacky - we want to make sure that the property is
-        // only "required" after it has been set (from the formatted date). If we don't do this, then an error
-        // will be produced when the form data is initially validated by the framework, whether or not a valid
-        // date has actually been provided.
-        [RequiredIf(@"DatesHaveBeenSet && IsMDRTreatment && IsLegacy != true", ErrorMessage = ValidationMessages.FieldRequired)]
-        [AssertThat(@"AfterDob(MDRTreatmentStartDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
-        [ValidClinicalDate]
-        public DateTime? MDRTreatmentStartDate { get; set; }
-
-        [MaxLength(10)]
-        [ValidDuration]
-        [Display(Name = "Expected treatment duration")]
-        public string MDRExpectedTreatmentDurationInMonths { get; set; }
-
         [MaxLength(100)]
         [Display(Name = "Treatment regimen other description")]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
@@ -119,6 +104,11 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Other description")]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string HealthcareDescription { get; set; }
+
+        [MaxLength(40, ErrorMessage = ValidationMessages.MaximumTextLength)]
+        [Display(Name = "Health Protection Team reference number")]
+        [RegularExpression(ValidationRegexes.CharacterValidationLocalPatientId, ErrorMessage = ValidationMessages.InvalidCharacter)]
+        public string HealthProtectionTeamReferenceNumber { get; set; }
 
         #endregion
 

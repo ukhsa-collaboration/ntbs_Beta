@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using ntbs_service.Models.Enums;
 using ntbs_service.Properties;
 
 namespace ntbs_service.Helpers
@@ -34,6 +35,11 @@ namespace ntbs_service.Helpers
         public bool UserIsReadOnly(ClaimsPrincipal user)
         {
             return user.IsInRole(_adOptions.ReadOnlyUserGroup);
+        }
+
+        public static Status BoolToStatus(bool b)
+        {
+            return b ? Status.Yes : Status.No;
         }
     }
 }

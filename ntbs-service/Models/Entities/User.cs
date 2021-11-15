@@ -13,8 +13,10 @@ namespace ntbs_service.Models.Entities
         public string DisplayName { get; set; }
         public string AdGroups { get; set; }
         public bool IsActive { get; set; }
-        public bool IsCaseManager { get; set; }
         public bool IsReadOnly { get; set; }
+
+        [Display(Name = "Case manager")]
+        public bool IsCaseManager { get; set; }
 
         [MaxLength(100)]
         [Display(Name = "Job title")]
@@ -60,9 +62,5 @@ namespace ntbs_service.Models.Entities
         public string Notes { get; set; }
 
         public virtual ICollection<CaseManagerTbService> CaseManagerTbServices { get; set; }
-
-        public bool ArePrimaryContactDetailsMissing => string.IsNullOrEmpty(JobTitle)
-                                                       && string.IsNullOrEmpty(PhoneNumberPrimary)
-                                                       && string.IsNullOrEmpty(EmailPrimary);
     }
 }

@@ -36,6 +36,10 @@
             <nhs-summary-list-row-value>@Model.EmailSecondary</nhs-summary-list-row-value>
           </nhs-summary-list-row>
           <nhs-summary-list-row>
+            <nhs-summary-list-row-key>@Html.DisplayNameFor(x => x.IsCaseManager)</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@UserHelper.BoolToStatus(Model.IsCaseManager)</nhs-summary-list-row-value>
+          </nhs-summary-list-row>
+          <nhs-summary-list-row>
             <nhs-summary-list-row-key>@Html.DisplayNameFor(x => x.Notes)</nhs-summary-list-row-key>
             <nhs-summary-list-row-value>@Model.Notes</nhs-summary-list-row-value>
           </nhs-summary-list-row>

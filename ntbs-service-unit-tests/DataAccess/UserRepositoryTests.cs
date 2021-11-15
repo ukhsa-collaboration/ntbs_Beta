@@ -62,7 +62,7 @@ namespace ntbs_service_unit_tests.DataAccess
         }
 
         [Fact]
-        public async Task AddOrUpdateData_AddsAnotherCaseManagerTbService_ToExistingUser()
+        public async Task AddOrUpdateUser_AddsAnotherCaseManagerTbService_ToExistingUser()
         {
             // Arrange
             const string username = "user2";
@@ -85,7 +85,7 @@ namespace ntbs_service_unit_tests.DataAccess
         }
 
         [Fact]
-        public async Task AddOrUpdateData_RemovesOnlyCaseManagerTbService_FromExistingUser()
+        public async Task AddOrUpdateUser_RemovesOnlyCaseManagerTbService_FromExistingUser()
         {
             // Arrange
             const string username = "user3";
@@ -106,7 +106,7 @@ namespace ntbs_service_unit_tests.DataAccess
         }
 
         [Fact]
-        public async Task AddOrUpdateData_RemovesSingleCaseManagerTbService_FromExistingUser()
+        public async Task AddOrUpdateUser_RemovesSingleCaseManagerTbService_FromExistingUser()
         {
             // Arrange
             const string username = "user4";
@@ -125,6 +125,26 @@ namespace ntbs_service_unit_tests.DataAccess
             Assert.True(updatedUser.IsCaseManager);
             Assert.Collection(updatedUser.CaseManagerTbServices,
                 cmtbs => Assert.Equal(_tbService1.Code, cmtbs.TbService.Code));
+        }
+
+        [Fact]
+        public async Task AddOrUpdateUser_WithFalseUpdateFlag_DoesNotChangeCaseManagerStatus()
+        {
+            // Arrange
+            const string username = "user5";
+            await AddUserAndTbServices(CreateUser(username), new[] { _tbService1 });
+
+            var updateUser = CreateUser(username);
+            updateUser.IsCaseManager = false;
+            var updateTbServices = new[] { _tbService1 };
+
+            // Act
+            await _userRepo.AddOrUpdateUser(updateUser, updateTbServices, allowIsCaseManagerUpdate: false);
+
+            // Assert
+            var updatedUser = GetUserUsingNewContext(username);
+            Assert.NotNull(updatedUser);
+            Assert.True(updatedUser.IsCaseManager);
         }
 
         private User GetUserUsingNewContext(string username)

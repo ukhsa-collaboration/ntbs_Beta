@@ -43,6 +43,7 @@ namespace ntbs_service.DataAccess
         Task<bool> NotificationWithLegacyIdExistsAsync(string id);
         Task<int> GetNotificationIdByLegacyIdAsync(string legacyId);
         Task<bool> IsNotificationLegacyAsync(int id);
+        Task<bool> AnyNotificationsForUser(int userId);
     }
 
     public class NotificationRepository : INotificationRepository
@@ -109,6 +110,12 @@ namespace ntbs_service.DataAccess
             return await GetBaseNotificationsIQueryable()
                 .Include(n => n.HospitalDetails)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
+        }
+
+        public async Task<bool> AnyNotificationsForUser(int userId)
+        {
+            return await GetBaseNotificationsIQueryable()
+                .AnyAsync(n => n.HospitalDetails.CaseManagerId == userId);
         }
 
         public async Task<IEnumerable<NotificationForDrugResistanceImport>> GetNotificationsForDrugResistanceImportAsync(
