@@ -214,6 +214,7 @@ namespace ntbs_service.Services
                             userName,
                             NotificationAuditType.Edited);
                     }
+                    await _alertRepository.CloseUnmatchedLabResultAlertForSpecimenAndNotificationAsync(labReferenceNumber, notificationId);
                 }
 
                 return success;

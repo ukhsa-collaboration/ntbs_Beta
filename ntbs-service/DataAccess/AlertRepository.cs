@@ -30,6 +30,7 @@ namespace ntbs_service.DataAccess
 
         Task CloseAlertRangeAsync(IEnumerable<Alert> alerts);
         Task CloseUnmatchedLabResultAlertsForSpecimenIdAsync(string specimenId);
+        Task CloseUnmatchedLabResultAlertForSpecimenAndNotificationAsync(string specimenId, int notificationId);
         Task SaveAlertChangesAsync(NotificationAuditType auditType = NotificationAuditType.Edited);
     }
 
@@ -191,6 +192,18 @@ namespace ntbs_service.DataAccess
                 .ToListAsync();
 
             await CloseAlertRangeAsync(alertsToClose);
+        }
+
+        public async Task CloseUnmatchedLabResultAlertForSpecimenAndNotificationAsync(string specimenId,
+            int notificationId)
+        {
+            var alertToClose = await _context.Alert.OfType<UnmatchedLabResultAlert>()
+                .SingleAsync(alert => alert.AlertStatus == AlertStatus.Open
+                                      && alert.SpecimenId == specimenId
+                                      && alert.NotificationId == notificationId);
+
+            alertToClose.AlertStatus = AlertStatus.Closed;
+            await _context.SaveChangesAsync();
         }
 
         public async Task SaveAlertChangesAsync(NotificationAuditType auditType = NotificationAuditType.Edited)
