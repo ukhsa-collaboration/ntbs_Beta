@@ -208,6 +208,7 @@ namespace ntbs_service.Services
                 return new[] { log };
             }
 
+            // We don't want a log for rejecting a potential match to appear on the changes page
             if (group.Count == 1 && group.Single().EventType == AuditEventType.REJECT_POTENTIAL)
             {
                 return new List<AuditLog>();
