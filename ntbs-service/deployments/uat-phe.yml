@@ -29,7 +29,7 @@ spec:
                 topologyKey: kubernetes.io/hostname
       containers:
         - name: ntbs-uat
-          image: "ntbscontainerregistry.azurecr.io/ntbs-service:uat"
+          image: "ghcr.io/publichealthengland/ntbs-service:uat"
           imagePullPolicy: Always
           resources:
             requests:
@@ -136,7 +136,6 @@ spec:
             - mountPath: /krbtab
               name: krb-tab
       imagePullSecrets:
-        - name: registery-password
         - name: default-dockercfg-bs7wj
       volumes:
         - name: krb-tab
