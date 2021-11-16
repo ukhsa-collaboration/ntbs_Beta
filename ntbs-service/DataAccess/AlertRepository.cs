@@ -198,12 +198,15 @@ namespace ntbs_service.DataAccess
             int notificationId)
         {
             var alertToClose = await _context.Alert.OfType<UnmatchedLabResultAlert>()
-                .SingleAsync(alert => alert.AlertStatus == AlertStatus.Open
+                .SingleOrDefaultAsync(alert => alert.AlertStatus == AlertStatus.Open
                                       && alert.SpecimenId == specimenId
                                       && alert.NotificationId == notificationId);
 
-            alertToClose.AlertStatus = AlertStatus.Closed;
-            await _context.SaveChangesAsync();
+            if (alertToClose != null)
+            {
+                alertToClose.AlertStatus = AlertStatus.Closed;
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task SaveAlertChangesAsync(NotificationAuditType auditType = NotificationAuditType.Edited)
