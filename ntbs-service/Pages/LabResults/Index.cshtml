@@ -243,7 +243,12 @@ else
 
                 <div class="flex-container">
                     <button nhs-button-type="Standard" classes="ntbsuk-button--secondary create-notification-button--right">
-                        Match selected specimen
+                        Match to selected notification
+                    </button>
+                    <button nhs-button-type="Standard"
+                            classes="ntbsuk-button--secondary reject-button"
+                            asp-page-handler="UnmatchPotential">
+                        Remove from selected notification
                     </button>
                 </div>
             </form>

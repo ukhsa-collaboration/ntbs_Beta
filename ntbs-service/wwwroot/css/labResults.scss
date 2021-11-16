@@ -68,6 +68,10 @@
   margin-bottom: 24px;
 }
 
+.reject-button {
+  margin-left: 15px;
+}
+
 .nhsuk-care-card--specimen {
   @include care-card($specimen-card-border, $color_nhsuk-white, 4px);
 

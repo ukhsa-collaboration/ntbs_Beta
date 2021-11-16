@@ -172,7 +172,8 @@ namespace ntbs_service.Services
                 new List<(string LegacyId, string ReferenceLaboratoryNumber)>().AsEnumerable());
         }
 
-        public Task<bool> UnmatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName)
+        public Task<bool> UnmatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName,
+            bool isPotential)
         {
             return Task.FromResult(true);
         }
