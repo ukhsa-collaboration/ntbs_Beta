@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: ntbs-load-test
-        image: "ntbscontainerregistry.azurecr.io/ntbs-service:load-test"
+        image: "ghcr.io/publichealthengland/ntbs-service:load-test"
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -90,8 +90,6 @@ spec:
           requests:
             cpu: 500m
             memory: 1Gi
-      imagePullSecrets:
-      - name: registry-password
 ---
 apiVersion: v1
 kind: Service

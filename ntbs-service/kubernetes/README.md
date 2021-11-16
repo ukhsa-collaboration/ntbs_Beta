@@ -10,7 +10,6 @@ Before you begin, you need to generate the required secrets. Assuming that you h
 * development-ad-sync-credentials
 * int-azuread-options
 * int-connection-strings
-* registry-password
 * softwire-container-registry-secret
 * test-azuread-options
 * test-connection-strings
@@ -44,7 +43,7 @@ The following steps assume that you are working in a resource group called `NTBS
     * Get the `int.yml` file from the `deployments` directory in the project.
     * Update the domain to the new DNS Zone.
     * `kubectl apply -f int.yml`
-    * `kubectl set image deployment/ntbs-int ntbs-int=ntbscontainerregistry.azurecr.io/ntbs-service:<current-build>`
+    * `kubectl set image deployment/ntbs-int ntbs-int=ghcr.io/publichealthengland/ntbs-service:<current-build>`
 
 1. Set up the TLS certificates by following the instructions in the cert-manager `readMe`, but remember to update the domains to the new DNS Zone.
 

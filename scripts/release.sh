@@ -20,7 +20,7 @@ fi
 
 echo "Setting image to build $build"
 # This sets the image to current build. Should be the same as "latest", but triggers pull of the image.
-kubectl set image deployment/ntbs-$env ntbs-$env=ntbscontainerregistry.azurecr.io/ntbs-service:$build --record=true
+kubectl set image deployment/ntbs-$env ntbs-$env=ghcr.io/publichealthengland/ntbs-service:$build --record=true
 
 attempts=0
 maxAttempts=30
