@@ -1,4 +1,6 @@
-﻿namespace ntbs_service.Models.Validations
+﻿using System.Collections.Generic;
+
+namespace ntbs_service.Models.Validations
 {
     public class InputValidationModel
     {
@@ -14,6 +16,11 @@
         public string Month {get; set;}
         public string Year {get; set;}
         public int NotificationId { get; set; }
+    }
+
+    public class DatesValidationModel
+    {
+        public IEnumerable<Dictionary<string, string>> KeyValuePairs { get; set; }
     }
 
     public class NhsNumberValidationModel

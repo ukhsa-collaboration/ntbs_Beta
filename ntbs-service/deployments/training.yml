@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: ntbs-training
-        image: "ntbscontainerregistry.azurecr.io/ntbs-service:training"
+        image: "ghcr.io/publichealthengland/ntbs-service:training"
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -87,8 +87,6 @@ spec:
             value: "training"
           - name: EnvironmentDescription__EnvironmentName
             value: "azure-training"
-      imagePullSecrets:
-      - name: registry-password
 ---
 apiVersion: v1
 kind: Service

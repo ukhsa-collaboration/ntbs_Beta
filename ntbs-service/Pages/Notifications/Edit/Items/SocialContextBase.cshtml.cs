@@ -107,10 +107,10 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             return ValidationService.GetDateValidationResult<T>(validationData.Key, validationData.Day, validationData.Month, validationData.Year, isLegacy);
         }
 
-        public ContentResult OnGetValidateSocialContextDates(IEnumerable<Dictionary<string, string>> keyValuePairs)
+        public IActionResult OnPostValidateSocialContextDates([FromBody]DatesValidationModel validationData)
         {
             List<(string, object)> propertyValueTuples = new List<(string key, object property)>();
-            foreach (var keyValuePair in keyValuePairs)
+            foreach (var keyValuePair in validationData.KeyValuePairs)
             {
                 var formattedDate = new FormattedDate() { Day = keyValuePair["day"], Month = keyValuePair["month"], Year = keyValuePair["year"] };
                 if (formattedDate.TryConvertToDateTime(out var convertedDob))
@@ -119,8 +119,10 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 }
                 else
                 {
-                    // should not ever get here as we validate individual dates first before comparing
-                    return null;
+                    // As we know that the validation will have already run for each date separately, we don't need to
+                    // return any errors as they will already have been displayed.
+                    // It would be better if we didn't get to this point if we knew there was an invalid date.
+                    return BadRequest("One or more of the provided dates does not have a valid format.");
                 }
             }
             return ValidationService.GetMultiplePropertiesValidationResult<T>(propertyValueTuples);

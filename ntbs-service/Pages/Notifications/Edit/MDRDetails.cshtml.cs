@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
@@ -42,6 +43,9 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public MDRDetails MDRDetails { get; set; }
 
+        [BindProperty]
+        public FormattedDate FormattedMdrTreatmentDate { get; set; }
+
         public SelectList Countries { get; set; }
 
 
@@ -56,6 +60,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             Countries = new SelectList(countries, nameof(Country.CountryId), nameof(Country.Name));
 
             MDRDetails = Notification.MDRDetails;
+            FormattedMdrTreatmentDate = MDRDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
             await SetNotificationProperties(isBeingSubmitted, MDRDetails);
 
             if (MDRDetails.ShouldValidateFull)
@@ -91,6 +96,13 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             UpdateFlags();
             ValidateRelatedNotificationId();
+
+            ValidationService.TrySetFormattedDate(MDRDetails, "MDRDetails", nameof(MDRDetails.MDRTreatmentStartDate), FormattedMdrTreatmentDate);
+            MDRDetails.DatesHaveBeenSet = true;
+
+            // Add additional field required for date validation
+            MDRDetails.Dob = Notification.PatientDetails.Dob;
+
             MDRDetails.SetValidationContext(Notification);
 
             if (TryValidateModel(MDRDetails, nameof(MDRDetails)))
@@ -141,6 +153,12 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ContentResult OnPostValidateMDRDetailsProperty([FromBody]InputValidationModel validationData)
         {
             return ValidationService.GetPropertyValidationResult<MDRDetails>(validationData.Key, validationData.Value, validationData.ShouldValidateFull);
+        }
+
+        public async Task<ContentResult> OnPostValidateMDRDetailsDate([FromBody]DateValidationModel validationData)
+        {
+            var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
+            return ValidationService.GetDateValidationResult<MDRDetails>(validationData.Key, validationData.Day, validationData.Month, validationData.Year, isLegacy);
         }
     }
 }

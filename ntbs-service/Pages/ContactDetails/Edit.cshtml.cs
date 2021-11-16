@@ -16,12 +16,14 @@ namespace ntbs_service.Pages.ContactDetails
         private readonly IUserRepository _userRepository;
         private readonly ValidationService _validationService;
         private readonly IUserHelper _userHelper;
+        private readonly INotificationRepository _notificationRepository;
 
-        public EditModel(IUserRepository userRepository, IUserHelper userHelper)
+        public EditModel(IUserRepository userRepository, IUserHelper userHelper, INotificationRepository notificationRepository)
         {
             _userRepository = userRepository;
             _userHelper = userHelper;
             _validationService = new ValidationService(this);
+            _notificationRepository = notificationRepository;
         }
 
         [BindProperty]
@@ -29,6 +31,8 @@ namespace ntbs_service.Pages.ContactDetails
         
         [BindProperty(SupportsGet = true)]
         public int UserId { get; set; }
+        
+        public bool UserHasNotificationAndIsCaseManager { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -37,6 +41,8 @@ namespace ntbs_service.Pages.ContactDetails
                 .OrderBy(x => x.TbService.Name)
                 .ThenBy(x => x.TbService.PHEC.Name)
                 .ToList();
+
+            UserHasNotificationAndIsCaseManager = await _notificationRepository.AnyNotificationsForUser(UserId) && ContactDetails.IsCaseManager;
 
             return Page();
         }
@@ -66,10 +72,6 @@ namespace ntbs_service.Pages.ContactDetails
         private void ValidateModel()
         {
             TryValidateModel(ContactDetails, nameof(ContactDetails));
-            if (ContactDetails.ArePrimaryContactDetailsMissing)
-            {
-                ModelState.AddModelError("ContactDetails", ValidationMessages.SupplyCaseManagerPrimaryParameter);
-            }
 
             if (!ModelState.IsValid)
             {

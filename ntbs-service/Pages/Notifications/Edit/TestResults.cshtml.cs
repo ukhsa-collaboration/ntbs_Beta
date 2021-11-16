@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
@@ -46,7 +47,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             if (TestData.ShouldValidateFull)
             {
-                TryValidateModel(TestData, nameof(TestData));
+                TryValidateTestData(TestData, nameof(TestData));
             }
 
             return Page();
@@ -72,7 +73,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             TestData.ManualTestResults = Notification.TestData.ManualTestResults;
             TestData.ProceedingToAdd = ActionName == ActionNameString.Create;
             TestData.SetValidationContext(Notification);
-            if (TryValidateModel(TestData, nameof(TestData)))
+            if (TryValidateTestData(TestData, nameof(TestData)))
             {
                 await Service.UpdateTestDataAsync(Notification, TestData);
             }
@@ -93,6 +94,17 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task<Notification> GetNotificationAsync(int notificationId)
         {
             return await NotificationRepository.GetNotificationWithTestsAsync(notificationId);
+        }
+
+        private bool TryValidateTestData(TestData testData, string name)
+        {
+            TryValidateModel(testData, name);
+            // The manual test results have already been validated/saved on the manual test result page. Here we need to include
+            // them in the TestData so that the HasTestCarriedOut property can be validated correctly, but we don't care if there
+            // are validation errors in the tests themselves. (It is possible to have errors on test results which have been
+            // imported from ETS where the test type and sample type combination is invalid).
+            ModelState.RemoveAll<TestResultsModel>(t => t.TestData.ManualTestResults);
+            return ModelState.IsValid;
         }
     }
 }

@@ -49,28 +49,5 @@ namespace ntbs_service_unit_tests.Models.Entities
             // Assert
             Assert.Equal("Yes - 2000", stateAndYear);
         }
-
-        [Theory]
-        [InlineData(2019, 1, 1, "RR/MDR/XDR treatment - 01 Jan 2019")]
-        [InlineData(null, null, null, "RR/MDR/XDR treatment")]
-        public void CreatesMdrTreatmentStringCorrectly(int? year, int? month, int? day, string expectedResult)
-        {
-
-            // Arrange
-            var clinicalDetails = new ClinicalDetails();
-            if (year != null && month != null && day != null)
-            {
-                var dateTime = new DateTime((int)year, (int)month, (int)day);
-                clinicalDetails.MDRTreatmentStartDate = dateTime;
-            }
-
-            clinicalDetails.TreatmentRegimen = TreatmentRegimen.MdrTreatment;
-
-            // Act
-            var stateAndDate = clinicalDetails.FormattedTreatmentRegimen;
-
-            // Assert
-            Assert.Equal(expectedResult, stateAndDate);
-        }
     }
 }

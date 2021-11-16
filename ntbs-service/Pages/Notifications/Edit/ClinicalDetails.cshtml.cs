@@ -35,7 +35,6 @@ namespace ntbs_service.Pages.Notifications.Edit
         public FormattedDate FormattedTbServicePresentationDate { get; set; }
         public FormattedDate FormattedDiagnosisDate { get; set; }
         public FormattedDate FormattedTreatmentDate { get; set; }
-        public FormattedDate FormattedMdrTreatmentDate { get; set; }
         public FormattedDate FormattedHomeVisitDate { get; set; }
 
         public ClinicalDetailsModel(
@@ -78,7 +77,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             FormattedTbServicePresentationDate = ClinicalDetails.TBServicePresentationDate.ConvertToFormattedDate();
             FormattedDiagnosisDate = ClinicalDetails.DiagnosisDate.ConvertToFormattedDate();
             FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
-            FormattedMdrTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
             FormattedHomeVisitDate = ClinicalDetails.FirstHomeVisitDate.ConvertToFormattedDate();
 
             if (ClinicalDetails.ShouldValidateFull)
@@ -138,17 +136,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task ValidateAndSave()
         {
             UpdateFlags();
-            new List<(string key, FormattedDate date)> {
-                (nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate),
-                (nameof(ClinicalDetails.FirstPresentationDate), FormattedFirstPresentationDate),
-                (nameof(ClinicalDetails.TBServicePresentationDate), FormattedTbServicePresentationDate),
-                (nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate),
-                (nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate),
-                (nameof(ClinicalDetails.FirstHomeVisitDate), FormattedHomeVisitDate),
-                (nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMdrTreatmentDate)
-            }.ForEach(item =>
-                ValidationService.TrySetFormattedDate(ClinicalDetails, "ClinicalDetails", item.key, item.date)
-            );
+            SetDatesOnClinicalDetails();
 
             if (ClinicalDetails.BCGVaccinationYear != null)
             {
@@ -197,6 +185,21 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
+        private void SetDatesOnClinicalDetails()
+        {
+            new List<(string key, FormattedDate date)>
+            {
+                (nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate),
+                (nameof(ClinicalDetails.FirstPresentationDate), FormattedFirstPresentationDate),
+                (nameof(ClinicalDetails.TBServicePresentationDate), FormattedTbServicePresentationDate),
+                (nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate),
+                (nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate),
+                (nameof(ClinicalDetails.FirstHomeVisitDate), FormattedHomeVisitDate)
+            }.ForEach(item =>
+                ValidationService.TrySetFormattedDate(ClinicalDetails, "ClinicalDetails", item.key, item.date)
+            );
+        }
+
         private void UpdateFlags()
         {
             if (ClinicalDetails.IsSymptomatic == false)
@@ -217,14 +220,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 ClinicalDetails.BCGVaccinationYear = null;
                 ModelState.Remove("ClinicalDetails.BCGVaccinationYear");
-            }
-
-            ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
-            if (!ClinicalDetails.IsMDRTreatment)
-            {
-                ClinicalDetails.MDRTreatmentStartDate = null;
-                FormattedMdrTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
-                ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
             }
 
             if (ClinicalDetails.TreatmentRegimen != TreatmentRegimen.Other)

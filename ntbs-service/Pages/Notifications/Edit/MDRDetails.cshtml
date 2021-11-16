@@ -17,9 +17,64 @@
 
 <div>
     <nhs-form-group nhs-form-group-type="Standard">
-        <nhs-fieldset>
-            <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(model => model.MDRDetails.ExposureToKnownCaseStatus)</nhs-fieldset-legend>
+        <nhs-fieldset>   
+            <validate-date model="MDRDetails" property="MDRTreatmentStartDate" inline-template>
+                @{
+                    var hasMdrTreatmentDateError = !Model.IsValid("MDRDetails.MDRTreatmentStartDate");
+                    var mdrTreatmentDateState = hasMdrTreatmentDateError ? Error : Standard;
+                }
+                <nhs-form-group nhs-form-group-type=@mdrTreatmentDateState id="MDRDetails-MDRTreatmentStartDate">
+                    <nhs-fieldset aria-describedby="mdr-treatment-date-error" role="group">
+                        <nhs-fieldset-legend nhs-legend-size="Standard">RR/MDR/XDR treatment start date</nhs-fieldset-legend>
+                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="MDRDetails.MDRTreatmentStartDate"
+                              has-error="@hasMdrTreatmentDateError" id="mdr-treatment-date-error"></span>
+                        <nhs-date-input id="mdr-treatment-date">
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type="Standard">
+                                    <label nhs-label-type="Date" asp-for="FormattedMdrTreatmentDate.Day">Day</label>
+                                    <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
+                                           is-error-input=@hasMdrTreatmentDateError asp-for="FormattedMdrTreatmentDate.Day"/>
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type="Standard">
+                                    <label nhs-label-type="Date" asp-for="FormattedMdrTreatmentDate.Month">Month</label>
+                                    <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
+                                           is-error-input=@hasMdrTreatmentDateError asp-for="FormattedMdrTreatmentDate.Month"/>
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type="Standard">
+                                    <label nhs-label-type="Date" asp-for="FormattedMdrTreatmentDate.Year">Year</label>
+                                    <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
+                                           is-error-input=@hasMdrTreatmentDateError asp-for="FormattedMdrTreatmentDate.Year"/>
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                        </nhs-date-input>
+                    </nhs-fieldset>
+                </nhs-form-group>
+            </validate-date>
 
+            <validate-input model="MDRDetails" property="ExpectedTreatmentDurationInMonths" inline-template>
+                @{
+                    var hasMdrExpectedDurationError = !Model.IsValid("MDRDetails.ExpectedTreatmentDurationInMonths");
+                    var mdrExpectedDurationState = hasMdrExpectedDurationError ? Error : Standard;
+                }
+                <nhs-form-group nhs-form-group-type=@mdrExpectedDurationState id="MDRDetails-ExpectedTreatmentDurationInMonths">
+                    <span nhs-span-type="ErrorMessage" asp-validation-for="MDRDetails.ExpectedTreatmentDurationInMonths"
+                          has-error="@hasMdrExpectedDurationError" ref="errorField" id="expected-treatment-duration-error">
+                    </span>
+                    <label asp-for="MDRDetails.ExpectedTreatmentDurationInMonths" nhs-label-type="Standard">
+                        Expected treatment duration in months
+                    </label>
+                    <input nhs-input-type="Standard" asp-for="MDRDetails.ExpectedTreatmentDurationInMonths" is-error-input="@hasMdrExpectedDurationError"
+                           v-on:blur="validate" ref="inputField" fixed-width="Five" aria-describedby="expected-treatment-duration-error"/>
+                </nhs-form-group>
+            </validate-input>
+        </nhs-fieldset> <br/>
+        
+        <nhs-fieldset> 
+        <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(model => model.MDRDetails.ExposureToKnownCaseStatus)</nhs-fieldset-legend>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
                     <input asp-for="MDRDetails.ExposureToKnownCaseStatus" id="exposure-yes" class="nhsuk-radios__input" type="radio"
@@ -69,7 +124,7 @@
                                         @Html.DisplayNameFor(x => x.MDRDetails.CountryId)
                                     </label>
                                     <span nhs-span-type="ErrorMessage" id="exposure-country-error"
-                                        ref="errorField" asp-validation-for="MDRDetails.CountryId" has-error="@hasCountryError">
+                                          ref="errorField" asp-validation-for="MDRDetails.CountryId" has-error="@hasCountryError">
                                     </span>
                                     <div ref="selectField" data-aria-controls="notified-to-phe-conditional" class=@countrySelectErrorClass>
                                         <autocomplete-select v-on:input-changed="validate" placeholder="Select Country" emit-change-on="blur" inline-template>
@@ -166,7 +221,30 @@
                         Unknown
                     </label>
                 </div>
-            </div>
+            </div> <br/>
+            <nhs-fieldset>
+                <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(x => x.MDRDetails.DiscussedAtMDRForum)</nhs-fieldset-legend>
+                <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                    <div class="nhsuk-radios__item">
+                        <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes">
+                        <label class="nhsuk-label nhsuk-radios__label" for="discussed-at-forum-yes">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="nhsuk-radios__item">
+                        <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
+                        <label class="nhsuk-label nhsuk-radios__label" for="discussed-at-forum-no">
+                            No
+                        </label>
+                    </div>
+                    <div class="nhsuk-radios__item">
+                        <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
+                        <label class="nhsuk-label nhsuk-radios__label" for="discussed-at-forum-unknown">
+                            Unknown
+                        </label>
+                    </div>
+                </div>
+            </nhs-fieldset>
         </nhs-fieldset>
     </nhs-form-group>
 </div>

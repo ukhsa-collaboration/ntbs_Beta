@@ -29,7 +29,6 @@
         public const string YearAfter1900 = "Year field must be at last 1900";
         public const string SupplyAParameter = "Please supply at least one of these fields";
         public const string SupplyAModelParameter = "Please supply at least one of {0} fields";
-        public const string SupplyCaseManagerPrimaryParameter = "Please supply at least one of Job Title, Phone number #1, Email #1 fields";
         public const string Mandatory = "{0} is a mandatory field";
         public const string RequiredEnter = "Please enter {0}";
         public const string RequiredSelect = "Please select {0}";
@@ -57,6 +56,7 @@
         public const string DiseaseSiteIsRequired = "Please choose at least one site of disease";
         public const string ValidTreatmentOptions = "Short course and MDR treatment cannot both be true";
         public const string MDRCantChange = "You cannot change the value of this field because an MDR Enhanced Surveillance Questionnaire exists. Please contact NTBS@phe.gov.uk";
+        public const string MDRDuration = "Please enter a whole number of months, or a range, for example, 12, 12-18 or 24+";
         #endregion
 
         #region Test Results

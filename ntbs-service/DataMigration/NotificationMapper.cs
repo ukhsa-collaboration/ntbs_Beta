@@ -494,10 +494,11 @@ namespace ntbs_service.DataMigration
                 DiagnosisDate = notification.DiagnosisDate ?? notification.StartOfTreatmentDate ?? notification.NotificationDate,
                 StartedTreatment = !Converter.GetNullableBoolValue(notification.DidNotStartTreatment),
                 TreatmentStartDate = notification.StartOfTreatmentDate,
-                MDRTreatmentStartDate = notification.MDRTreatmentStartDate,
                 IsSymptomatic = Converter.GetNullableBoolValue(notification.IsSymptomatic),
                 HomeVisitCarriedOut = Converter.GetStatusFromString(notification.HomeVisitCarriedOut),
                 FirstHomeVisitDate = notification.FirstHomeVisitDate,
+                HealthcareSetting = Converter.GetEnumValue<HealthcareSetting>(notification.HealthcareSetting),
+                HealthcareDescription = notification.HealthcareDescription,
                 IsPostMortem = Converter.GetNullableBoolValue(notification.IsPostMortem),
                 HIVTestState = Converter.GetEnumValue<HIVTestStatus>(notification.HivTestStatus),
                 IsDotOffered = Converter.GetStatusFromString(notification.IsDotOffered),
@@ -506,6 +507,7 @@ namespace ntbs_service.DataMigration
                 BCGVaccinationState = Converter.GetStatusFromString(notification.BCGVaccinationState),
                 BCGVaccinationYear = notification.BCGVaccinationYear,
                 TreatmentRegimen = Converter.GetEnumValue<TreatmentRegimen>(notification.TreatmentRegimen),
+                HealthProtectionTeamReferenceNumber = RemoveCharactersNotIn(ValidationRegexes.CharacterValidationLocalPatientId, notification.HealthProtectionTeamReferenceNumber),
                 Notes = notification.Notes
             };
             return details;
@@ -871,6 +873,8 @@ namespace ntbs_service.DataMigration
         {
             var mdr = new MDRDetails
             {
+                MDRTreatmentStartDate = rawNotification.MDRTreatmentStartDate,
+                ExpectedTreatmentDurationInMonths = rawNotification.MDRExpectedDuration,
                 ExposureToKnownCaseStatus = Converter.GetStatusFromString(rawNotification.mdr_ExposureToKnownTbCase),
                 RelationshipToCase = rawNotification.mdr_RelationshipToCase,
                 // Notification.mdr_CaseInUKStatus is not used, as in NTBS it's calculated on the fly

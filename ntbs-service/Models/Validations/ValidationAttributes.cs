@@ -128,4 +128,44 @@ namespace ntbs_service.Models.Validations
             return null;
         }
     }
+
+    public class ValidDurationAttribute : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var duration = ((string)value).Trim();
+            if (duration.Contains("+"))
+            {
+                var numbers = duration.Split("+").Where(x => x != "");
+                if (numbers.Count() != 1 ||
+                    !int.TryParse(numbers.Single(), out _))
+                {
+                    return new ValidationResult(ValidationMessages.MDRDuration);
+                }
+            }
+
+            else if (duration.Contains("-"))
+            {
+                var numbers = duration.Split("-");
+                if (numbers.Length != 2 ||
+                    numbers.Any(num => !int.TryParse(num, out _)) ||
+                    int.Parse(numbers[0]) > int.Parse(numbers[1]))
+                {
+                    return new ValidationResult(ValidationMessages.MDRDuration);
+                }
+            }
+
+            else if (!int.TryParse(duration, out _))
+            {
+                return new ValidationResult(ValidationMessages.MDRDuration);
+            }
+
+            return null;
+        }
+    }
 }

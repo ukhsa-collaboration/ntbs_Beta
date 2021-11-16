@@ -26,6 +26,25 @@
     <partial name="_ClinicalDetailsTreatmentOptions"/>
     <br />
     
+    <div>
+        @{
+            var hptError = !Model.IsValid("ClinicalDetails.HealthProtectionTeamReferenceNumber");
+            var hptGroupState = hptError ? Error : Standard;
+        }
+        <validate-input model="ClinicalDetails" property="HealthProtectionTeamReferenceNumber" shouldvalidatefull="@fullValidation" inline-template>
+            <nhs-form-group nhs-form-group-type=@hptGroupState aria-describedby="hpt-ref-text-error">
+                <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hptError"
+                      asp-validation-for="ClinicalDetails.HealthProtectionTeamReferenceNumber" id="hpt-ref-text-error">
+                </span>
+                <label nhs-label-type="Standard" asp-for="ClinicalDetails.HealthProtectionTeamReferenceNumber">
+                    @Html.DisplayNameFor(model => model.ClinicalDetails.HealthProtectionTeamReferenceNumber)
+                </label>
+                <input ref="inputField" v-on:blur="validate" asp-for="ClinicalDetails.HealthProtectionTeamReferenceNumber"
+                       is-error-input=@hptError nhs-input-type="Standard" fixed-width="Twenty">
+            </nhs-form-group>
+        </validate-input>
+    </div>
+
     <h2>Notes</h2>
     <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="1000">
         @{

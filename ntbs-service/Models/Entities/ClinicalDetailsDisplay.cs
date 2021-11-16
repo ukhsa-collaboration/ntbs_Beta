@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 
@@ -29,10 +30,6 @@ namespace ntbs_service.Models.Entities
 
             switch (TreatmentRegimen)
             {
-                case Enums.TreatmentRegimen.MdrTreatment:
-                    return MDRTreatmentStartDate == null
-                        ? TreatmentRegimen.GetDisplayName()
-                        : $"{TreatmentRegimen.GetDisplayName()} - {MDRTreatmentStartDate.ConvertToString()}";
                 case Enums.TreatmentRegimen.Other:
                     return TreatmentRegimenOtherDescription == null
                         ? TreatmentRegimen.GetDisplayName()
