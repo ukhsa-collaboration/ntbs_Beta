@@ -497,6 +497,8 @@ namespace ntbs_service.DataMigration
                 IsSymptomatic = Converter.GetNullableBoolValue(notification.IsSymptomatic),
                 HomeVisitCarriedOut = Converter.GetStatusFromString(notification.HomeVisitCarriedOut),
                 FirstHomeVisitDate = notification.FirstHomeVisitDate,
+                HealthcareSetting = Converter.GetEnumValue<HealthcareSetting>(notification.HealthcareSetting),
+                HealthcareDescription = notification.HealthcareDescription,
                 IsPostMortem = Converter.GetNullableBoolValue(notification.IsPostMortem),
                 HIVTestState = Converter.GetEnumValue<HIVTestStatus>(notification.HivTestStatus),
                 IsDotOffered = Converter.GetStatusFromString(notification.IsDotOffered),
