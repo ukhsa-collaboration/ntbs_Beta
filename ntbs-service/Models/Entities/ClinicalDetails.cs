@@ -102,7 +102,7 @@ namespace ntbs_service.Models.Entities
 
         [MaxLength(100)]
         [Display(Name = "Other description")]
-        [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [RegularExpression(ValidationRegexes.CharacterValidationAsciiBasic, ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string HealthcareDescription { get; set; }
 
         [MaxLength(40, ErrorMessage = ValidationMessages.MaximumTextLength)]
