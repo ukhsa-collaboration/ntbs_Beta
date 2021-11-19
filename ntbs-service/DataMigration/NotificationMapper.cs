@@ -243,6 +243,7 @@ namespace ntbs_service.DataMigration
             {
                 eventToReturn = deathEvents.First();
                 eventToReturn.EventDate = rawNotification.DeathDate;
+                // We add the treatment outcome manually to make sure it is loaded for the HasDeathEventForPostMortemCase check
                 eventToReturn.TreatmentOutcome =
                     _diedOutcomes.Single(te => te.TreatmentOutcomeId == eventToReturn.TreatmentOutcomeId);
             }
