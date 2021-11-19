@@ -241,7 +241,7 @@ namespace ntbs_service.DataMigration
             TreatmentEvent eventToReturn;
             if (deathEvents.Any())
             {
-                eventToReturn = deathEvents.OrderByDescending(e => e.EventDate).First();
+                eventToReturn = deathEvents.First();
                 eventToReturn.EventDate = rawNotification.DeathDate;
                 eventToReturn.TreatmentOutcome =
                     _diedOutcomes.Single(te => te.TreatmentOutcomeId == eventToReturn.TreatmentOutcomeId);
