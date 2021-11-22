@@ -65,13 +65,17 @@ namespace ntbs_service
 
         private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseSentry(o =>
+                .ConfigureKestrel(options =>
                 {
-                    o.Release = Environment.GetEnvironmentVariable(Constants.Release);
+                    options.AddServerHeader = false;
+                })
+                .UseStartup<Startup>()
+                .UseSentry(options =>
+                {
+                    options.Release = Environment.GetEnvironmentVariable(Constants.Release);
                     // This is a workaround for a known issue in Sentry.
                     // See https://github.com/getsentry/sentry-dotnet/issues/1210
-                    o.DisableDiagnosticSourceIntegration();
+                    options.DisableDiagnosticSourceIntegration();
                 })
                 .UseSerilog();
 
