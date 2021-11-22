@@ -31,6 +31,8 @@ namespace ntbs_service_unit_tests.DataMigration
     {
         private const int TreatmentOutcomeStillOnTreatmentId = 16;
         private const int TreatmentOutcomeTbCausedDeathId = 7;
+        private const int TreatmentOutcomeTbIncidentalToDeathId = 9;
+        private const int TreatmentOutcomeUnknownDeathId = 10;
 
         // SUTs - we're breaking the convention a little here by testing two classes in one suit, but
         // they are realistically never used separately and this way we have can simulate the import logic a little
@@ -79,7 +81,8 @@ namespace ntbs_service_unit_tests.DataMigration
                 .ReturnsAsync(new TreatmentOutcome
                 {
                     TreatmentOutcomeType = TreatmentOutcomeType.Died,
-                    TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown
+                    TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown,
+                    TreatmentOutcomeId = 10
                 });
             _referenceDataRepositoryMock.Setup(repo =>
                     repo.GetTreatmentOutcomesForType(TreatmentOutcomeType.Died))
@@ -256,7 +259,7 @@ namespace ntbs_service_unit_tests.DataMigration
 
         // This is based on NTBS-1650
         [Fact]
-        public async Task correctlyCreates_PostMortemNotification()
+        public async Task correctlyCreates_PostMortemNotificationWithNoExistingDeathEvent()
         {
             // Arrange
             const string legacyId = "132465";
@@ -265,14 +268,36 @@ namespace ntbs_service_unit_tests.DataMigration
             // Act
             var notification = await GetSingleNotification(legacyId);
 
-
             // Assert
             Assert.Single(notification.TreatmentEvents);
             Assert.True(notification.ClinicalDetails.IsPostMortem);
             Assert.Equal(NotificationStatus.Closed, notification.NotificationStatus);
-            // For post mortem cases we *only* want to import the single death event so outcomes reporting is correct
+            // For post mortem cases with no death event we *only* want to create the single death event so outcomes reporting is correct
             Assert.Collection(notification.TreatmentEvents,
                 te => Assert.Equal(TreatmentOutcomeType.Died, te.TreatmentOutcome.TreatmentOutcomeType));
+            Assert.Collection(notification.TreatmentEvents,
+                te => Assert.Equal(TreatmentOutcomeUnknownDeathId, te.TreatmentOutcome.TreatmentOutcomeId));
+        }
+
+        // This is based on NTBS-2869
+        [Fact]
+        public async Task correctlyCreates_PostMortemNotificationWithExistingDeathEvent()
+        {
+            // Arrange
+            const string legacyId = "300999";
+            SetupNotificationsInGroups((legacyId, "6"));
+
+            // Act
+            var notification = await GetSingleNotification(legacyId);
+
+            // Assert
+            Assert.Single(notification.TreatmentEvents);
+            var deathEvent = notification.TreatmentEvents.Single();
+            Assert.True(notification.ClinicalDetails.IsPostMortem);
+            // For post mortem cases we *only* want to import the single death event so outcomes reporting is correct
+            Assert.Equal(TreatmentOutcomeType.Died, deathEvent.TreatmentOutcome.TreatmentOutcomeType);
+            Assert.Equal(TreatmentOutcomeTbIncidentalToDeathId, deathEvent.TreatmentOutcomeId);
+            Assert.Equal(new DateTime(2021,01,01), deathEvent.EventDate);
         }
 
         // This is based on NTBS-2417
@@ -296,7 +321,7 @@ namespace ntbs_service_unit_tests.DataMigration
 
         // This is based on NTBS-2417
         [Fact]
-        public async Task doesNotAddDeathEvent_WhenOneAlreadyExists()
+        public async Task doesNotAddDeathEvent_WhenOneAlreadyExistsForPreMortemCase()
         {
             // Arrange
             const string legacyId = "132469";
