@@ -65,6 +65,11 @@ namespace ntbs_service.Pages.ContactDetails
                 return StatusCode((int)HttpStatusCode.Forbidden);
             }
 
+            if (UserId != ContactDetails.Id)
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest);
+            }
+
             ValidateModel();
             if (!ModelState.IsValid)
             {
