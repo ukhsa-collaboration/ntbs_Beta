@@ -119,6 +119,10 @@
                     <label nhs-label-type="Standard" asp-for="ContactDetails.IsCaseManager">
                         Is a case manager?
                     </label>
+                    @if (Model.UserHasNotificationAndIsCaseManager)
+                    {
+                        <input type="hidden" asp-for="ContactDetails.IsCaseManager" />
+                    }
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
                             <input asp-for="ContactDetails.IsCaseManager" id="iscasemanager-yes" class="nhsuk-radios__input" type="radio" value="true" disabled="@(Model.UserHasNotificationAndIsCaseManager)">
