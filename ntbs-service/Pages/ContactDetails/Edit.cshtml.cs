@@ -65,7 +65,8 @@ namespace ntbs_service.Pages.ContactDetails
                 return StatusCode((int)HttpStatusCode.Forbidden);
             }
 
-            if (UserId != ContactDetails.Id)
+            var user = await _userRepository.GetUserById(UserId);
+            if (user.Username != ContactDetails.Username)
             {
                 return StatusCode((int)HttpStatusCode.BadRequest);
             }
