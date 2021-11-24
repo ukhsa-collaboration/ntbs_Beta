@@ -37,6 +37,12 @@ namespace ntbs_service.Pages.ContactDetails
         public async Task<IActionResult> OnGetAsync()
         {
             ContactDetails = await _userRepository.GetUserById(UserId);
+
+            if (UserShouldNotBeAbleToEditDetails())
+            {
+                return StatusCode((int)HttpStatusCode.Forbidden);
+            }
+
             ContactDetails.CaseManagerTbServices = ContactDetails.CaseManagerTbServices
                 .OrderBy(x => x.TbService.Name)
                 .ThenBy(x => x.TbService.PHEC.Name)
@@ -54,9 +60,15 @@ namespace ntbs_service.Pages.ContactDetails
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!_userHelper.CurrentUserMatchesUsernameOrIsAdmin(HttpContext, ContactDetails.Username))
+            if (UserShouldNotBeAbleToEditDetails())
             {
                 return StatusCode((int)HttpStatusCode.Forbidden);
+            }
+
+            var user = await _userRepository.GetUserById(UserId);
+            if (user.Username != ContactDetails.Username)
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest);
             }
 
             ValidateModel();
@@ -83,6 +95,12 @@ namespace ntbs_service.Pages.ContactDetails
         {
             var user = new User();
             return _validationService.GetPropertyValidationResult(user, input.Key, input.Value);
+        }
+
+        private bool UserShouldNotBeAbleToEditDetails()
+        {
+            return !_userHelper.CurrentUserMatchesUsernameOrIsAdmin(HttpContext, ContactDetails.Username) ||
+                   _userHelper.UserIsReadOnly(User);
         }
     }
 }

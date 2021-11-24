@@ -38,6 +38,7 @@ namespace ntbs_service.DataMigration
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IImportLogger _logger;
         private readonly TreatmentOutcome _postMortemOutcomeType;
+        private readonly List<TreatmentOutcome> _diedOutcomes;
         private readonly List<int> _diedOutcomeIds;
         private readonly IPostcodeService _postcodeService;
         private readonly ICaseManagerImportService _caseManagerImportService;
@@ -61,8 +62,10 @@ namespace ntbs_service.DataMigration
             _postMortemOutcomeType = _referenceDataRepository.GetTreatmentOutcomeForTypeAndSubType(
                 TreatmentOutcomeType.Died,
                 TreatmentOutcomeSubType.Unknown).Result;
-            _diedOutcomeIds = _referenceDataRepository.GetTreatmentOutcomesForType(TreatmentOutcomeType.Died)
+            _diedOutcomes = _referenceDataRepository.GetTreatmentOutcomesForType(TreatmentOutcomeType.Died)
                 .Result
+                .ToList();
+            _diedOutcomeIds = _diedOutcomes
                 .Select(outcome => outcome.TreatmentOutcomeId)
                 .ToList();
         }
@@ -221,7 +224,7 @@ namespace ntbs_service.DataMigration
             IEnumerable<TreatmentEvent> notificationOutcomeEvents)
         {
             return notification.ClinicalDetails.IsPostMortem == true
-                ? TreatmentEventsForPostMortemNotification(rawNotification)
+                ? TreatmentEventsForPostMortemNotification(rawNotification, notificationOutcomeEvents)
                 : TreatmentEventsForPreMortemNotification(
                     notification,
                     rawNotification,
@@ -229,14 +232,27 @@ namespace ntbs_service.DataMigration
                     notificationOutcomeEvents);
         }
 
-        private List<TreatmentEvent> TreatmentEventsForPostMortemNotification(MigrationDbNotification rawNotification)
+        private List<TreatmentEvent> TreatmentEventsForPostMortemNotification(MigrationDbNotification rawNotification,
+            IEnumerable<TreatmentEvent> notificationOutcomeEvents)
         {
             // For post mortem cases the death event is the ONLY event we want to import so the final outcome is
             // correctly reported.
-            return new List<TreatmentEvent>
+            var deathEvents = notificationOutcomeEvents.Where(e => _diedOutcomeIds.Contains(e.TreatmentOutcomeId ?? 0)).ToList();
+            TreatmentEvent eventToReturn;
+            if (deathEvents.Any())
             {
-                CreateDerivedDeathEvent(rawNotification)
-            };
+                eventToReturn = deathEvents.First();
+                eventToReturn.EventDate = rawNotification.DeathDate;
+                // We add the treatment outcome manually to make sure it is loaded for the HasDeathEventForPostMortemCase check
+                eventToReturn.TreatmentOutcome =
+                    _diedOutcomes.Single(te => te.TreatmentOutcomeId == eventToReturn.TreatmentOutcomeId);
+            }
+            else
+            {
+                eventToReturn = CreateDerivedDeathEvent(rawNotification);
+            }
+
+            return new List<TreatmentEvent> {eventToReturn};
         }
 
         private List<TreatmentEvent> TreatmentEventsForPreMortemNotification(Notification notification,

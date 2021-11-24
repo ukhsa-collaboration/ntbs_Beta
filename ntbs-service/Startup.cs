@@ -74,6 +74,11 @@ namespace ntbs_service
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddHsts(options =>
+            {
+                options.MaxAge = TimeSpan.FromSeconds(63072000); // Two years
+            });
+
             var adConfig = Configuration.GetSection("AdOptions");
             var adfsConfig = Configuration.GetSection("AdfsOptions");
             var azureAdConfig = Configuration.GetSection("AzureAdOptions");
@@ -113,6 +118,7 @@ namespace ntbs_service
             services.AddSession(options =>
             {
                 options.Cookie.IsEssential = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
 
             // select authentication method
