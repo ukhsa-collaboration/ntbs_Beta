@@ -130,7 +130,7 @@ namespace ntbs_integration_tests.ContactDetailsPages
         public async Task EditDetails_EditingOtherUser_IsAllowedForAdmin()
         {
             var user = TestUser.NationalTeamUser;
-            var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Id, ContactDetailsSubPaths.Edit));
+            var pageRoute = (RouteHelper.GetContactDetailsSubPath(TestUser.AbingdonCaseManager.Id, ContactDetailsSubPaths.Edit));
             using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
             {
                 // Arrange
