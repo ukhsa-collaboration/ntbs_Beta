@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Primitives;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
@@ -27,7 +26,7 @@ namespace ntbs_service.Pages.ContactDetails
         }
 
         public User ContactDetails { get; set; }
-        
+
         public IList<PHEC> RegionalMemberships { get; set; }
 
         [BindProperty(SupportsGet = true)]
@@ -54,9 +53,7 @@ namespace ntbs_service.Pages.ContactDetails
                 .ThenBy(x => x.TbService.Name)
                 .ToList();
 
-            ViewData["Referer"] = StringValues.IsNullOrEmpty(Request.Headers["Referer"])
-                ? "/"
-                : Request.Headers["Referer"].ToString();
+            ViewData["Referer"] = UrlHelper.SanitiseHttpsUrl(Request.Headers["Referer"].ToString());
 
             PrepareBreadcrumbs();
 
