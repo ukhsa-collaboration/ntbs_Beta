@@ -122,9 +122,9 @@
                             </nhs-form-group>
                         </nhs-grid-column>
                         @{
-                            var countryConditionFunctionString = $"function(value) {{ return value && value == {(int)Result.NoResult} }}";
+                            var resultConditionFunctionString = $"function(value) {{ return value && value == {(int)Result.NoResult} }}";
                         }
-                        <conditional-select-wrapper :value-condition-function='@countryConditionFunctionString' ref="results" inline-template>
+                        <conditional-select-wrapper :value-condition-function='@resultConditionFunctionString' ref="results" inline-template>
                             <div class="manual-test-result-container">
                                 <nhs-grid-column grid-column-width="OneThird" >
                                     @{

@@ -180,7 +180,7 @@ const FilteredDropdown = Vue.extend({
                     return selectField;
                 }
             }
-            return;
+            return null;
         }
     }
 });
