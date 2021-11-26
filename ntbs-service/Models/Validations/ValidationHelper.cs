@@ -138,7 +138,8 @@
         #endregion
 
         #region TransferAlert
-        public const string TransferDestinationCannotBeCurrentTbService = "{0} can not be transferred to the notification's current TB service";
+        public const string TransferDestinationCannotBeCurrentTbService =
+            "Notification cannot be transferred to the notification's current TB service";
         #endregion
 
         #region LabResults
