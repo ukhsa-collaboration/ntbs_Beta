@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
@@ -31,6 +32,11 @@ namespace ntbs_service.Models.Entities
         [AssertThat(nameof(ResultMatchesTestType), ErrorMessage = "Select a result that matches test type")]
         [Display(Name = "Result")]
         public Result? Result { get; set; }
+
+        [RegularExpression(ValidationRegexes.CharacterValidationLocalPatientId, ErrorMessage = ValidationMessages.InvalidCharacter)]
+        [MaxLength(30, ErrorMessage = ValidationMessages.MaximumTextLength)]
+        [Display(Name = "Reason for no result")]
+        public string NoResultReason { get; set; }
 
         [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
         [Display(Name = "Test type")]
@@ -67,6 +73,12 @@ namespace ntbs_service.Models.Entities
         public bool TestHasSampleTypes =>
             ManualTestType != null
             && ManualTestType.ManualTestTypeSampleTypes.Any();
+
+        [NotMapped]
+        public string ResultDisplayString => Result.GetDisplayName() +
+                                             (Result == Enums.Result.NoResult && !string.IsNullOrEmpty(NoResultReason)
+                                                 ? $"\n - {NoResultReason}"
+                                                 : string.Empty);
 
         string IHasRootEntityForAuditing.RootEntityType => RootEntities.Notification;
         string IHasRootEntityForAuditing.RootId => NotificationId.ToString();

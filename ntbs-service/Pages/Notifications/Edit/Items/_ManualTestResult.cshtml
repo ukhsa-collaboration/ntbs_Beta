@@ -121,25 +121,57 @@
                                 </select>
                             </nhs-form-group>
                         </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="Full" ref="results">
-                            @{
-                                var hasResultError = !Model.IsValid("TestResultForEdit.Result");
-                                var resultGroupState = hasResultError ? Error : Standard;
-                            }
-                            <nhs-form-group nhs-form-group-type="@resultGroupState"
-                                            aria-describedby="result-error"
-                                            id="TestResultForEdit-Result">
-                                <label nhs-label-type="Standard" asp-for="TestResultForEdit.Result">
-                                    @Html.DisplayNameFor(m => m.TestResultForEdit.Result)
-                                </label>
-                                <span id="result-error" nhs-span-type="ErrorMessage" has-error="@hasResultError" asp-validation-for="TestResultForEdit.Result"></span>
-                                <select nhs-select-type="@(hasResultError ? SelectType.Error : SelectType.Standard)"
-                                        asp-for="TestResultForEdit.Result"
-                                        asp-items="Html.GetEnumSelectList<Result>()">
-                                    <option value="">Please select</option>
-                                </select>
-                            </nhs-form-group>
-                        </nhs-grid-column>
+                        @{
+                            var resultConditionFunctionString = $"function(value) {{ return value && value == {(int)Result.NoResult} }}";
+                        }
+                        <conditional-select-wrapper :value-condition-function='@resultConditionFunctionString' ref="results" inline-template>
+                            <div class="manual-test-result-container">
+                                <nhs-grid-column grid-column-width="OneThird" >
+                                    @{
+                                        var hasResultError = !Model.IsValid("TestResultForEdit.Result");
+                                        var resultGroupState = hasResultError ? Error : Standard;
+                                    }
+                                    <validate-input model="ManualTestResult" property="Result" v-on:validate="handleChange" v-on:mounted="innerValidateMounted" ref="inner-validate" inline-template>
+                                        <nhs-form-group nhs-form-group-type="@resultGroupState"
+                                                    aria-describedby="result-error"
+                                                    id="TestResultForEdit-Result">
+                                            <label nhs-label-type="Standard" asp-for="TestResultForEdit.Result">
+                                                @Html.DisplayNameFor(m => m.TestResultForEdit.Result)
+                                            </label>
+                                            <span ref="errorField" id="result-error" nhs-span-type="ErrorMessage" has-error="@hasResultError" asp-validation-for="TestResultForEdit.Result"></span>
+                                            <select v-on:change="validate" nhs-select-type="@(hasResultError ? SelectType.Error : SelectType.Standard)"
+                                                    asp-for="TestResultForEdit.Result"
+                                                    asp-items="Html.GetEnumSelectList<Result>()" ref="selectField">
+                                                <option value="">Please select</option>
+                                            </select>
+                                        </nhs-form-group>
+                                    </validate-input>
+                                </nhs-grid-column>
+                                <div ref="conditional-control" id="no-result-reason-conditional" class="govuk-radios__conditional">
+                                    <nhs-grid-column grid-column-width="OneThird">
+                                        @{
+                                            var hasReasonError = !Model.IsValid("TestResultForEdit.ResultReason");
+                                            var reasonGroupState = hasReasonError ? Error : Standard;
+                                        }
+                                        <validate-input model="ManualTestResult" property="NoResultReason" inline-template>
+                                            <nhs-form-group nhs-form-group-type="@reasonGroupState"
+                                                            aria-describedby="reason-error"
+                                                            id="TestResultForEdit-ResultReason">
+                                                <label nhs-label-type="Standard" asp-for="TestResultForEdit.NoResultReason">
+                                                    @Html.DisplayNameFor(m => m.TestResultForEdit.NoResultReason)
+                                                </label>
+                                                <span ref="errorField" id="reason-error" nhs-span-type="ErrorMessage" has-error="@hasReasonError" asp-validation-for="TestResultForEdit.NoResultReason"></span>
+                                                <input ref="inputField"
+                                                       v-on:blur="validate"
+                                                       is-error-input="@hasReasonError"
+                                                       nhs-input-type="Standard"
+                                                       asp-for="TestResultForEdit.NoResultReason"/>
+                                            </nhs-form-group>
+                                        </validate-input>
+                                    </nhs-grid-column>
+                                </div>
+                            </div>
+                        </conditional-select-wrapper>
                     </nhs-grid-row>
                 </filtered-dropdown>
 
