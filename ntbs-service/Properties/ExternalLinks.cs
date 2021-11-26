@@ -12,5 +12,6 @@
         public string ReportingOverview { get; set; }
         public string SharePointHomePage { get; set; }
         public string ClusterReport { get; set; }
+        public string EmbeddedPowerBiDashboard { get; set; }
     }
 }

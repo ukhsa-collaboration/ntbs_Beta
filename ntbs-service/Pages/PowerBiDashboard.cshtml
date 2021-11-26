@@ -1,0 +1,21 @@
+﻿@page
+@model ntbs_service.Pages.PowerBiDashboard
+
+@{
+    ViewData["Title"] = "PowerBI";
+    Layout = "./Shared/_Layout.cshtml";
+}
+
+<nhs-width-container container-width="Standard">
+    <h1>Embedded PowerBI dashboard</h1>
+
+    @if (string.IsNullOrEmpty(Model.DashboardUrl))
+    {
+        @: The embedded dashboard could not be found.
+    }
+    else
+    {
+        <iframe src="@Model.DashboardUrl" class="embedded-dashboard" allow="fullscreen">
+        </iframe>
+    }
+</nhs-width-container>
