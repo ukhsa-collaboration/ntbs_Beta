@@ -379,6 +379,8 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.TreatmentEvents)
                     .ThenInclude(t => t.TreatmentOutcome)
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified)
+                // This query will return notifications where ShouldBeClosed is true, as well as some that are false.
+                // We are trying to avoid pulling too many notifications into memory
                 .Where(n => n.TreatmentEvents.Any(t => t.TreatmentOutcome != null && t.EventDate < DateTime.Today.AddYears(-1)))
                 .OrderBy(n => n.NotificationId)
                 .AsSplitQuery()
