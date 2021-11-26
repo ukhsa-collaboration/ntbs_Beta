@@ -1,6 +1,4 @@
-@using Castle.Core.Internal
 @using ntbs_service.Helpers
-@using ntbs_service.Models.Enums
 @model ICollection<ntbs_service.Models.Entities.ManualTestResult>
 
 @{
@@ -52,7 +50,7 @@
                         @result?.SampleType?.Description
                     </nhs-table-item>
                     <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.Result)">
-                        @result.ResultDisplayString
+                        @result.Result.GetDisplayName()
                     </nhs-table-item>
                     @if (showEditLinks)
                     {

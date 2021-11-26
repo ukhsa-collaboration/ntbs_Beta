@@ -106,15 +106,11 @@ const FilteredDropdown = Vue.extend({
             }
 
             selectElement.value = "";
-            selectElement.dispatchEvent(new Event("change"));
         },
         getSelectElementInRef(refName: string) {
             const filterValueContainer = this.$refs[refName];
             if (filterValueContainer.$refs) {
-                const selectField = this.findSelectFieldInContainer(filterValueContainer);
-                if (selectField) {
-                    return selectField;
-                }
+                return filterValueContainer.$refs["selectField"];
             }
 
             return filterValueContainer.getElementsByTagName("select")[0];
@@ -168,19 +164,6 @@ const FilteredDropdown = Vue.extend({
 
             optionInnerHtml += "</optgroup>";
             return optionInnerHtml;
-        },
-        findSelectFieldInContainer(container: Vue) {
-            if (container.$refs["selectField"]) {
-                return container.$refs["selectField"];
-            }
-            let selectField: Vue;
-            for(let i = 0; i < container.$children.length; i++) {
-                selectField = this.findSelectFieldInContainer(container.$children[i]);
-                if (selectField) {
-                    return selectField;
-                }
-            }
-            return null;
         }
     }
 });

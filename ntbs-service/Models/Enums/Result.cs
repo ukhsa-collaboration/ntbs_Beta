@@ -17,8 +17,6 @@ namespace ntbs_service.Models.Enums
         Positive,
         [Display(Name = "Negative")]
         Negative,
-        [Display(Name = "No result available")]
-        NoResult,
         // Universal
         [Display(Name = "Awaiting")]
         Awaiting
@@ -36,7 +34,6 @@ namespace ntbs_service.Models.Enums
                 case Result.ConsistentWithTbOther:
                 case Result.NotConsistentWithTb:
                     return testTypeId == (int)ManualTestTypeId.ChestXRay || testTypeId == (int)ManualTestTypeId.ChestCT;
-                case Result.NoResult:
                 case Result.Positive:
                 case Result.Negative:
                     return testTypeId != (int)ManualTestTypeId.ChestXRay && testTypeId != (int)ManualTestTypeId.ChestCT;

@@ -408,10 +408,6 @@ namespace ntbs_service.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<string>("NoResultReason")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
                     b.Property<int>("NotificationId")
                         .HasColumnType("int");
 
