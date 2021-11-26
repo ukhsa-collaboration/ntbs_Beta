@@ -12,185 +12,186 @@
 
         <h2> M. bovis - @(Model.RowId == null ? "Add new " : "Edit ") occupation exposure </h2>
 
-        <form method="post" autocomplete="off">
+        <single-submit-form inline-template>
+            <form method="post" autocomplete="off" v-on:submit="disableButton">
+                <nhs-grid-row>
+                    <nhs-grid-column grid-column-width="OneHalf">
+                        @{
+                            var hasYearError = !Model.IsValid($"{nameof(Model.MBovisOccupationExposure)}.{nameof(Model.MBovisOccupationExposure.YearOfExposure)}");
+                            var yearErrorGroupState = hasYearError ? Error : Standard;
+                        }
+                        <validate-input model="@nameof(MBovisOccupationExposure)" property="@nameof(MBovisOccupationExposure.YearOfExposure)" inline-template>
+                            <nhs-form-group
+                                id="@($"{nameof(MBovisOccupationExposure)}-{nameof(MBovisOccupationExposure.YearOfExposure)}")"
+                                nhs-form-group-type="@yearErrorGroupState"
+                                aria-describedby="year-of-exposure-error">
+                                <label nhs-label-type="Standard" asp-for="MBovisOccupationExposure.YearOfExposure">
+                                    @Html.DisplayNameFor(m => m.MBovisOccupationExposure.YearOfExposure)
+                                </label>
+                                <span
+                                    id="year-of-exposure-error"
+                                    nhs-span-type="ErrorMessage"
+                                    ref="errorField"
+                                    asp-validation-for="MBovisOccupationExposure.YearOfExposure"
+                                    has-error="@hasYearError">
+                                </span>
+                                <input
+                                    nhs-input-type="Number"
+                                    ref="inputField"
+                                    asp-for="MBovisOccupationExposure.YearOfExposure"
+                                    v-on:blur="validate"
+                                    fixed-width="Four"
+                                    is-error-input="@hasYearError">
+                            </nhs-form-group>
+                        </validate-input>
+                    </nhs-grid-column>
+                        
+                    <nhs-grid-column grid-column-width="OneHalf">
+                        @{
+                            var hasCountryError = !Model.IsValid($"{nameof(Model.MBovisOccupationExposure)}.{nameof(Model.MBovisOccupationExposure.CountryId)}");
+                            var countryGroupState = hasCountryError ? Error : Standard;
+                            var countrySelectErrorClass = hasCountryError ? "nhsuk-select--error" : "";
+                        }
+                        <validate-input model="@nameof(MBovisOccupationExposure)" property="@nameof(MBovisOccupationExposure.CountryId)" inline-template>
+                            <nhs-form-group
+                                id="@($"{nameof(MBovisOccupationExposure)}-{nameof(MBovisOccupationExposure.CountryId)}")"
+                                nhs-form-group-type="@countryGroupState"
+                                aria-describedby="country-error">
+                                <label nhs-label-type="Standard" asp-for="MBovisOccupationExposure.CountryId">
+                                    Country
+                                </label>
+                                <span
+                                    id="country-error"
+                                    nhs-span-type="ErrorMessage"
+                                    ref="errorField"
+                                    asp-validation-for="MBovisOccupationExposure.CountryId"
+                                    has-error="@hasCountryError">
+                                </span>
+                                <div ref="selectField" class="@countrySelectErrorClass">
+                                    <autocomplete-select v-on:input-changed="validate" placeholder="Please select" emit-change-on="blur" inline-template>
+                                        <select asp-for="MBovisOccupationExposure.CountryId" asp-items="Model.Countries" ref="selectField">
+                                            <option value=""></option>
+                                        </select>
+                                    </autocomplete-select>
+                                </div>
+                            </nhs-form-group>
+                        </validate-input>
+                    </nhs-grid-column>
+                </nhs-grid-row>
 
-            <nhs-grid-row>
-                <nhs-grid-column grid-column-width="OneHalf">
-                    @{
-                        var hasYearError = !Model.IsValid($"{nameof(Model.MBovisOccupationExposure)}.{nameof(Model.MBovisOccupationExposure.YearOfExposure)}");
-                        var yearErrorGroupState = hasYearError ? Error : Standard;
-                    }
-                    <validate-input model="@nameof(MBovisOccupationExposure)" property="@nameof(MBovisOccupationExposure.YearOfExposure)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisOccupationExposure)}-{nameof(MBovisOccupationExposure.YearOfExposure)}")"
-                            nhs-form-group-type="@yearErrorGroupState"
-                            aria-describedby="year-of-exposure-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisOccupationExposure.YearOfExposure">
-                                @Html.DisplayNameFor(m => m.MBovisOccupationExposure.YearOfExposure)
-                            </label>
-                            <span
-                                id="year-of-exposure-error"
-                                nhs-span-type="ErrorMessage"
-                                ref="errorField"
-                                asp-validation-for="MBovisOccupationExposure.YearOfExposure"
-                                has-error="@hasYearError">
-                            </span>
-                            <input
-                                nhs-input-type="Number"
-                                ref="inputField"
-                                asp-for="MBovisOccupationExposure.YearOfExposure"
-                                v-on:blur="validate"
-                                fixed-width="Four"
-                                is-error-input="@hasYearError">
-                        </nhs-form-group>
-                    </validate-input>
-                </nhs-grid-column>
-                
-                <nhs-grid-column grid-column-width="OneHalf">
-                    @{
-                        var hasCountryError = !Model.IsValid($"{nameof(Model.MBovisOccupationExposure)}.{nameof(Model.MBovisOccupationExposure.CountryId)}");
-                        var countryGroupState = hasCountryError ? Error : Standard;
-                        var countrySelectErrorClass = hasCountryError ? "nhsuk-select--error" : "";
-                    }
-                    <validate-input model="@nameof(MBovisOccupationExposure)" property="@nameof(MBovisOccupationExposure.CountryId)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisOccupationExposure)}-{nameof(MBovisOccupationExposure.CountryId)}")"
-                            nhs-form-group-type="@countryGroupState"
-                            aria-describedby="country-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisOccupationExposure.CountryId">
-                                Country
-                            </label>
-                            <span
-                                id="country-error"
-                                nhs-span-type="ErrorMessage"
-                                ref="errorField"
-                                asp-validation-for="MBovisOccupationExposure.CountryId"
-                                has-error="@hasCountryError">
-                            </span>
-                            <div ref="selectField" class="@countrySelectErrorClass">
-                                <autocomplete-select v-on:input-changed="validate" placeholder="Please select" emit-change-on="blur" inline-template>
-                                    <select asp-for="MBovisOccupationExposure.CountryId" asp-items="Model.Countries" ref="selectField">
-                                        <option value=""></option>
-                                    </select>
-                                </autocomplete-select>
-                            </div>
-                        </nhs-form-group>
-                    </validate-input>
-                </nhs-grid-column>
-            </nhs-grid-row>
+                <nhs-grid-row>
+                    <nhs-grid-column grid-column-width="OneHalf">
+                        @{
+                            var hasOccupationSettingError = !Model.IsValid($"{nameof(Model.MBovisOccupationExposure)}.{nameof(Model.MBovisOccupationExposure.OccupationSetting)}");
+                            var occupationSettingGroupState = hasOccupationSettingError ? Error : Standard;
+                        }
+                        <validate-input model="@nameof(MBovisOccupationExposure)" property="@nameof(MBovisOccupationExposure.OccupationSetting)" inline-template>
+                            <nhs-form-group
+                                id="@($"{nameof(MBovisOccupationExposure)}-{nameof(MBovisOccupationExposure.OccupationSetting)}")"
+                                nhs-form-group-type="@occupationSettingGroupState"
+                                aria-describedby="occupation-setting-error">
+                                <label nhs-label-type="Standard" asp-for="MBovisOccupationExposure.OccupationSetting">
+                                    @Html.DisplayNameFor(m => m.MBovisOccupationExposure.OccupationSetting)
+                                </label>
+                                <span
+                                    id="occupation-setting-error"
+                                    nhs-span-type="ErrorMessage"
+                                    has-error="@hasOccupationSettingError"
+                                    asp-validation-for="MBovisOccupationExposure.OccupationSetting"
+                                    ref="errorField">
+                                </span>
+                                <select
+                                    nhs-select-type="@(hasOccupationSettingError ? SelectType.Error : SelectType.Standard)"
+                                    asp-for="MBovisOccupationExposure.OccupationSetting"
+                                    asp-items="Html.GetEnumSelectList<OccupationSetting>()"
+                                    ref="selectField"
+                                    v-on:change="validate">
+                                    <option value="">Please select</option>
+                                </select>
+                            </nhs-form-group>
+                        </validate-input>
+                    </nhs-grid-column>
+                        
+                    <nhs-grid-column grid-column-width="OneHalf">
+                        @{
+                            var hasDurationError = !Model.IsValid($"{nameof(Model.MBovisOccupationExposure)}.{nameof(Model.MBovisOccupationExposure.OccupationDuration)}");
+                            var durationGroupState = hasDurationError ? Error : Standard;
+                        }
+                        <validate-input model="@nameof(MBovisOccupationExposure)" property="@nameof(MBovisOccupationExposure.OccupationDuration)" inline-template>
+                            <nhs-form-group
+                                id="@($"{nameof(MBovisOccupationExposure)}-{nameof(MBovisOccupationExposure.OccupationDuration)}")"
+                                nhs-form-group-type="@durationGroupState"
+                                aria-describedby="duration-error">
+                                <label nhs-label-type="Standard" asp-for="MBovisOccupationExposure.OccupationDuration">
+                                    @Html.DisplayNameFor(m => m.MBovisOccupationExposure.OccupationDuration)
+                                </label>
+                                <span
+                                    id="duration-error"
+                                    nhs-span-type="ErrorMessage"
+                                    has-error="@hasDurationError"
+                                    asp-validation-for="MBovisOccupationExposure.OccupationDuration"
+                                    ref="errorField">
+                                </span>
+                                <input
+                                    nhs-input-type="Number"
+                                    ref="inputField"
+                                    asp-for="MBovisOccupationExposure.OccupationDuration"
+                                    v-on:blur="validate"
+                                    fixed-width="Two"
+                                    is-error-input="@hasDurationError">
+                            </nhs-form-group>
+                        </validate-input>
+                    </nhs-grid-column>
+                </nhs-grid-row>
 
-            <nhs-grid-row>
-                <nhs-grid-column grid-column-width="OneHalf">
-                    @{
-                        var hasOccupationSettingError = !Model.IsValid($"{nameof(Model.MBovisOccupationExposure)}.{nameof(Model.MBovisOccupationExposure.OccupationSetting)}");
-                        var occupationSettingGroupState = hasOccupationSettingError ? Error : Standard;
-                    }
-                    <validate-input model="@nameof(MBovisOccupationExposure)" property="@nameof(MBovisOccupationExposure.OccupationSetting)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisOccupationExposure)}-{nameof(MBovisOccupationExposure.OccupationSetting)}")"
-                            nhs-form-group-type="@occupationSettingGroupState"
-                            aria-describedby="occupation-setting-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisOccupationExposure.OccupationSetting">
-                                @Html.DisplayNameFor(m => m.MBovisOccupationExposure.OccupationSetting)
-                            </label>
-                            <span
-                                id="occupation-setting-error"
-                                nhs-span-type="ErrorMessage"
-                                has-error="@hasOccupationSettingError"
-                                asp-validation-for="MBovisOccupationExposure.OccupationSetting"
-                                ref="errorField">
-                            </span>
-                            <select
-                                nhs-select-type="@(hasOccupationSettingError ? SelectType.Error : SelectType.Standard)"
-                                asp-for="MBovisOccupationExposure.OccupationSetting"
-                                asp-items="Html.GetEnumSelectList<OccupationSetting>()"
-                                ref="selectField"
-                                v-on:change="validate">
-                                <option value="">Please select</option>
-                            </select>
-                        </nhs-form-group>
-                    </validate-input>
-                </nhs-grid-column>
-                
-                <nhs-grid-column grid-column-width="OneHalf">
-                    @{
-                        var hasDurationError = !Model.IsValid($"{nameof(Model.MBovisOccupationExposure)}.{nameof(Model.MBovisOccupationExposure.OccupationDuration)}");
-                        var durationGroupState = hasDurationError ? Error : Standard;
-                    }
-                    <validate-input model="@nameof(MBovisOccupationExposure)" property="@nameof(MBovisOccupationExposure.OccupationDuration)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisOccupationExposure)}-{nameof(MBovisOccupationExposure.OccupationDuration)}")"
-                            nhs-form-group-type="@durationGroupState"
-                            aria-describedby="duration-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisOccupationExposure.OccupationDuration">
-                                @Html.DisplayNameFor(m => m.MBovisOccupationExposure.OccupationDuration)
-                            </label>
-                            <span
-                                id="duration-error"
-                                nhs-span-type="ErrorMessage"
-                                has-error="@hasDurationError"
-                                asp-validation-for="MBovisOccupationExposure.OccupationDuration"
-                                ref="errorField">
-                            </span>
-                            <input
-                                nhs-input-type="Number"
-                                ref="inputField"
-                                asp-for="MBovisOccupationExposure.OccupationDuration"
-                                v-on:blur="validate"
-                                fixed-width="Two"
-                                is-error-input="@hasDurationError">
-                        </nhs-form-group>
-                    </validate-input>
-                </nhs-grid-column>
-            </nhs-grid-row>
+                <nhs-grid-row>
+                    <nhs-grid-column grid-column-width="Full">
+                        @{
+                            var hasOtherDetailsError = !Model.IsValid($"{nameof(Model.MBovisOccupationExposure)}.{nameof(Model.MBovisOccupationExposure.OtherDetails)}");
+                            var otherDetailsGroupState = hasOtherDetailsError ? Error : Standard;
+                            var otherDetailsTextAreaType = hasOtherDetailsError ? TextAreaType.Error : TextAreaType.Standard;
+                        }
+                        <validate-input model="@nameof(MBovisOccupationExposure)" property="@nameof(MBovisOccupationExposure.OtherDetails)" inline-template>
+                            <nhs-form-group
+                                id="@($"{nameof(MBovisOccupationExposure)}-{nameof(MBovisOccupationExposure.OtherDetails)}")"
+                                nhs-form-group-type="@otherDetailsGroupState"
+                                aria-describedby="other-details-error">
+                                <label nhs-label-type="Standard" asp-for="MBovisOccupationExposure.OtherDetails">
+                                    @Html.DisplayNameFor(m => m.MBovisOccupationExposure.OtherDetails)
+                                </label>
+                                <span
+                                    id="other-details-error"
+                                    nhs-span-type="ErrorMessage"
+                                    ref="errorField"
+                                    asp-validation-for="MBovisOccupationExposure.OtherDetails"
+                                    has-error="@hasOtherDetailsError">
+                                </span>
+                                <textarea
+                                          asp-for="MBovisOccupationExposure.OtherDetails"
+                                          v-on:change="validate"
+                                          ref="textareaField"
+                                          nhs-textarea-type="@otherDetailsTextAreaType"
+                                          rows="2"
+                                          classes="nhsuk-input--width-30"> </textarea>
+                            </nhs-form-group>
+                        </validate-input>
+                    </nhs-grid-column>
+                </nhs-grid-row>
 
-            <nhs-grid-row>
-                <nhs-grid-column grid-column-width="Full">
-                    @{
-                        var hasOtherDetailsError = !Model.IsValid($"{nameof(Model.MBovisOccupationExposure)}.{nameof(Model.MBovisOccupationExposure.OtherDetails)}");
-                        var otherDetailsGroupState = hasOtherDetailsError ? Error : Standard;
-                        var otherDetailsTextAreaType = hasOtherDetailsError ? TextAreaType.Error : TextAreaType.Standard;
-                    }
-                    <validate-input model="@nameof(MBovisOccupationExposure)" property="@nameof(MBovisOccupationExposure.OtherDetails)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisOccupationExposure)}-{nameof(MBovisOccupationExposure.OtherDetails)}")"
-                            nhs-form-group-type="@otherDetailsGroupState"
-                            aria-describedby="other-details-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisOccupationExposure.OtherDetails">
-                                @Html.DisplayNameFor(m => m.MBovisOccupationExposure.OtherDetails)
-                            </label>
-                            <span
-                                id="other-details-error"
-                                nhs-span-type="ErrorMessage"
-                                ref="errorField"
-                                asp-validation-for="MBovisOccupationExposure.OtherDetails"
-                                has-error="@hasOtherDetailsError">
-                            </span>
-                            <textarea
-                                  asp-for="MBovisOccupationExposure.OtherDetails"
-                                  v-on:change="validate"
-                                  ref="textareaField"
-                                  nhs-textarea-type="@otherDetailsTextAreaType"
-                                  rows="2"
-                                  classes="nhsuk-input--width-30"> </textarea>
-                        </nhs-form-group>
-                    </validate-input>
-                </nhs-grid-column>
-            </nhs-grid-row>
-
-            <button id="save-button" nhs-button-type="Standard" classes="ntbsuk-button--primary">
-                Save
-            </button>
-            @if (Model.RowId != null)
-            {
-                <button id="delete-button"
-                        asp-page-handler="Delete"
-                        nhs-button-type="Standard"
-                        classes="ntbsuk-button--secondary">
-                    Delete
+                <button id="save-button" ref="submitButton" nhs-button-type="Standard" classes="ntbsuk-button--primary">
+                    Save
                 </button>
-            }
-        </form>
+                @if (Model.RowId != null)
+                {
+                    <button id="delete-button"
+                            asp-page-handler="Delete"
+                            nhs-button-type="Standard"
+                            classes="ntbsuk-button--secondary">
+                        Delete
+                    </button>
+                }
+            </form>
+        </single-submit-form>
     </nhs-width-container>
 </div>
 @if (Model.Notification.MBovisDetails.MBovisOccupationExposures.Count > 0)

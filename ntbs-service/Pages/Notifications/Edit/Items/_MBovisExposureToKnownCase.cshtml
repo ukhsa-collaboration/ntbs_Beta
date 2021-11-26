@@ -12,185 +12,186 @@
 
         <h2> M. bovis - @(Model.RowId == null ? "Add new " : "Edit ") exposure to known case </h2>
 
-        <form method="post" autocomplete="off">
+        <single-submit-form inline-template>
+            <form method="post" autocomplete="off" v-on:submit="disableButton">
+                <nhs-grid-row>
+                    <nhs-grid-column grid-column-width="OneHalf">
+                        @{
+                            var hasYearError = !Model.IsValid($"{nameof(Model.MBovisExposureToKnownCase)}.{nameof(Model.MBovisExposureToKnownCase.YearOfExposure)}");
+                            var yearErrorGroupState = hasYearError ? Error : Standard;
+                        }
+                        <validate-input model="@nameof(MBovisExposureToKnownCase)" property="@nameof(MBovisExposureToKnownCase.YearOfExposure)" inline-template>
+                            <nhs-form-group
+                                id="@($"{nameof(MBovisExposureToKnownCase)}-{nameof(MBovisExposureToKnownCase.YearOfExposure)}")"
+                                nhs-form-group-type="@yearErrorGroupState"
+                                aria-describedby="year-of-exposure-error">
+                                <label nhs-label-type="Standard" asp-for="MBovisExposureToKnownCase.YearOfExposure">
+                                    @Html.DisplayNameFor(m => m.MBovisExposureToKnownCase.YearOfExposure)
+                                </label>
+                                <span
+                                    id="year-of-exposure-error"
+                                    nhs-span-type="ErrorMessage"
+                                    ref="errorField"
+                                    asp-validation-for="MBovisExposureToKnownCase.YearOfExposure"
+                                    has-error="@hasYearError">
+                                </span>
+                                <input
+                                    nhs-input-type="Number"
+                                    ref="inputField"
+                                    asp-for="MBovisExposureToKnownCase.YearOfExposure"
+                                    v-on:blur="validate"
+                                    fixed-width="Four"
+                                    is-error-input="@hasYearError">
+                            </nhs-form-group>
+                        </validate-input>
 
-            <nhs-grid-row>
-                <nhs-grid-column grid-column-width="OneHalf">
-                    @{
-                        var hasYearError = !Model.IsValid($"{nameof(Model.MBovisExposureToKnownCase)}.{nameof(Model.MBovisExposureToKnownCase.YearOfExposure)}");
-                        var yearErrorGroupState = hasYearError ? Error : Standard;
-                    }
-                    <validate-input model="@nameof(MBovisExposureToKnownCase)" property="@nameof(MBovisExposureToKnownCase.YearOfExposure)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisExposureToKnownCase)}-{nameof(MBovisExposureToKnownCase.YearOfExposure)}")"
-                            nhs-form-group-type="@yearErrorGroupState"
-                            aria-describedby="year-of-exposure-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisExposureToKnownCase.YearOfExposure">
-                                @Html.DisplayNameFor(m => m.MBovisExposureToKnownCase.YearOfExposure)
-                            </label>
-                            <span
-                                id="year-of-exposure-error"
-                                nhs-span-type="ErrorMessage"
-                                ref="errorField"
-                                asp-validation-for="MBovisExposureToKnownCase.YearOfExposure"
-                                has-error="@hasYearError">
-                            </span>
-                            <input
-                                nhs-input-type="Number"
-                                ref="inputField"
-                                asp-for="MBovisExposureToKnownCase.YearOfExposure"
-                                v-on:blur="validate"
-                                fixed-width="Four"
-                                is-error-input="@hasYearError">
-                        </nhs-form-group>
-                    </validate-input>
+                        @{
+                            var hasExposureSettingError = !Model.IsValid($"{nameof(Model.MBovisExposureToKnownCase)}.{nameof(Model.MBovisExposureToKnownCase.ExposureSetting)}");
+                            var exposureSettingGroupState = hasExposureSettingError ? Error : Standard;
+                        }
+                        <validate-input model="@nameof(MBovisExposureToKnownCase)" property="@nameof(MBovisExposureToKnownCase.ExposureSetting)" inline-template>
+                            <nhs-form-group
+                                id="@($"{nameof(MBovisExposureToKnownCase)}-{nameof(MBovisExposureToKnownCase.ExposureSetting)}")"
+                                nhs-form-group-type="@exposureSettingGroupState"
+                                aria-describedby="exposure-setting-error">
+                                <label nhs-label-type="Standard" asp-for="MBovisExposureToKnownCase.ExposureSetting">
+                                    @Html.DisplayNameFor(m => m.MBovisExposureToKnownCase.ExposureSetting)
+                                </label>
+                                <span
+                                    id="exposure-setting-error"
+                                    nhs-span-type="ErrorMessage"
+                                    has-error="@hasExposureSettingError"
+                                    asp-validation-for="MBovisExposureToKnownCase.ExposureSetting"
+                                    ref="errorField">
+                                </span>
+                                <select
+                                    nhs-select-type="@(hasExposureSettingError ? SelectType.Error : SelectType.Standard)"
+                                    asp-for="MBovisExposureToKnownCase.ExposureSetting"
+                                    asp-items="Html.GetEnumSelectList<ExposureSetting>()"
+                                    ref="selectField"
+                                    v-on:change="validate">
+                                    <option value="">Please select</option>
+                                </select>
+                            </nhs-form-group>
+                        </validate-input>
+                    </nhs-grid-column>
 
-                    @{
-                        var hasExposureSettingError = !Model.IsValid($"{nameof(Model.MBovisExposureToKnownCase)}.{nameof(Model.MBovisExposureToKnownCase.ExposureSetting)}");
-                        var exposureSettingGroupState = hasExposureSettingError ? Error : Standard;
-                    }
-                    <validate-input model="@nameof(MBovisExposureToKnownCase)" property="@nameof(MBovisExposureToKnownCase.ExposureSetting)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisExposureToKnownCase)}-{nameof(MBovisExposureToKnownCase.ExposureSetting)}")"
-                            nhs-form-group-type="@exposureSettingGroupState"
-                            aria-describedby="exposure-setting-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisExposureToKnownCase.ExposureSetting">
-                                @Html.DisplayNameFor(m => m.MBovisExposureToKnownCase.ExposureSetting)
-                            </label>
-                            <span
-                                id="exposure-setting-error"
-                                nhs-span-type="ErrorMessage"
-                                has-error="@hasExposureSettingError"
-                                asp-validation-for="MBovisExposureToKnownCase.ExposureSetting"
-                                ref="errorField">
-                            </span>
-                            <select
-                                nhs-select-type="@(hasExposureSettingError ? SelectType.Error : SelectType.Standard)"
-                                asp-for="MBovisExposureToKnownCase.ExposureSetting"
-                                asp-items="Html.GetEnumSelectList<ExposureSetting>()"
-                                ref="selectField"
-                                v-on:change="validate">
-                                <option value="">Please select</option>
-                            </select>
-                        </nhs-form-group>
-                    </validate-input>
-                </nhs-grid-column>
-
-                <nhs-grid-column grid-column-width="OneHalf">
-                    @{
-                        var pheNotifiedError = !Model.IsValid("MBovisExposureToKnownCase.NotifiedToPheStatus");
-                        var pheNotifiedGroupState = pheNotifiedError ? Error : Standard;
-                    }
-                    <nhs-form-group nhs-form-group-type="@pheNotifiedGroupState" ref="formGroup">
-                        <nhs-fieldset aria-describedby="notified-error">
-                            <nhs-fieldset-legend nhs-legend-size="Standard">
-                                @Html.DisplayNameFor(x => x.MBovisExposureToKnownCase.NotifiedToPheStatus)
-                            </nhs-fieldset-legend>
-                            <span nhs-span-type="ErrorMessage" id="notified-error"
-                                  ref="errorField" asp-validation-for="MBovisExposureToKnownCase.NotifiedToPheStatus" has-error="@pheNotifiedError">
-                            </span>
-                            <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
-                                <div class="nhsuk-radios__item">
-                                    <input asp-for="MBovisExposureToKnownCase.NotifiedToPheStatus" id="notified-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-notified-to-phe">
-                                    <label class="nhsuk-label nhsuk-radios__label" for="notified-yes">
-                                        Yes
-                                    </label>
-                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-notified-to-phe">
-                                        @{
-                                            var hasRelatedNotificationError = !Model.IsValid($"{nameof(Model.MBovisExposureToKnownCase)}.{nameof(Model.MBovisExposureToKnownCase.ExposureNotificationId)}");
-                                            var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
-                                        }
-                                        <validate-related-notification model="@nameof(Model.MBovisExposureToKnownCase)" allow-draft="false" allow-legacy-notifications="true" inline-template>
-                                            <nhs-form-group
-                                                id="@($"{nameof(MBovisExposureToKnownCase)}-{nameof(MBovisExposureToKnownCase.ExposureNotificationId)}")"
-                                                nhs-form-group-type="@relatedNotificationGroupState"
-                                                aria-describedby="related-notification-error">
-                                                <label nhs-label-type="Standard" asp-for="MBovisExposureToKnownCase.ExposureNotificationId">
-                                                    @Html.DisplayNameFor(m => m.MBovisExposureToKnownCase.ExposureNotificationId)
-                                                </label>
-                                                <span
-                                                    id="related-notification-error"
-                                                    nhs-span-type="ErrorMessage"
-                                                    ref="errorField"
-                                                    has-error="@hasRelatedNotificationError"
-                                                    asp-validation-for="MBovisExposureToKnownCase.ExposureNotificationId">
-                                                </span>
-                                                <input
-                                                    nhs-input-type="Standard"
-                                                    ref="inputField"
-                                                    v-on:blur="validate"
-                                                    is-error-input="@hasRelatedNotificationError"
-                                                    fixed-width="Ten"
-                                                    asp-for="MBovisExposureToKnownCase.ExposureNotificationId">
-                                                <notification-info v-if="isValid" v-bind:notification-info="relatedNotification"></notification-info>
-                                                <notification-warning v-if="hasWarningMessage" v-bind:warning-message="warningMessage"></notification-warning>
-                                            </nhs-form-group>
-                                        </validate-related-notification>
+                    <nhs-grid-column grid-column-width="OneHalf">
+                        @{
+                            var pheNotifiedError = !Model.IsValid("MBovisExposureToKnownCase.NotifiedToPheStatus");
+                            var pheNotifiedGroupState = pheNotifiedError ? Error : Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type="@pheNotifiedGroupState" ref="formGroup">
+                            <nhs-fieldset aria-describedby="notified-error">
+                                <nhs-fieldset-legend nhs-legend-size="Standard">
+                                    @Html.DisplayNameFor(x => x.MBovisExposureToKnownCase.NotifiedToPheStatus)
+                                </nhs-fieldset-legend>
+                                <span nhs-span-type="ErrorMessage" id="notified-error"
+                                      ref="errorField" asp-validation-for="MBovisExposureToKnownCase.NotifiedToPheStatus" has-error="@pheNotifiedError">
+                                </span>
+                                <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                                    <div class="nhsuk-radios__item">
+                                        <input asp-for="MBovisExposureToKnownCase.NotifiedToPheStatus" id="notified-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-notified-to-phe">
+                                        <label class="nhsuk-label nhsuk-radios__label" for="notified-yes">
+                                            Yes
+                                        </label>
+                                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-notified-to-phe">
+                                            @{
+                                                var hasRelatedNotificationError = !Model.IsValid($"{nameof(Model.MBovisExposureToKnownCase)}.{nameof(Model.MBovisExposureToKnownCase.ExposureNotificationId)}");
+                                                var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
+                                            }
+                                            <validate-related-notification model="@nameof(Model.MBovisExposureToKnownCase)" allow-draft="false" allow-legacy-notifications="true" inline-template>
+                                                <nhs-form-group
+                                                    id="@($"{nameof(MBovisExposureToKnownCase)}-{nameof(MBovisExposureToKnownCase.ExposureNotificationId)}")"
+                                                    nhs-form-group-type="@relatedNotificationGroupState"
+                                                    aria-describedby="related-notification-error">
+                                                    <label nhs-label-type="Standard" asp-for="MBovisExposureToKnownCase.ExposureNotificationId">
+                                                        @Html.DisplayNameFor(m => m.MBovisExposureToKnownCase.ExposureNotificationId)
+                                                    </label>
+                                                    <span
+                                                        id="related-notification-error"
+                                                        nhs-span-type="ErrorMessage"
+                                                        ref="errorField"
+                                                        has-error="@hasRelatedNotificationError"
+                                                        asp-validation-for="MBovisExposureToKnownCase.ExposureNotificationId">
+                                                    </span>
+                                                    <input
+                                                        nhs-input-type="Standard"
+                                                        ref="inputField"
+                                                        v-on:blur="validate"
+                                                        is-error-input="@hasRelatedNotificationError"
+                                                        fixed-width="Ten"
+                                                        asp-for="MBovisExposureToKnownCase.ExposureNotificationId">
+                                                    <notification-info v-if="isValid" v-bind:notification-info="relatedNotification"></notification-info>
+                                                    <notification-warning v-if="hasWarningMessage" v-bind:warning-message="warningMessage"></notification-warning>
+                                                </nhs-form-group>
+                                            </validate-related-notification>
+                                        </div>
+                                    </div>
+                                    <div class="nhsuk-radios__item">
+                                        <input asp-for="MBovisExposureToKnownCase.NotifiedToPheStatus" id="notified-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
+                                        <label class="nhsuk-label nhsuk-radios__label" for="notified-no">
+                                            No
+                                        </label>
+                                    </div>
+                                    <div class="nhsuk-radios__item">
+                                        <input asp-for="MBovisExposureToKnownCase.NotifiedToPheStatus" id="notified-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
+                                        <label class="nhsuk-label nhsuk-radios__label" for="notified-unknown">
+                                            Unknown
+                                        </label>
                                     </div>
                                 </div>
-                                <div class="nhsuk-radios__item">
-                                    <input asp-for="MBovisExposureToKnownCase.NotifiedToPheStatus" id="notified-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
-                                    <label class="nhsuk-label nhsuk-radios__label" for="notified-no">
-                                        No
-                                    </label>
-                                </div>
-                                <div class="nhsuk-radios__item">
-                                    <input asp-for="MBovisExposureToKnownCase.NotifiedToPheStatus" id="notified-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
-                                    <label class="nhsuk-label nhsuk-radios__label" for="notified-unknown">
-                                        Unknown
-                                    </label>
-                                </div>
-                            </div>
-                        </nhs-fieldset>
-                    </nhs-form-group>
-                </nhs-grid-column>
-
-                <nhs-grid-column grid-column-width="Full">
-                    @{
-                        var hasOtherDetailsError = !Model.IsValid($"{nameof(Model.MBovisExposureToKnownCase)}.{nameof(Model.MBovisExposureToKnownCase.OtherDetails)}");
-                        var otherDetailsGroupState = hasOtherDetailsError ? Error : Standard;
-                        var otherDetailsTextAreaType = hasOtherDetailsError ? TextAreaType.Error : TextAreaType.Standard;
-                    }
-                    <validate-input model="@nameof(MBovisExposureToKnownCase)" property="@nameof(MBovisExposureToKnownCase.OtherDetails)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisExposureToKnownCase)}-{nameof(MBovisExposureToKnownCase.OtherDetails)}")"
-                            nhs-form-group-type="@otherDetailsGroupState"
-                            aria-describedby="other-details-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisExposureToKnownCase.OtherDetails">
-                                @Html.DisplayNameFor(m => m.MBovisExposureToKnownCase.OtherDetails)
-                            </label>
-                            <span
-                                id="other-details-error"
-                                nhs-span-type="ErrorMessage"
-                                ref="errorField"
-                                asp-validation-for="MBovisExposureToKnownCase.OtherDetails"
-                                has-error="@hasOtherDetailsError">
-                            </span>
-                            <textarea
-                                  asp-for="MBovisExposureToKnownCase.OtherDetails"
-                                  v-on:change="validate"
-                                  ref="textareaField"
-                                  nhs-textarea-type="@otherDetailsTextAreaType"
-                                  rows="2"
-                                  classes="nhsuk-input--width-30"> </textarea>
+                            </nhs-fieldset>
                         </nhs-form-group>
-                    </validate-input>
-                </nhs-grid-column>
-            </nhs-grid-row>
+                    </nhs-grid-column>
 
-            <button id="save-button" nhs-button-type="Standard" classes="ntbsuk-button--primary">
-                Save
-            </button>
-            @if (Model.RowId != null)
-            {
-                <button id="delete-button"
-                        asp-page-handler="Delete"
-                        nhs-button-type="Standard"
-                        classes="ntbsuk-button--secondary">
-                    Delete
+                    <nhs-grid-column grid-column-width="Full">
+                        @{
+                            var hasOtherDetailsError = !Model.IsValid($"{nameof(Model.MBovisExposureToKnownCase)}.{nameof(Model.MBovisExposureToKnownCase.OtherDetails)}");
+                            var otherDetailsGroupState = hasOtherDetailsError ? Error : Standard;
+                            var otherDetailsTextAreaType = hasOtherDetailsError ? TextAreaType.Error : TextAreaType.Standard;
+                        }
+                        <validate-input model="@nameof(MBovisExposureToKnownCase)" property="@nameof(MBovisExposureToKnownCase.OtherDetails)" inline-template>
+                            <nhs-form-group
+                                id="@($"{nameof(MBovisExposureToKnownCase)}-{nameof(MBovisExposureToKnownCase.OtherDetails)}")"
+                                nhs-form-group-type="@otherDetailsGroupState"
+                                aria-describedby="other-details-error">
+                                <label nhs-label-type="Standard" asp-for="MBovisExposureToKnownCase.OtherDetails">
+                                    @Html.DisplayNameFor(m => m.MBovisExposureToKnownCase.OtherDetails)
+                                </label>
+                                <span
+                                    id="other-details-error"
+                                    nhs-span-type="ErrorMessage"
+                                    ref="errorField"
+                                    asp-validation-for="MBovisExposureToKnownCase.OtherDetails"
+                                    has-error="@hasOtherDetailsError">
+                                </span>
+                                <textarea
+                                      asp-for="MBovisExposureToKnownCase.OtherDetails"
+                                      v-on:change="validate"
+                                      ref="textareaField"
+                                      nhs-textarea-type="@otherDetailsTextAreaType"
+                                      rows="2"
+                                      classes="nhsuk-input--width-30"> </textarea>
+                            </nhs-form-group>
+                        </validate-input>
+                    </nhs-grid-column>
+                </nhs-grid-row>
+
+                <button id="save-button" ref="submitButton" nhs-button-type="Standard" classes="ntbsuk-button--primary">
+                    Save
                 </button>
-            }
-        </form>
+                @if (Model.RowId != null)
+                {
+                    <button id="delete-button"
+                            asp-page-handler="Delete"
+                            nhs-button-type="Standard"
+                            classes="ntbsuk-button--secondary">
+                        Delete
+                    </button>
+                }
+            </form>
+        </single-submit-form>
     </nhs-width-container>
 </div>
 

@@ -5,7 +5,11 @@
     var header = Model.FirstOrDefault();
     var showEditLinks = (bool)(ViewData["ShowManualResultsEditLinks"] ?? false);
     var isReducedTable = (bool)(ViewData["RenderReducedSizeManualResultsTable"] ?? false);
-    var orderedResults = Model.OrderByDescending(r => r.TestDate);
+    var orderedResults = Model
+        .OrderByDescending(r => r.TestDate)
+        .ThenBy(r => r.SampleType?.Description)    // Chest x-rays and CTs don't have a sample type
+        .ThenBy(r => r.ManualTestType.Description)
+        .ThenBy(r => r.Result.ToString());
 }
 
 @if (Model.Count != 0)
