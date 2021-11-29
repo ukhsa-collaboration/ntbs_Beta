@@ -61,8 +61,23 @@ spec:
               secretKeyRef:
                 name: load-test-connection-strings
                 key: applicationInsights
-          - name: AdOptions__UseDummyAuth
+          - name: AzureAdOptions__Enabled
             value: "true"
+          - name: AzureAdOptions__ClientId
+            valueFrom:
+              secretKeyRef:
+                name: load-test-azuread-options
+                key: clientId
+          - name: AzureAdOptions__ClientSecret
+            valueFrom:
+              secretKeyRef:
+                name: load-test-azuread-options
+                key: clientSecret
+          - name: AzureAdOptions__Authority
+            valueFrom:
+              secretKeyRef:
+                name: load-test-azuread-options
+                key: authority
           - name: MigrationConfig__NtbsEnvironment
             value: "LoadTest"
           - name: Sentry__Environment
