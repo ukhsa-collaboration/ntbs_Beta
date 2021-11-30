@@ -95,12 +95,12 @@ namespace ntbs_service_unit_tests.DataMigration
         }
 
         [Fact]
-        public async Task WhenCaseManagerForLegacyNotificationExistsInNtbs_UserNotImportedButNameUpdated()
+        public async Task WhenInactiveCaseManagerForLegacyNotificationExistsInNtbs_UserNotImportedButNameUpdated()
         {
             // Arrange
             GivenLegacyUserWithName(CASE_MANAGER_USERNAME_1, "John", "Johnston");
             await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS99HULL", HOSPITAL_GUID_1);
-            await GivenUserExistsInNtbsWithName("Jon", "Jonston");
+            await GivenUserExistsInNtbsWithName("Jon", "Jonston", isActive: false);
 
             // Act
             await _caseManagerImportService.ImportOrUpdateLegacyUser(CASE_MANAGER_USERNAME_1, "TBS99HULL", null, BATCH_ID);
@@ -110,6 +110,24 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.NotNull(updatedUser);
             Assert.Equal("John", updatedUser.GivenName);
             Assert.Equal("Johnston", updatedUser.FamilyName);
+        }
+
+        [Fact]
+        public async Task WhenActiveCaseManagerForLegacyNotificationExistsInNtbs_UserNotImportedAndNameNotUpdated()
+        {
+            // Arrange
+            GivenLegacyUserWithName(CASE_MANAGER_USERNAME_1, "Jon", "O'Cara");
+            await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS99HULL", HOSPITAL_GUID_1);
+            await GivenUserExistsInNtbsWithName("Ben", "Kingsly", isActive: true);
+
+            // Act
+            await _caseManagerImportService.ImportOrUpdateLegacyUser(CASE_MANAGER_USERNAME_1, "TBS99HULL", null, BATCH_ID);
+
+            // Assert
+            var updatedUser = _context.User.Single();
+            Assert.NotNull(updatedUser);
+            Assert.Equal("Ben", updatedUser.GivenName);
+            Assert.Equal("Kingsly", updatedUser.FamilyName);
         }
 
         private void SetupMockMigrationRepo()
@@ -141,10 +159,10 @@ namespace ntbs_service_unit_tests.DataMigration
             await _context.SaveChangesAsync();
         }
 
-        private async Task GivenUserExistsInNtbsWithName(string givenName, string familyName)
+        private async Task GivenUserExistsInNtbsWithName(string givenName, string familyName, bool isActive = true)
         {
             await _context.User.AddAsync(
-                new User {GivenName = givenName, FamilyName = familyName, Username = CASE_MANAGER_USERNAME_1, IsActive = true});
+                new User {GivenName = givenName, FamilyName = familyName, Username = CASE_MANAGER_USERNAME_1, IsActive = isActive});
             await _context.SaveChangesAsync();
         }
 
