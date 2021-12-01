@@ -11,150 +11,185 @@
 
         <h3> @(Model.RowId == null ? "Add new " : "Edit ") test result</h3>
 
-        <form method="post" autocomplete="off">
-            <filtered-dropdown filter-handler-path="FilteredSampleTypesForManualTestType"
-                               :filtering-refs="['sampleTypes', 'results']"
-                               :wait-for-child-mount="false"
-                               hide-on-empty="true"
-                               inline-template>
-                <nhs-grid-row>
-                    <nhs-grid-column grid-column-width="Full">
-                        <validate-date model="TestResultForEdit" property="TestDate" inline-template>
+        <single-submit-form inline-template>
+            <form method="post" autocomplete="off" v-on:submit="disableButton">
+                <filtered-dropdown filter-handler-path="FilteredSampleTypesForManualTestType"
+                                   :filtering-refs="['sampleTypes', 'results']"
+                                   :wait-for-child-mount="false"
+                                   hide-on-empty="true"
+                                   inline-template>
+                    <nhs-grid-row>
+                        <nhs-grid-column grid-column-width="Full">
+                            <validate-date model="TestResultForEdit" property="TestDate" inline-template>
+                                @{
+                                    var hasTestDateError = !Model.IsValid("TestResultForEdit.TestDate") || !Model.IsValid("FormattedTestDate");
+                                    var testDateGroupState = hasTestDateError ? Error : Standard;
+                                }
+                                <nhs-form-group nhs-form-group-type="@testDateGroupState" id="TestResultForEdit-TestDate">
+                                    <nhs-fieldset role="group" aria-describe-by="test-date-error">
+                                        <nhs-fieldset-legend nhs-legend-size="Standard">
+                                            @Html.DisplayNameFor(m => m.TestResultForEdit.TestDate)
+                                        </nhs-fieldset-legend>
+                                        <span nhs-span-type="ErrorMessage"
+                                              ref="errorField"
+                                              asp-validation-for="TestResultForEdit.TestDate"
+                                              has-error="@hasTestDateError"
+                                              id="test-date-error"></span>
+                                        <nhs-date-input>
+                                            <nhs-date-input-item>
+                                                <nhs-form-group nhs-form-group-type="Standard">
+                                                    <label nhs-label-type="Date" asp-for="FormattedTestDate.Day">Day</label>
+                                                    <input v-on:blur="validate"
+                                                           is-error-input="@hasTestDateError"
+                                                           ref="dayInput"
+                                                           nhs-input-type="Date"
+                                                           fixed-width="Two"
+                                                           asp-for="FormattedTestDate.Day" />
+                                                </nhs-form-group>
+                                            </nhs-date-input-item>
+                                            <nhs-date-input-item>
+                                                <nhs-form-group nhs-form-group-type="Standard">
+                                                    <label nhs-label-type="Date" asp-for="FormattedTestDate.Month">Month</label>
+                                                    <input v-on:blur="validate"
+                                                           is-error-input="@hasTestDateError"
+                                                           ref="monthInput"
+                                                           nhs-input-type="Date"
+                                                           fixed-width="Two"
+                                                           asp-for="FormattedTestDate.Month" />
+                                                </nhs-form-group>
+                                            </nhs-date-input-item>
+                                            <nhs-date-input-item>
+                                                <nhs-form-group nhs-form-group-type="Standard">
+                                                    <label nhs-label-type="Date" asp-for="FormattedTestDate.Year">Year</label>
+                                                    <input v-on:blur="validate"
+                                                           is-error-input="@hasTestDateError"
+                                                           ref="yearInput"
+                                                           nhs-input-type="Date"
+                                                           fixed-width="Four"
+                                                           asp-for="FormattedTestDate.Year" />
+                                                </nhs-form-group>
+                                            </nhs-date-input-item>
+                                        </nhs-date-input>
+                                    </nhs-fieldset>
+                                </nhs-form-group>
+                            </validate-date>
+                        </nhs-grid-column>
+
+                        <nhs-grid-column grid-column-width="OneThird">
                             @{
-                                var hasTestDateError = !Model.IsValid("TestResultForEdit.TestDate") || !Model.IsValid("FormattedTestDate");
-                                var testDateGroupState = hasTestDateError ? Error : Standard;
+                                var hasTestTypeError = !Model.IsValid("TestResultForEdit.ManualTestTypeId");
+                                var testTypeGroupState = hasTestTypeError ? Error : Standard;
                             }
-                            <nhs-form-group nhs-form-group-type="@testDateGroupState" id="TestResultForEdit-TestDate">
-                                <nhs-fieldset role="group" aria-describe-by="test-date-error">
-                                    <nhs-fieldset-legend nhs-legend-size="Standard">
-                                        @Html.DisplayNameFor(m => m.TestResultForEdit.TestDate)
-                                    </nhs-fieldset-legend>
-                                    <span nhs-span-type="ErrorMessage"
-                                          ref="errorField"
-                                          asp-validation-for="TestResultForEdit.TestDate"
-                                          has-error="@hasTestDateError"
-                                          id="test-date-error"></span>
-                                    <nhs-date-input>
-                                        <nhs-date-input-item>
-                                            <nhs-form-group nhs-form-group-type="Standard">
-                                                <label nhs-label-type="Date" asp-for="FormattedTestDate.Day">Day</label>
-                                                <input v-on:blur="validate"
-                                                       is-error-input="@hasTestDateError"
-                                                       ref="dayInput"
-                                                       nhs-input-type="Date"
-                                                       fixed-width="Two"
-                                                       asp-for="FormattedTestDate.Day" />
-                                            </nhs-form-group>
-                                        </nhs-date-input-item>
-                                        <nhs-date-input-item>
-                                            <nhs-form-group nhs-form-group-type="Standard">
-                                                <label nhs-label-type="Date" asp-for="FormattedTestDate.Month">Month</label>
-                                                <input v-on:blur="validate"
-                                                       is-error-input="@hasTestDateError"
-                                                       ref="monthInput"
-                                                       nhs-input-type="Date"
-                                                       fixed-width="Two"
-                                                       asp-for="FormattedTestDate.Month" />
-                                            </nhs-form-group>
-                                        </nhs-date-input-item>
-                                        <nhs-date-input-item>
-                                            <nhs-form-group nhs-form-group-type="Standard">
-                                                <label nhs-label-type="Date" asp-for="FormattedTestDate.Year">Year</label>
-                                                <input v-on:blur="validate"
-                                                       is-error-input="@hasTestDateError"
-                                                       ref="yearInput"
-                                                       nhs-input-type="Date"
-                                                       fixed-width="Four"
-                                                       asp-for="FormattedTestDate.Year" />
-                                            </nhs-form-group>
-                                        </nhs-date-input-item>
-                                    </nhs-date-input>
-                                </nhs-fieldset>
+                            <nhs-form-group nhs-form-group-type="@testTypeGroupState"
+                                            aria-describedby="test-type-error"
+                                            ref="filterContainer"
+                                            id="TestResultForEdit-ManualTestTypeId">
+                                <label nhs-label-type="Standard" asp-for="TestResultForEdit.ManualTestTypeId">
+                                    @Html.DisplayNameFor(m => m.TestResultForEdit.ManualTestTypeId)
+                                </label>
+                                <span id="test-type-error"
+                                      nhs-span-type="ErrorMessage"
+                                      has-error="@hasTestTypeError"
+                                      asp-validation-for="TestResultForEdit.ManualTestTypeId"></span>
+                                <select nhs-select-type="@(hasTestTypeError ? SelectType.Error : SelectType.Standard)"
+                                        asp-for="TestResultForEdit.ManualTestTypeId"
+                                        asp-items="Model.ManualTestTypes"
+                                        v-on:change="filteringChanged">
+                                    <option value="">Please select</option>
+                                </select>
                             </nhs-form-group>
-                        </validate-date>
-                    </nhs-grid-column>
+                        </nhs-grid-column>
+                        <nhs-grid-column grid-column-width="OneThird" ref="sampleTypes">
+                            @{
+                                var hasSampleTypeError = !Model.IsValid("TestResultForEdit.SampleTypeId");
+                                var sampleTypeGroupState = hasSampleTypeError ? Error : Standard;
+                            }
+                            <nhs-form-group nhs-form-group-type="@sampleTypeGroupState"
+                                            aria-describedby="sample-type-error"
+                                            id="TestResultForEdit-SampleTypeId">
+                                <label nhs-label-type="Standard" asp-for="TestResultForEdit.SampleTypeId">
+                                    @Html.DisplayNameFor(m => m.TestResultForEdit.SampleTypeId)
+                                </label>
+                                <span id="sample-type-error"
+                                      nhs-span-type="ErrorMessage"
+                                      has-error="@hasSampleTypeError"
+                                      asp-validation-for="TestResultForEdit.SampleTypeId"></span>
+                                <select nhs-select-type="@(hasSampleTypeError ? SelectType.Error : SelectType.Standard)"
+                                        asp-for="TestResultForEdit.SampleTypeId"
+                                        asp-items="Model.SampleTypes">
+                                    <option value="">Please select</option>
+                                </select>
+                            </nhs-form-group>
+                        </nhs-grid-column>
+                        @{
+                            var resultConditionFunctionString = $"function(value) {{ return value && value == {(int)Result.NoResult} }}";
+                        }
+                        <conditional-select-wrapper :value-condition-function='@resultConditionFunctionString' ref="results" inline-template>
+                            <div class="manual-test-result-container">
+                                <nhs-grid-column grid-column-width="OneThird" >
+                                    @{
+                                        var hasResultError = !Model.IsValid("TestResultForEdit.Result");
+                                        var resultGroupState = hasResultError ? Error : Standard;
+                                    }
+                                    <validate-input model="ManualTestResult" property="Result" v-on:validate="handleChange" v-on:mounted="innerValidateMounted" ref="inner-validate" inline-template>
+                                        <nhs-form-group nhs-form-group-type="@resultGroupState"
+                                                    aria-describedby="result-error"
+                                                    id="TestResultForEdit-Result">
+                                            <label nhs-label-type="Standard" asp-for="TestResultForEdit.Result">
+                                                @Html.DisplayNameFor(m => m.TestResultForEdit.Result)
+                                            </label>
+                                            <span ref="errorField" id="result-error" nhs-span-type="ErrorMessage" has-error="@hasResultError" asp-validation-for="TestResultForEdit.Result"></span>
+                                            <select v-on:change="validate" nhs-select-type="@(hasResultError ? SelectType.Error : SelectType.Standard)"
+                                                    asp-for="TestResultForEdit.Result"
+                                                    asp-items="Html.GetEnumSelectList<Result>()" ref="selectField">
+                                                <option value="">Please select</option>
+                                            </select>
+                                        </nhs-form-group>
+                                    </validate-input>
+                                </nhs-grid-column>
+                                <div ref="conditional-control" id="no-result-reason-conditional" class="govuk-radios__conditional">
+                                    <nhs-grid-column grid-column-width="OneThird">
+                                        @{
+                                            var hasReasonError = !Model.IsValid("TestResultForEdit.ResultReason");
+                                            var reasonGroupState = hasReasonError ? Error : Standard;
+                                        }
+                                        <validate-input model="ManualTestResult" property="NoResultReason" inline-template>
+                                            <nhs-form-group nhs-form-group-type="@reasonGroupState"
+                                                            aria-describedby="reason-error"
+                                                            id="TestResultForEdit-ResultReason">
+                                                <label nhs-label-type="Standard" asp-for="TestResultForEdit.NoResultReason">
+                                                    @Html.DisplayNameFor(m => m.TestResultForEdit.NoResultReason)
+                                                </label>
+                                                <span ref="errorField" id="reason-error" nhs-span-type="ErrorMessage" has-error="@hasReasonError" asp-validation-for="TestResultForEdit.NoResultReason"></span>
+                                                <input ref="inputField"
+                                                       v-on:blur="validate"
+                                                       is-error-input="@hasReasonError"
+                                                       nhs-input-type="Standard"
+                                                       asp-for="TestResultForEdit.NoResultReason"/>
+                                            </nhs-form-group>
+                                        </validate-input>
+                                    </nhs-grid-column>
+                                </div>
+                            </div>
+                        </conditional-select-wrapper>
+                    </nhs-grid-row>
+                </filtered-dropdown>
 
-                    <nhs-grid-column grid-column-width="OneThird">
-                        @{
-                            var hasTestTypeError = !Model.IsValid("TestResultForEdit.ManualTestTypeId");
-                            var testTypeGroupState = hasTestTypeError ? Error : Standard;
-                        }
-                        <nhs-form-group nhs-form-group-type="@testTypeGroupState"
-                                        aria-describedby="test-type-error"
-                                        ref="filterContainer"
-                                        id="TestResultForEdit-ManualTestTypeId">
-                            <label nhs-label-type="Standard" asp-for="TestResultForEdit.ManualTestTypeId">
-                                @Html.DisplayNameFor(m => m.TestResultForEdit.ManualTestTypeId)
-                            </label>
-                            <span id="test-type-error"
-                                  nhs-span-type="ErrorMessage"
-                                  has-error="@hasTestTypeError"
-                                  asp-validation-for="TestResultForEdit.ManualTestTypeId"></span>
-                            <select nhs-select-type="@(hasTestTypeError ? SelectType.Error : SelectType.Standard)"
-                                    asp-for="TestResultForEdit.ManualTestTypeId"
-                                    asp-items="Model.ManualTestTypes"
-                                    v-on:change="filteringChanged">
-                                <option value="">Please select</option>
-                            </select>
-                        </nhs-form-group>
-                    </nhs-grid-column>
-                    <nhs-grid-column grid-column-width="OneThird" ref="sampleTypes">
-                        @{
-                            var hasSampleTypeError = !Model.IsValid("TestResultForEdit.SampleTypeId");
-                            var sampleTypeGroupState = hasSampleTypeError ? Error : Standard;
-                        }
-                        <nhs-form-group nhs-form-group-type="@sampleTypeGroupState"
-                                        aria-describedby="sample-type-error"
-                                        id="TestResultForEdit-SampleTypeId">
-                            <label nhs-label-type="Standard" asp-for="TestResultForEdit.SampleTypeId">
-                                @Html.DisplayNameFor(m => m.TestResultForEdit.SampleTypeId)
-                            </label>
-                            <span id="sample-type-error"
-                                  nhs-span-type="ErrorMessage"
-                                  has-error="@hasSampleTypeError"
-                                  asp-validation-for="TestResultForEdit.SampleTypeId"></span>
-                            <select nhs-select-type="@(hasSampleTypeError ? SelectType.Error : SelectType.Standard)"
-                                    asp-for="TestResultForEdit.SampleTypeId"
-                                    asp-items="Model.SampleTypes">
-                                <option value="">Please select</option>
-                            </select>
-                        </nhs-form-group>
-                    </nhs-grid-column>
-                    <nhs-grid-column grid-column-width="Full" ref="results">
-                        @{
-                            var hasResultError = !Model.IsValid("TestResultForEdit.Result");
-                            var resultGroupState = hasResultError ? Error : Standard;
-                        }
-                        <nhs-form-group nhs-form-group-type="@resultGroupState"
-                                        aria-describedby="result-error"
-                                        id="TestResultForEdit-Result">
-                            <label nhs-label-type="Standard" asp-for="TestResultForEdit.Result">
-                                @Html.DisplayNameFor(m => m.TestResultForEdit.Result)
-                            </label>
-                            <span id="result-error" nhs-span-type="ErrorMessage" has-error="@hasResultError" asp-validation-for="TestResultForEdit.Result"></span>
-                            <select nhs-select-type="@(hasResultError ? SelectType.Error : SelectType.Standard)"
-                                    asp-for="TestResultForEdit.Result"
-                                    asp-items="Html.GetEnumSelectList<Result>()">
-                                <option value="">Please select</option>
-                            </select>
-                        </nhs-form-group>
-                    </nhs-grid-column>
-                </nhs-grid-row>
-            </filtered-dropdown>
-
-            <button id="save-test-result-button" nhs-button-type="Standard" classes="ntbsuk-button--primary">
-                Save
-            </button>
-            @if (Model.RowId != null)
-            {
-                <button id="delete-test-result-button"
-                        asp-page-handler="Delete"
-                        nhs-button-type="Standard"
-                        classes="ntbsuk-button--secondary">
-                    Delete
+                <button ref="submitButton" id="save-test-result-button" nhs-button-type="Standard" classes="ntbsuk-button--primary">
+                    Save
                 </button>
-            }
-        </form>
+                
+                @if (Model.RowId != null)
+                {
+                    <button id="delete-test-result-button"
+                            asp-page-handler="Delete"
+                            nhs-button-type="Standard"
+                            classes="ntbsuk-button--secondary">
+                        Delete
+                    </button>
+                }
+            </form>
+        </single-submit-form>
     </nhs-width-container>
 </div>
 <nhs-width-container container-width="Standard">

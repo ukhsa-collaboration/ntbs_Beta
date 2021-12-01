@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
-using MoreLinq;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -379,7 +379,9 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.TreatmentEvents)
                     .ThenInclude(t => t.TreatmentOutcome)
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified)
-                .Where(n => n.TreatmentEvents.Any(t => t.TreatmentOutcome != null))
+                // This query will return notifications where ShouldBeClosed is true, as well as some that are false.
+                // We are trying to avoid pulling too many notifications into memory
+                .Where(n => n.TreatmentEvents.Any(t => t.TreatmentOutcome != null && t.EventDate < DateTime.Today.AddYears(-1)))
                 .OrderBy(n => n.NotificationId)
                 .AsSplitQuery()
                 .ToListAsync())

@@ -1,11 +1,17 @@
+@using Castle.Core.Internal
 @using ntbs_service.Helpers
+@using ntbs_service.Models.Enums
 @model ICollection<ntbs_service.Models.Entities.ManualTestResult>
 
 @{
     var header = Model.FirstOrDefault();
     var showEditLinks = (bool)(ViewData["ShowManualResultsEditLinks"] ?? false);
     var isReducedTable = (bool)(ViewData["RenderReducedSizeManualResultsTable"] ?? false);
-    var orderedResults = Model.OrderByDescending(r => r.TestDate);
+    var orderedResults = Model
+        .OrderByDescending(r => r.TestDate)
+        .ThenBy(r => r.SampleType?.Description)    // Chest x-rays and CTs don't have a sample type
+        .ThenBy(r => r.ManualTestType.Description)
+        .ThenBy(r => r.Result.ToString());
 }
 
 @if (Model.Count != 0)
@@ -46,7 +52,7 @@
                         @result?.SampleType?.Description
                     </nhs-table-item>
                     <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.Result)">
-                        @result.Result.GetDisplayName()
+                        @result.ResultDisplayString
                     </nhs-table-item>
                     @if (showEditLinks)
                     {
