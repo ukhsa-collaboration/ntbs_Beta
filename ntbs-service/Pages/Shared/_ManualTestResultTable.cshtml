@@ -52,7 +52,12 @@
                         @result?.SampleType?.Description
                     </nhs-table-item>
                     <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.Result)">
-                        @result.ResultDisplayString
+                        @result.Result.GetDisplayName()
+                        @if (!string.IsNullOrEmpty(result.NoResultReason))
+                        {
+                            <br/>
+                            @($"- {result.NoResultReason}")
+                        }
                     </nhs-table-item>
                     @if (showEditLinks)
                     {
