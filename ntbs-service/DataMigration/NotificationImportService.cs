@@ -217,23 +217,33 @@ namespace ntbs_service.DataMigration
             }
 
             _logger.LogSuccess(context, runId, $"Importing {notifications.Count} valid notifications");
-            try
+
+            var savedNotifications = await SaveLinkedNotifications(context, runId, importResult, notifications);
+
+            if (savedNotifications != null
+                && await MarkNotificationsAsImported(context, runId, importResult, savedNotifications))
             {
-                var savedNotifications = await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
-                await _migratedNotificationsMarker.MarkNotificationsAsImportedAsync(savedNotifications);
                 importResult.NtbsIds = savedNotifications.ToDictionary(x => x.LegacyId, x => x.NotificationId);
-                await _specimenImportService.ImportReferenceLabResultsAsync(context, runId, savedNotifications, importResult);
-                await _cultureAndResistanceService.MigrateNotificationCultureResistanceSummary(savedNotifications);
-                await _drugResistanceProfileService.UpdateDrugResistanceProfiles(savedNotifications);
-                await _clusterImportService.UpdateClusterInformation(savedNotifications);
+                await ImportLabResults(context, runId, importResult, savedNotifications);
+                await MigrateCultureResistanceSummaries(context, runId, savedNotifications);
+                await UpdateDrugResistanceProfiles(context, runId, savedNotifications);
+                await UpdateClusterInformation(context, runId, savedNotifications);
 
                 await _logger.LogGroupSuccess(context, runId, notifications);
             }
-            catch (MarkingNotificationsAsImportedFailedException e)
+
+            return importResult;
+        }
+
+        private async Task<List<Notification>> SaveLinkedNotifications(
+            PerformContext context,
+            int runId,
+            ImportResult importResult,
+            List<Notification> notifications)
+        {
+            try
             {
-                Log.Error(e, e.Message);
-                await _logger.LogGroupWarning(context, runId, notifications, e.Message);
-                importResult.AddGroupError($"{e.Message}: {e.StackTrace}");
+                return await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
             }
             catch (Exception e)
             {
@@ -241,8 +251,101 @@ namespace ntbs_service.DataMigration
                 await _logger.LogImportGroupFailure(context, runId, notifications,
                     "failed to save a notification in the group", e);
                 importResult.AddGroupError($"{e.Message}: {e.StackTrace}");
+                return null;
             }
-            return importResult;
+        }
+
+        private async Task<bool> MarkNotificationsAsImported(
+            PerformContext context,
+            int runId,
+            ImportResult importResult,
+            List<Notification> savedNotifications)
+        {
+            try
+            {
+                await _migratedNotificationsMarker.MarkNotificationsAsImportedAsync(savedNotifications);
+                return true;
+            }
+            catch (MarkingNotificationsAsImportedFailedException e)
+            {
+                Log.Error(e, e.Message);
+                await _logger.LogGroupWarning(context, runId, savedNotifications, e.Message);
+                importResult.AddGroupError($"{e.Message}: {e.StackTrace}");
+                return false;
+            }
+        }
+
+        private async Task ImportLabResults(
+            PerformContext context,
+            int runId,
+            ImportResult importResult,
+            List<Notification> savedNotifications)
+        {
+            try
+            {
+                await _specimenImportService.ImportReferenceLabResultsAsync(context, runId, savedNotifications, importResult);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, e.Message);
+                await _logger.LogGroupWarning(context, runId, savedNotifications,
+                    "An error occurred while attempting to import the lab results for the group." +
+                    " Please contact your system administrator to fix this issue.");
+            }
+        }
+
+        private async Task MigrateCultureResistanceSummaries(
+            PerformContext context,
+            int runId,
+            List<Notification> savedNotifications)
+        {
+            try
+            {
+                await _cultureAndResistanceService.MigrateNotificationCultureResistanceSummary(savedNotifications);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, e.Message);
+                await _logger.LogGroupWarning(context, runId, savedNotifications,
+                    "An error occurred while attempting to migrate the culture resistance summaries for the group." +
+                    " Please contact your system administrator to fix this issue.");
+            }
+        }
+
+        private async Task UpdateDrugResistanceProfiles(
+            PerformContext context,
+            int runId,
+            List<Notification> savedNotifications)
+        {
+            try
+            {
+                await _drugResistanceProfileService.UpdateDrugResistanceProfiles(savedNotifications);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, e.Message);
+                await _logger.LogGroupWarning(context, runId, savedNotifications,
+                    "An error occurred while attempting to update the drug resistance profiles for the group." +
+                    " The drug resistance profile update job should be run when the import finishes to fix this issue.");
+            }
+        }
+
+        private async Task UpdateClusterInformation(
+            PerformContext context,
+            int runId,
+            List<Notification> savedNotifications)
+        {
+            try
+            {
+                await _clusterImportService.UpdateClusterInformation(savedNotifications);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, e.Message);
+                await _logger.LogGroupWarning(context, runId, savedNotifications,
+                    "An error occurred while attempting to update the cluster information for the group." +
+                    " Please contact your system administrator to fix this issue.");
+            }
         }
 
         private async Task<List<string>> FilterOutImportedIdsAsync(PerformContext context, int runId,
