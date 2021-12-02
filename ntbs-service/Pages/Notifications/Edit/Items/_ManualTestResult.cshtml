@@ -15,7 +15,7 @@
             <form method="post" autocomplete="off" v-on:submit="disableButton">
                 <filtered-dropdown filter-handler-path="FilteredSampleTypesForManualTestType"
                                    :filtering-refs="['sampleTypes', 'results']"
-                                   :wait-for-child-mount="false"
+                                   :should-filter-on-load="true"
                                    hide-on-empty="true"
                                    inline-template>
                     <nhs-grid-row>
@@ -178,7 +178,7 @@
                 <button ref="submitButton" id="save-test-result-button" nhs-button-type="Standard" classes="ntbsuk-button--primary">
                     Save
                 </button>
-                
+
                 @if (Model.RowId != null)
                 {
                     <button id="delete-test-result-button"

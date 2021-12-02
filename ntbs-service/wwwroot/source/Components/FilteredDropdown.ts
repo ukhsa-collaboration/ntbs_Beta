@@ -11,10 +11,10 @@ type OptionValue = {
 const DEFAULT_SELECT_INNER_HTML = "<option value=\"\">Please select</option>";
 
 /*
- The component only works for a single select field to filter one or more other fields, 
+ The component only works for a single select field to filter one or more other fields,
  any cascading nonsense will require more specific handling.
 
- 'filteringRefs' prop is required to be an array of strings corresponding to a 
+ 'filteringRefs' prop is required to be an array of strings corresponding to a
  ref containing a select element (if ref is a vue component, requires a 'selectField' ref within that).
  Each string in the array is also an expected response-object key from the endpoint:
  see OnGetGetFilteredListsByTbService in Episode.cshtml.cs
@@ -22,10 +22,9 @@ const DEFAULT_SELECT_INNER_HTML = "<option value=\"\">Please select</option>";
  Additionally to the ref requirements above the input to drive the filtering must be within a ref
  of name 'filterContainer' containing a select element (if ref is a vue component, requires a 'selectField' ref within that).
 
- waitForChildMount is intended to be used to either trigger filtering on mount of this component,
- or if relevant to be triggered on mount of the filterContainer's vue component.
+ shouldFilterOnLoad is intended to be used to either trigger filtering on mount of this component.
 
- hideOnEmptyOptions configures whether the component should hide the dependent control if the returned list 
+ hideOnEmptyOptions configures whether the component should hide the dependent control if the returned list
  of OptionValues from the server is empty.
 */
 const FilteredDropdown = Vue.extend({
@@ -36,9 +35,9 @@ const FilteredDropdown = Vue.extend({
         filteringRefs: {
             type: Array
         },
-        waitForChildMount: {
+        shouldFilterOnLoad: {
             type: Boolean,
-            default: true
+            default: false
         },
         hideOnEmpty: {
             type: Boolean,
@@ -46,7 +45,7 @@ const FilteredDropdown = Vue.extend({
         }
     },
     mounted: function () {
-        if (!this.waitForChildMount) {
+        if (this.shouldFilterOnLoad) {
             this.filteringMounted();
         }
     },
