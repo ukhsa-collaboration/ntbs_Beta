@@ -110,6 +110,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.NotNull(updatedUser);
             Assert.Equal("John", updatedUser.GivenName);
             Assert.Equal("Johnston", updatedUser.FamilyName);
+            Assert.Equal("John Johnston", updatedUser.DisplayName);
         }
 
         [Fact]
@@ -128,6 +129,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.NotNull(updatedUser);
             Assert.Equal("Ben", updatedUser.GivenName);
             Assert.Equal("Kingsly", updatedUser.FamilyName);
+            Assert.Equal("Ben Kingsly", updatedUser.DisplayName);
         }
 
         private void SetupMockMigrationRepo()
@@ -162,7 +164,7 @@ namespace ntbs_service_unit_tests.DataMigration
         private async Task GivenUserExistsInNtbsWithName(string givenName, string familyName, bool isActive = true)
         {
             await _context.User.AddAsync(
-                new User {GivenName = givenName, FamilyName = familyName, Username = CASE_MANAGER_USERNAME_1, IsActive = isActive});
+                new User {GivenName = givenName, FamilyName = familyName, DisplayName = $"{givenName} {familyName}", Username = CASE_MANAGER_USERNAME_1, IsActive = isActive});
             await _context.SaveChangesAsync();
         }
 

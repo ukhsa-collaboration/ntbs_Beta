@@ -48,7 +48,7 @@ namespace ntbs_service.DataMigration
             {
                 ntbsCaseManager.GivenName = legacyCaseManager.GivenName;
                 ntbsCaseManager.FamilyName = legacyCaseManager.FamilyName;
-                ntbsCaseManager.DisplayName = $"{ntbsCaseManager.GivenName} {ntbsCaseManager.FamilyName}";
+                ntbsCaseManager.DisplayName = $"{legacyCaseManager.GivenName} {legacyCaseManager.FamilyName}";
             }
             ntbsCaseManager.IsCaseManager = true;
 
