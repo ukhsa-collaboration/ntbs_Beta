@@ -69,6 +69,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             TestResultForEdit.Dob = Notification.PatientDetails.Dob;
             await SetRelatedEntitiesAsync();
             SetDate();
+            RemoveNoResultDescriptionIfOtherResult();
 
             if (TryValidateModel(TestResultForEdit, "TestResultForEdit"))
             {
@@ -157,6 +158,14 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 FormattedTestDate);
         }
 
+        private void RemoveNoResultDescriptionIfOtherResult()
+        {
+            if (TestResultForEdit.Result != Result.NoResult)
+            {
+                TestResultForEdit.NoResultReason = null;
+            }
+        }
+
         public async Task<ContentResult> OnPostValidateTestResultForEditDateAsync([FromBody]DateValidationModel validationData)
         {
             var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
@@ -180,6 +189,13 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                         .Where(result => result.IsValidForTestType(value))
                         .Select(result => OptionValue.FromEnum(result))
                 });
+        }
+
+        public ContentResult OnPostValidateManualTestResultProperty([FromBody]InputValidationModel validationData)
+        {
+            // This is a workaround for the fact we need to use a validate-input component on our result field
+            // but we cannot validate it here as we do not know the test type
+            return Content("");
         }
     }
 }

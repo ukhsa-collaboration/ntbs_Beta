@@ -11,250 +11,252 @@
         <partial name="Notifications/Edit/_SinglePageErrorSummaryPartial"/>
         
         <h2> M. bovis - @(Model.RowId == null ? "Add new " : "Edit ") animal exposure </h2>
-        
-        <form method="post" autocomplete="off">
-            <nhs-grid-row>
-                <nhs-grid-column grid-column-width="OneHalf">
-                    @{
-                        var hasYearError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.YearOfExposure)}");
-                        var yearErrorGroupState = hasYearError ? Error : Standard;
-                    }
-                    <validate-input model="@nameof(MBovisAnimalExposure)" property="@nameof(MBovisAnimalExposure.YearOfExposure)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisAnimalExposure)}-{nameof(MBovisAnimalExposure.YearOfExposure)}")"
-                            nhs-form-group-type="@yearErrorGroupState"
-                            aria-describedby="year-of-exposure-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisAnimalExposure.YearOfExposure">
-                                @Html.DisplayNameFor(m => m.MBovisAnimalExposure.YearOfExposure)
-                            </label>
-                            <span
-                                id="year-of-exposure-error"
-                                nhs-span-type="ErrorMessage"
-                                ref="errorField"
-                                asp-validation-for="MBovisAnimalExposure.YearOfExposure"
-                                has-error="@hasYearError">
-                            </span>
-                            <input
-                                nhs-input-type="Number"
-                                ref="inputField"
-                                asp-for="MBovisAnimalExposure.YearOfExposure"
-                                v-on:blur="validate"
-                                is-error-input="@hasYearError"
-                                fixed-width="Four">
-                        </nhs-form-group>
-                    </validate-input>
-                </nhs-grid-column>
-            
-                <nhs-grid-column grid-column-width="OneHalf">
-                    @{
-                        var hasCountryError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.CountryId)}");
-                        var countryGroupState = hasCountryError ? Error : Standard;
-                        var countrySelectErrorClass = hasCountryError ? "nhsuk-select--error" : "";
-                    }
-                    <validate-input model="@nameof(MBovisAnimalExposure)" property="@nameof(MBovisAnimalExposure.CountryId)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisAnimalExposure)}-{nameof(MBovisAnimalExposure.CountryId)}")"
-                            nhs-form-group-type="@countryGroupState"
-                            aria-describedby="country-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisAnimalExposure.CountryId">
-                                Country
-                            </label>
-                            <span
-                                id="country-error"
-                                nhs-span-type="ErrorMessage"
-                                ref="errorField"
-                                asp-validation-for="MBovisAnimalExposure.CountryId"
-                                has-error="@hasCountryError">
-                            </span>
-                            <div ref="selectField" class="@countrySelectErrorClass">
-                                <autocomplete-select v-on:input-changed="validate" placeholder="Please select" emit-change-on="blur" inline-template>
-                                    <select asp-for="MBovisAnimalExposure.CountryId" asp-items="Model.Countries" ref="selectField">
-                                        <option value=""></option>
-                                    </select>
-                                </autocomplete-select>
-                            </div>
-                        </nhs-form-group>
-                    </validate-input>
-                </nhs-grid-column>
-            </nhs-grid-row>
-            
-            <nhs-grid-row>
-                <nhs-grid-column grid-column-width="OneHalf">
-                    @{
-                        var hasAnimalTypeError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.AnimalType)}");
-                        var animalTypeGroupState = hasAnimalTypeError ? Error : Standard;
-                    }
-                    <validate-input model="@nameof(MBovisAnimalExposure)" property="@nameof(MBovisAnimalExposure.AnimalType)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisAnimalExposure)}-{nameof(MBovisAnimalExposure.AnimalType)}")"
-                            nhs-form-group-type="@animalTypeGroupState"
-                            aria-describedby="animal-type-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisAnimalExposure.AnimalType">
-                                @Html.DisplayNameFor(m => m.MBovisAnimalExposure.AnimalType)
-                            </label>
-                            <span
-                                id="animal-type-error"
-                                nhs-span-type="ErrorMessage"
-                                has-error="@hasAnimalTypeError"
-                                asp-validation-for="MBovisAnimalExposure.AnimalType"
-                                ref="errorField">
-                            </span>
-                            <select
-                                nhs-select-type="@(hasAnimalTypeError ? SelectType.Error : SelectType.Standard)"
-                                asp-for="MBovisAnimalExposure.AnimalType"
-                                asp-items="Html.GetEnumSelectList<AnimalType>()"
-                                ref="selectField"
-                                v-on:change="validate">
-                                <option value="">Please select</option>
-                            </select>
-                        </nhs-form-group>
-                    </validate-input>
-                </nhs-grid-column>
-            
-                <nhs-grid-column grid-column-width="OneHalf">
-                    @{
-                        var hasAnimalError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.Animal)}");
-                        var animalGroupState = hasAnimalError ? Error : Standard;
-                    }
-                    <validate-input model="@nameof(MBovisAnimalExposure)" property="@nameof(MBovisAnimalExposure.Animal)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisAnimalExposure)}-{nameof(MBovisAnimalExposure.Animal)}")"
-                            nhs-form-group-type="@animalGroupState"
-                            aria-describedby="animal-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisAnimalExposure.Animal">
-                                @Html.DisplayNameFor(m => m.MBovisAnimalExposure.Animal)
-                            </label>
-                            <span
-                                id="animal-error"
-                                nhs-span-type="ErrorMessage"
-                                has-error="@hasAnimalError"
-                                asp-validation-for="MBovisAnimalExposure.Animal"
-                                ref="errorField">
-                            </span>
-                            <input
-                                nhs-input-type="Standard"
-                                ref="inputField"
-                                asp-for="MBovisAnimalExposure.Animal"
-                                v-on:blur="validate"
-                                fixed-width="Ten"
-                                is-error-input="@hasAnimalError">
-                        </nhs-form-group>
-                    </validate-input>
-                </nhs-grid-column>
-            </nhs-grid-row>
-            
-            <nhs-grid-row>
-                <nhs-grid-column grid-column-width="OneHalf">
-                    @{
-                        var hasAnimalTbStatusError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.AnimalTbStatus)}");
-                        var animalTbStatusGroupState = hasAnimalTbStatusError ? Error : Standard;
-                    }
-                    <validate-input model="@nameof(MBovisAnimalExposure)" property="@nameof(MBovisAnimalExposure.AnimalTbStatus)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisAnimalExposure)}-{nameof(MBovisAnimalExposure.AnimalTbStatus)}")"
-                            nhs-form-group-type="@animalTbStatusGroupState"
-                            aria-describedby="animal-tb-status-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisAnimalExposure.AnimalTbStatus">
-                                @Html.DisplayNameFor(m => m.MBovisAnimalExposure.AnimalTbStatus)
-                            </label>
-                            <span
-                                id="animal-tb-status-error"
-                                nhs-span-type="ErrorMessage"
-                                has-error="@hasAnimalTbStatusError"
-                                asp-validation-for="MBovisAnimalExposure.AnimalTbStatus"
-                                ref="errorField">
-                            </span>
-                            <select
-                                nhs-select-type="@(hasAnimalTbStatusError ? SelectType.Error : SelectType.Standard)"
-                                asp-for="MBovisAnimalExposure.AnimalTbStatus"
-                                asp-items="Html.GetEnumSelectList<AnimalTbStatus>()"
-                                ref="selectField"
-                                v-on:change="validate">
-                                <option value="">Please select</option>
-                            </select>
-                        </nhs-form-group>
-                    </validate-input>
-                </nhs-grid-column>
-            
-                <nhs-grid-column grid-column-width="OneHalf">
-                    @{
-                        var hasDurationError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.ExposureDuration)}");
-                        var durationGroupState = hasDurationError ? Error : Standard;
-                    }
-                    <validate-input model="@nameof(MBovisAnimalExposure)" property="@nameof(MBovisAnimalExposure.ExposureDuration)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisAnimalExposure)}-{nameof(MBovisAnimalExposure.ExposureDuration)}")"
-                            nhs-form-group-type="@durationGroupState"
-                            aria-describedby="duration-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisAnimalExposure.ExposureDuration">
-                                @Html.DisplayNameFor(m => m.MBovisAnimalExposure.ExposureDuration)
-                            </label>
-                            <span
-                                id="duration-error"
-                                nhs-span-type="ErrorMessage"
-                                has-error="@hasDurationError"
-                                asp-validation-for="MBovisAnimalExposure.ExposureDuration"
-                                ref="errorField">
-                            </span>
-                            <input
-                                nhs-input-type="Number"
-                                ref="inputField"
-                                asp-for="MBovisAnimalExposure.ExposureDuration"
-                                v-on:blur="validate"
-                                fixed-width="Two"
-                                is-error-input="@hasDurationError">
-                        </nhs-form-group>
-                    </validate-input>
-                </nhs-grid-column>
-            </nhs-grid-row>
-            
-            <nhs-grid-row>
-                <nhs-grid-column grid-column-width="Full">
-                    @{
-                        var hasOtherDetailsError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.OtherDetails)}");
-                        var otherDetailsGroupState = hasOtherDetailsError ? Error : Standard;
-                        var otherDetailsTextAreaType = hasOtherDetailsError ? TextAreaType.Error : TextAreaType.Standard;
-                    }
-                    <validate-input model="@nameof(MBovisAnimalExposure)" property="@nameof(MBovisAnimalExposure.OtherDetails)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisAnimalExposure)}-{nameof(MBovisAnimalExposure.OtherDetails)}")"
-                            nhs-form-group-type="@otherDetailsGroupState"
-                            aria-describedby="other-details-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisAnimalExposure.OtherDetails">
-                                @Html.DisplayNameFor(m => m.MBovisAnimalExposure.OtherDetails)
-                            </label>
-                            <span
-                                id="other-details-error"
-                                nhs-span-type="ErrorMessage"
-                                ref="errorField"
-                                asp-validation-for="MBovisAnimalExposure.OtherDetails"
-                                has-error="@hasOtherDetailsError">
-                            </span>
-                            <textarea
-                                  asp-for="MBovisAnimalExposure.OtherDetails"
-                                  v-on:change="validate"
-                                  ref="textareaField"
-                                  nhs-textarea-type="@otherDetailsTextAreaType"
-                                  rows="2"
-                                  classes="nhsuk-input--width-30"> </textarea>
-                        </nhs-form-group>
-                    </validate-input>
-                </nhs-grid-column>
-            </nhs-grid-row>
-            
-            <button id="save-button" nhs-button-type="Standard" classes="ntbsuk-button--primary">
-                Save
-            </button>
-            @if (Model.RowId != null)
-            {
-                <button id="delete-button"
-                        asp-page-handler="Delete"
-                        nhs-button-type="Standard"
-                        classes="ntbsuk-button--secondary">
-                    Delete
+
+        <single-submit-form inline-template>
+            <form method="post" autocomplete="off" v-on:submit="disableButton">
+                <nhs-grid-row>
+                    <nhs-grid-column grid-column-width="OneHalf">
+                        @{
+                            var hasYearError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.YearOfExposure)}");
+                            var yearErrorGroupState = hasYearError ? Error : Standard;
+                        }
+                        <validate-input model="@nameof(MBovisAnimalExposure)" property="@nameof(MBovisAnimalExposure.YearOfExposure)" inline-template>
+                            <nhs-form-group
+                                id="@($"{nameof(MBovisAnimalExposure)}-{nameof(MBovisAnimalExposure.YearOfExposure)}")"
+                                nhs-form-group-type="@yearErrorGroupState"
+                                aria-describedby="year-of-exposure-error">
+                                <label nhs-label-type="Standard" asp-for="MBovisAnimalExposure.YearOfExposure">
+                                    @Html.DisplayNameFor(m => m.MBovisAnimalExposure.YearOfExposure)
+                                </label>
+                                <span
+                                    id="year-of-exposure-error"
+                                    nhs-span-type="ErrorMessage"
+                                    ref="errorField"
+                                    asp-validation-for="MBovisAnimalExposure.YearOfExposure"
+                                    has-error="@hasYearError">
+                                </span>
+                                <input
+                                    nhs-input-type="Number"
+                                    ref="inputField"
+                                    asp-for="MBovisAnimalExposure.YearOfExposure"
+                                    v-on:blur="validate"
+                                    is-error-input="@hasYearError"
+                                    fixed-width="Four">
+                            </nhs-form-group>
+                        </validate-input>
+                    </nhs-grid-column>
+                
+                    <nhs-grid-column grid-column-width="OneHalf">
+                        @{
+                            var hasCountryError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.CountryId)}");
+                            var countryGroupState = hasCountryError ? Error : Standard;
+                            var countrySelectErrorClass = hasCountryError ? "nhsuk-select--error" : "";
+                        }
+                        <validate-input model="@nameof(MBovisAnimalExposure)" property="@nameof(MBovisAnimalExposure.CountryId)" inline-template>
+                            <nhs-form-group
+                                id="@($"{nameof(MBovisAnimalExposure)}-{nameof(MBovisAnimalExposure.CountryId)}")"
+                                nhs-form-group-type="@countryGroupState"
+                                aria-describedby="country-error">
+                                <label nhs-label-type="Standard" asp-for="MBovisAnimalExposure.CountryId">
+                                    Country
+                                </label>
+                                <span
+                                    id="country-error"
+                                    nhs-span-type="ErrorMessage"
+                                    ref="errorField"
+                                    asp-validation-for="MBovisAnimalExposure.CountryId"
+                                    has-error="@hasCountryError">
+                                </span>
+                                <div ref="selectField" class="@countrySelectErrorClass">
+                                    <autocomplete-select v-on:input-changed="validate" placeholder="Please select" emit-change-on="blur" inline-template>
+                                        <select asp-for="MBovisAnimalExposure.CountryId" asp-items="Model.Countries" ref="selectField">
+                                            <option value=""></option>
+                                        </select>
+                                    </autocomplete-select>
+                                </div>
+                            </nhs-form-group>
+                        </validate-input>
+                    </nhs-grid-column>
+                </nhs-grid-row>
+                
+                <nhs-grid-row>
+                    <nhs-grid-column grid-column-width="OneHalf">
+                        @{
+                            var hasAnimalTypeError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.AnimalType)}");
+                            var animalTypeGroupState = hasAnimalTypeError ? Error : Standard;
+                        }
+                        <validate-input model="@nameof(MBovisAnimalExposure)" property="@nameof(MBovisAnimalExposure.AnimalType)" inline-template>
+                            <nhs-form-group
+                                id="@($"{nameof(MBovisAnimalExposure)}-{nameof(MBovisAnimalExposure.AnimalType)}")"
+                                nhs-form-group-type="@animalTypeGroupState"
+                                aria-describedby="animal-type-error">
+                                <label nhs-label-type="Standard" asp-for="MBovisAnimalExposure.AnimalType">
+                                    @Html.DisplayNameFor(m => m.MBovisAnimalExposure.AnimalType)
+                                </label>
+                                <span
+                                    id="animal-type-error"
+                                    nhs-span-type="ErrorMessage"
+                                    has-error="@hasAnimalTypeError"
+                                    asp-validation-for="MBovisAnimalExposure.AnimalType"
+                                    ref="errorField">
+                                </span>
+                                <select
+                                    nhs-select-type="@(hasAnimalTypeError ? SelectType.Error : SelectType.Standard)"
+                                    asp-for="MBovisAnimalExposure.AnimalType"
+                                    asp-items="Html.GetEnumSelectList<AnimalType>()"
+                                    ref="selectField"
+                                    v-on:change="validate">
+                                    <option value="">Please select</option>
+                                </select>
+                            </nhs-form-group>
+                        </validate-input>
+                    </nhs-grid-column>
+                
+                    <nhs-grid-column grid-column-width="OneHalf">
+                        @{
+                            var hasAnimalError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.Animal)}");
+                            var animalGroupState = hasAnimalError ? Error : Standard;
+                        }
+                        <validate-input model="@nameof(MBovisAnimalExposure)" property="@nameof(MBovisAnimalExposure.Animal)" inline-template>
+                            <nhs-form-group
+                                id="@($"{nameof(MBovisAnimalExposure)}-{nameof(MBovisAnimalExposure.Animal)}")"
+                                nhs-form-group-type="@animalGroupState"
+                                aria-describedby="animal-error">
+                                <label nhs-label-type="Standard" asp-for="MBovisAnimalExposure.Animal">
+                                    @Html.DisplayNameFor(m => m.MBovisAnimalExposure.Animal)
+                                </label>
+                                <span
+                                    id="animal-error"
+                                    nhs-span-type="ErrorMessage"
+                                    has-error="@hasAnimalError"
+                                    asp-validation-for="MBovisAnimalExposure.Animal"
+                                    ref="errorField">
+                                </span>
+                                <input
+                                    nhs-input-type="Standard"
+                                    ref="inputField"
+                                    asp-for="MBovisAnimalExposure.Animal"
+                                    v-on:blur="validate"
+                                    fixed-width="Ten"
+                                    is-error-input="@hasAnimalError">
+                            </nhs-form-group>
+                        </validate-input>
+                    </nhs-grid-column>
+                </nhs-grid-row>
+                
+                <nhs-grid-row>
+                    <nhs-grid-column grid-column-width="OneHalf">
+                        @{
+                            var hasAnimalTbStatusError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.AnimalTbStatus)}");
+                            var animalTbStatusGroupState = hasAnimalTbStatusError ? Error : Standard;
+                        }
+                        <validate-input model="@nameof(MBovisAnimalExposure)" property="@nameof(MBovisAnimalExposure.AnimalTbStatus)" inline-template>
+                            <nhs-form-group
+                                id="@($"{nameof(MBovisAnimalExposure)}-{nameof(MBovisAnimalExposure.AnimalTbStatus)}")"
+                                nhs-form-group-type="@animalTbStatusGroupState"
+                                aria-describedby="animal-tb-status-error">
+                                <label nhs-label-type="Standard" asp-for="MBovisAnimalExposure.AnimalTbStatus">
+                                    @Html.DisplayNameFor(m => m.MBovisAnimalExposure.AnimalTbStatus)
+                                </label>
+                                <span
+                                    id="animal-tb-status-error"
+                                    nhs-span-type="ErrorMessage"
+                                    has-error="@hasAnimalTbStatusError"
+                                    asp-validation-for="MBovisAnimalExposure.AnimalTbStatus"
+                                    ref="errorField">
+                                </span>
+                                <select
+                                    nhs-select-type="@(hasAnimalTbStatusError ? SelectType.Error : SelectType.Standard)"
+                                    asp-for="MBovisAnimalExposure.AnimalTbStatus"
+                                    asp-items="Html.GetEnumSelectList<AnimalTbStatus>()"
+                                    ref="selectField"
+                                    v-on:change="validate">
+                                    <option value="">Please select</option>
+                                </select>
+                            </nhs-form-group>
+                        </validate-input>
+                    </nhs-grid-column>
+                
+                    <nhs-grid-column grid-column-width="OneHalf">
+                        @{
+                            var hasDurationError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.ExposureDuration)}");
+                            var durationGroupState = hasDurationError ? Error : Standard;
+                        }
+                        <validate-input model="@nameof(MBovisAnimalExposure)" property="@nameof(MBovisAnimalExposure.ExposureDuration)" inline-template>
+                            <nhs-form-group
+                                id="@($"{nameof(MBovisAnimalExposure)}-{nameof(MBovisAnimalExposure.ExposureDuration)}")"
+                                nhs-form-group-type="@durationGroupState"
+                                aria-describedby="duration-error">
+                                <label nhs-label-type="Standard" asp-for="MBovisAnimalExposure.ExposureDuration">
+                                    @Html.DisplayNameFor(m => m.MBovisAnimalExposure.ExposureDuration)
+                                </label>
+                                <span
+                                    id="duration-error"
+                                    nhs-span-type="ErrorMessage"
+                                    has-error="@hasDurationError"
+                                    asp-validation-for="MBovisAnimalExposure.ExposureDuration"
+                                    ref="errorField">
+                                </span>
+                                <input
+                                    nhs-input-type="Number"
+                                    ref="inputField"
+                                    asp-for="MBovisAnimalExposure.ExposureDuration"
+                                    v-on:blur="validate"
+                                    fixed-width="Two"
+                                    is-error-input="@hasDurationError">
+                            </nhs-form-group>
+                        </validate-input>
+                    </nhs-grid-column>
+                </nhs-grid-row>
+                
+                <nhs-grid-row>
+                    <nhs-grid-column grid-column-width="Full">
+                        @{
+                            var hasOtherDetailsError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.OtherDetails)}");
+                            var otherDetailsGroupState = hasOtherDetailsError ? Error : Standard;
+                            var otherDetailsTextAreaType = hasOtherDetailsError ? TextAreaType.Error : TextAreaType.Standard;
+                        }
+                        <validate-input model="@nameof(MBovisAnimalExposure)" property="@nameof(MBovisAnimalExposure.OtherDetails)" inline-template>
+                            <nhs-form-group
+                                id="@($"{nameof(MBovisAnimalExposure)}-{nameof(MBovisAnimalExposure.OtherDetails)}")"
+                                nhs-form-group-type="@otherDetailsGroupState"
+                                aria-describedby="other-details-error">
+                                <label nhs-label-type="Standard" asp-for="MBovisAnimalExposure.OtherDetails">
+                                    @Html.DisplayNameFor(m => m.MBovisAnimalExposure.OtherDetails)
+                                </label>
+                                <span
+                                    id="other-details-error"
+                                    nhs-span-type="ErrorMessage"
+                                    ref="errorField"
+                                    asp-validation-for="MBovisAnimalExposure.OtherDetails"
+                                    has-error="@hasOtherDetailsError">
+                                </span>
+                                <textarea
+                                      asp-for="MBovisAnimalExposure.OtherDetails"
+                                      v-on:change="validate"
+                                      ref="textareaField"
+                                      nhs-textarea-type="@otherDetailsTextAreaType"
+                                      rows="2"
+                                      classes="nhsuk-input--width-30"> </textarea>
+                            </nhs-form-group>
+                        </validate-input>
+                    </nhs-grid-column>
+                </nhs-grid-row>
+                
+                <button id="save-button" ref="submitButton" nhs-button-type="Standard" classes="ntbsuk-button--primary">
+                    Save
                 </button>
-            }
-        </form>
+                @if (Model.RowId != null)
+                {
+                    <button id="delete-button"
+                            asp-page-handler="Delete"
+                            nhs-button-type="Standard"
+                            classes="ntbsuk-button--secondary">
+                        Delete
+                    </button>
+                }
+            </form>
+        </single-submit-form>
     </nhs-width-container>
 </div>
 
