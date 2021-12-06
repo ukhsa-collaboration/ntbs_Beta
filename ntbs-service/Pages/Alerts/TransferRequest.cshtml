@@ -15,7 +15,7 @@
     <form method="post" autocomplete="off">
         <h2> You are about to transfer this notification </h2>
         <div>
-            <filtered-dropdown filter-handler-path="FilteredCaseManagersListByTbServiceCode" :filtering-refs="['caseManagers']" inline-template>
+            <filtered-dropdown filter-handler-path="FilteredCaseManagersListByTbServiceCode" :filtering-refs="['caseManagers']" :should-filter-on-load="true" inline-template>
                 <div>
                     @{
                         var hasTbServiceCodeError = !Model.ValidationService.IsValid("TransferRequest.TbServiceCode");
