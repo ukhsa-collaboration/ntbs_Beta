@@ -88,7 +88,7 @@ namespace ntbs_integration_tests.LabResultsPage
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-                var specimenDetailsSections = document.QuerySelectorAll(".nhsuk-care-card--specimen");
+                var specimenDetailsSections = document.QuerySelectorAll(".nhsuk-card--care--specimen");
                 Assert.Equal(expectedLabReferenceNumbers.Count, specimenDetailsSections.Length);
 
                 foreach (var expectedLabReferenceNumber in expectedLabReferenceNumbers)
@@ -118,7 +118,7 @@ namespace ntbs_integration_tests.LabResultsPage
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-                var specimenDetailsSections = document.QuerySelectorAll(".nhsuk-care-card--specimen");
+                var specimenDetailsSections = document.QuerySelectorAll(".nhsuk-card--care--specimen");
                 Assert.Equal(0, specimenDetailsSections.Length);
             }
         }
@@ -146,7 +146,7 @@ namespace ntbs_integration_tests.LabResultsPage
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-                var specimenDetailsSections = document.QuerySelectorAll(".nhsuk-care-card--specimen");
+                var specimenDetailsSections = document.QuerySelectorAll(".nhsuk-card--care--specimen");
                 Assert.Equal(expectedLabReferenceNumbers.Count, specimenDetailsSections.Length);
 
                 foreach (var expectedLabReferenceNumber in expectedLabReferenceNumbers)
@@ -183,7 +183,7 @@ namespace ntbs_integration_tests.LabResultsPage
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-                var specimenDetailsSections = document.QuerySelectorAll(".nhsuk-care-card--specimen");
+                var specimenDetailsSections = document.QuerySelectorAll(".nhsuk-card--care--specimen");
                 Assert.Equal(expectedLabReferenceNumbers.Count, specimenDetailsSections.Length);
 
                 foreach (var expectedLabReferenceNumber in expectedLabReferenceNumbers)

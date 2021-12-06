@@ -72,10 +72,10 @@
   margin-left: 15px;
 }
 
-.nhsuk-care-card--specimen {
+.nhsuk-card--care--specimen {
   @include care-card($specimen-card-border, $color_nhsuk-white, 4px);
 
-  .nhsuk-care-card__arrow {
+  .nhsuk-card--care__arrow {
     &:before,
     &:after {
       border-color: $specimen-card-border;

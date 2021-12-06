@@ -56,16 +56,16 @@ else
     <h2 class="govuk-visually-hidden">Unmatched specimens and potential matches</h2>
     @foreach (var specimen in Model.UnmatchedSpecimens)
     {
-        <div class="nhsuk-care-card nhsuk-care-card--specimen">
-            <div class="nhsuk-care-card__heading-container">
-                <h3 class="nhsuk-care-card__heading" id="@($"specimen-{specimen.ReferenceLaboratoryNumber}")">
+        <div class="nhsuk-card nhsuk-card--care nhsuk-card--care--non-urgent nhsuk-card--care--specimen">
+            <div class="nhsuk-card--care__heading-container">
+                <h3 class="nhsuk-card--care__heading" id="@($"specimen-{specimen.ReferenceLaboratoryNumber}")">
                     <span role="text">
                         Reference laboratory number @specimen.ReferenceLaboratoryNumber
                     </span>
                 </h3>
-                <span class="nhsuk-care-card__arrow" aria-hidden="true"></span>
+                <span class="nhsuk-card--care__arrow" aria-hidden="true"></span>
             </div>
-            <div class="nhsuk-care-card__content">
+            <div class="nhsuk-card__content">
             <form method="post" autocomplete="off">
                 <div>
                     <nhs-grid-row>

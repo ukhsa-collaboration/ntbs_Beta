@@ -74,12 +74,6 @@ namespace ntbs_service.Models.Entities
             ManualTestType != null
             && ManualTestType.ManualTestTypeSampleTypes.Any();
 
-        [NotMapped]
-        public string ResultDisplayString => Result.GetDisplayName() +
-                                             (Result == Enums.Result.NoResult && !string.IsNullOrEmpty(NoResultReason)
-                                                 ? $"\n - {NoResultReason}"
-                                                 : string.Empty);
-
         string IHasRootEntityForAuditing.RootEntityType => RootEntities.Notification;
         string IHasRootEntityForAuditing.RootId => NotificationId.ToString();
     }
