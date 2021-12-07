@@ -36,7 +36,7 @@ namespace ntbs_service.Services
 
             var allPhecs = await _referenceDataRepository.GetAllPhecs();
             var filteredPhecs = allPhecs
-                .Where(phec => searchKeywords.Any(s => phec.Name.ToLower().Contains(s)));
+                .Where(phec => searchKeywords.All(s => phec.Name.ToLower().Contains(s)));
 
             var caseManagersAndRegionalUsers = (await _userRepository.GetOrderedUsers())
                 .Where(u => u.IsActive && (u.CaseManagerTbServices.Any()
@@ -45,11 +45,12 @@ namespace ntbs_service.Services
             // This query is too complex to translate to sql, so we explicitly work on an in-memory list.
             // The size of the directory should make this ok.
             var filteredCaseManagersAndRegionalUsers = caseManagersAndRegionalUsers.Where(c =>
-                    searchKeywords.Any(s => c.FamilyName != null && c.FamilyName.ToLower().Contains(s))
-                    || searchKeywords.Any(s => c.GivenName != null && c.GivenName.ToLower().Contains(s))
-                    || searchKeywords.Any(s => c.DisplayName != null && c.DisplayName.ToLower().Contains(s))
+                    searchKeywords.All(s =>
+                        c.FamilyName != null && c.FamilyName.ToLower().Contains(s)
+                            || c.GivenName != null && c.GivenName.ToLower().Contains(s))
+                    || searchKeywords.All(s => c.DisplayName != null && c.DisplayName.ToLower().Contains(s))
                     || c.CaseManagerTbServices.Any(x =>
-                        searchKeywords.Any(s => x.TbService.Name.ToLower().Contains(s)))
+                        searchKeywords.All(s => x.TbService.Name.ToLower().Contains(s)))
                     || filteredPhecs.Any(phec => c.AdGroups != null && c.AdGroups.Split(",").Contains(phec.AdGroup)))
                 .ToList();
 
