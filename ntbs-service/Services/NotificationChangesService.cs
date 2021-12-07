@@ -104,11 +104,17 @@ namespace ntbs_service.Services
                 return group;
             }
 
-            // Social risks page contains sub-models, which create their own audit entries
+            // Social risks page contains sub-models if they are being set for the first time, which create their own audit entries
             var socialRisksUpdate = group.Find(log => log.EntityType == nameof(SocialRiskFactors));
             if (socialRisksUpdate != null)
             {
                 return new List<AuditLog> {socialRisksUpdate};
+            }
+
+            // Social risks page updates can create a group of only risk factor detail logs
+            if (group.All(log => log.EntityType == nameof(RiskFactorDetails)))
+            {
+                return new List<AuditLog> {group.First()};
             }
 
             // Travel and visitor details get saved together, but it actually makes sense to show them independently

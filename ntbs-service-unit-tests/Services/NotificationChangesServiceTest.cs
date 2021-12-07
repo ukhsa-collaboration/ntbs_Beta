@@ -207,6 +207,31 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
+        // This issue was seen on a live notification, the logs are taken from a replication of the issue on a test environment
+        public async Task AllSocialRiskFactorCases_GetTranslatedCorrectly()
+        {
+            // Arrange
+            var auditLogs = GetAuditLogs("auditLogsForNotification7");
+            _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(7))
+                .ReturnsAsync(auditLogs);
+
+            // Act
+            var changes = (await _changesService.GetChangesList(7)).ToList();
+
+            // Assert
+            Assert.Collection(PrintInOrder(changes),
+                c => Assert.Equal("07 Dec 2021, 16:33 John Johnson updated Social risk factors", c),
+                c => Assert.Equal("07 Dec 2021, 16:26 John Johnson updated Social risk factors", c),
+                c => Assert.Equal("07 Dec 2021, 16:26 John Johnson updated Social risk factors", c),
+                c => Assert.Equal("07 Dec 2021, 16:24 John Johnson updated Social risk factors", c),
+                c => Assert.Equal("07 Dec 2021, 16:23 John Johnson updated Social risk factors", c),
+                c => Assert.Equal("09 Nov 2021, 17:11 John Johnson submitted Notification", c),
+                c => Assert.Equal("09 Nov 2021, 17:10 John Johnson created Draft", c)
+            );
+            _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
         // These logs are a copy notification 5, but with varied audit user
         public async Task GetChangesCorrectlyMapsUserToUserId()
         {
