@@ -173,6 +173,7 @@ namespace ntbs_service.DataAccess
         {
             return await _context.User
                 .Where(u => u.IsCaseManager && u.IsActive)
+                .OrderBy(u => u.DisplayName)
                 .ToListAsync();
         }
 
