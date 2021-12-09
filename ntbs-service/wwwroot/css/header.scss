@@ -49,7 +49,17 @@
     }
 
     .nav-with-submenu-header-link {
+        padding-right: 3px;
         color: white;
+
+        &:hover:not(:focus) {
+            text-decoration: none;
+            box-shadow: 0 3px white;
+        }
+
+        &:focus {
+            color: black;
+        }
     }
 
     .nav-with-submenu-header {
@@ -94,6 +104,10 @@ body:not(.js-enabled) {
     border-width: 0 3px 3px 0;
     display: inline-block;
     padding: 3px;
+}
+
+.nav-with-submenu-header-link:focus .arrow {
+      border-color: black;
 }
 
 .down {

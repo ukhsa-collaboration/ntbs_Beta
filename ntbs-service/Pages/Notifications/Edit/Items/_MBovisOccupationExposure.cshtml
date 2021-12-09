@@ -45,7 +45,7 @@
                             </nhs-form-group>
                         </validate-input>
                     </nhs-grid-column>
-                        
+
                     <nhs-grid-column grid-column-width="OneHalf">
                         @{
                             var hasCountryError = !Model.IsValid($"{nameof(Model.MBovisOccupationExposure)}.{nameof(Model.MBovisOccupationExposure.CountryId)}");
@@ -111,7 +111,7 @@
                             </nhs-form-group>
                         </validate-input>
                     </nhs-grid-column>
-                        
+
                     <nhs-grid-column grid-column-width="OneHalf">
                         @{
                             var hasDurationError = !Model.IsValid($"{nameof(Model.MBovisOccupationExposure)}.{nameof(Model.MBovisOccupationExposure.OccupationDuration)}");
@@ -197,7 +197,7 @@
 @if (Model.Notification.MBovisDetails.MBovisOccupationExposures.Count > 0)
 {
     <nhs-width-container container-width="Standard">
-        <h2> Exposure to known cases </h2>
+        <h2> Occupation exposures </h2>
         <partial name="Shared/_MBovisOccupationExposureTable" for="Notification.MBovisDetails.MBovisOccupationExposures"/>
     </nhs-width-container>
 }
