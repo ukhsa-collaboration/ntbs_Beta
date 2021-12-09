@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
@@ -6,6 +7,7 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
+    [Display(Name = "Social risk factors")]
     public class RiskFactorDetails : IOwnedEntityForAuditing
     {
         public RiskFactorDetails() { }
