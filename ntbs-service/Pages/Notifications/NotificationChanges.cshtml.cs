@@ -47,6 +47,7 @@ namespace ntbs_service.Pages.Notifications
             Changes = (await _notificationChangesService.GetChangesList(NotificationId))
                 .OrderByDescending(change => change.Date);
 
+            PrepareBreadcrumbs();
             return Page();
         }
     }

@@ -110,7 +110,7 @@
                             </nhs-form-group>
                         </validate-input>
                     </nhs-grid-column>
-                    
+
                     <nhs-grid-column grid-column-width="OneHalf">
                         @{
                             var hasFrequencyError = !Model.IsValid($"{nameof(Model.MBovisUnpasteurisedMilkConsumption)}.{nameof(Model.MBovisUnpasteurisedMilkConsumption.ConsumptionFrequency)}");
@@ -198,13 +198,13 @@
 @if (Model.Notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions.Count > 0)
 {
     <nhs-width-container container-width="Standard">
-        <h2> Exposure to known cases </h2>
+        <h2> Unpasteurised milk consumptions </h2>
         <partial name="Shared/_MBovisUnpasteurisedMilkConsumptionTable" for="Notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions"/>
     </nhs-width-container>
 }
 
 <nhs-width-container container-width="Standard">
     <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions)">
-        Back to M. bovis exposure to known cases
+        Back to M. bovis unpasteurised milk consumptions
     </a>
 </nhs-width-container>

@@ -106,7 +106,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
             await _mBovisUnpasteurisedMilkConsumptionRepository.DeleteAsync(mBovisUnpasteurisedMilkConsumption);
 
-            return RedirectToPage("/Notifications/Edit/MBovisExposureToKnownCases", new { NotificationId });
+            return RedirectToPage("/Notifications/Edit/MBovisUnpasteurisedMilkConsumptions", new { NotificationId });
         }
 
         public ContentResult OnPostValidateMBovisUnpasteurisedMilkConsumptionProperty([FromBody]InputValidationModel validationData)
