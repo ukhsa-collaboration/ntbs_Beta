@@ -52,7 +52,9 @@ namespace ntbs_service.Services
             var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code).ToList();
             if (alert is TransferAlert transferAlert)
             {
-                return userTbServiceCodes.Contains(transferAlert.TbServiceCode);
+                var userPhecCodes = (await _userService.GetPhecCodesAsync(user)).ToList();
+                return userTbServiceCodes.Contains(transferAlert.TbServiceCode)
+                       || userPhecCodes.Contains(transferAlert.TbService.PHECCode);
             }
 
             if (alert.NotificationId != null)
