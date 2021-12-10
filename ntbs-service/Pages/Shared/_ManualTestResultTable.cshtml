@@ -45,11 +45,11 @@
                     <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.TestDate)">
                         @result.TestDate?.ConvertToString()
                     </nhs-table-item>
-                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.ManualTestTypeId)">
-                        @result.ManualTestType.Description
-                    </nhs-table-item>
                     <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.SampleTypeId)">
                         @result?.SampleType?.Description
+                    </nhs-table-item>
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.ManualTestTypeId)">
+                        @result.ManualTestType.Description
                     </nhs-table-item>
                     <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.Result)">
                         @result.Result.GetDisplayName()
