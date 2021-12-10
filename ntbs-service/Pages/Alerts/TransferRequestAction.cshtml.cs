@@ -108,6 +108,7 @@ namespace ntbs_service.Pages.Alerts
             if (AcceptTransfer == true)
             {
                 await AcceptTransferAndDismissAlertAsync();
+                await AuthorizeAndSetBannerAsync();
                 return Partial("_AcceptedTransferConfirmation", this);
             }
 
