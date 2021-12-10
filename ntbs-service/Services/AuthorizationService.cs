@@ -50,18 +50,15 @@ namespace ntbs_service.Services
             }
 
             var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code).ToList();
-            var userPhecCodes = (await _userService.GetPhecCodesAsync(user)).ToList();
             if (alert is TransferAlert transferAlert)
             {
-                return userTbServiceCodes.Contains(transferAlert.TbServiceCode)
-                       || userPhecCodes.Contains(transferAlert.TbService.PHECCode);
+                return userTbServiceCodes.Contains(transferAlert.TbServiceCode);
             }
 
             if (alert.NotificationId != null)
             {
-                var notification = await _notificationRepository.GetNotificationAsync((int)alert.NotificationId);
-                return userTbServiceCodes.Contains(notification.HospitalDetails.TBServiceCode)
-                    || userPhecCodes.Contains(notification.HospitalDetails.TBService.PHECCode);
+                return userTbServiceCodes.Contains(
+                    (await _notificationRepository.GetNotificationAsync((int)alert.NotificationId)).HospitalDetails.TBServiceCode);
             }
 
             return false;
