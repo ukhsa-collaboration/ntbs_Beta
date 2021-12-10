@@ -220,8 +220,7 @@ namespace ntbs_service.Services
             alerts = alerts.Where(a => userTbServiceCodes.Contains(a.TbServiceCode)).ToList();
             if (userType == UserType.PheUser)
             {
-                alerts = alerts.Where(a => a.AlertType != AlertType.TransferRequest &&
-                                           a.AlertType != AlertType.TransferRejected).ToList();
+                alerts = alerts.Where(a => a.AlertType != AlertType.TransferRejected).ToList();
             }
             return alerts.ToList();
         }
