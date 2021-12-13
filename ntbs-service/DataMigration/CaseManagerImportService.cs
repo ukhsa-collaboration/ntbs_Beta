@@ -42,7 +42,12 @@ namespace ntbs_service.DataMigration
             var legacyCaseManager = await _migrationRepository.GetLegacyUserByUsername(legacyCaseManagerUsername);
             var existingCaseManager = await _userRepository.GetUserByUsername(legacyCaseManagerUsername);
             var ntbsCaseManager = existingCaseManager ??
-                                  new User {IsActive = false, Username = legacyCaseManager.Username, CaseManagerTbServices = new List<CaseManagerTbService>()};
+                                  new User {
+                                      IsActive = false,
+                                      IsCaseManager = false,
+                                      Username = legacyCaseManager.Username,
+                                      CaseManagerTbServices = new List<CaseManagerTbService>()
+                                  };
 
             if (!ntbsCaseManager.IsActive)
             {
@@ -50,38 +55,14 @@ namespace ntbs_service.DataMigration
                 ntbsCaseManager.FamilyName = legacyCaseManager.FamilyName;
                 ntbsCaseManager.DisplayName = $"{legacyCaseManager.GivenName} {legacyCaseManager.FamilyName}";
             }
-            ntbsCaseManager.IsCaseManager = true;
-
-            await AddTbServiceToUserBasedOnLegacyPermissions(ntbsCaseManager, legacyTbServiceCode);
+            else
+            {
+                ntbsCaseManager.IsCaseManager = true;
+            }
 
             await _userRepository.AddOrUpdateUser(ntbsCaseManager, ntbsCaseManager.CaseManagerTbServices.Select(cmtb => cmtb.TbService));
 
             _logger.LogInformation(context, runId, "Added/Updated the case manager assigned to the notification.");
-        }
-
-        private async Task AddTbServiceToUserBasedOnLegacyPermissions(User ntbsCaseManager, string legacyTbServiceCode)
-        {
-            var existingCaseManagerTbServices = await _referenceDataRepository.GetCaseManagerTbServicesByUsernameAsync
-                (ntbsCaseManager.Username);
-            if (!ntbsCaseManager.IsActive &&
-                existingCaseManagerTbServices.All(cmtb => cmtb.TbServiceCode != legacyTbServiceCode))
-            {
-                var legacyUserHospitals = (await _migrationRepository.GetLegacyUserHospitalsByUsername(ntbsCaseManager.Username))
-                    .Where(h => h.HospitalId != null).Select(h => h.HospitalId).OfType<Guid>();
-                var legacyUserTbServices =
-                    await _referenceDataRepository.GetTbServicesFromHospitalIdsAsync(legacyUserHospitals);
-                var legacyMatchingTbService = legacyUserTbServices.SingleOrDefault(tb => tb.Code == legacyTbServiceCode);
-                if (legacyMatchingTbService != null)
-                {
-                    ntbsCaseManager.CaseManagerTbServices.Add(new CaseManagerTbService
-                    {
-                        TbService = legacyMatchingTbService,
-                        // We need the TB service code as well as the TB Service at this point, because it is
-                        // used in subsequent code before the object is saved and re-fetched from the context.
-                        TbServiceCode = legacyMatchingTbService.Code
-                    });
-                }
-            }
         }
     }
 }

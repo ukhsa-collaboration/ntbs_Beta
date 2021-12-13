@@ -132,27 +132,16 @@
                 </nhs-form-group>
             </validate-input>
 
-            <validate-input model="HospitalDetails" property="CaseManagerId" shouldvalidatefull="@fullValidation"
-                            ref="caseManagers" inline-template>
-                @{
-                    var hasCaseManagerError = !Model.IsValid("HospitalDetails.CaseManagerId");
-                    var caseManagerGroupState = hasCaseManagerError ? Error : Standard;
-                    var caseManagerSelectErrorState = hasCaseManagerError ? SelectType.Error : SelectType.Standard;
-                }
-                <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="HospitalDetails-CaseManagerId">
-                    <label nhs-label-type="Standard" asp-for="HospitalDetails.CaseManagerId">
-                        Case manager
-                    </label>
-                    <span nhs-span-type="ErrorMessage" id="case-manager-error" has-error="@hasCaseManagerError"
-                          ref="errorField" asp-validation-for="HospitalDetails.CaseManagerId"></span>
-                    <select ref="selectField" nhs-select-type="@caseManagerSelectErrorState" asp-for="HospitalDetails.CaseManagerId"
-                            asp-items="Model.CaseManagers" v-on:change="validate">
-                        <option value="" selected>Please select</option>
-                    </select>
-                </nhs-form-group>
-            </validate-input>
+            <nhs-form-group nhs-form-group-type="Standard" id="HospitalDetails-CaseManagerId" ref="caseManagers">
+                <label nhs-label-type="Standard" asp-for="HospitalDetails.CaseManagerId">
+                    Case manager
+                </label>
+                <select ref="selectField" nhs-select-type="Standard" asp-for="HospitalDetails.CaseManagerId"
+                        asp-items="Model.CaseManagers">
+                    <option value="" selected>Please select</option>
+                </select>
+            </nhs-form-group>
             <br />
-
         </nhs-fieldset>
     </filtered-dropdown>
 

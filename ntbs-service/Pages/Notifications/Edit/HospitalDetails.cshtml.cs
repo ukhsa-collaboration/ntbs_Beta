@@ -133,6 +133,10 @@ namespace ntbs_service.Pages.Notifications.Edit
                 nameof(Notification),
                 Notification.NotificationDate,
                 nameof(Notification.NotificationDate));
+            if (Notification.HospitalDetails.CaseManagerId == HospitalDetails.CaseManagerId)
+            {
+                ModelState.Remove("HospitalDetails.CaseManagerId");
+            }
             if (ModelState.IsValid)
             {
                 await Service.UpdateHospitalDetailsAsync(Notification, HospitalDetails);
