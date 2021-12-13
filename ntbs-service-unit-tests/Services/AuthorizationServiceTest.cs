@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
-using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
@@ -19,7 +18,6 @@ namespace ntbs_service_unit_tests.Services
     {
         private readonly IAuthorizationService _authorizationService;
         private readonly Mock<IUserService> _mockUserService;
-        private UserPermissionsFilter _userPermissionsFilter;
         private readonly Mock<IUserHelper> _mockUserHelper;
         private readonly Mock<INotificationRepository> _mockNotificationRepository;
 
@@ -178,7 +176,7 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
-        public async Task FilterAlertsForUser_OnlyFiltersOutTransferRejectedForPheUser()
+        public async Task FilterAlertsForUser_DoesNotFilterAnyAlertsForPheUser()
         {
             // Arrange
             var testUser = new ClaimsPrincipal(new ClaimsIdentity("TestDev"));
@@ -198,28 +196,28 @@ namespace ntbs_service_unit_tests.Services
                     NotificationId = 2,
                     AlertType = AlertType.Test,
                     TbServiceCode = tbService.Code
-                }
-            };
-            var testAlerts = new List<AlertWithTbServiceForDisplay>
-            {
+                },
                 new AlertWithTbServiceForDisplay()
                 {
-                    AlertId = 2, NotificationId = 3, AlertType = AlertType.TransferRejected, TbServiceCode = tbService.Code
+                    AlertId = 2,
+                    NotificationId = 3,
+                    AlertType = AlertType.TransferRejected,
+                    TbServiceCode = tbService.Code
                 }
             };
-            testAlerts = testAlerts.Concat(alertsToExpect).ToList();
             _mockUserService.Setup(us => us.GetTbServicesAsync(It.IsAny<ClaimsPrincipal>()))
                 .Returns(Task.FromResult((new List<TBService> {tbService}).AsEnumerable()));
             _mockUserService.Setup(us => us.GetUserType(It.IsAny<ClaimsPrincipal>()))
                 .Returns(UserType.PheUser);
 
             // Act
-            var result = await _authorizationService.FilterAlertsForUserAsync(testUser, testAlerts);
+            var result = await _authorizationService.FilterAlertsForUserAsync(testUser, alertsToExpect);
 
             // Assert
             Assert.Equal(alertsToExpect.Count, result.Count);
             Assert.Contains(alertsToExpect[0], result);
             Assert.Contains(alertsToExpect[1], result);
+            Assert.Contains(alertsToExpect[2], result);
         }
     }
 }

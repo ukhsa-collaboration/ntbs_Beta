@@ -213,12 +213,7 @@ namespace ntbs_service.Services
         public async Task<IList<AlertWithTbServiceForDisplay>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<AlertWithTbServiceForDisplay> alerts)
         {
             var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code).ToList();
-            var userType = _userService.GetUserType(user);
             alerts = alerts.Where(a => userTbServiceCodes.Contains(a.TbServiceCode)).ToList();
-            if (userType == UserType.PheUser)
-            {
-                alerts = alerts.Where(a => a.AlertType != AlertType.TransferRejected).ToList();
-            }
             return alerts.ToList();
         }
 
