@@ -25,10 +25,10 @@
                 @Html.DisplayNameFor(_ => header.TestDate)
             </nhs-table-item>
             <nhs-table-item>
-                @Html.DisplayNameFor(_ => header.ManualTestTypeId)
+                @Html.DisplayNameFor(_ => header.SampleTypeId)
             </nhs-table-item>
             <nhs-table-item>
-                @Html.DisplayNameFor(_ => header.SampleTypeId)
+                @Html.DisplayNameFor(_ => header.ManualTestTypeId)
             </nhs-table-item>
             <nhs-table-item>
                 @Html.DisplayNameFor(_ => header.Result)
@@ -45,11 +45,11 @@
                     <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.TestDate)">
                         @result.TestDate?.ConvertToString()
                     </nhs-table-item>
-                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.ManualTestTypeId)">
-                        @result.ManualTestType.Description
-                    </nhs-table-item>
                     <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.SampleTypeId)">
                         @result?.SampleType?.Description
+                    </nhs-table-item>
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.ManualTestTypeId)">
+                        @result.ManualTestType.Description
                     </nhs-table-item>
                     <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.Result)">
                         @result.Result.GetDisplayName()
