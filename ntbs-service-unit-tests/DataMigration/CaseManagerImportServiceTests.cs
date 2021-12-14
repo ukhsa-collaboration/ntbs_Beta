@@ -11,7 +11,6 @@ using ntbs_service.DataMigration.RawModels;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Properties;
-using ntbs_service.Services;
 using ntbs_service_unit_tests.TestHelpers;
 using Xunit;
 
@@ -55,7 +54,7 @@ namespace ntbs_service_unit_tests.DataMigration
         }
 
         [Fact]
-        public async Task WhenCaseManagerForLegacyNotificationWithCorrectPermissionsDoesNotExistInNtbs_AddsCaseManagerWithTbServices()
+        public async Task WhenCaseManagerForLegacyNotificationDoesNotExistInNtbs_AddsInactiveUserWhoIsNotACaseManager()
         {
             // Arrange
             GivenLegacyUserWithName(CASE_MANAGER_USERNAME_1, "John", "Johnston");
@@ -70,28 +69,8 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal("John", addedUser.GivenName);
             Assert.Equal("Johnston", addedUser.FamilyName);
             Assert.False(addedUser.IsActive);
-            Assert.True(addedUser.IsCaseManager);
-            Assert.Contains("TBS00TEST", addedUser.CaseManagerTbServices.Select(cmtb => cmtb.TbServiceCode));
-        }
-
-        [Fact]
-        public async Task WhenCaseManagerForLegacyNotificationWithIncorrectPermissionsDoesNotExistInNtbs_AddsCaseManagerWithNoTbServices()
-        {
-            // Arrange
-            GivenLegacyUserWithName(CASE_MANAGER_USERNAME_1, "John", "Johnston");
-            await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS11FAKE", HOSPITAL_GUID_1);
-
-            // Act
-            await _caseManagerImportService.ImportOrUpdateLegacyUser(CASE_MANAGER_USERNAME_1, "TBS00TEST", null, BATCH_ID);
-
-            // Assert
-            var addedUser = _context.User.SingleOrDefault();
-            Assert.NotNull(addedUser);
-            Assert.Equal("John", addedUser.GivenName);
-            Assert.Equal("Johnston", addedUser.FamilyName);
-            Assert.False(addedUser.IsActive);
-            Assert.True(addedUser.IsCaseManager);
-            Assert.DoesNotContain("TBS00TEST", addedUser.CaseManagerTbServices.Select(cmtb => cmtb.TbServiceCode));
+            Assert.False(addedUser.IsCaseManager);
+            Assert.Empty(addedUser.CaseManagerTbServices);
         }
 
         [Fact]

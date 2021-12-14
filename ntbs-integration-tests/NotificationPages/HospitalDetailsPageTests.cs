@@ -78,6 +78,17 @@ namespace ntbs_integration_tests.NotificationPages
                         HospitalId = Guid.Parse(Utilities.HOSPITAL_DUNSTON_HILL_HOSPITAL_GATESHEAD_ID),
                         CaseManagerId = Utilities.CASEMANAGER_GATESHEAD_ID1,
                     }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.NOTIFIED_WITH_ACTIVE_CASEMANAGER_NOT_IN_TB_SERVICE,
+                    NotificationStatus = NotificationStatus.Notified,
+                    HospitalDetails = new HospitalDetails
+                    {
+                        TBServiceCode = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                        HospitalId = Guid.Parse(Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID),
+                        CaseManagerId = Utilities.CASEMANAGER_GATESHEAD_ID2,
+                    }
                 }
             };
         }
@@ -386,21 +397,55 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task PostDraft_CaseManagerDoesNotMatchTbService_ReturnsValidationError()
+        public async Task PostNotified_CaseManagerAlreadyOnNotificationDoesNotMatchTbService_IsValid()
         {
             // Arrange
-            var url = GetCurrentPathForId(Utilities.DRAFT_ID);
-            var initialDocument = await GetDocumentForUrlAsync(url);
+            const int id = Utilities.NOTIFIED_WITH_ACTIVE_CASEMANAGER_NOT_IN_TB_SERVICE;
+            var url = GetCurrentPathForId(id);
+            var document = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
-                ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
-                ["HospitalDetails.TBServiceCode"] = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID,
-                ["HospitalDetails.CaseManagerId"] = Utilities.CASEMANAGER_ABINGDON_ID.ToString()
+                ["NotificationId"] = id.ToString(),
+                ["HospitalDetails.HospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                ["HospitalDetails.TBServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                ["HospitalDetails.Consultant"] = "Consultant",
+                ["HospitalDetails.CaseManagerId"] = Utilities.CASEMANAGER_GATESHEAD_ID2.ToString(),
+                ["FormattedNotificationDate.Day"] = "1",
+                ["FormattedNotificationDate.Month"] = "1",
+                ["FormattedNotificationDate.Year"] = "2012",
             };
 
             // Act
-            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
+            var result = await Client.SendPostFormWithData(document, formData, url);
+
+            // Assert
+            var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
+            result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
+        }
+
+        [Fact]
+        public async Task PostNotified_CaseManagerChangesAndDoesNotMatchTbService_IsNotValid()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_WITH_ACTIVE_CASEMANAGER_NOT_IN_TB_SERVICE;
+            var url = GetCurrentPathForId(id);
+            var document = await GetDocumentForUrlAsync(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = id.ToString(),
+                ["HospitalDetails.HospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                ["HospitalDetails.TBServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                ["HospitalDetails.Consultant"] = "Consultant",
+                ["HospitalDetails.CaseManagerId"] = Utilities.CASEMANAGER_GATESHEAD_ID1.ToString(),
+                ["FormattedNotificationDate.Day"] = "1",
+                ["FormattedNotificationDate.Month"] = "1",
+                ["FormattedNotificationDate.Year"] = "2012",
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(document, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
