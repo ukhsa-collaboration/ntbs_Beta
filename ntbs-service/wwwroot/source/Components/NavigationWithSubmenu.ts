@@ -14,7 +14,7 @@ const NavigationWithSubmenu = Vue.extend({
         {
             let inputElement = (<HTMLInputElement>event.target);
             let headerLink = this.$el.getElementsByClassName('nav-with-submenu-header-link')[0];
-            if (inputElement != headerLink) {
+            if (inputElement != headerLink && !headerLink.contains(inputElement)) {
                 this.showMenu = false;
             }
         },

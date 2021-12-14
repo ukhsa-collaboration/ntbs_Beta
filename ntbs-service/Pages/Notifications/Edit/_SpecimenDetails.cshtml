@@ -8,17 +8,17 @@
     <div id="specimens-details">
         @foreach (var specimen in Model)
         {
-            <div class="nhsuk-care-card nhsuk-care-card--specimen">
-                <div class="nhsuk-care-card__heading-container">
-                    <h5 class="nhsuk-care-card__heading">
+            <div class="nhsuk-card nhsuk-card--care nhsuk-card--care--non-urgent nhsuk-card--care--specimen">
+                <div class="nhsuk-card--care__heading-container">
+                    <h5 class="nhsuk-card--care__heading">
                         <span role="text">
                             Specimen #@specimen.ReferenceLaboratoryNumber
                         </span>
                     </h5>
-                    <span class="nhsuk-care-card__arrow" aria-hidden="true"></span>
+                    <span class="nhsuk-card--care__arrow" aria-hidden="true"></span>
                 </div>
 
-                <div class="nhsuk-care-card__content">
+                <div class="nhsuk-card__content">
                     <div>
                         <nhs-grid-row>
                             <nhs-grid-column grid-column-width="OneQuarter" id="@specimen.ReferenceLaboratoryNumber-date">

@@ -13,7 +13,15 @@ Additionally, before you use the Gatling recorder, you must:
 
 ## Running the tests
 
-In order to the run tests, simply run the `bash gradlew gatlingRun-NtbsLoadTest` from Git Bash in the [gradle](gradle) directory.
+Before you can run tests, you first need to acquire authentication cookies. One way to do this is:
+
+- In a browser, visit the site that you want to run the load tests against and sign-in.
+  - It's a good idea to use a national team user for this, so that they have access to all of the records in the environment.
+- Open your browser's dev tools, and load any page on the site.
+- In the network tab, find the request you just made, and copy the value of the "cookie" header on the request.
+- Go to [Config.scala](gradle/src/gatling/scala/Config.scala) and paste the value as the default for the  `COOKIE_HEADER` environment variable (i.e. in place of `<insert cookie here>`).
+ 
+Then to run the tests, simply run the command `bash gradlew gatlingRun-NtbsLoadTest --rerun-tasks` from Git Bash in the [gradle](gradle) directory.
 
 ## Using the Gatling recorder
 

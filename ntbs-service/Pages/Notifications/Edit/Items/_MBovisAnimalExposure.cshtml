@@ -7,9 +7,9 @@
 
 <div class="table-row-form">
     <nhs-width-container container-width="Standard">
-    
+
         <partial name="Notifications/Edit/_SinglePageErrorSummaryPartial"/>
-        
+
         <h2> M. bovis - @(Model.RowId == null ? "Add new " : "Edit ") animal exposure </h2>
 
         <single-submit-form inline-template>
@@ -45,7 +45,7 @@
                             </nhs-form-group>
                         </validate-input>
                     </nhs-grid-column>
-                
+
                     <nhs-grid-column grid-column-width="OneHalf">
                         @{
                             var hasCountryError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.CountryId)}");
@@ -78,7 +78,7 @@
                         </validate-input>
                     </nhs-grid-column>
                 </nhs-grid-row>
-                
+
                 <nhs-grid-row>
                     <nhs-grid-column grid-column-width="OneHalf">
                         @{
@@ -111,7 +111,7 @@
                             </nhs-form-group>
                         </validate-input>
                     </nhs-grid-column>
-                
+
                     <nhs-grid-column grid-column-width="OneHalf">
                         @{
                             var hasAnimalError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.Animal)}");
@@ -143,7 +143,7 @@
                         </validate-input>
                     </nhs-grid-column>
                 </nhs-grid-row>
-                
+
                 <nhs-grid-row>
                     <nhs-grid-column grid-column-width="OneHalf">
                         @{
@@ -176,7 +176,7 @@
                             </nhs-form-group>
                         </validate-input>
                     </nhs-grid-column>
-                
+
                     <nhs-grid-column grid-column-width="OneHalf">
                         @{
                             var hasDurationError = !Model.IsValid($"{nameof(Model.MBovisAnimalExposure)}.{nameof(Model.MBovisAnimalExposure.ExposureDuration)}");
@@ -208,7 +208,7 @@
                         </validate-input>
                     </nhs-grid-column>
                 </nhs-grid-row>
-                
+
                 <nhs-grid-row>
                     <nhs-grid-column grid-column-width="Full">
                         @{
@@ -242,7 +242,7 @@
                         </validate-input>
                     </nhs-grid-column>
                 </nhs-grid-row>
-                
+
                 <button id="save-button" ref="submitButton" nhs-button-type="Standard" classes="ntbsuk-button--primary">
                     Save
                 </button>
@@ -263,13 +263,13 @@
 @if (Model.Notification.MBovisDetails.MBovisAnimalExposures.Count > 0)
 {
     <nhs-width-container container-width="Standard">
-        <h2> Exposure to known cases </h2>
+        <h2> Exposure to animals </h2>
         <partial name="Shared/_MBovisAnimalExposureTable" for="Notification.MBovisDetails.MBovisAnimalExposures"/>
     </nhs-width-container>
 }
 
 <nhs-width-container container-width="Standard">
     <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditMBovisAnimalExposures)">
-        Back to M. bovis occupation exposures
+        Back to M. bovis animal exposures
     </a>
 </nhs-width-container>

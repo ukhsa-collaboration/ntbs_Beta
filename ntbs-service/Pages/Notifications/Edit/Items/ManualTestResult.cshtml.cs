@@ -160,7 +160,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         private void RemoveNoResultDescriptionIfOtherResult()
         {
-            if (TestResultForEdit.Result != Result.NoResult)
+            if (TestResultForEdit.Result != Result.NoResultAvailable)
             {
                 TestResultForEdit.NoResultReason = null;
             }
