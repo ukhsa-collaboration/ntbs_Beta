@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -212,6 +212,13 @@ namespace ntbs_service.Services
             if (group.Count == 1 && group.Single().EventType == AuditEventType.REJECT_POTENTIAL)
             {
                 return new List<AuditLog>();
+            }
+
+            // Multiple specimens may be matched to a notification at the same time by the specimen
+            // matching database. We want a change to appear for each of them on the changes page.
+            if (group.All(log => log.EventType == AuditEventType.MATCH_EVENT))
+            {
+                return group;
             }
 
             // We want this check at the end, since some of the group checks above may have a single member but still
