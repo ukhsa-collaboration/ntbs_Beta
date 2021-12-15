@@ -454,6 +454,35 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
+        public async Task PostNotified_AddCaseManagerThatDoesNotMatchTbService_IsNotValid()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_WITH_TBSERVICE;
+            var url = GetCurrentPathForId(id);
+            var document = await GetDocumentForUrlAsync(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = id.ToString(),
+                ["HospitalDetails.CaseManagerId"] = Utilities.CASEMANAGER_ABINGDON_ID.ToString(),
+                ["HospitalDetails.HospitalId"] = Utilities.HOSPITAL_SOUTH_TYNESIDE_DISTRICT_HOSPITAL_ID,
+                ["HospitalDetails.TBServiceCode"] = Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID,
+                ["HospitalDetails.Consultant"] = "Consultant",
+                ["FormattedNotificationDate.Day"] = "1",
+                ["FormattedNotificationDate.Month"] = "1",
+                ["FormattedNotificationDate.Year"] = "2012",
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(document, formData, url);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+            result.EnsureSuccessStatusCode();
+            resultDocument.AssertErrorSummaryMessage("HospitalDetails-CaseManagerId", "case-manager", "Case Manager must be allowed for selected TB Service");
+        }
+
+        [Fact]
         public async Task PostNotified_TBServiceHasChanged_ReturnsValidationError()
         {
             // Arrange

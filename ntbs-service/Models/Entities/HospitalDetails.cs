@@ -19,7 +19,7 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Consultant")]
         public string Consultant { get; set; }
 
-        [AssertThat("ExistingCaseManagerId == null || CaseManagerId == ExistingCaseManagerId || CaseManagerAllowedForTbService", ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
+        [AssertThat("CaseManagerId == ExistingCaseManagerId || CaseManagerAllowedForTbService", ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
         [Display(Name = "Case Manager")]
         public int? CaseManagerId { get; set; }
         public virtual User CaseManager { get; set; }
