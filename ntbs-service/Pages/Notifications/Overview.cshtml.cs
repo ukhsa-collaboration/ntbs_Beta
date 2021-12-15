@@ -80,7 +80,7 @@ namespace ntbs_service.Pages.Notifications
 
         private IEnumerable<TreatmentEvent> FilterEventsForPostMortem()
         {
-            return (Notification.ClinicalDetails.IsPostMortem ?? false) && Notification.HasCorrectEventsForPostMortemCase
+            return Notification.IsPostMortemAndHasCorrectEvents
                 ? Notification.TreatmentEvents.Where(te => te.TreatmentEventTypeIsOutcome && te.TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.Died)
                 : Notification.TreatmentEvents;
         }

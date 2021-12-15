@@ -67,7 +67,7 @@ namespace ntbs_service.Models
             NotificationStatusString = notification.NotificationStatus.GetDisplayName();
             NotificationDate = notification.FormattedNotificationDate;
             DrugResistance = notification.DrugResistanceProfile.DrugResistanceProfileString;
-            TreatmentOutcome = CalculateOutcome(notification.TreatmentEvents, (notification.ClinicalDetails.IsPostMortem ?? false) && notification.HasCorrectEventsForPostMortemCase);
+            TreatmentOutcome = CalculateOutcome(notification.TreatmentEvents, notification.IsPostMortemAndHasCorrectEvents);
             PreviousTbServiceCodes = notification.PreviousTbServices.Select(service => service.TbServiceCode);
             PreviousPhecCodes = notification.PreviousTbServices.Select(service => service.PhecCode);
             LinkedNotificationPhecCodes =

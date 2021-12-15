@@ -128,11 +128,11 @@ namespace ntbs_service.Models.Entities
                                        || NotificationStatus == NotificationStatus.Legacy;
 
         [AssertThat(
-            @"ShouldValidateFull && (ClinicalDetails.IsPostMortem != true || HasCorrectEventsForPostMortemCase)",
+            @"ShouldValidateFull && (ClinicalDetails.IsPostMortem != true || IsPostMortemAndHasCorrectEvents)",
             ErrorMessage = ValidationMessages.IsPostMortemButTreatmentEventsDoNotMatch)]
-        public bool HasCorrectEventsForPostMortemCase =>
-            TreatmentEvents != null &&
-            (TreatmentEvents.Any(x => x.TreatmentEventTypeIsOutcome && x.TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.Died) &&
+        public bool IsPostMortemAndHasCorrectEvents =>
+            (ClinicalDetails?.IsPostMortem ?? false) && TreatmentEvents != null &&
+            (TreatmentEvents.Any(x => x.TreatmentEventTypeIsOutcome && x.TreatmentOutcome?.TreatmentOutcomeType == TreatmentOutcomeType.Died) &&
              (TreatmentEvents.Count == 1 || (HasCorrectDiagnosisMadeEvent)));
 
         private bool HasCorrectDiagnosisMadeEvent =>

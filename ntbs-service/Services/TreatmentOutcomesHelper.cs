@@ -87,7 +87,7 @@ namespace ntbs_service.Services
             Notification notification,
             int numberOfYears)
         {
-            if ((notification.ClinicalDetails.IsPostMortem ?? false) && notification.HasCorrectEventsForPostMortemCase)
+            if (notification.IsPostMortemAndHasCorrectEvents && numberOfYears == 1)
             {
                 return notification.TreatmentEvents?.Where(te => te.TreatmentEventTypeIsOutcome);
             }

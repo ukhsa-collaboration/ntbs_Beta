@@ -98,6 +98,31 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
+        public async Task PostDraft_ReturnsModelError_IfPostMortemAndStartedTreatmentBothSelected()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.DRAFT_ID);
+            var initialDocument = await GetDocumentForUrlAsync(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
+                ["NotificationSiteMap[PULMONARY]"] = "true",
+                ["ClinicalDetails.StartedTreatment"] = "true",
+                ["ClinicalDetails.IsPostMortem"] = "true"
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+
+            result.EnsureSuccessStatusCode();
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-IsPostMortem", null, "Unable to save value of ‘Diagnosis after death’ field due to conflicting information on the record: Started treatment is set to true");
+        }
+
+        [Fact]
         public async Task PostDraft_ReturnsPageWithTabError_IfNotesContainTabs()
         {
             // Arrange
