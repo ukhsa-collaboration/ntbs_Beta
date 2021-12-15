@@ -134,10 +134,6 @@ namespace ntbs_service.Pages.Notifications.Edit
                 nameof(Notification),
                 Notification.NotificationDate,
                 nameof(Notification.NotificationDate));
-            if (Notification.HospitalDetails.CaseManagerId == HospitalDetails.CaseManagerId)
-            {
-                ModelState.Remove("HospitalDetails.CaseManagerId");
-            }
             if (ModelState.IsValid)
             {
                 await Service.UpdateHospitalDetailsAsync(Notification, HospitalDetails);
@@ -164,6 +160,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private async Task SetValuesForValidation()
         {
+            HospitalDetails.ExistingCaseManagerId = Notification.HospitalDetails.CaseManagerId;
             HospitalDetails.SetValidationContext(Notification);
             ValidationService.TrySetFormattedDate(Notification, "Notification", nameof(Notification.NotificationDate), FormattedNotificationDate);
             /*

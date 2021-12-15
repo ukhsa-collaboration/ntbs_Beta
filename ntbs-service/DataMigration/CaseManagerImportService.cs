@@ -55,10 +55,7 @@ namespace ntbs_service.DataMigration
                 ntbsCaseManager.FamilyName = legacyCaseManager.FamilyName;
                 ntbsCaseManager.DisplayName = $"{legacyCaseManager.GivenName} {legacyCaseManager.FamilyName}";
             }
-            else
-            {
-                ntbsCaseManager.IsCaseManager = true;
-            }
+            ntbsCaseManager.IsCaseManager = true;
 
             await _userRepository.AddOrUpdateUser(ntbsCaseManager, ntbsCaseManager.CaseManagerTbServices.Select(cmtb => cmtb.TbService));
 

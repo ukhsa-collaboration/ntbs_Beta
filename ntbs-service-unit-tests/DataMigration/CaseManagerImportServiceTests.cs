@@ -54,7 +54,7 @@ namespace ntbs_service_unit_tests.DataMigration
         }
 
         [Fact]
-        public async Task WhenCaseManagerForLegacyNotificationDoesNotExistInNtbs_AddsInactiveUserWhoIsNotACaseManager()
+        public async Task WhenCaseManagerForLegacyNotificationDoesNotExistInNtbs_AddsInactiveUserWhoIsACaseManager()
         {
             // Arrange
             GivenLegacyUserWithName(CASE_MANAGER_USERNAME_1, "John", "Johnston");
@@ -69,7 +69,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal("John", addedUser.GivenName);
             Assert.Equal("Johnston", addedUser.FamilyName);
             Assert.False(addedUser.IsActive);
-            Assert.False(addedUser.IsCaseManager);
+            Assert.True(addedUser.IsCaseManager);
             Assert.Empty(addedUser.CaseManagerTbServices);
         }
 

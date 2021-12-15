@@ -132,7 +132,7 @@
                 </nhs-form-group>
             </validate-input>
 
-            <govuk-warning-text id="case-manager-warning" ref="case-manager-warning" is-hidden="@(!Model.HasNonActiveCaseManager)">
+            <govuk-warning-text id="case-manager-warning" is-hidden="@(!Model.HasNonActiveCaseManager)">
                 <strong>The case manager assigned to the notification is not active, or is no longer a member of this TB service.</strong>
             </govuk-warning-text>
             @{
