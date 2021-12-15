@@ -127,10 +127,19 @@ namespace ntbs_service.Models.Entities
                                        || NotificationStatus == NotificationStatus.Closed
                                        || NotificationStatus == NotificationStatus.Legacy;
 
-        [AssertThat(@"ShouldValidateFull && HasDeathEventForPostMortemCase", ErrorMessage = ValidationMessages.DeathEventRequiredForPostMortemCase)]
-        public bool HasDeathEventForPostMortemCase =>
-            ClinicalDetails.IsPostMortem != true || (TreatmentEvents != null && TreatmentEvents.Any(x =>
-                x.TreatmentEventTypeIsOutcome && x.TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.Died));
+        [AssertThat(
+            @"ShouldValidateFull && (ClinicalDetails.IsPostMortem != true || HasCorrectEventsForPostMortemCase)",
+            ErrorMessage = ValidationMessages.IsPostMortemButTreatmentEventsDoNotMatch)]
+        public bool HasCorrectEventsForPostMortemCase =>
+            TreatmentEvents != null &&
+            (TreatmentEvents.Any(x => x.TreatmentEventTypeIsOutcome && x.TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.Died) &&
+             (TreatmentEvents.Count == 1 || (HasCorrectDiagnosisMadeEvent)));
+
+        private bool HasCorrectDiagnosisMadeEvent =>
+            TreatmentEvents.Count == 2 &&
+            TreatmentEvents.Any(x => x.TreatmentEventType == TreatmentEventType.DiagnosisMade) &&
+            TreatmentEvents.Single(x => x.TreatmentEventType == TreatmentEventType.DiagnosisMade).EventDate
+            >= TreatmentEvents.Single(x => x.TreatmentEventTypeIsOutcome).EventDate;
 
         public bool ShouldBeClosed()
         {

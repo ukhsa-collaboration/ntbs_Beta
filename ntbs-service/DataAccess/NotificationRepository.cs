@@ -320,6 +320,7 @@ namespace ntbs_service.DataAccess
                         NotificationStatus = n.NotificationStatus,
                         DrugResistance = n.DrugResistanceProfile.DrugResistanceProfileString,
                         TreatmentEvents = n.TreatmentEvents,
+                        IsPostMortemWithCorrectEvents = (n.ClinicalDetails.IsPostMortem ?? false) && n.HasCorrectEventsForPostMortemCase
                     })
                 .AsNoTracking()
                 .ToListAsync());

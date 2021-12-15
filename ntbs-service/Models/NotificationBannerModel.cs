@@ -67,7 +67,7 @@ namespace ntbs_service.Models
             NotificationStatusString = notification.NotificationStatus.GetDisplayName();
             NotificationDate = notification.FormattedNotificationDate;
             DrugResistance = notification.DrugResistanceProfile.DrugResistanceProfileString;
-            TreatmentOutcome = CalculateOutcome(notification.TreatmentEvents);
+            TreatmentOutcome = CalculateOutcome(notification.TreatmentEvents, (notification.ClinicalDetails.IsPostMortem ?? false) && notification.HasCorrectEventsForPostMortemCase);
             PreviousTbServiceCodes = notification.PreviousTbServices.Select(service => service.TbServiceCode);
             PreviousPhecCodes = notification.PreviousTbServices.Select(service => service.PhecCode);
             LinkedNotificationPhecCodes =
@@ -102,7 +102,7 @@ namespace ntbs_service.Models
             NotificationStatusString = notification.NotificationStatus.GetDisplayName();
             NotificationDate = notification.NotificationDate.ConvertToString();
             DrugResistance = notification.DrugResistance;
-            TreatmentOutcome = CalculateOutcome(notification.TreatmentEvents);
+            TreatmentOutcome = CalculateOutcome(notification.TreatmentEvents, notification.IsPostMortemWithCorrectEvents);
             PreviousTbServiceCodes = notification.PreviousTbServiceCodes;
             PreviousPhecCodes = notification.PreviousPhecCodes;
             LinkedNotificationTbServiceCodes = notification.LinkedNotificationTbServiceCodes;
@@ -113,9 +113,11 @@ namespace ntbs_service.Models
             RedirectPath = RouteHelper.GetNotificationPath(notification.NotificationId, NotificationSubPaths.Overview);
         }
 
-        private static string CalculateOutcome(ICollection<TreatmentEvent> treatmentEvents)
+        private static string CalculateOutcome(ICollection<TreatmentEvent> treatmentEvents, bool isPostMortemWithCorrectEvents)
         {
-            return treatmentEvents.GetMostRecentTreatmentEvent()
+            return (isPostMortemWithCorrectEvents
+                    ? treatmentEvents.Single(te => te.TreatmentEventTypeIsOutcome)
+                    : treatmentEvents.GetMostRecentTreatmentEvent())
                        ?.TreatmentOutcome
                        ?.TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded";
         }
