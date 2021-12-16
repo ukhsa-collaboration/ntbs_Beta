@@ -70,19 +70,11 @@ namespace ntbs_service.Pages.Notifications
 
             CultureAndResistance = await _cultureAndResistanceService.GetCultureAndResistanceDetailsAsync(NotificationId);
 
-            var treatmentEvents = FilterEventsForPostMortem();
-            TreatmentPeriods = treatmentEvents.GroupEpisodesIntoPeriods();
+            TreatmentPeriods = Notification.TreatmentEvents.GroupEpisodesIntoPeriods(Notification.IsPostMortemAndHasCorrectEvents);
 
             AddDenotificationEventIfDenotified();
             CalculateTreatmentOutcomes();
             return Page();
-        }
-
-        private IEnumerable<TreatmentEvent> FilterEventsForPostMortem()
-        {
-            return Notification.IsPostMortemAndHasCorrectEvents
-                ? Notification.TreatmentEvents.Where(te => te.TreatmentEventTypeIsOutcome && te.TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.Died)
-                : Notification.TreatmentEvents;
         }
 
         private void CalculateTreatmentOutcomes()

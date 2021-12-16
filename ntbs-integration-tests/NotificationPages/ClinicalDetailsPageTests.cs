@@ -119,7 +119,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-IsPostMortem", null, "Unable to save value of ‘Diagnosis after death’ field due to conflicting information on the record: Started treatment is set to true");
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-IsPostMortem", null, ValidationMessages.IsPostMortemButStartedTreatment);
         }
 
         [Fact]

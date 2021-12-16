@@ -174,17 +174,9 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.AddModelError("ClinicalDetails.IsMDRTreatment", ValidationMessages.MDRCantChange);
             }
 
-            if ((ClinicalDetails.IsPostMortem ?? false))
+            if (ClinicalDetails.IsPostMortem == true && Notification.HasNonPostMortemEvents)
             {
-                if (ClinicalDetails.StartedTreatment ?? false)
-                {
-                    ModelState.AddModelError("ClinicalDetails.IsPostMortem", ValidationMessages.IsPostMortemButStartedTreatment);
-                }
-
-                if (HasNonPostMortemTreatmentEvents())
-                {
-                    ModelState.AddModelError("ClinicalDetails.IsPostMortem", ValidationMessages.IsPostMortemButTreatmentEventsDoNotMatch);
-                }
+                ModelState.AddModelError("ClinicalDetails.IsPostMortem", ValidationMessages.IsPostMortemButTreatmentEventsDoNotMatch);
             }
 
             if (ModelState.IsValid)
@@ -197,13 +189,6 @@ namespace ntbs_service.Pages.Notifications.Edit
                     await _enhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(Notification);
                 }
             }
-        }
-
-        private bool HasNonPostMortemTreatmentEvents()
-        {
-            return Notification.TreatmentEvents
-                .Any(te => te.TreatmentEventType != TreatmentEventType.DiagnosisMade
-                           && (!te.TreatmentEventTypeIsOutcome || te.TreatmentOutcome.TreatmentOutcomeType != TreatmentOutcomeType.Died));
         }
 
         private void SetDatesOnClinicalDetails()

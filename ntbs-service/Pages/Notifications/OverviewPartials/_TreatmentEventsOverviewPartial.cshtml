@@ -53,11 +53,11 @@
 
                 @if (period.TreatmentEvents.Last().IsEpisodeEndingTreatmentEvent())
                 {
-                    <span id="@sectionId-@period.PeriodNumber-dates">@period.TreatmentEvents.First().FormattedEventDate to @period.TreatmentEvents.Last().FormattedEventDate</span>
+                    <span id="@sectionId-@period.PeriodNumber-dates">@period.PeriodStartDate.ConvertToString() to @period.PeriodEndDate.ConvertToString()</span>
                 }
                 else
                 {
-                    <span id="@sectionId-@period.PeriodNumber-dates">@period.TreatmentEvents.First().FormattedEventDate to Present</span>
+                    <span id="@sectionId-@period.PeriodNumber-dates">@period.PeriodStartDate.ConvertToString() to Present</span>
                 }
             </div>
             <nhs-table classes="nhsuk-table--reduced-font" responsive>

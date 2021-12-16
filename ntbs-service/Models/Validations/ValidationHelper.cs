@@ -58,9 +58,9 @@
         public const string MDRCantChange = "You cannot change the value of this field because an MDR Enhanced Surveillance Questionnaire exists. Please contact NTBS@phe.gov.uk";
         public const string MDRDuration = "Please enter a whole number of months, or a range, for example, 12, 12-18 or 24+";
         public const string IsPostMortemButStartedTreatment =
-            "Unable to save value of ‘Diagnosis after death’ field due to conflicting information on the record: Started treatment is set to true";
+            "Unable to save value of 'Diagnosis after death' field due to conflicting information on the record: The patient has started treatment";
         public const string IsPostMortemButTreatmentEventsDoNotMatch =
-            "Unable to save value of ‘Diagnosis after death’ field due to conflicting information on the record: Treatment events indicate otherwise";
+            "Unable to save value of 'Diagnosis after death' field due to conflicting information on the record: When diagnosis occurs after death the only allowed treatment events are the diagnosis and the outcome";
 
         #endregion
 

@@ -54,6 +54,7 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Has the patient started treatment?")]
         public bool? StartedTreatment { get; set; }
 
+        [AssertThat(@"IsPostMortem != true || StartedTreatment != true", ErrorMessage = ValidationMessages.IsPostMortemButStartedTreatment)]
         [Display(Name = "Was the TB diagnosis made at after death?")]
         public bool? IsPostMortem { get; set; }
 
