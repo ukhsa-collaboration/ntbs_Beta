@@ -9,6 +9,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Setup .NET 6.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+
       - name: Set build number
         id: ntbs_build_step
         run: echo '::set-output name=NTBS_BUILD::${{ format('build-{0}-{1}', github.run_number, github.sha) }}'
