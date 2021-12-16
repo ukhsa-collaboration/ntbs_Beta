@@ -72,6 +72,10 @@ namespace EFAuditer
                         JsonSerializer.Serialize(entry.ColumnValues, Audit.Core.Configuration.JsonSettings);
                     break;
                 case "Update":
+                    if (Boolean.Parse(GetCustomKey(ev, CustomFields.IncludeTypeInUpdate) ?? "false") && entry.ColumnValues.ContainsKey("Type"))
+                    {
+                        entry.Changes.Insert(0, new EventEntryChange{ColumnName = "Type", OriginalValue = entry.ColumnValues["Type"]});
+                    }
                     audit.AuditData =
                         JsonSerializer.Serialize(entry.Changes, Audit.Core.Configuration.JsonSettings);
                     break;

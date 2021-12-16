@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
@@ -242,6 +243,7 @@ namespace ntbs_service.Services
             _context.SetValues(notification.SocialRiskFactors.RiskFactorImprisonment, socialRiskFactors.RiskFactorImprisonment);
             _context.SetValues(notification.SocialRiskFactors.RiskFactorSmoking, socialRiskFactors.RiskFactorSmoking);
 
+            _context.AddAuditCustomField(CustomFields.IncludeTypeInUpdate, true);
             await _notificationRepository.SaveChangesAsync();
             await _alertService.AutoDismissAlertAsync<DataQualityDotVotAlert>(notification);
         }
