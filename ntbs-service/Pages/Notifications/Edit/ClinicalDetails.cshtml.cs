@@ -174,7 +174,9 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.AddModelError("ClinicalDetails.IsMDRTreatment", ValidationMessages.MDRCantChange);
             }
 
-            if (ClinicalDetails.IsPostMortem == true && Notification.ClinicalDetails.IsPostMortem != true)
+            if (Notification.NotificationStatus == NotificationStatus.Notified
+                && ClinicalDetails.IsPostMortem == true
+                && Notification.ClinicalDetails.IsPostMortem != true)
             {
                 if (Notification.HasNonPostMortemEvents)
                 {
