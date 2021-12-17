@@ -174,9 +174,17 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.AddModelError("ClinicalDetails.IsMDRTreatment", ValidationMessages.MDRCantChange);
             }
 
-            if (ClinicalDetails.IsPostMortem == true && Notification.HasNonPostMortemEvents)
+            if (ClinicalDetails.IsPostMortem == true && Notification.ClinicalDetails.IsPostMortem != true)
             {
-                ModelState.AddModelError("ClinicalDetails.IsPostMortem", ValidationMessages.IsPostMortemButTreatmentEventsDoNotMatch);
+                if (Notification.HasNonPostMortemEvents)
+                {
+                    ModelState.AddModelError("ClinicalDetails.IsPostMortem", ValidationMessages.IsPostMortemButTreatmentEventsDoNotMatch);
+                }
+
+                if (ClinicalDetails.StartedTreatment == true)
+                {
+                     ModelState.AddModelError("ClinicalDetails.IsPostMortem", ValidationMessages.IsPostMortemButStartedTreatment);
+                }
             }
 
             if (ModelState.IsValid)
