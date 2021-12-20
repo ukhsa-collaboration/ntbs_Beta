@@ -20,15 +20,15 @@ namespace ntbs_service.Helpers
             TreatmentOutcomeType.TreatmentStopped
         };
 
-        public static List<TreatmentPeriod> GroupEpisodesIntoPeriods(this IEnumerable<TreatmentEvent> treatmentEvents, bool isPostMortem = false)
+        public static List<TreatmentPeriod> GroupEpisodesIntoPeriods(this IEnumerable<TreatmentEvent> treatmentEvents, bool isPostMortemWithCorrectEvents = false)
         {
             var treatmentPeriods = new List<TreatmentPeriod>();
             var periodNumber = 1;
 
-            if (isPostMortem)
+            if (isPostMortemWithCorrectEvents)
             {
-                var onlyPeriod = TreatmentPeriod.CreatePeriodFromEvents(periodNumber, treatmentEvents.OrderForEpisodes());
-                onlyPeriod.PeriodStartDate = onlyPeriod.PeriodEndDate = treatmentEvents.Single(te => te.TreatmentEventIsDeathEvent).EventDate;
+                var deathDate = treatmentEvents.Single(te => te.TreatmentEventIsDeathEvent).EventDate;
+                var onlyPeriod = TreatmentPeriod.CreatePeriodFromEvents(1, treatmentEvents.OrderForEpisodes(), deathDate);
                 return new List<TreatmentPeriod> { onlyPeriod };
             }
 
@@ -51,16 +51,13 @@ namespace ntbs_service.Helpers
                         periodNumber++;
                     }
 
-                    currentTreatmentPeriod.PeriodStartDate = treatmentEvent.EventDate;
-
                     treatmentPeriods.Add(currentTreatmentPeriod);
                 }
                 // Otherwise append this event to the existing period
                 else
                 {
-                    currentTreatmentPeriod.TreatmentEvents.Add(treatmentEvent);
+                    currentTreatmentPeriod.AddTreatmentEvent(treatmentEvent);
                 }
-                currentTreatmentPeriod.PeriodEndDate = treatmentEvent.EventDate;
 
                 if (treatmentEvent.IsEpisodeEndingTreatmentEvent())
                 {

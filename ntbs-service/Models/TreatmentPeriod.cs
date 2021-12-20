@@ -12,14 +12,16 @@ namespace ntbs_service.Models
         public int? PeriodNumber { get; }
         public bool IsTransfer { get; }
         public List<TreatmentEvent> TreatmentEvents { get; }
-        public DateTime? PeriodStartDate { get; set; }
+        public DateTime? PeriodStartDate { get; }
         public DateTime? PeriodEndDate { get; set; }
 
-        private TreatmentPeriod(int? periodNumber, bool isTransfer, IEnumerable<TreatmentEvent> treatmentEvents)
+        private TreatmentPeriod(int? periodNumber, bool isTransfer, List<TreatmentEvent> treatmentEvents, DateTime? endDate = null)
         {
             PeriodNumber = periodNumber;
             IsTransfer = isTransfer;
-            TreatmentEvents = treatmentEvents.ToList();
+            TreatmentEvents = treatmentEvents;
+            PeriodStartDate = treatmentEvents.First().EventDate;
+            PeriodEndDate = endDate ?? treatmentEvents.Last().EventDate;
         }
 
         public static TreatmentPeriod CreateTreatmentPeriod(int? periodNumber, TreatmentEvent treatmentEvent)
@@ -32,9 +34,15 @@ namespace ntbs_service.Models
             return new TreatmentPeriod(null, true, new List<TreatmentEvent> { treatmentEvent });
         }
 
-        public static TreatmentPeriod CreatePeriodFromEvents(int? periodNumber, IEnumerable<TreatmentEvent> treatmentEvents)
+        public static TreatmentPeriod CreatePeriodFromEvents(int? periodNumber, IEnumerable<TreatmentEvent> treatmentEvents, DateTime? endDate = null)
         {
-            return new TreatmentPeriod(periodNumber, true, treatmentEvents);
+            return new TreatmentPeriod(periodNumber, false, treatmentEvents.ToList(), endDate);
+        }
+
+        public void AddTreatmentEvent(TreatmentEvent treatmentEvent)
+        {
+            TreatmentEvents.Add(treatmentEvent);
+            PeriodEndDate = treatmentEvent.EventDate;
         }
     }
 }

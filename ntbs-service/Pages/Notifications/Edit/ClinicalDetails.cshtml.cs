@@ -174,20 +174,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.AddModelError("ClinicalDetails.IsMDRTreatment", ValidationMessages.MDRCantChange);
             }
 
-            if (Notification.NotificationStatus == NotificationStatus.Notified
-                && ClinicalDetails.IsPostMortem == true
-                && Notification.ClinicalDetails.IsPostMortem != true)
-            {
-                if (Notification.HasNonPostMortemEvents)
-                {
-                    ModelState.AddModelError("ClinicalDetails.IsPostMortem", ValidationMessages.IsPostMortemButTreatmentEventsDoNotMatch);
-                }
-
-                if (ClinicalDetails.StartedTreatment == true)
-                {
-                     ModelState.AddModelError("ClinicalDetails.IsPostMortem", ValidationMessages.IsPostMortemButStartedTreatment);
-                }
-            }
+            AddPostMortemErrorsIfApplicable();
 
             if (ModelState.IsValid)
             {
@@ -197,6 +184,25 @@ namespace ntbs_service.Pages.Notifications.Edit
                 if (mdrChanged)
                 {
                     await _enhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(Notification);
+                }
+            }
+        }
+
+        private void AddPostMortemErrorsIfApplicable()
+        {
+            // Only validate post mortem if a notified case is changing to post mortem, or draft is post mortem
+            if (ClinicalDetails.IsPostMortem == true
+                && (Notification.NotificationStatus == NotificationStatus.Notified && Notification.ClinicalDetails.IsPostMortem != true)
+                || Notification.NotificationStatus == NotificationStatus.Draft)
+            {
+                if (Notification.HasNonPostMortemEvents)
+                {
+                    ModelState.AddModelError("ClinicalDetails.IsPostMortem", ValidationMessages.IsPostMortemButTreatmentEventsDoNotMatch);
+                }
+
+                if (ClinicalDetails.StartedTreatment == true)
+                {
+                    ModelState.AddModelError("ClinicalDetails.IsPostMortem", ValidationMessages.IsPostMortemButStartedTreatment);
                 }
             }
         }

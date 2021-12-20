@@ -24,7 +24,8 @@ namespace ntbs_service_unit_tests.Helpers
             {
                 EventDate = new DateTime(2011, 6, 1),
                 TreatmentEventType = TreatmentEventType.TreatmentOutcome,
-                TreatmentOutcome = new TreatmentOutcome {TreatmentOutcomeType = TreatmentOutcomeType.TreatmentStopped}
+                TreatmentOutcome =
+                    new TreatmentOutcome {TreatmentOutcomeType = TreatmentOutcomeType.TreatmentStopped}
             },
             // Transfer
             new TreatmentEvent
@@ -74,25 +75,23 @@ namespace ntbs_service_unit_tests.Helpers
 
             // Assert
             Assert.Equal(5, periods.Count);
-            var expectedPeriod0 = TreatmentPeriod.CreateTreatmentPeriod(1, _testTreatmentEvents[0]);
-            expectedPeriod0.PeriodStartDate = _testTreatmentEvents[0].EventDate;
-            expectedPeriod0.TreatmentEvents.Add(_testTreatmentEvents[1]);
-            expectedPeriod0.PeriodEndDate = _testTreatmentEvents[1].EventDate;
+            var expectedPeriod0 = TreatmentPeriod.CreatePeriodFromEvents(1,
+                new List<TreatmentEvent> {_testTreatmentEvents[0], _testTreatmentEvents[1]},
+                _testTreatmentEvents[1].EventDate);
 
             var expectedPeriod1 = TreatmentPeriod.CreateTransferPeriod(_testTreatmentEvents[2]);
-            expectedPeriod1.PeriodStartDate = expectedPeriod1.PeriodEndDate = _testTreatmentEvents[2].EventDate;
+            expectedPeriod1.PeriodEndDate = _testTreatmentEvents[2].EventDate;
+            
             var expectedPeriod2 = TreatmentPeriod.CreateTreatmentPeriod(2, _testTreatmentEvents[3]);
-            expectedPeriod2.PeriodStartDate = expectedPeriod2.PeriodEndDate = _testTreatmentEvents[3].EventDate;
+            expectedPeriod2.PeriodEndDate = _testTreatmentEvents[3].EventDate;
 
-            var expectedPeriod3 = TreatmentPeriod.CreateTreatmentPeriod(3, _testTreatmentEvents[5]);
-            expectedPeriod3.PeriodStartDate = _testTreatmentEvents[5].EventDate;
-            expectedPeriod3.TreatmentEvents.Add(_testTreatmentEvents[4]);
-            expectedPeriod3.PeriodEndDate = _testTreatmentEvents[4].EventDate;
+            var expectedPeriod3 = TreatmentPeriod.CreatePeriodFromEvents(3,
+                new List<TreatmentEvent> {_testTreatmentEvents[5], _testTreatmentEvents[4] },
+                _testTreatmentEvents[4].EventDate);
 
-            var expectedPeriod4 = TreatmentPeriod.CreateTreatmentPeriod(4, _testTreatmentEvents[6]);
-            expectedPeriod4.PeriodStartDate = _testTreatmentEvents[6].EventDate;
-            expectedPeriod4.TreatmentEvents.AddRange(new[] { _testTreatmentEvents[8], _testTreatmentEvents[7] });
-            expectedPeriod4.PeriodEndDate = _testTreatmentEvents[7].EventDate;
+            var expectedPeriod4 = TreatmentPeriod.CreatePeriodFromEvents(4,
+                new List<TreatmentEvent> { _testTreatmentEvents[6], _testTreatmentEvents[8], _testTreatmentEvents[7]},
+                _testTreatmentEvents[7].EventDate);
 
             AssertTreatmentPeriodMatchesExpected(expectedPeriod0, periods[0]);
             AssertTreatmentPeriodMatchesExpected(expectedPeriod1, periods[1]);
@@ -116,7 +115,8 @@ namespace ntbs_service_unit_tests.Helpers
                 {
                     EventDate = new DateTime(2011, 1, 1),
                     TreatmentEventType = TreatmentEventType.TreatmentOutcome,
-                    TreatmentOutcome = new TreatmentOutcome {TreatmentOutcomeType = TreatmentOutcomeType.TreatmentStopped}
+                    TreatmentOutcome =
+                        new TreatmentOutcome {TreatmentOutcomeType = TreatmentOutcomeType.TreatmentStopped}
                 },
                 // Transfer
                 new TreatmentEvent
@@ -134,14 +134,12 @@ namespace ntbs_service_unit_tests.Helpers
                 },
                 new TreatmentEvent
                 {
-                    EventDate = new DateTime(2015, 1, 1),
-                    TreatmentEventType = TreatmentEventType.TransferOut
+                    EventDate = new DateTime(2015, 1, 1), TreatmentEventType = TreatmentEventType.TransferOut
                 },
                 // Episode 3
                 new TreatmentEvent
                 {
-                    EventDate = new DateTime(2016, 1, 1),
-                    TreatmentEventType = TreatmentEventType.TransferIn
+                    EventDate = new DateTime(2016, 1, 1), TreatmentEventType = TreatmentEventType.TransferIn
                 },
                 new TreatmentEvent
                 {
@@ -156,23 +154,20 @@ namespace ntbs_service_unit_tests.Helpers
 
             // Assert
             Assert.Equal(4, periods.Count);
-            var expectedPeriod0 = TreatmentPeriod.CreateTreatmentPeriod(1, testTransferEvents[0]);
-            expectedPeriod0.PeriodStartDate = testTransferEvents[0].EventDate;
-            expectedPeriod0.TreatmentEvents.Add(testTransferEvents[1]);
-            expectedPeriod0.PeriodEndDate = testTransferEvents[1].EventDate;
+            var expectedPeriod0 = TreatmentPeriod.CreatePeriodFromEvents(1,
+                new List<TreatmentEvent> { testTransferEvents[0], testTransferEvents[1] }, 
+                testTransferEvents[1].EventDate);
 
             var expectedPeriod1 = TreatmentPeriod.CreateTransferPeriod(testTransferEvents[2]);
-            expectedPeriod1.PeriodStartDate = expectedPeriod1.PeriodEndDate = testTransferEvents[2].EventDate;
+            expectedPeriod1.PeriodEndDate = testTransferEvents[2].EventDate;
 
-            var expectedPeriod2 = TreatmentPeriod.CreateTreatmentPeriod(2, testTransferEvents[3]);
-            expectedPeriod2.PeriodStartDate = testTransferEvents[3].EventDate;
-            expectedPeriod2.TreatmentEvents.AddRange(new[] { testTransferEvents[4], testTransferEvents[5] });
-            expectedPeriod2.PeriodEndDate = testTransferEvents[5].EventDate;
+            var expectedPeriod2 = TreatmentPeriod.CreatePeriodFromEvents(2,
+                new List<TreatmentEvent> { testTransferEvents[3], testTransferEvents[4], testTransferEvents[5] }, 
+                testTransferEvents[5].EventDate);
 
-            var expectedPeriod3 = TreatmentPeriod.CreateTreatmentPeriod(3, testTransferEvents[6]);
-            expectedPeriod3.PeriodStartDate = testTransferEvents[6].EventDate;
-            expectedPeriod3.TreatmentEvents.Add(testTransferEvents[7]);
-            expectedPeriod3.PeriodEndDate = testTransferEvents[7].EventDate;
+            var expectedPeriod3 = TreatmentPeriod.CreatePeriodFromEvents(3,
+                new List<TreatmentEvent> { testTransferEvents[6], testTransferEvents[7] },
+                testTransferEvents[7].EventDate);
 
             AssertTreatmentPeriodMatchesExpected(expectedPeriod0, periods[0]);
             AssertTreatmentPeriodMatchesExpected(expectedPeriod1, periods[1]);
@@ -250,24 +245,24 @@ namespace ntbs_service_unit_tests.Helpers
         {
             // Arrange
             var dateOfDeath = new DateTime(1999, 12, 12);
-            var treatmentEvents = new List<TreatmentEvent> {
-                new TreatmentEvent {
+            var treatmentEvents = new List<TreatmentEvent>
+            {
+                new TreatmentEvent
+                {
                     TreatmentEventType = TreatmentEventType.TreatmentOutcome,
-                    TreatmentOutcome = new TreatmentOutcome { TreatmentOutcomeType = TreatmentOutcomeType.Died },
+                    TreatmentOutcome = new TreatmentOutcome {TreatmentOutcomeType = TreatmentOutcomeType.Died},
                     EventDate = dateOfDeath
                 },
-                new TreatmentEvent {
-                    TreatmentEventType = TreatmentEventType.DiagnosisMade,
-                    EventDate = dateOfDeath.AddDays(15)
+                new TreatmentEvent
+                {
+                    TreatmentEventType = TreatmentEventType.DiagnosisMade, EventDate = dateOfDeath.AddDays(15)
                 }
             };
-            var expectedPeriod = TreatmentPeriod.CreatePeriodFromEvents(1, treatmentEvents);
-            expectedPeriod.PeriodStartDate = dateOfDeath;
-            expectedPeriod.PeriodEndDate = dateOfDeath;
-            
+            var expectedPeriod = TreatmentPeriod.CreatePeriodFromEvents(1, treatmentEvents, dateOfDeath);
+
             // Act
-            var periods = treatmentEvents.GroupEpisodesIntoPeriods(isPostMortem: true);
-            
+            var periods = treatmentEvents.GroupEpisodesIntoPeriods(isPostMortemWithCorrectEvents: true);
+
             // Assert
             Assert.Single(periods);
             AssertTreatmentPeriodMatchesExpected(expectedPeriod, periods.Single());

@@ -126,8 +126,8 @@ namespace ntbs_service.Models.Entities
                                        || NotificationStatus == NotificationStatus.Closed
                                        || NotificationStatus == NotificationStatus.Legacy;
 
-        [AssertThat(@"ShouldValidateFull && HasDeathEventForPostMortemCase", ErrorMessage = ValidationMessages.DeathEventRequiredForPostMortemCase)]
-        public bool HasDeathEventForPostMortemCase =>
+        [AssertThat(@"ShouldValidateFull && HasDeathEventIfPostMortemCase", ErrorMessage = ValidationMessages.DeathEventRequiredForPostMortemCase)]
+        public bool HasDeathEventIfPostMortemCase =>
             ClinicalDetails.IsPostMortem != true
             || (TreatmentEvents != null && TreatmentEvents.Any(x => x.TreatmentEventIsDeathEvent));
 
