@@ -51,7 +51,7 @@
                     @(period.IsTransfer ? "Transfer" :  $"Treatment period {period.PeriodNumber}")
                 </h4>
 
-                @if (period.TreatmentEvents.Last().IsEpisodeEndingTreatmentEvent())
+                @if (period.TreatmentEvents.Last().IsEpisodeEndingTreatmentEvent() || Model.Notification.IsPostMortemAndHasCorrectEvents)
                 {
                     <span id="@sectionId-@period.PeriodNumber-dates">@period.PeriodStartDate.ConvertToString() to @period.PeriodEndDate.ConvertToString()</span>
                 }
