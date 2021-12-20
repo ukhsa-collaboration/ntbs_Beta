@@ -192,12 +192,10 @@ namespace ntbs_service.Services
                 return group;
             }
 
-            // Standalone transfers, created when backfilling NTBS-2693
-            // These are just two treatment events (transfer out and in), no transfer alerts
+            // Standalone transfer changes which occur during manual scripts
+            // These have just two treatment events (transfer out and in), no transfer alerts
             if(group.Count == 2
                && group.All(log => log.EntityType == nameof(TreatmentEvent))
-               && group.All(log => log.EventType == "Insert")
-               && group.All(log => log.AuditDetails == "SystemEdited")
                && group.Any(log => log.AuditData.Contains("TransferIn"))
                && group.Any(log => log.AuditData.Contains("TransferOut")))
             {
