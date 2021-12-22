@@ -98,6 +98,31 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
+        public async Task PostDraft_ReturnsModelError_IfPostMortemAndStartedTreatmentBothSelected()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.DRAFT_ID);
+            var initialDocument = await GetDocumentForUrlAsync(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
+                ["NotificationSiteMap[PULMONARY]"] = "true",
+                ["ClinicalDetails.StartedTreatment"] = "true",
+                ["ClinicalDetails.IsPostMortem"] = "true"
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+
+            result.EnsureSuccessStatusCode();
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-IsPostMortem", null, ValidationMessages.IsPostMortemButStartedTreatment);
+        }
+
+        [Fact]
         public async Task PostDraft_ReturnsPageWithTabError_IfNotesContainTabs()
         {
             // Arrange

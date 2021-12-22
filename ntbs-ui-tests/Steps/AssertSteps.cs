@@ -364,7 +364,7 @@ namespace ntbs_ui_tests.Steps
                     "Symptom onset to treatment start", "Presentation to any health service date",
                     "Symptom onset to health service presentation", "Healthcare setting", "Presentation to TB service date",
                     "Health service to TB service presentation", "Diagnosis date", "TB service presentation to diagnosis",
-                    "Treatment start date", "Diagnosis to treatment start", "Postmortem diagnosis", "Home visit",
+                    "Treatment start date", "Diagnosis to treatment start", "Diagnosis after death", "Home visit",
                     "HIV test offered", "DOT offered", "BCG vaccination", "Enhanced case management",
                     "Planned treatment regimen", "Health Protection Team reference number", "Notes"},
                 "ContactTracing" => new [] {"Number of contacts identified for screening",

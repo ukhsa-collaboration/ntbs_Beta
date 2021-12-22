@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MoreLinq.Extensions;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -19,10 +20,17 @@ namespace ntbs_service.Helpers
             TreatmentOutcomeType.TreatmentStopped
         };
 
-        public static List<TreatmentPeriod> GroupEpisodesIntoPeriods(this IEnumerable<TreatmentEvent> treatmentEvents)
+        public static List<TreatmentPeriod> GroupEpisodesIntoPeriods(this IEnumerable<TreatmentEvent> treatmentEvents, bool isPostMortemWithCorrectEvents = false)
         {
             var treatmentPeriods = new List<TreatmentPeriod>();
             var periodNumber = 1;
+
+            if (isPostMortemWithCorrectEvents)
+            {
+                var deathDate = treatmentEvents.Single(te => te.TreatmentEventIsDeathEvent).EventDate;
+                var onlyPeriod = TreatmentPeriod.CreatePeriodFromEvents(1, treatmentEvents.OrderForEpisodes(), deathDate);
+                return new List<TreatmentPeriod> { onlyPeriod };
+            }
 
             // The treatment period to append to; if it is null then a new period should be created
             TreatmentPeriod currentTreatmentPeriod = null;
@@ -48,7 +56,7 @@ namespace ntbs_service.Helpers
                 // Otherwise append this event to the existing period
                 else
                 {
-                    currentTreatmentPeriod.TreatmentEvents.Add(treatmentEvent);
+                    currentTreatmentPeriod.AddTreatmentEvent(treatmentEvent);
                 }
 
                 if (treatmentEvent.IsEpisodeEndingTreatmentEvent())
