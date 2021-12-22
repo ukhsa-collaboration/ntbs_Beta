@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -192,12 +192,10 @@ namespace ntbs_service.Services
                 return group;
             }
 
-            // Standalone transfers, created when backfilling NTBS-2693
-            // These are just two treatment events (transfer out and in), no transfer alerts
+            // Standalone transfer changes which occur during manual scripts
+            // These have just two treatment events (transfer out and in), no transfer alerts
             if(group.Count == 2
                && group.All(log => log.EntityType == nameof(TreatmentEvent))
-               && group.All(log => log.EventType == "Insert")
-               && group.All(log => log.AuditDetails == "SystemEdited")
                && group.Any(log => log.AuditData.Contains("TransferIn"))
                && group.Any(log => log.AuditData.Contains("TransferOut")))
             {
@@ -212,6 +210,13 @@ namespace ntbs_service.Services
             if (group.Count == 1 && group.Single().EventType == AuditEventType.REJECT_POTENTIAL)
             {
                 return new List<AuditLog>();
+            }
+
+            // Multiple specimens may be matched to a notification at the same time by the specimen
+            // matching database. We want a change to appear for each of them on the changes page.
+            if (group.All(log => log.EventType == AuditEventType.MATCH_EVENT))
+            {
+                return group;
             }
 
             // We want this check at the end, since some of the group checks above may have a single member but still

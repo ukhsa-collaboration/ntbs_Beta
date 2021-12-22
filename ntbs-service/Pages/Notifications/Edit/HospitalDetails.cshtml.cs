@@ -25,6 +25,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public SelectList TbServices { get; set; }
         public SelectList Hospitals { get; set; }
         public SelectList CaseManagers { get; set; }
+        public bool HasNonActiveCaseManager { get; set; }
 
         [BindProperty]
         public FormattedDate FormattedNotificationDate { get; set; }
@@ -159,6 +160,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private async Task SetValuesForValidation()
         {
+            HospitalDetails.ExistingCaseManagerId = Notification.HospitalDetails.CaseManagerId;
             HospitalDetails.SetValidationContext(Notification);
             ValidationService.TrySetFormattedDate(Notification, "Notification", nameof(Notification.NotificationDate), FormattedNotificationDate);
             /*
@@ -172,9 +174,10 @@ namespace ntbs_service.Pages.Notifications.Edit
         private async Task<IList<User>> GetCaseManagerDropdownValues(IList<string> tbServiceCodes)
         {
             var caseManagersToReturn = await _referenceDataRepository.GetActiveCaseManagersByTbServiceCodesAsync(tbServiceCodes);
-            if (HospitalDetails.CaseManager?.IsActive == false)
+            if (HospitalDetails.CaseManager != null && !caseManagersToReturn.Select(u => u.Username).Contains(HospitalDetails.CaseManager.Username))
             {
                 caseManagersToReturn.Add(Notification.HospitalDetails.CaseManager);
+                HasNonActiveCaseManager = true;
             }
 
             return caseManagersToReturn;
