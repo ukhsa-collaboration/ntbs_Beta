@@ -13,7 +13,7 @@ namespace ntbs_service.Models
         public bool IsTransfer { get; }
         public List<TreatmentEvent> TreatmentEvents { get; }
         public DateTime? PeriodStartDate { get; }
-        public DateTime? PeriodEndDate { get; set; }
+        public DateTime? PeriodEndDate { get; private set; }
 
         private TreatmentPeriod(int? periodNumber, bool isTransfer, List<TreatmentEvent> treatmentEvents, DateTime? endDate = null)
         {

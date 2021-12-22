@@ -80,10 +80,8 @@ namespace ntbs_service_unit_tests.Helpers
                 _testTreatmentEvents[1].EventDate);
 
             var expectedPeriod1 = TreatmentPeriod.CreateTransferPeriod(_testTreatmentEvents[2]);
-            expectedPeriod1.PeriodEndDate = _testTreatmentEvents[2].EventDate;
             
             var expectedPeriod2 = TreatmentPeriod.CreateTreatmentPeriod(2, _testTreatmentEvents[3]);
-            expectedPeriod2.PeriodEndDate = _testTreatmentEvents[3].EventDate;
 
             var expectedPeriod3 = TreatmentPeriod.CreatePeriodFromEvents(3,
                 new List<TreatmentEvent> {_testTreatmentEvents[5], _testTreatmentEvents[4] },
@@ -159,7 +157,6 @@ namespace ntbs_service_unit_tests.Helpers
                 testTransferEvents[1].EventDate);
 
             var expectedPeriod1 = TreatmentPeriod.CreateTransferPeriod(testTransferEvents[2]);
-            expectedPeriod1.PeriodEndDate = testTransferEvents[2].EventDate;
 
             var expectedPeriod2 = TreatmentPeriod.CreatePeriodFromEvents(2,
                 new List<TreatmentEvent> { testTransferEvents[3], testTransferEvents[4], testTransferEvents[5] }, 
