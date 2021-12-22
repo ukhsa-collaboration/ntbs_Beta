@@ -190,7 +190,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private void AddPostMortemErrorsIfApplicable()
         {
-            // Only validate post mortem if a notified case is changing to post mortem, or draft is post mortem
+            // Only validate if a case is changing to post mortem
             if (ClinicalDetails.IsPostMortem == true && Notification.ClinicalDetails.IsPostMortem != true)
             {
                 if (Notification.HasNonPostMortemEvents)

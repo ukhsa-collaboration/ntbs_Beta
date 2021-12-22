@@ -54,7 +54,7 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Has the patient started treatment?")]
         public bool? StartedTreatment { get; set; }
 
-        [Display(Name = "Was the TB diagnosis made at after death?")]
+        [Display(Name = "Was the TB diagnosis made after death?")]
         public bool? IsPostMortem { get; set; }
 
         [Display(Name = "Has the patient had a BCG vaccination?")]
