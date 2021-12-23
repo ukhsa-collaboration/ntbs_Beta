@@ -6,6 +6,12 @@
     <RootNamespace>ntbs_service</RootNamespace>
     <UserSecretsId>3736039d-9d74-48f5-9007-015e53f0b2a1</UserSecretsId>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Audit.EntityFramework.Core" Version="19.0.1" />
     <PackageReference Include="Dapper" Version="2.0.123" />
