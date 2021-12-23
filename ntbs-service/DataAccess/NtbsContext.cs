@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using Audit.EntityFramework;
+﻿using Audit.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
@@ -252,29 +250,39 @@ namespace ntbs_service.DataAccess
                 // it would completely clog up any EF actions. We've used manually created migrations instead.
             });
 
+            modelBuilder.Entity<PatientDetails>(entity =>
+            {
+                entity.HasKey(pd => pd.NotificationId);
+
+                entity.HasOne(pd => pd.PostcodeLookup)
+                    .WithMany()
+                    .HasForeignKey(ns => ns.PostcodeToLookup);
+
+                entity.ToTable("Patients");
+            });
+
+            modelBuilder.Entity<HospitalDetails>(entity =>
+            {
+                entity.HasKey(pd => pd.NotificationId);
+
+                entity.HasOne(hd => hd.CaseManager);
+
+                entity.ToTable("HospitalDetails");
+            });
+
             modelBuilder.Entity<Notification>(entity =>
             {
                 entity.HasOne(n => n.Group)
                     .WithMany(g => g.Notifications)
                     .HasForeignKey(e => e.GroupId);
 
-                entity.OwnsOne(e => e.HospitalDetails,
-                    hospitalDetails =>
-                    {
-                        hospitalDetails.HasOne(e => e.CaseManager);
+                entity.HasOne(n => n.PatientDetails)
+                    .WithOne()
+                    .OnDelete(DeleteBehavior.Cascade);
 
-                        hospitalDetails.ToTable("HospitalDetails");
-                    });
-
-                entity.OwnsOne(e => e.PatientDetails,
-                    x =>
-                    {
-                        x.HasOne(pd => pd.PostcodeLookup)
-                            .WithMany()
-                            .HasForeignKey(ns => ns.PostcodeToLookup);
-
-                        x.ToTable("Patients");
-                    });
+                entity.HasOne(n => n.HospitalDetails)
+                    .WithOne()
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.OwnsOne(e => e.ClinicalDetails,
                     e =>
