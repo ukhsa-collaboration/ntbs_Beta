@@ -136,6 +136,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
+            PatientDetails.NotificationId = NotificationId;
             await Service.UpdatePatientFlagsAsync(PatientDetails);
             // Remove already invalidated states from modelState as rely
             // on changes made in UpdatePatientFlags

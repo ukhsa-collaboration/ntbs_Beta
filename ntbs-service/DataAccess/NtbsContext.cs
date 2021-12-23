@@ -37,6 +37,8 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<Ethnicity> Ethnicity { get; set; }
         public virtual DbSet<TBService> TbService { get; set; }
         public virtual DbSet<Hospital> Hospital { get; set; }
+        public virtual DbSet<PatientDetails> Patients { get; set; }
+        public virtual DbSet<HospitalDetails> HospitalDetails { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<NotificationSite> NotificationSite { get; set; }
         public virtual DbSet<NotificationGroup> NotificationGroup { get; set; }
