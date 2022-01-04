@@ -30,7 +30,7 @@
     "govuk-frontend": "3.13.1",
     "nhsuk-frontend": "6.0.1",
     "qs": "6.10.1",
-    "sass": "1.44.0",
+    "sass": "1.45.2",
     "url-loader": "4.1.1",
     "vue": "2.6.14",
     "vue-accessible-modal": "0.4.0"
