@@ -267,7 +267,7 @@ namespace ntbs_service.DataAccess
             {
                 entity.HasKey(pd => pd.NotificationId);
 
-                entity.HasOne(hd => hd.CaseManager);
+                entity.HasOne(hd => hd.CaseManager).WithMany();
 
                 entity.ToTable("HospitalDetails");
             });
