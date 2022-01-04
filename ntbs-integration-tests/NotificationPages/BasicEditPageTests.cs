@@ -89,14 +89,14 @@ namespace ntbs_integration_tests.NotificationPages
                                         .CreateClientWithoutRedirects())
             {
                 EditSubPaths.ForEach(subPath =>
-               {
-                   // Act
-                   var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
+                {
+                    // Act
+                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
-                   _output.WriteLine("Testing subpath {0}", subPath);
-                   // Assert
-                   Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-               });
+                    _output.WriteLine("Testing subpath {0}", subPath);
+                    // Assert
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                });
             }
         }
 

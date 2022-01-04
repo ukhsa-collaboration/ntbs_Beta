@@ -140,7 +140,7 @@ namespace ntbs_service.Services
             switch (type)
             {
                 case UserType.NationalTeam:
-                    return _referenceDataRepository.GetTbServicesQueryable();
+                    return _referenceDataRepository.GetActiveTbServicesOrderedByNameQueryable();
                 case UserType.NhsUser:
                     return _referenceDataRepository.GetDefaultTbServicesForNhsUserQueryable(roles);
                 default:

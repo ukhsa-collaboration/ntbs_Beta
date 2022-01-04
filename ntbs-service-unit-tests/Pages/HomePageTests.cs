@@ -86,27 +86,9 @@ namespace ntbs_service_unit_tests.Pages
             // Arrange
             var recents = new List<Notification>
             {
-                new Notification
-                {
-                    PatientDetails = new PatientDetails{ GivenName = "Alice", FamilyName = "Adams" },
-                    NotificationStatus = NotificationStatus.Notified,
-                    CreationDate = DateTime.Parse("2021-04-01"),
-                    NotificationDate = DateTime.Parse("2021-04-01")
-                },
-                new Notification
-                {
-                    PatientDetails = new PatientDetails{ GivenName = "Bob", FamilyName = "Baker" },
-                    NotificationStatus = NotificationStatus.Notified,
-                    CreationDate = DateTime.Parse("2021-04-15"),
-                    NotificationDate = DateTime.Parse("2021-04-30")
-                },
-                new Notification
-                {
-                    PatientDetails = new PatientDetails{ GivenName = "Charlie", FamilyName = "Cook" },
-                    NotificationStatus = NotificationStatus.Notified,
-                    CreationDate = DateTime.Parse("2021-04-30"),
-                    NotificationDate = DateTime.Parse("2021-04-15")
-                }
+                CreateNotification("Alice", "Adams", NotificationStatus.Notified, "2021-04-01", "2021-04-01"),
+                CreateNotification("Bob", "Baker", NotificationStatus.Notified, "2021-04-15", "2021-04-30"),
+                CreateNotification("Charlie", "Cook", NotificationStatus.Notified, "2021-04-30", "2021-04-15")
             };
 
             await _homePageFixture.Context.AddRangeAsync(recents);
@@ -135,24 +117,9 @@ namespace ntbs_service_unit_tests.Pages
             // Arrange
             var drafts = new List<Notification>
             {
-                new Notification
-                {
-                    PatientDetails = new PatientDetails{ GivenName = "Dave", FamilyName = "Davids" },
-                    NotificationStatus = NotificationStatus.Draft,
-                    CreationDate = DateTime.Parse("2021-04-01")
-                },
-                new Notification
-                {
-                    PatientDetails = new PatientDetails{ GivenName = "Eve", FamilyName = "Smith" },
-                    NotificationStatus = NotificationStatus.Draft,
-                    CreationDate = DateTime.Parse("2021-04-30")
-                },
-                new Notification
-                {
-                    PatientDetails = new PatientDetails{ GivenName = "Frank", FamilyName = "Jones" },
-                    NotificationStatus = NotificationStatus.Draft,
-                    CreationDate = DateTime.Parse("2021-04-15")
-                }
+                CreateNotification("Dave", "Davids", NotificationStatus.Draft, "2021-04-01"),
+                CreateNotification("Eve", "Smith", NotificationStatus.Draft, "2021-04-30"),
+                CreateNotification("Frank", "Jones", NotificationStatus.Draft, "2021-04-15")
             };
 
             await _homePageFixture.Context.AddRangeAsync(drafts);
@@ -251,6 +218,25 @@ namespace ntbs_service_unit_tests.Pages
             Assert.True(phecCodes.Count() == 1);
             Assert.True(homepageKpiDetails.Count == 1);
             Assert.True(homepageKpiDetails[0] == mockHomepageKpiWithTbService);
+        }
+
+        private static Notification CreateNotification(
+            string givenName,
+            string familyName,
+            NotificationStatus status,
+            string creationDate,
+            string notificationDate = null)
+        {
+            var notification = new Notification
+            {
+                PatientDetails = new PatientDetails { GivenName = givenName, FamilyName = familyName },
+                NotificationStatus = status,
+                CreationDate = DateTime.Parse(creationDate),
+                NotificationDate = notificationDate != null ? DateTime.Parse(notificationDate) : (DateTime?)null
+            };
+            notification.DrugResistanceProfile.Species = string.Empty;
+            notification.DrugResistanceProfile.DrugResistanceProfileString = string.Empty;
+            return notification;
         }
     }
 }

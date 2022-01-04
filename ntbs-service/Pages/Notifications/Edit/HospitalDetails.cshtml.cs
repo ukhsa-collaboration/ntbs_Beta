@@ -160,6 +160,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private async Task SetValuesForValidation()
         {
+            HospitalDetails.NotificationId = NotificationId;
             HospitalDetails.ExistingCaseManagerId = Notification.HospitalDetails.CaseManagerId;
             HospitalDetails.SetValidationContext(Notification);
             ValidationService.TrySetFormattedDate(Notification, "Notification", nameof(Notification.NotificationDate), FormattedNotificationDate);

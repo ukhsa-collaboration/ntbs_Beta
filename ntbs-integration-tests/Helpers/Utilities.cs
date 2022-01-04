@@ -404,8 +404,8 @@ namespace ntbs_integration_tests.Helpers
 
         public static void SetServiceCodeForNotification(NtbsContext context, int notificationId, string code)
         {
-            var notification = context.Notification.Find(notificationId);
-            notification.HospitalDetails.TBServiceCode = code;
+            var hospitalDetails = context.HospitalDetails.Find(notificationId);
+            hospitalDetails.TBServiceCode = code;
             context.SaveChanges();
         }
 
