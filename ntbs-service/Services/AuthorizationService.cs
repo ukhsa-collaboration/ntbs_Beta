@@ -164,18 +164,18 @@ namespace ntbs_service.Services
 
         private bool UserBelongsToTbService(string tbServiceCode)
         {
-            return _userPermissionsFilter.Type == UserType.NhsUser && _userPermissionsFilter.IncludedTBServiceCodes.Contains(tbServiceCode);
+            return _userPermissionsFilter.IncludedTBServiceCodes.Contains(tbServiceCode);
         }
 
         private bool UserBelongsToPhec(string phecCode)
         {
-            return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(phecCode);
+            return _userPermissionsFilter.IncludedPHECCodes.Contains(phecCode);
         }
 
         private bool UserBelongsToResidencePhecOfNotification(Notification notification)
         {
             var phecCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
-            return _userPermissionsFilter.Type == UserType.PheUser
+            return _userPermissionsFilter.IsInAtLeastOneRegion
                    && _userPermissionsFilter.IncludedPHECCodes.Contains(phecCode);
         }
 
@@ -187,25 +187,17 @@ namespace ntbs_service.Services
                 _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
             }
 
-            if (_userPermissionsFilter.Type == UserType.NhsUser)
-            {
-                notifications = notifications.Where(n => _userPermissionsFilter.IncludedTBServiceCodes.Contains(n.HospitalDetails.TBServiceCode));
-            }
-            else if (_userPermissionsFilter.Type == UserType.PheUser)
-            {
+            notifications = notifications.Where(n =>
+                _userPermissionsFilter.IncludedTBServiceCodes.Contains(n.HospitalDetails.TBServiceCode)
                 // Having a method in LINQ clause breaks IQueryable abstraction. We have to use inline expression over methods
-                notifications = notifications.Where(n =>
-                    (
-                        n.HospitalDetails.TBService != null &&
-                        _userPermissionsFilter.IncludedPHECCodes.Contains(n.HospitalDetails.TBService.PHECCode)
-                    ) || (
-                        n.PatientDetails.PostcodeLookup != null &&
-                        n.PatientDetails.PostcodeLookup.LocalAuthority != null &&
-                        n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC != null &&
-                        _userPermissionsFilter.IncludedPHECCodes.Contains(n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC.PHECCode)
-                    )
+                || (n.HospitalDetails.TBService != null
+                    && _userPermissionsFilter.IncludedPHECCodes.Contains(n.HospitalDetails.TBService.PHECCode))
+                || (_userPermissionsFilter.IsInAtLeastOneRegion
+                    && n.PatientDetails.PostcodeLookup != null
+                    && n.PatientDetails.PostcodeLookup.LocalAuthority != null
+                    && n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC != null
+                    && _userPermissionsFilter.IncludedPHECCodes.Contains(n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC.PHECCode))
                 );
-            }
 
             return notifications;
         }

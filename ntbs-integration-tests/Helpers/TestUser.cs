@@ -67,7 +67,7 @@ namespace ntbs_integration_tests.Helpers
             1234,
             "abingdon@nhs.uk",
             "Abingdon Permitted",
-            UserType.NhsUser,
+            UserType.ServiceOrPhecUser,
             new[] { "App.Auth.NIS.NTBS.Service_Abingdon", "App.Auth.NIS.NTBS.Service_Ashford" },
             tbServiceCodes: new[]
             {
@@ -79,14 +79,14 @@ namespace ntbs_integration_tests.Helpers
             2345,
             "no-service@nhs.uk",
             "No Service",
-            UserType.NhsUser,
+            UserType.ServiceOrPhecUser,
             new string[] { });
 
         public static TestUser PheUserWithPermittedPhecCode = new TestUser(
             3456,
             "permitted-phec@phe.com",
             "Permitted Phec",
-            UserType.PheUser,
+            UserType.ServiceOrPhecUser,
             new[] { "App.Auth.NIS.NTBS.Admin", "App.Auth.NIS.NTBS.SoE" });
 
         public static TestUser NationalTeamUser = new TestUser(
@@ -100,7 +100,7 @@ namespace ntbs_integration_tests.Helpers
             5678,
             Utilities.CASEMANAGER_ABINGDON_EMAIL,
             "TestCase TestManager",
-            UserType.NhsUser,
+            UserType.ServiceOrPhecUser,
             new[] { "App.Auth.NIS.NTBS.Service_Abingdon" },
             tbServiceCodes: new[] { Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID });
 
@@ -108,7 +108,7 @@ namespace ntbs_integration_tests.Helpers
             6789,
             Utilities.CASEMANAGER_ABINGDON_EMAIL2,
             "TestCase TestManager",
-            UserType.NhsUser,
+            UserType.ServiceOrPhecUser,
             new[] { "App.Auth.NIS.NTBS.Service_Abingdon" },
             tbServiceCodes: new[] { Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID });
 
@@ -116,7 +116,7 @@ namespace ntbs_integration_tests.Helpers
             Utilities.CASEMANAGER_GATESHEAD_ID1,
             Utilities.CASEMANAGER_GATESHEAD_EMAIL1,
             Utilities.CASEMANAGER_GATESHEAD_DISPLAY_NAME1,
-            UserType.NhsUser,
+            UserType.ServiceOrPhecUser,
             new[] { Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID },
             tbServiceCodes: new[] { Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID });
 
@@ -124,7 +124,7 @@ namespace ntbs_integration_tests.Helpers
             Utilities.CASEMANAGER_GATESHEAD_ID2,
             Utilities.CASEMANAGER_GATESHEAD_EMAIL2,
             Utilities.CASEMANAGER_GATESHEAD_DISPLAY_NAME2,
-            UserType.NhsUser,
+            UserType.ServiceOrPhecUser,
             new[] { "App.Auth.NIS.NTBS.Service_Gateshead" },
             tbServiceCodes: new[] { Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID });
 
@@ -132,7 +132,7 @@ namespace ntbs_integration_tests.Helpers
             Utilities.CASEMANAGER_GATESHEAD_INACTIVE_ID,
             Utilities.CASEMANAGER_GATESHEAD_INACTIVE_EMAIL,
             Utilities.CASEMANAGER_GATESHEAD_INACTIVE_DISPLAY_NAME,
-            UserType.NhsUser,
+            UserType.ServiceOrPhecUser,
             new[] { "App.Auth.NIS.NTBS.Service_Gateshead" },
             tbServiceCodes: new[] { Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID },
             isActive: false);
@@ -148,7 +148,7 @@ namespace ntbs_integration_tests.Helpers
             7892,
             "ReadOnly@ntbs.phe.com",
             "ReadOnly UserGroup",
-            UserType.NhsUser,
+            UserType.ServiceOrPhecUser,
             new[] { "App.Auth.NIS.NTBS.Read_Only" },
             isReadOnly: true);
     }

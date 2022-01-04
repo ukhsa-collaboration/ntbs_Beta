@@ -22,7 +22,6 @@ namespace ntbs_service.Services
         Task<TBService> GetDefaultTbService(ClaimsPrincipal user);
         Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user);
         UserType GetUserType(ClaimsPrincipal user);
-        Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user);
         Task RecordUserLoginAsync(string username);
         Task<User> GetUser(ClaimsPrincipal user);
         string GetUserDisplayName(ClaimsPrincipal user);
@@ -51,18 +50,13 @@ namespace ntbs_service.Services
             if (userFilter.Type == UserType.NationalTeam)
             {
                 // National Team users have access to all services' records
+                userFilter.IncludedPHECCodes = (await _referenceDataRepository.GetAllPhecs()).Select(p => p.Code).ToList();
                 return userFilter;
             }
 
-            var roles = GetRoles(user);
-            if (userFilter.Type == UserType.NhsUser)
-            {
-                userFilter.IncludedTBServiceCodes = await _referenceDataRepository.GetTbServiceCodesMatchingRolesAsync(roles);
-            }
-            else
-            {
-                userFilter.IncludedPHECCodes = await _referenceDataRepository.GetPhecCodesMatchingRolesAsync(roles);
-            }
+            var roles = GetRoles(user).ToList();
+            userFilter.IncludedTBServiceCodes = await _referenceDataRepository.GetTbServiceCodesMatchingRolesAsync(roles);
+            userFilter.IncludedPHECCodes = await _referenceDataRepository.GetPhecCodesMatchingRolesAsync(roles);
 
             return userFilter;
         }
@@ -89,21 +83,7 @@ namespace ntbs_service.Services
                 return UserType.NationalTeam;
             }
 
-            if (GetRoles(user).Any(role => role.Contains(_config.ServiceGroupAdPrefix)))
-            {
-                return UserType.NhsUser;
-            }
-
-            return UserType.PheUser;
-        }
-
-        public async Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user)
-        {
-            if (GetUserType(user) == UserType.NationalTeam)
-            {
-                return (await _referenceDataRepository.GetAllPhecs())?.Select(x => x.Code);
-            }
-            return await _referenceDataRepository.GetPhecCodesMatchingRolesAsync(GetRoles(user));
+            return UserType.ServiceOrPhecUser;
         }
 
         public async Task RecordUserLoginAsync(string username)
@@ -136,16 +116,10 @@ namespace ntbs_service.Services
         {
             var type = GetUserType(user);
             var roles = GetRoles(user);
-
-            switch (type)
-            {
-                case UserType.NationalTeam:
-                    return _referenceDataRepository.GetActiveTbServicesOrderedByNameQueryable();
-                case UserType.NhsUser:
-                    return _referenceDataRepository.GetDefaultTbServicesForNhsUserQueryable(roles);
-                default:
-                    return _referenceDataRepository.GetDefaultTbServicesForPheUserQueryable(roles);
-            }
+            
+            return type == UserType.NationalTeam
+                ? _referenceDataRepository.GetActiveTbServicesOrderedByNameQueryable()
+                : _referenceDataRepository.GetDefaultTbServicesForUserQueryable(roles);
         }
 
         private static IEnumerable<string> GetRoles(ClaimsPrincipal user)

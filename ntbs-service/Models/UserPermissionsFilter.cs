@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Models
@@ -11,7 +12,6 @@ namespace ntbs_service.Models
         public List<string> IncludedPHECCodes { get; set; } = new List<string>();
         public UserType Type { get; set; }
 
-        public bool FilterByTBService => Type == UserType.NhsUser;
-        public bool FilterByPHEC => Type == UserType.PheUser;
+        public bool IsInAtLeastOneRegion => IncludedPHECCodes.Any();
     }
 }

@@ -45,6 +45,8 @@ namespace ntbs_service_unit_tests.Services
         public async Task GetUserPermissionsFilter_ReturnsExpectedFilter_ForNationalUser()
         {
             // Arrange
+            var allPhec = new List<PHEC> {new PHEC {Code = "PHEC001"}};
+            _mockReferenceDataRepository.Setup(r => r.GetAllPhecs()).ReturnsAsync(allPhec);
             var claim = new Claim("User", NationalTeam);
             SetupClaimMocking(claim);
 
@@ -53,7 +55,7 @@ namespace ntbs_service_unit_tests.Services
 
             // Assert
             Assert.Empty(result.IncludedTBServiceCodes);
-            Assert.Empty(result.IncludedPHECCodes);
+            Assert.Equal(allPhec.Select(p => p.Code), result.IncludedPHECCodes);
             Assert.Equal(UserType.NationalTeam, result.Type);
         }
 
@@ -69,6 +71,8 @@ namespace ntbs_service_unit_tests.Services
             var serviceCodeList = new List<string> { code };
             _mockReferenceDataRepository.Setup(c => c.GetTbServiceCodesMatchingRolesAsync(It.Is<IEnumerable<string>>(l => l.Contains(serviceAdGroup))))
                 .Returns(Task.FromResult(serviceCodeList));
+            _mockReferenceDataRepository.Setup(c => c.GetPhecCodesMatchingRolesAsync(It.Is<IEnumerable<string>>(l => l.Contains(serviceAdGroup))))
+                .Returns(Task.FromResult(new List<string>()));
 
             // Act
             var result = await _service.GetUserPermissionsFilterAsync(_mockUser.Object);
@@ -77,7 +81,7 @@ namespace ntbs_service_unit_tests.Services
             Assert.Empty(result.IncludedPHECCodes);
             Assert.Single(result.IncludedTBServiceCodes);
             Assert.Equal(code, result.IncludedTBServiceCodes.First());
-            Assert.Equal(UserType.NhsUser, result.Type);
+            Assert.Equal(UserType.ServiceOrPhecUser, result.Type);
         }
 
         [Fact]
@@ -92,6 +96,8 @@ namespace ntbs_service_unit_tests.Services
             var phecCodeList = new List<string> { code };
             _mockReferenceDataRepository.Setup(c => c.GetPhecCodesMatchingRolesAsync(It.Is<IEnumerable<string>>(l => l.Contains(adGroup))))
                 .Returns(Task.FromResult(phecCodeList));
+            _mockReferenceDataRepository.Setup(c => c.GetTbServiceCodesMatchingRolesAsync(It.Is<IEnumerable<string>>(l => l.Contains(adGroup))))
+                .Returns(Task.FromResult(new List<string>()));
 
             // Act
             var result = await _service.GetUserPermissionsFilterAsync(_mockUser.Object);
@@ -100,35 +106,7 @@ namespace ntbs_service_unit_tests.Services
             Assert.Empty(result.IncludedTBServiceCodes);
             Assert.Single(result.IncludedPHECCodes);
             Assert.Equal(code, result.IncludedPHECCodes.First());
-            Assert.Equal(UserType.PheUser, result.Type);
-        }
-
-        [Fact]
-        public async Task GetPhecCodesAsync_RetrievesAllPhecCodes_ForNationalUser()
-        {
-            // Arrange
-            var claim = new Claim("User", NationalTeam);
-            SetupClaimMocking(claim);
-
-            // Act
-            await _service.GetPhecCodesAsync(_mockUser.Object);
-
-            // Assert
-            _mockReferenceDataRepository.Verify(x => x.GetAllPhecs(), Times.Once);
-        }
-
-        [Fact]
-        public async Task GetPhecCodesAsync_RetrievesPhecCodesForRoles_ForPhecUser()
-        {
-            // Arrange
-            var claim = new Claim(ClaimsIdentity.DefaultRoleClaimType, "PHE");
-            SetupClaimMocking(claim);
-
-            // Act
-            await _service.GetPhecCodesAsync(_mockUser.Object);
-
-            // Assert
-            _mockReferenceDataRepository.Verify(x => x.GetPhecCodesMatchingRolesAsync(new List<string> { "PHE" }), Times.Once);
+            Assert.Equal(UserType.ServiceOrPhecUser, result.Type);
         }
 
         [Fact]
@@ -160,7 +138,7 @@ namespace ntbs_service_unit_tests.Services
             var claim = new Claim("User", serviceAdGroup);
             SetupClaimMocking(claim);
             var mockTbServiceQuery = new List<TBService> { tbService }.AsQueryable().BuildMock();
-            _mockReferenceDataRepository.Setup(c => c.GetDefaultTbServicesForNhsUserQueryable(It.Is<IEnumerable<string>>(l => l.Contains(serviceAdGroup))))
+            _mockReferenceDataRepository.Setup(c => c.GetDefaultTbServicesForUserQueryable(It.Is<IEnumerable<string>>(l => l.Contains(serviceAdGroup))))
                 .Returns(mockTbServiceQuery.Object);
 
             // Act
@@ -181,7 +159,7 @@ namespace ntbs_service_unit_tests.Services
             var claim = new Claim("User", adGroup);
             SetupClaimMocking(claim);
             var mockTbServiceQuery = new List<TBService> { tbService }.AsQueryable().BuildMock();
-            _mockReferenceDataRepository.Setup(c => c.GetDefaultTbServicesForPheUserQueryable(It.Is<IEnumerable<string>>(l => l.Contains(adGroup))))
+            _mockReferenceDataRepository.Setup(c => c.GetDefaultTbServicesForUserQueryable(It.Is<IEnumerable<string>>(l => l.Contains(adGroup))))
                 .Returns(mockTbServiceQuery.Object);
 
             // Act

@@ -174,20 +174,18 @@ namespace ntbs_service.Pages.LabResults
         private async Task FetchUnmatchedSpecimensAsync()
         {
             var permissionsFilter = await _userService.GetUserPermissionsFilterAsync(User);
+
             if (permissionsFilter.Type == UserType.NationalTeam)
             {
                 UnmatchedSpecimens = await _specimenService.GetAllUnmatchedSpecimensAsync();
+                return;
             }
-            else if (permissionsFilter.FilterByTBService)
-            {
-                UnmatchedSpecimens = await _specimenService.GetUnmatchedSpecimensDetailsForTbServicesAsync(
-                    permissionsFilter.IncludedTBServiceCodes);
-            }
-            else if (permissionsFilter.FilterByPHEC)
-            {
-                UnmatchedSpecimens = await _specimenService.GetUnmatchedSpecimensDetailsForPhecsAsync(
-                    permissionsFilter.IncludedPHECCodes);
-            }
+
+            var specimensFromServices = await _specimenService.GetUnmatchedSpecimensDetailsForTbServicesAsync(
+                permissionsFilter.IncludedTBServiceCodes);
+            var specimensFromPhecs = await _specimenService.GetUnmatchedSpecimensDetailsForPhecsAsync(
+                permissionsFilter.IncludedPHECCodes);
+            UnmatchedSpecimens = specimensFromServices.Concat(specimensFromPhecs);
         }
 
         private void AddTempDataForSuccessfulMessage(int notificationId, string laboratoryReferenceNumber)
