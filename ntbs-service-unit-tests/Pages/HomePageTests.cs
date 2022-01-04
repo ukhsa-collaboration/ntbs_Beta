@@ -175,7 +175,7 @@ namespace ntbs_service_unit_tests.Pages
         }
 
         [Fact]
-        public async Task OnGetAsync_PopulatesHomepageKpisDetailsWithPhecCodes_WhenUserIsPheUser()
+        public async Task OnGetAsync_PopulatesHomepageKpisDetailsWithPhecCodes_WhenUserIsRegionalUser()
         {
             // Arrange
             _mockUserService.Setup(s => s.GetUserPermissionsFilterAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
@@ -204,7 +204,7 @@ namespace ntbs_service_unit_tests.Pages
         }
 
         [Fact]
-        public async Task OnGetAsync_PopulatesHomepageKpisDetailsWithTbServiceCodes_WhenUserIsNhsUser()
+        public async Task OnGetAsync_PopulatesHomepageKpisDetailsWithTbServiceCodes_WhenUserIsServiceUser()
         {
             // Arrange
             _mockUserService.Setup(s => s.GetUserPermissionsFilterAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(

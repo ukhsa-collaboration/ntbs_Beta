@@ -50,9 +50,9 @@ namespace ntbs_integration_tests.Helpers
 
         public static IEnumerable<TestUser> GetAll() => new[]
         {
-            NhsUserForAbingdonAndPermitted,
-            NhsUserWithNoTbServices,
-            PheUserWithPermittedPhecCode,
+            ServiceUserForAbingdonAndPermitted,
+            ServiceUserWithNoTbServices,
+            RegionalUserWithPermittedPhecCode,
             NationalTeamUser,
             AbingdonCaseManager,
             AbingdonCaseManager2,
@@ -63,7 +63,7 @@ namespace ntbs_integration_tests.Helpers
             ReadOnlyUser
         };
 
-        public static TestUser NhsUserForAbingdonAndPermitted = new TestUser(
+        public static TestUser ServiceUserForAbingdonAndPermitted = new TestUser(
             1234,
             "abingdon@nhs.uk",
             "Abingdon Permitted",
@@ -75,14 +75,14 @@ namespace ntbs_integration_tests.Helpers
                 Utilities.PERMITTED_SERVICE_CODE
             });
 
-        public static TestUser NhsUserWithNoTbServices = new TestUser(
+        public static TestUser ServiceUserWithNoTbServices = new TestUser(
             2345,
             "no-service@nhs.uk",
             "No Service",
             UserType.ServiceOrPhecUser,
             new string[] { });
 
-        public static TestUser PheUserWithPermittedPhecCode = new TestUser(
+        public static TestUser RegionalUserWithPermittedPhecCode = new TestUser(
             3456,
             "permitted-phec@phe.com",
             "Permitted Phec",

@@ -66,9 +66,9 @@ namespace ntbs_integration_tests.LabResultsPage
         }
 
         [Fact]
-        public async Task NhsUser_CanViewSpecimensAccordingToPermissions()
+        public async Task ServiceUser_CanViewSpecimensAccordingToPermissions()
         {
-            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                 .CreateClientWithoutRedirects())
             {
                 // Arrange
@@ -106,9 +106,9 @@ namespace ntbs_integration_tests.LabResultsPage
         }
 
         [Fact]
-        public async Task NhsUser_ShowsNoSpecimensIfNoPermissionForTbServices()
+        public async Task ServiceUser_ShowsNoSpecimensIfNoPermissionForTbServices()
         {
-            using (var client = Factory.WithUserAuth(TestUser.NhsUserWithNoTbServices)
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserWithNoTbServices)
                 .CreateClientWithoutRedirects())
             {
                 //Act
@@ -124,9 +124,9 @@ namespace ntbs_integration_tests.LabResultsPage
         }
 
         [Fact]
-        public async Task PheUser_CanViewSpecimensAccordingToPermissions()
+        public async Task RegionalUser_CanViewSpecimensAccordingToPermissions()
         {
-            using (var client = Factory.WithUserAuth(TestUser.PheUserWithPermittedPhecCode)
+            using (var client = Factory.WithUserAuth(TestUser.RegionalUserWithPermittedPhecCode)
                 .CreateClientWithoutRedirects())
             {
                 // Arrange

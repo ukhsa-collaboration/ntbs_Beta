@@ -60,7 +60,7 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
-        public async Task GetUserPermissionsFilter_ReturnsExpectedFilter_ForNhsUser()
+        public async Task GetUserPermissionsFilter_ReturnsExpectedFilter_ForServiceUser()
         {
             // Arrange
             const string serviceAdGroup = ServicePrefix + "Ashford";
@@ -85,7 +85,7 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
-        public async Task GetUserPermissionsFilter_ReturnsExpectedFilter_ForPheUser()
+        public async Task GetUserPermissionsFilter_ReturnsExpectedFilter_ForRegionalUser()
         {
             // Arrange
             const string adGroup = "SoE";
@@ -129,7 +129,7 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
-        public async Task GetDefaultTbService_ReturnsMatchingService_ForNhsUser()
+        public async Task GetDefaultTbService_ReturnsMatchingService_ForServiceUser()
         {
             // Arrange
             const string serviceAdGroup = ServicePrefix + "Ashford";
@@ -149,7 +149,7 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
-        public async Task GetDefaultTbService_ReturnsMatchingService_ForPheUser()
+        public async Task GetDefaultTbService_ReturnsMatchingService_ForRegionalUser()
         {
             // Arrange
             const string adGroup = "SoE";

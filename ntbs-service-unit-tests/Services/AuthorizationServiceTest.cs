@@ -175,7 +175,7 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
-        public async Task FilterAlertsForUser_DoesNotFilterAnyAlertsForPheUser()
+        public async Task FilterAlertsForUser_DoesNotFilterAnyAlertsForRegionalUser()
         {
             // Arrange
             var testUser = new ClaimsPrincipal(new ClaimsIdentity("TestDev"));
