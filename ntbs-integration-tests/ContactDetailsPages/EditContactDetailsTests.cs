@@ -159,7 +159,7 @@ namespace ntbs_integration_tests.ContactDetailsPages
         [Fact]
         public async Task EditDetails_EditingOtherUser_IsForbiddenForNonAdmin()
         {
-            var user = TestUser.NhsUserWithNoTbServices;
+            var user = TestUser.ServiceUserWithNoTbServices;
             var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Id, ContactDetailsSubPaths.Edit));
             using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
             {

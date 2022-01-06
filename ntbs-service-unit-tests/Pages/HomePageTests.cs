@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
@@ -65,15 +66,10 @@ namespace ntbs_service_unit_tests.Pages
                 .Setup(s => s.FilterNotificationsByUserAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<IQueryable<Notification>>()))
                 .Returns((ClaimsPrincipal user, IQueryable<Notification> notifications) => Task.FromResult(notifications));
             _mockAuthorizationService
-                .Setup(s => s.FilterNotificationsByUserAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<IQueryable<Notification>>()))
-                .Returns((ClaimsPrincipal user, IQueryable<Notification> notifications) => Task.FromResult(notifications));
-            _mockAuthorizationService
                 .Setup(s => s.FilterAlertsForUserAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<IList<AlertWithTbServiceForDisplay>>()))
                 .Returns((ClaimsPrincipal user, IList<AlertWithTbServiceForDisplay> alerts) => Task.FromResult(alerts));
 
             _mockUserService.Setup(s => s.GetUserType(It.IsAny<ClaimsPrincipal>())).Returns(UserType.NationalTeam);
-            _mockUserService.Setup(s => s.GetPhecCodesAsync(It.IsAny<ClaimsPrincipal>()))
-                .Returns(Task.FromResult(new List<string> { mockHomepageKpiWithPhec.Code } as IEnumerable<string>));
             _mockHomepageKpiService.Setup(s => s.GetKpiForPhec(new List<string> { mockHomepageKpiWithPhec.Code }))
                 .Returns(Task.FromResult(new List<HomepageKpi> { mockHomepageKpiWithPhec } as IEnumerable<HomepageKpi>));
             _mockHomepageKpiService.Setup(s => s.GetKpiForTbService(new List<string> { mockHomepageKpiWithTbService.Code }))
@@ -84,6 +80,9 @@ namespace ntbs_service_unit_tests.Pages
         public async Task OnGetAsync_PopulatesPageModel_WithRecentNotifications()
         {
             // Arrange
+            _mockUserService.Setup(s => s.GetUserPermissionsFilterAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
+                new UserPermissionsFilter { Type = UserType.ServiceOrRegionalUser });
+
             var recents = new List<Notification>
             {
                 CreateNotification("Alice", "Adams", NotificationStatus.Notified, "2021-04-01", "2021-04-01"),
@@ -115,6 +114,9 @@ namespace ntbs_service_unit_tests.Pages
         public async Task OnGetAsync_PopulatesPageModel_WithDraftNotifications()
         {
             // Arrange
+            _mockUserService.Setup(s => s.GetUserPermissionsFilterAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
+                new UserPermissionsFilter { Type = UserType.ServiceOrRegionalUser });
+
             var drafts = new List<Notification>
             {
                 CreateNotification("Dave", "Davids", NotificationStatus.Draft, "2021-04-01"),
@@ -149,7 +151,9 @@ namespace ntbs_service_unit_tests.Pages
             var alerts = new List<AlertWithTbServiceForDisplay> { new AlertWithTbServiceForDisplay { AlertId = 101 } };
             _mockAlertRepository.Setup(s => s.GetOpenAlertsByTbServiceCodesAsync(It.IsAny<IEnumerable<string>>()))
                 .Returns(Task.FromResult(alerts));
-            _mockUserService.Setup(s => s.GetUserType(It.IsAny<ClaimsPrincipal>())).Returns(UserType.PheUser);
+            _mockUserService.Setup(s => s.GetUserType(It.IsAny<ClaimsPrincipal>())).Returns(UserType.ServiceOrRegionalUser);
+            _mockUserService.Setup(s => s.GetUserPermissionsFilterAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
+                new UserPermissionsFilter { Type = UserType.ServiceOrRegionalUser });
 
             var pageModel = new IndexModel(_notificationRepository,
                 _mockAlertRepository.Object,
@@ -168,12 +172,15 @@ namespace ntbs_service_unit_tests.Pages
         }
 
         [Fact]
-        public async Task OnGetAsync_PopulatesHomepageKpisDetailsWithPhecCodes_WhenUserIsPheUser()
+        public async Task OnGetAsync_PopulatesHomepageKpisDetailsWithPhecCodes_WhenUserIsRegionalUser()
         {
             // Arrange
-            _mockUserService.Setup(s => s.GetUserType(It.IsAny<ClaimsPrincipal>())).Returns(UserType.PheUser);
-            _mockUserService.Setup(s => s.GetPhecCodesAsync(It.IsAny<ClaimsPrincipal>()))
-                .Returns(Task.FromResult(new List<string> { mockHomepageKpiWithPhec.Code } as IEnumerable<string>));
+            _mockUserService.Setup(s => s.GetUserPermissionsFilterAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
+                new UserPermissionsFilter
+                {
+                    Type = UserType.ServiceOrRegionalUser,
+                    IncludedPHECCodes = new List<string> { "PHEC001" }
+                });
 
             var pageModel = new IndexModel(_notificationRepository,
                 _mockAlertRepository.Object,
@@ -194,13 +201,15 @@ namespace ntbs_service_unit_tests.Pages
         }
 
         [Fact]
-        public async Task OnGetAsync_PopulatesHomepageKpisDetailsWithTbServiceCodes_WhenUserIsNhsUser()
+        public async Task OnGetAsync_PopulatesHomepageKpisDetailsWithTbServiceCodes_WhenUserIsServiceUser()
         {
             // Arrange
-            _mockUserService.Setup(s => s.GetUserType(It.IsAny<ClaimsPrincipal>())).Returns(UserType.NhsUser);
-            var mockTbService = new TBService() { Code = mockHomepageKpiWithTbService.Code };
-            _mockUserService.Setup(s => s.GetTbServicesAsync(It.IsAny<ClaimsPrincipal>()))
-                .Returns(Task.FromResult(new List<TBService> { mockTbService } as IEnumerable<TBService>));
+            _mockUserService.Setup(s => s.GetUserPermissionsFilterAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
+                new UserPermissionsFilter
+                {
+                    Type = UserType.ServiceOrRegionalUser,
+                    IncludedTBServiceCodes = new List<string> { "TB001" }
+                });
 
             var pageModel = new IndexModel(_notificationRepository,
                 _mockAlertRepository.Object,

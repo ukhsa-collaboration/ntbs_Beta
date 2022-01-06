@@ -130,13 +130,13 @@ namespace ntbs_service.Services
             }
 
             return _userPermissionsFilter.Type == UserType.NationalTeam
-                   || UserBelongsToTbService(notificationBannerModel.TbServiceCode)
-                   || UserBelongsToPhec(notificationBannerModel.TbServicePHECCode)
-                   || UserBelongsToPhec(notificationBannerModel.LocationPHECCode)
-                   || notificationBannerModel.LinkedNotificationPhecCodes.Any(UserBelongsToPhec)
-                   || notificationBannerModel.LinkedNotificationTbServiceCodes.Any(UserBelongsToTbService)
-                   || notificationBannerModel.PreviousTbServiceCodes.Any(UserBelongsToTbService)
-                   || notificationBannerModel.PreviousPhecCodes.Any(UserBelongsToPhec);
+                   || _userPermissionsFilter.UserBelongsToTbService(notificationBannerModel.TbServiceCode)
+                   || _userPermissionsFilter.UserBelongsToPHEC(notificationBannerModel.TbServicePHECCode)
+                   || _userPermissionsFilter.UserBelongsToPHEC(notificationBannerModel.LocationPHECCode)
+                   || notificationBannerModel.LinkedNotificationPhecCodes.Any(_userPermissionsFilter.UserBelongsToPHEC)
+                   || notificationBannerModel.LinkedNotificationTbServiceCodes.Any(_userPermissionsFilter.UserBelongsToTbService)
+                   || notificationBannerModel.PreviousTbServiceCodes.Any(_userPermissionsFilter.UserBelongsToTbService)
+                   || notificationBannerModel.PreviousPhecCodes.Any(_userPermissionsFilter.UserBelongsToPHEC);
         }
 
         private bool UserHasDirectRelationToLinkedNotification(Notification notification)
@@ -149,7 +149,8 @@ namespace ntbs_service.Services
         {
             foreach (var previousTbService in notification.PreviousTbServices)
             {
-                if (UserBelongsToTbService(previousTbService.TbServiceCode) || UserBelongsToPhec(previousTbService.PhecCode))
+                if (_userPermissionsFilter.UserBelongsToTbService(previousTbService.TbServiceCode)
+                    || _userPermissionsFilter.UserBelongsToPHEC(previousTbService.PhecCode))
                 {
                     return true;
                 }
@@ -159,24 +160,14 @@ namespace ntbs_service.Services
 
         private bool UserHasDirectRelationToNotification(Notification notification)
         {
-            return UserBelongsToTbService(notification.HospitalDetails.TBServiceCode) || UserBelongsToPhec(notification.HospitalDetails.TBService?.PHECCode);
-        }
-
-        private bool UserBelongsToTbService(string tbServiceCode)
-        {
-            return _userPermissionsFilter.Type == UserType.NhsUser && _userPermissionsFilter.IncludedTBServiceCodes.Contains(tbServiceCode);
-        }
-
-        private bool UserBelongsToPhec(string phecCode)
-        {
-            return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(phecCode);
+            return _userPermissionsFilter.UserBelongsToTbService(notification.HospitalDetails.TBServiceCode)
+                   || _userPermissionsFilter.UserBelongsToPHEC(notification.HospitalDetails.TBService?.PHECCode);
         }
 
         private bool UserBelongsToResidencePhecOfNotification(Notification notification)
         {
             var phecCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
-            return _userPermissionsFilter.Type == UserType.PheUser
-                   && _userPermissionsFilter.IncludedPHECCodes.Contains(phecCode);
+            return _userPermissionsFilter.UserBelongsToPHEC(phecCode);
         }
 
         public async Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user,
@@ -187,27 +178,19 @@ namespace ntbs_service.Services
                 _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
             }
 
-            if (_userPermissionsFilter.Type == UserType.NhsUser)
-            {
-                notifications = notifications.Where(n => _userPermissionsFilter.IncludedTBServiceCodes.Contains(n.HospitalDetails.TBServiceCode));
-            }
-            else if (_userPermissionsFilter.Type == UserType.PheUser)
-            {
-                // Having a method in LINQ clause breaks IQueryable abstraction. We have to use inline expression over methods
-                notifications = notifications.Where(n =>
-                    (
-                        n.HospitalDetails.TBService != null &&
-                        _userPermissionsFilter.IncludedPHECCodes.Contains(n.HospitalDetails.TBService.PHECCode)
-                    ) || (
-                        n.PatientDetails.PostcodeLookup != null &&
-                        n.PatientDetails.PostcodeLookup.LocalAuthority != null &&
-                        n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC != null &&
-                        _userPermissionsFilter.IncludedPHECCodes.Contains(n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC.PHECCode)
-                    )
+            return _userPermissionsFilter.Type == UserType.NationalTeam
+                ? notifications
+                : notifications.Where(n =>
+                    _userPermissionsFilter.IncludedTBServiceCodes.Contains(n.HospitalDetails.TBServiceCode)
+                    // Having a method in LINQ clause breaks IQueryable abstraction. We have to use inline expression over methods
+                    || (n.HospitalDetails.TBService != null
+                        && _userPermissionsFilter.IncludedPHECCodes.Contains(n.HospitalDetails.TBService.PHECCode))
+                    || (_userPermissionsFilter.IsInAtLeastOneRegion
+                        && n.PatientDetails.PostcodeLookup != null
+                        && n.PatientDetails.PostcodeLookup.LocalAuthority != null
+                        && n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC != null
+                        && _userPermissionsFilter.IncludedPHECCodes.Contains(n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC.PHECCode))
                 );
-            }
-
-            return notifications;
         }
 
         public async Task<IList<AlertWithTbServiceForDisplay>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<AlertWithTbServiceForDisplay> alerts)

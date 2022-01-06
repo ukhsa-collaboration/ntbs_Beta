@@ -110,7 +110,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsOverviewPage_ForUserWithPermission()
         {
             // Arrange
-            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                                         .WithNotificationAndTbServiceConnected(Utilities.NOTIFIED_ID, Utilities.PERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
@@ -130,7 +130,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             using (var client = Factory
-                .WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+                .WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                 .WithNotificationAndTbServiceConnected(Utilities.LINKED_NOTIFICATION_ABINGDON_TB_SERVICE, Utilities.PERMITTED_SERVICE_CODE)
                 .CreateClientWithoutRedirects())
             {
@@ -153,7 +153,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ShowsWarning_ForUserWithoutPermission()
         {
             // Arrange
-            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                                         .WithNotificationAndTbServiceConnected(Utilities.NOTIFIED_ID, Utilities.UNPERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
@@ -185,9 +185,9 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsOverviewPageReadOnlyVersion_ForUserWithReadOnlyPermissionFromLinkedNotification()
         {
             // Arrange
-            // NhsUserForAbingdonAndPermitted has been set up to have access to Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID
+            // ServiceUserForAbingdonAndPermitted has been set up to have access to Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID
             // which belong to the same Notification group as LINK_NOTIFICATION_ROYAL_FREE_LONDON_TB_SERVICE
-            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                 .CreateClientWithoutRedirects())
             {
                 // Act
@@ -202,10 +202,10 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task OverviewPageReturnsReadOnlyVersion_ForPheUserWithMatchingPostcodePermission()
+        public async Task OverviewPageReturnsReadOnlyVersion_ForRegionalUserWithMatchingPostcodePermission()
         {
             // Arrange
-            using (var client = Factory.WithUserAuth(TestUser.PheUserWithPermittedPhecCode)
+            using (var client = Factory.WithUserAuth(TestUser.RegionalUserWithPermittedPhecCode)
                 .WithNotificationAndPostcodeConnected(Utilities.NOTIFIED_ID, Utilities.PERMITTED_POSTCODE)
                 .CreateClientWithoutRedirects())
             {
@@ -224,9 +224,9 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task OverviewPageReturnsReadOnlyVersion_ForUserWhoHadEditPermissionsBeforeATransfer()
         {
             // Arrange
-            // NhsUserForAbingdonAndPermitted has been set up to have access to Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID
+            // ServiceUserForAbingdonAndPermitted has been set up to have access to Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID
             // which belong to the notification has previously been assigned to
-            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                 .CreateClientWithoutRedirects())
             {
                 // Act
@@ -244,9 +244,9 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task GetOnClosedNotification_ReturnsOverviewPageReadOnlyVersion_ForUserWithEditPermission()
         {
             // Arrange
-            // NhsUserForAbingdonAndPermitted has been set up to have access to Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID
+            // ServiceUserForAbingdonAndPermitted has been set up to have access to Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID
             // which belong to the same Notification group as LINK_NOTIFICATION_ROYAL_FREE_LONDON_TB_SERVICE
-            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                 .CreateClientWithoutRedirects())
             {
                 // Act

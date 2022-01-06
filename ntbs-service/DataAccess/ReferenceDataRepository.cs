@@ -22,9 +22,8 @@ namespace ntbs_service.DataAccess
         Task<IList<TBService>> GetTbServicesFromHospitalIdsAsync(IEnumerable<Guid> hospitalIds);
         Task<IList<TBService>> GetTbServicesFromPhecCodeAsync(string phecCode);
         Task<IList<TBService>> GetTbServicesWithCaseManagersFromPhecCodeAsync(string phecCode);
-        IQueryable<TBService> GetDefaultTbServicesForPheUserQueryable(IEnumerable<string> roles);
-        IQueryable<TBService> GetDefaultTbServicesForNhsUserQueryable(IEnumerable<string> roles);
         IQueryable<TBService> GetActiveTbServicesOrderedByNameQueryable();
+        IQueryable<TBService> GetDefaultTbServicesForUserQueryable(IEnumerable<string> roles);
         Task<IList<PHEC>> GetAllPhecs();
         Task<PHEC> GetPhecByCode(string phecCode);
         Task<IList<User>> GetAllActiveCaseManagers();
@@ -136,17 +135,11 @@ namespace ntbs_service.DataAccess
                 .ToListAsync();
         }
 
-        public IQueryable<TBService> GetDefaultTbServicesForPheUserQueryable(IEnumerable<string> roles)
+        public IQueryable<TBService> GetDefaultTbServicesForUserQueryable(IEnumerable<string> roles)
         {
             return GetActiveTbServicesOrderedByNameQueryable()
                 .Include(tb => tb.PHEC)
-                .Where(tb => roles.Contains(tb.PHEC.AdGroup));
-        }
-
-        public IQueryable<TBService> GetDefaultTbServicesForNhsUserQueryable(IEnumerable<string> roles)
-        {
-            return GetActiveTbServicesOrderedByNameQueryable()
-                .Where(tb => roles.Contains(tb.ServiceAdGroup));
+                .Where(tb => roles.Contains(tb.PHEC.AdGroup) || roles.Contains(tb.ServiceAdGroup));
         }
 
         public IQueryable<TBService> GetActiveTbServicesOrderedByNameQueryable()

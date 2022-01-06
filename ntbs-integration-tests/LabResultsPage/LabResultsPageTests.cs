@@ -66,9 +66,9 @@ namespace ntbs_integration_tests.LabResultsPage
         }
 
         [Fact]
-        public async Task NhsUser_CanViewSpecimensAccordingToPermissions()
+        public async Task ServiceUser_CanViewSpecimensAccordingToPermissions()
         {
-            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                 .CreateClientWithoutRedirects())
             {
                 // Arrange
@@ -106,9 +106,9 @@ namespace ntbs_integration_tests.LabResultsPage
         }
 
         [Fact]
-        public async Task NhsUser_ShowsNoSpecimensIfNoPermissionForTbServices()
+        public async Task ServiceUser_ShowsNoSpecimensIfNoPermissionForTbServices()
         {
-            using (var client = Factory.WithUserAuth(TestUser.NhsUserWithNoTbServices)
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserWithNoTbServices)
                 .CreateClientWithoutRedirects())
             {
                 //Act
@@ -124,9 +124,9 @@ namespace ntbs_integration_tests.LabResultsPage
         }
 
         [Fact]
-        public async Task PheUser_CanViewSpecimensAccordingToPermissions()
+        public async Task RegionalUser_CanViewSpecimensAccordingToPermissions()
         {
-            using (var client = Factory.WithUserAuth(TestUser.PheUserWithPermittedPhecCode)
+            using (var client = Factory.WithUserAuth(TestUser.RegionalUserWithPermittedPhecCode)
                 .CreateClientWithoutRedirects())
             {
                 // Arrange
@@ -159,6 +159,37 @@ namespace ntbs_integration_tests.LabResultsPage
                 {
                     var header = document.QuerySelector($"#specimen-{notExpectedLabReferenceNumber}");
                     Assert.Null(header);
+                }
+            }
+        }
+
+        [Fact]
+        public async Task ServiceAndRegionalUser_CanViewSpecimensAccordingToPermissions()
+        {
+            using (var client = Factory.WithUserAuth(TestUser.UserWithServiceAndRegion)
+                .CreateClientWithoutRedirects())
+            {
+                // Arrange
+                var expectedLabReferenceNumbers = new List<string>
+                {
+                    MockSpecimenService.MockUnmatchedSpecimenForPhec.ReferenceLaboratoryNumber,
+                    MockSpecimenService.MockUnmatchedSpecimenForTbService.ReferenceLaboratoryNumber
+                };
+
+                //Act
+                var response = await client.GetAsync(PageRoute);
+                var document = await GetDocumentAsync(response);
+
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                var specimenDetailsSections = document.QuerySelectorAll(".nhsuk-card--care--specimen");
+                Assert.Equal(expectedLabReferenceNumbers.Count, specimenDetailsSections.Length);
+
+                foreach (var expectedLabReferenceNumber in expectedLabReferenceNumbers)
+                {
+                    var header = document.QuerySelector($"#specimen-{expectedLabReferenceNumber}");
+                    Assert.NotNull(header);
                 }
             }
         }

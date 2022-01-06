@@ -55,19 +55,21 @@ namespace ntbs_service.Pages
 
         private async Task SetHomepageKpiDetails()
         {
-            var userType = _userService.GetUserType(User);
-            if (userType == UserType.NhsUser)
+            var userPermissionsFilter = await _userService.GetUserPermissionsFilterAsync(User);
+
+            if (userPermissionsFilter.Type == UserType.NationalTeam)
             {
-                var tbServiceCodes = (await _userService.GetTbServicesAsync(User))
-                    .Select(x => x.Code)
-                    .ToList();
-                HomepageKpiDetails = await _homepageKpiService.GetKpiForTbService(tbServiceCodes);
+                HomepageKpiDetails = await _homepageKpiService.GetKpiForAllPhec();
+            }
+            else if (userPermissionsFilter.IsInAtLeastOneRegion)
+            {
+                HomepageKpiDetails = await _homepageKpiService.GetKpiForPhec(userPermissionsFilter.IncludedPHECCodes);
             }
             else
             {
-                var phecCodes = (await _userService.GetPhecCodesAsync(User)).ToList();
-                HomepageKpiDetails = await _homepageKpiService.GetKpiForPhec(phecCodes);
+                HomepageKpiDetails = await _homepageKpiService.GetKpiForTbService(userPermissionsFilter.IncludedTBServiceCodes);
             }
+
             KpiFilter = new SelectList(HomepageKpiDetails.OrderBy(x => x.Name), nameof(HomepageKpi.Code), nameof(HomepageKpi.Name));
         }
 

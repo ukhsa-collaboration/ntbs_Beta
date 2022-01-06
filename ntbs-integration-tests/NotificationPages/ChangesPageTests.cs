@@ -20,7 +20,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             using (var client = Factory
-                .WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+                .WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                 .WithNotificationAndTbServiceConnected(Utilities.NOTIFIED_ID, Utilities.PERMITTED_SERVICE_CODE)
                 .CreateClientWithoutRedirects())
             {
@@ -38,7 +38,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             using (var client = Factory
-                .WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+                .WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                 .WithNotificationAndTbServiceConnected(Utilities.LINKED_NOTIFICATION_ABINGDON_TB_SERVICE, Utilities.PERMITTED_SERVICE_CODE)
                 .CreateClientWithoutRedirects())
             {
@@ -62,7 +62,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             using (var client = Factory
-                .WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+                .WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                 .WithNotificationAndTbServiceConnected(Utilities.NOTIFIED_ID, Utilities.UNPERMITTED_SERVICE_CODE)
                 .CreateClientWithoutRedirects())
             {
