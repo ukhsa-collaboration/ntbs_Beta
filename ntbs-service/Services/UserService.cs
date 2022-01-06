@@ -83,7 +83,7 @@ namespace ntbs_service.Services
                 return UserType.NationalTeam;
             }
 
-            return UserType.ServiceOrPhecUser;
+            return UserType.ServiceOrRegionalUser;
         }
 
         public async Task RecordUserLoginAsync(string username)

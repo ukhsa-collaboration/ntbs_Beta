@@ -84,7 +84,7 @@ namespace ntbs_service_unit_tests.Pages
         {
             // Arrange
             _mockUserService.Setup(s => s.GetUserPermissionsFilterAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
-                new UserPermissionsFilter { Type = UserType.ServiceOrPhecUser });
+                new UserPermissionsFilter { Type = UserType.ServiceOrRegionalUser });
 
             var recents = new List<Notification>
             {
@@ -118,7 +118,7 @@ namespace ntbs_service_unit_tests.Pages
         {
             // Arrange
             _mockUserService.Setup(s => s.GetUserPermissionsFilterAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
-                new UserPermissionsFilter { Type = UserType.ServiceOrPhecUser });
+                new UserPermissionsFilter { Type = UserType.ServiceOrRegionalUser });
 
             var drafts = new List<Notification>
             {
@@ -154,9 +154,9 @@ namespace ntbs_service_unit_tests.Pages
             var alerts = new List<AlertWithTbServiceForDisplay> { new AlertWithTbServiceForDisplay { AlertId = 101 } };
             _mockAlertRepository.Setup(s => s.GetOpenAlertsByTbServiceCodesAsync(It.IsAny<IEnumerable<string>>()))
                 .Returns(Task.FromResult(alerts));
-            _mockUserService.Setup(s => s.GetUserType(It.IsAny<ClaimsPrincipal>())).Returns(UserType.ServiceOrPhecUser);
+            _mockUserService.Setup(s => s.GetUserType(It.IsAny<ClaimsPrincipal>())).Returns(UserType.ServiceOrRegionalUser);
             _mockUserService.Setup(s => s.GetUserPermissionsFilterAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
-                new UserPermissionsFilter { Type = UserType.ServiceOrPhecUser });
+                new UserPermissionsFilter { Type = UserType.ServiceOrRegionalUser });
 
             var pageModel = new IndexModel(_notificationRepository,
                 _mockAlertRepository.Object,
@@ -181,7 +181,7 @@ namespace ntbs_service_unit_tests.Pages
             _mockUserService.Setup(s => s.GetUserPermissionsFilterAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
                 new UserPermissionsFilter
                 {
-                    Type = UserType.ServiceOrPhecUser,
+                    Type = UserType.ServiceOrRegionalUser,
                     IncludedPHECCodes = new List<string> { "PHEC001" }
                 });
 
@@ -210,7 +210,7 @@ namespace ntbs_service_unit_tests.Pages
             _mockUserService.Setup(s => s.GetUserPermissionsFilterAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
                 new UserPermissionsFilter
                 {
-                    Type = UserType.ServiceOrPhecUser,
+                    Type = UserType.ServiceOrRegionalUser,
                     IncludedTBServiceCodes = new List<string> { "TB001" }
                 });
 

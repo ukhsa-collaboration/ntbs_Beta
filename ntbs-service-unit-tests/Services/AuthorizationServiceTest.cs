@@ -142,7 +142,7 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Theory]
-        [InlineData(UserType.ServiceOrPhecUser)]
+        [InlineData(UserType.ServiceOrRegionalUser)]
         [InlineData(UserType.NationalTeam)]
         public async Task FilterAlertsForUser_FiltersByTheUsersTbServicesForAllUserTypes(UserType userType)
         {
@@ -207,7 +207,7 @@ namespace ntbs_service_unit_tests.Services
             _mockUserService.Setup(us => us.GetTbServicesAsync(It.IsAny<ClaimsPrincipal>()))
                 .Returns(Task.FromResult((new List<TBService> {tbService}).AsEnumerable()));
             _mockUserService.Setup(us => us.GetUserType(It.IsAny<ClaimsPrincipal>()))
-                .Returns(UserType.ServiceOrPhecUser);
+                .Returns(UserType.ServiceOrRegionalUser);
 
             // Act
             var result = await _authorizationService.FilterAlertsForUserAsync(testUser, alertsToExpect);

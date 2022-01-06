@@ -81,7 +81,7 @@ namespace ntbs_service_unit_tests.Services
             Assert.Empty(result.IncludedPHECCodes);
             Assert.Single(result.IncludedTBServiceCodes);
             Assert.Equal(code, result.IncludedTBServiceCodes.First());
-            Assert.Equal(UserType.ServiceOrPhecUser, result.Type);
+            Assert.Equal(UserType.ServiceOrRegionalUser, result.Type);
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace ntbs_service_unit_tests.Services
             Assert.Empty(result.IncludedTBServiceCodes);
             Assert.Single(result.IncludedPHECCodes);
             Assert.Equal(code, result.IncludedPHECCodes.First());
-            Assert.Equal(UserType.ServiceOrPhecUser, result.Type);
+            Assert.Equal(UserType.ServiceOrRegionalUser, result.Type);
         }
 
         [Fact]

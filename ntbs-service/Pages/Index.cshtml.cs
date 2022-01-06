@@ -57,10 +57,18 @@ namespace ntbs_service.Pages
         {
             var userPermissionsFilter = await _userService.GetUserPermissionsFilterAsync(User);
 
-            HomepageKpiDetails =
-                userPermissionsFilter.Type == UserType.NationalTeam || userPermissionsFilter.IsInAtLeastOneRegion
-                ? await _homepageKpiService.GetKpiForPhec(userPermissionsFilter.IncludedPHECCodes)
-                : await _homepageKpiService.GetKpiForTbService(userPermissionsFilter.IncludedTBServiceCodes);
+            if (userPermissionsFilter.Type == UserType.NationalTeam)
+            {
+                HomepageKpiDetails = await _homepageKpiService.GetKpiForAllPhec();
+            }
+            else if (userPermissionsFilter.IsInAtLeastOneRegion)
+            {
+                HomepageKpiDetails = await _homepageKpiService.GetKpiForPhec(userPermissionsFilter.IncludedPHECCodes);
+            }
+            else
+            {
+                HomepageKpiDetails = await _homepageKpiService.GetKpiForTbService(userPermissionsFilter.IncludedTBServiceCodes);
+            }
 
             KpiFilter = new SelectList(HomepageKpiDetails.OrderBy(x => x.Name), nameof(HomepageKpi.Code), nameof(HomepageKpi.Name));
         }

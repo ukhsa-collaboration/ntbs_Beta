@@ -5,6 +5,6 @@ namespace ntbs_service.Models.Enums
         /** Members of the national team with access to all regions */
         NationalTeam,
         /** Members of PHECs, regions associated with multiple TB services */
-        ServiceOrPhecUser
+        ServiceOrRegionalUser
     }
 }

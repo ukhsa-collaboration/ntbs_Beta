@@ -13,5 +13,15 @@ namespace ntbs_service.Models
         public UserType Type { get; set; }
 
         public bool IsInAtLeastOneRegion => IncludedPHECCodes.Any();
+
+        public bool UserBelongsToTbService(string tbServiceCode)
+        {
+            return IncludedTBServiceCodes.Contains(tbServiceCode);
+        }
+
+        public bool UserBelongsToPHEC(string phecCode)
+        {
+            return IncludedPHECCodes.Contains(phecCode);
+        }
     }
 }

@@ -178,14 +178,15 @@ namespace ntbs_service.Pages.LabResults
             if (permissionsFilter.Type == UserType.NationalTeam)
             {
                 UnmatchedSpecimens = await _specimenService.GetAllUnmatchedSpecimensAsync();
-                return;
             }
-
-            var specimensFromServices = await _specimenService.GetUnmatchedSpecimensDetailsForTbServicesAsync(
-                permissionsFilter.IncludedTBServiceCodes);
-            var specimensFromPhecs = await _specimenService.GetUnmatchedSpecimensDetailsForPhecsAsync(
-                permissionsFilter.IncludedPHECCodes);
-            UnmatchedSpecimens = specimensFromServices.Concat(specimensFromPhecs);
+            else
+            {
+                var specimensFromServices = await _specimenService.GetUnmatchedSpecimensDetailsForTbServicesAsync(
+                    permissionsFilter.IncludedTBServiceCodes);
+                var specimensFromPhecs = await _specimenService.GetUnmatchedSpecimensDetailsForPhecsAsync(
+                    permissionsFilter.IncludedPHECCodes);
+                UnmatchedSpecimens = specimensFromServices.Concat(specimensFromPhecs);
+            }
         }
 
         private void AddTempDataForSuccessfulMessage(int notificationId, string laboratoryReferenceNumber)
