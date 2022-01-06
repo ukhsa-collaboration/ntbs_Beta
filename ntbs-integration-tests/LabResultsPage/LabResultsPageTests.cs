@@ -164,6 +164,37 @@ namespace ntbs_integration_tests.LabResultsPage
         }
 
         [Fact]
+        public async Task ServiceAndRegionalUser_CanViewSpecimensAccordingToPermissions()
+        {
+            using (var client = Factory.WithUserAuth(TestUser.UserWithServiceAndRegion)
+                .CreateClientWithoutRedirects())
+            {
+                // Arrange
+                var expectedLabReferenceNumbers = new List<string>
+                {
+                    MockSpecimenService.MockUnmatchedSpecimenForPhec.ReferenceLaboratoryNumber,
+                    MockSpecimenService.MockUnmatchedSpecimenForTbService.ReferenceLaboratoryNumber
+                };
+
+                //Act
+                var response = await client.GetAsync(PageRoute);
+                var document = await GetDocumentAsync(response);
+
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                var specimenDetailsSections = document.QuerySelectorAll(".nhsuk-card--care--specimen");
+                Assert.Equal(expectedLabReferenceNumbers.Count, specimenDetailsSections.Length);
+
+                foreach (var expectedLabReferenceNumber in expectedLabReferenceNumbers)
+                {
+                    var header = document.QuerySelector($"#specimen-{expectedLabReferenceNumber}");
+                    Assert.NotNull(header);
+                }
+            }
+        }
+
+        [Fact]
         public async Task NationalTeam_CanViewSpecimensAccordingToPermissions()
         {
             using (var client = Factory.WithUserAuth(TestUser.NationalTeamUser)

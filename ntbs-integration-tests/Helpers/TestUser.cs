@@ -53,6 +53,7 @@ namespace ntbs_integration_tests.Helpers
             ServiceUserForAbingdonAndPermitted,
             ServiceUserWithNoTbServices,
             RegionalUserWithPermittedPhecCode,
+            UserWithServiceAndRegion,
             NationalTeamUser,
             AbingdonCaseManager,
             AbingdonCaseManager2,
@@ -88,6 +89,13 @@ namespace ntbs_integration_tests.Helpers
             "Permitted Phec",
             UserType.ServiceOrRegionalUser,
             new[] { "App.Auth.NIS.NTBS.Admin", "App.Auth.NIS.NTBS.SoE" });
+
+        public static TestUser UserWithServiceAndRegion = new TestUser(
+            9988,
+            "user-service-and-region@phe.com",
+            "Service and Region",
+            UserType.ServiceOrRegionalUser,
+            new[] { "App.Auth.NIS.NTBS.SoE", "App.Auth.NIS.NTBS.Service_Abingdon" });
 
         public static TestUser NationalTeamUser = new TestUser(
             4567,
