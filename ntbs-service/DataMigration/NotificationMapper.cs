@@ -197,10 +197,12 @@ namespace ntbs_service.DataMigration
                 };
                 notification.SocialContextAddresses = notificationSocialContextAddresses;
                 notification.SocialContextVenues = notificationSocialContextVenues;
-                notification.TreatmentEvents = CombineTreatmentEvents(notification,
+                notification.TreatmentEvents = await CombineTreatmentEvents(notification,
                     rawNotification,
                     notificationTransferEvents,
-                    notificationOutcomeEvents);
+                    notificationOutcomeEvents,
+                    context,
+                    runId);
 
                 notification.MBovisDetails = ExtractMBovisDetails(notificationMBovisAnimalExposures,
                     notificationMBovisExposureToKnownCase,
@@ -218,18 +220,22 @@ namespace ntbs_service.DataMigration
             return notificationsToReturn;
         }
 
-        private List<TreatmentEvent> CombineTreatmentEvents(Notification notification,
+        private async Task<List<TreatmentEvent>> CombineTreatmentEvents(Notification notification,
             MigrationDbNotification rawNotification,
             IEnumerable<TreatmentEvent> notificationTransferEvents,
-            IEnumerable<TreatmentEvent> notificationOutcomeEvents)
+            IEnumerable<TreatmentEvent> notificationOutcomeEvents,
+            PerformContext context,
+            int runId)
         {
             return notification.ClinicalDetails.IsPostMortem == true
                 ? TreatmentEventsForPostMortemNotification(rawNotification, notificationOutcomeEvents)
-                : TreatmentEventsForPreMortemNotification(
+                : await TreatmentEventsForPreMortemNotification(
                     notification,
                     rawNotification,
                     notificationTransferEvents,
-                    notificationOutcomeEvents);
+                    notificationOutcomeEvents,
+                    context,
+                    runId);
         }
 
         private List<TreatmentEvent> TreatmentEventsForPostMortemNotification(MigrationDbNotification rawNotification,
@@ -255,16 +261,23 @@ namespace ntbs_service.DataMigration
             return new List<TreatmentEvent> {eventToReturn};
         }
 
-        private List<TreatmentEvent> TreatmentEventsForPreMortemNotification(Notification notification,
+        private async Task<List<TreatmentEvent>> TreatmentEventsForPreMortemNotification(Notification notification,
             MigrationDbNotification rawNotification,
             IEnumerable<TreatmentEvent> notificationTransferEvents,
-            IEnumerable<TreatmentEvent> notificationOutcomeEvents)
+            IEnumerable<TreatmentEvent> notificationOutcomeEvents,
+            PerformContext context,
+            int runId)
         {
             var treatmentEvents = new List<TreatmentEvent>();
 
             if (notification.NotificationStatus != NotificationStatus.Draft)
             {
-                treatmentEvents.Add(NotificationHelper.CreateTreatmentStartEvent(notification));
+                var tbServiceCode = await GetTbServiceCodeFromHospitalId(rawNotification.NotifyingHospitalId);
+                var caseManagerId = await GetCaseManagerIdFromUsername(rawNotification.NotifyingCaseManager, context, runId);
+                treatmentEvents.Add(NotificationHelper.CreateTreatmentStartEvent(
+                    notification,
+                    caseManagerId,
+                    tbServiceCode));
             }
 
             treatmentEvents.AddRange(notificationTransferEvents);
@@ -380,34 +393,33 @@ namespace ntbs_service.DataMigration
             };
             var consultant = RemoveCharactersNotIn(ValidationRegexes.CharacterValidationAsciiBasic, rawNotification.Consultant);
             details.Consultant = consultant;
-            // details.TBServiceCode is set below, based on the hospital
-
-            if (details.HospitalId is Guid guid)
-            {
-                var tbService = (await _referenceDataRepository.GetTbServiceFromHospitalIdAsync(guid));
-                if (tbService == null)
-                {
-                    Log.Error($"No TB service exists for hospital with guid {guid}");
-                }
-                else
-                {
-                    // It's OK to only set this where it exists
-                    // - the service missing will come up in notification validation
-                    details.TBServiceCode = tbService.Code;
-                }
-            }
-
-            if (!string.IsNullOrEmpty(rawNotification.CaseManager))
-            {
-                await _caseManagerImportService.ImportOrUpdateLegacyUser(rawNotification.CaseManager, details.TBServiceCode, context, runId);
-                details.CaseManagerId = (await _referenceDataRepository.GetUserByUsernameAsync(rawNotification.CaseManager)).Id;
-            }
-
-            // we are not doing the same check to case manager here, because leaving it empty would make it pass
-            // validation - it is not a mandatory field. we don't want to lose it where it exists, so that check
-            // is explicitly done during the validation step
-
+            details.TBServiceCode = await GetTbServiceCodeFromHospitalId(details.HospitalId);
+            details.CaseManagerId = await GetCaseManagerIdFromUsername(rawNotification.CaseManager, context, runId);
             return details;
+        }
+
+        private async Task<int?> GetCaseManagerIdFromUsername(string username, PerformContext context, int runId)
+        {
+            if (string.IsNullOrEmpty(username)) return null;
+
+            await _caseManagerImportService.ImportOrUpdateLegacyUser(username, context, runId);
+            return (await _referenceDataRepository.GetUserByUsernameAsync(username))?.Id;
+        }
+
+        private async Task<string> GetTbServiceCodeFromHospitalId(Guid? hospitalId)
+        {
+            if (!hospitalId.HasValue) return null;
+
+            var tbService = await _referenceDataRepository.GetTbServiceFromHospitalIdAsync(hospitalId.Value);
+            if (tbService == null)
+            {
+                Log.Error($"No TB service exists for hospital with guid {hospitalId}");
+                return null;
+            }
+            else
+            {
+                return tbService.Code;
+            }
         }
 
         private static List<NotificationSite> AsSites(IEnumerable<MigrationDbSite> rawResultRawSites)

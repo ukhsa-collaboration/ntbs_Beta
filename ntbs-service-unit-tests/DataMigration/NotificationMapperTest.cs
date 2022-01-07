@@ -68,7 +68,7 @@ namespace ntbs_service_unit_tests.DataMigration
         public NotificationMapperTest()
         {
             _caseManagerImportService
-                .Setup(serv => serv.ImportOrUpdateLegacyUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<PerformContext>(), It.IsAny<int>()))
+                .Setup(serv => serv.ImportOrUpdateLegacyUser(It.IsAny<string>(), It.IsAny<PerformContext>(), It.IsAny<int>()))
                 .Returns(() => Task.CompletedTask);
             _referenceDataRepositoryMock.Setup(repo => repo.GetUserByUsernameAsync(It.IsAny<string>()))
                 .Returns((string username) => Task.FromResult(_usernameToUserDict[username]));

@@ -76,7 +76,7 @@ namespace ntbs_service.DataMigration
 
             if (!string.IsNullOrEmpty(caseManagerUsername))
             {
-                await _caseManagerImportService.ImportOrUpdateLegacyUser(caseManagerUsername, ev.TbServiceCode, context, runId);
+                await _caseManagerImportService.ImportOrUpdateLegacyUser(caseManagerUsername, context, runId);
                 ev.CaseManagerId = (await _referenceDataRepository.GetUserByUsernameAsync(caseManagerUsername)).Id;
             }
         }

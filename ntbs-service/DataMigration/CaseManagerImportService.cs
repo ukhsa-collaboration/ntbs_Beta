@@ -10,7 +10,7 @@ namespace ntbs_service.DataMigration
 {
     public interface ICaseManagerImportService
     {
-        Task ImportOrUpdateLegacyUser(string legacyCaseManagerUsername, string legacyTbServiceCode, PerformContext context, int runId);
+        Task ImportOrUpdateLegacyUser(string legacyCaseManagerUsername, PerformContext context, int runId);
     }
 
     public class CaseManagerImportService : ICaseManagerImportService
@@ -32,8 +32,7 @@ namespace ntbs_service.DataMigration
             _logger = logger;
         }
 
-        public async Task ImportOrUpdateLegacyUser(string legacyCaseManagerUsername,
-            string legacyTbServiceCode, PerformContext context, int runId)
+        public async Task ImportOrUpdateLegacyUser(string legacyCaseManagerUsername, PerformContext context, int runId)
         {
             if (legacyCaseManagerUsername == null)
             {
