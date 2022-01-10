@@ -40,6 +40,7 @@ namespace ntbs_service.DataMigration
         private readonly TreatmentOutcome _postMortemOutcomeType;
         private readonly List<TreatmentOutcome> _diedOutcomes;
         private readonly List<int> _diedOutcomeIds;
+        private readonly List<int> _endingOutcomeIds;
         private readonly IPostcodeService _postcodeService;
         private readonly ICaseManagerImportService _caseManagerImportService;
         private readonly ITreatmentEventMapper _treatmentEventMapper;
@@ -65,8 +66,18 @@ namespace ntbs_service.DataMigration
             _diedOutcomes = _referenceDataRepository.GetTreatmentOutcomesForType(TreatmentOutcomeType.Died)
                 .Result
                 .ToList();
+            var curedOutcomes = _referenceDataRepository.GetTreatmentOutcomesForType(TreatmentOutcomeType.Cured)
+                .Result
+                .ToList();
+            var completedOutcomes = _referenceDataRepository.GetTreatmentOutcomesForType(TreatmentOutcomeType.Completed)
+                .Result
+                .ToList();
             _diedOutcomeIds = _diedOutcomes
                 .Select(outcome => outcome.TreatmentOutcomeId)
+                .ToList();
+            _endingOutcomeIds = _diedOutcomeIds
+                .Concat(curedOutcomes.Select(o => o.TreatmentOutcomeId))
+                .Concat(completedOutcomes.Select(o => o.TreatmentOutcomeId))
                 .ToList();
         }
 
@@ -203,6 +214,8 @@ namespace ntbs_service.DataMigration
                     notificationOutcomeEvents,
                     context,
                     runId);
+                PopulateTreatmentOutcomesOnEvents(notification);
+                AlterStillOnTreatmentEventDateIfCompletedOutcomePresent(notification);
 
                 notification.MBovisDetails = ExtractMBovisDetails(notificationMBovisAnimalExposures,
                     notificationMBovisExposureToKnownCase,
@@ -291,6 +304,36 @@ namespace ntbs_service.DataMigration
             }
 
             return treatmentEvents;
+        }
+
+        private void PopulateTreatmentOutcomesOnEvents(Notification notification)
+        {
+            foreach (var treatmentOutcome in notification.TreatmentEvents)
+            {
+                treatmentOutcome.TreatmentOutcome = Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes()
+                    .FirstOrDefault(to => to.TreatmentOutcomeId == treatmentOutcome.TreatmentOutcomeId);
+            }
+        }
+
+        private void AlterStillOnTreatmentEventDateIfCompletedOutcomePresent(Notification notification)
+        {
+            if (notification.ClinicalDetails.StartingDate == null)
+            {
+                return;
+            }
+
+            var lastEndingEvent = notification.TreatmentEvents.Where(te => _endingOutcomeIds.Contains(te.TreatmentOutcomeId ?? 0)).GetMostRecentTreatmentEvent();
+            var mostRecentOutcomeYear = TreatmentOutcomesHelper.GetMostRecentExpectedOutcomeYear(notification);
+
+            if (mostRecentOutcomeYear != 0
+                && lastEndingEvent != null
+                && lastEndingEvent.TreatmentOutcomeId != null
+                && lastEndingEvent.EventDate < notification.ClinicalDetails.StartingDate.Value.AddYears(mostRecentOutcomeYear)
+                && TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(notification, mostRecentOutcomeYear)?.TreatmentOutcomeSubType == TreatmentOutcomeSubType.StillOnTreatment)
+            {
+                var stillOnTreatmentEvent = notification.TreatmentEvents.OrderForEpisodes().Last(o => o.TreatmentOutcome?.TreatmentOutcomeSubType == TreatmentOutcomeSubType.StillOnTreatment);
+                stillOnTreatmentEvent.EventDate = lastEndingEvent.EventDate.Value.AddDays(-1);
+            }
         }
 
         private TreatmentEvent CreateDerivedDeathEvent(MigrationDbNotification rawNotification) =>

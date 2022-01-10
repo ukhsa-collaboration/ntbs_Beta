@@ -83,6 +83,21 @@ namespace ntbs_service.Services
             return IsTreatmentOutcomeMissingAtXYears(notification, yearsAfterTreatmentStartDate);
         }
 
+        public static int GetMostRecentExpectedOutcomeYear(Notification notification)
+        {
+            var startingDate = notification.ClinicalDetails.StartingDate;
+            for (int i = 3; i > 0; i--)
+            {
+                //if (DateTime.Now > startingDate.Value.AddYears(i))
+                if (IsTreatmentOutcomeExpectedAtXYears(notification, i))
+                {
+                    return i;
+                }
+            }
+
+            return 0;
+        }
+
         private static IEnumerable<TreatmentEvent> GetOrderedTreatmentEventsInWindowXtoXMinus1Years(
             Notification notification,
             int numberOfYears)
