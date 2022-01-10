@@ -61,6 +61,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             await SetNotificationProperties(isBeingSubmitted, HospitalDetails);
             await SetDropdownsAsync();
             FormattedNotificationDate = Notification.NotificationDate.ConvertToFormattedDate();
+            HospitalDetails.ExistingCaseManagerId = Notification.HospitalDetails.CaseManagerId;
 
             if (HospitalDetails.ShouldValidateFull)
             {
