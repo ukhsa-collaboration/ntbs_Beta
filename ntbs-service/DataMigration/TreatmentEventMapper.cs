@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
@@ -45,11 +46,13 @@ namespace ntbs_service.DataMigration
 
         public async Task<TreatmentEvent> AsOutcomeEvent(MigrationDbOutcomeEvent rawEvent, PerformContext context, int runId)
         {
+            var outcomes = Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes();
             var ev = new TreatmentEvent
             {
                 EventDate = rawEvent.EventDate,
                 TreatmentEventType = Converter.GetEnumValue<TreatmentEventType>(rawEvent.TreatmentEventType),
                 TreatmentOutcomeId = rawEvent.TreatmentOutcomeId,
+                TreatmentOutcome = outcomes.First(o => o.TreatmentOutcomeId == rawEvent.TreatmentOutcomeId),
                 Note = rawEvent.Note
             };
 

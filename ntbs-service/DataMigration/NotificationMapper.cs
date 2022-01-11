@@ -37,10 +37,6 @@ namespace ntbs_service.DataMigration
         private readonly IMigrationRepository _migrationRepository;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IImportLogger _logger;
-        private readonly TreatmentOutcome _postMortemOutcomeType;
-        private readonly List<TreatmentOutcome> _diedOutcomes;
-        private readonly List<int> _diedOutcomeIds;
-        private readonly List<int> _endingOutcomeIds;
         private readonly IPostcodeService _postcodeService;
         private readonly ICaseManagerImportService _caseManagerImportService;
         private readonly ITreatmentEventMapper _treatmentEventMapper;
@@ -58,27 +54,6 @@ namespace ntbs_service.DataMigration
             _postcodeService = postcodeService;
             _caseManagerImportService = caseManagerImportService;
             _treatmentEventMapper = treatmentEventMapper;
-
-            // These are database-based values, but static from the runtime point of view, so we fetch them once here
-            _postMortemOutcomeType = _referenceDataRepository.GetTreatmentOutcomeForTypeAndSubType(
-                TreatmentOutcomeType.Died,
-                TreatmentOutcomeSubType.Unknown).Result;
-            _diedOutcomes = _referenceDataRepository.GetTreatmentOutcomesForType(TreatmentOutcomeType.Died)
-                .Result
-                .ToList();
-            var curedOutcomes = _referenceDataRepository.GetTreatmentOutcomesForType(TreatmentOutcomeType.Cured)
-                .Result
-                .ToList();
-            var completedOutcomes = _referenceDataRepository.GetTreatmentOutcomesForType(TreatmentOutcomeType.Completed)
-                .Result
-                .ToList();
-            _diedOutcomeIds = _diedOutcomes
-                .Select(outcome => outcome.TreatmentOutcomeId)
-                .ToList();
-            _endingOutcomeIds = _diedOutcomeIds
-                .Concat(curedOutcomes.Select(o => o.TreatmentOutcomeId))
-                .Concat(completedOutcomes.Select(o => o.TreatmentOutcomeId))
-                .ToList();
         }
 
         public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
@@ -214,8 +189,7 @@ namespace ntbs_service.DataMigration
                     notificationOutcomeEvents,
                     context,
                     runId);
-                PopulateTreatmentOutcomesOnEvents(notification);
-                AlterStillOnTreatmentEventDateIfCompletedOutcomePresent(notification);
+                AlterStillOnTreatmentEventDateIfEndingOutcomePresent(notification);
 
                 notification.MBovisDetails = ExtractMBovisDetails(notificationMBovisAnimalExposures,
                     notificationMBovisExposureToKnownCase,
@@ -256,15 +230,12 @@ namespace ntbs_service.DataMigration
         {
             // For post mortem cases the death event is the ONLY event we want to import so the final outcome is
             // correctly reported.
-            var deathEvents = notificationOutcomeEvents.Where(e => _diedOutcomeIds.Contains(e.TreatmentOutcomeId ?? 0)).ToList();
+            var deathEvents = notificationOutcomeEvents.Where(e => e.TreatmentEventIsDeathEvent).ToList();
             TreatmentEvent eventToReturn;
             if (deathEvents.Any())
             {
                 eventToReturn = deathEvents.First();
                 eventToReturn.EventDate = rawNotification.DeathDate;
-                // We add the treatment outcome manually to make sure it is loaded for the HasDeathEventForPostMortemCase check
-                eventToReturn.TreatmentOutcome =
-                    _diedOutcomes.Single(te => te.TreatmentOutcomeId == eventToReturn.TreatmentOutcomeId);
             }
             else
             {
@@ -297,8 +268,7 @@ namespace ntbs_service.DataMigration
             treatmentEvents.AddRange(notificationOutcomeEvents);
 
             // If there is a death date but no death treatment event, add one in
-            if (rawNotification.DeathDate != null
-                && !treatmentEvents.Any(e => _diedOutcomeIds.Contains(e.TreatmentOutcomeId ?? 0)))
+            if (rawNotification.DeathDate != null && !treatmentEvents.Any(e => e.TreatmentEventIsDeathEvent))
             {
                 treatmentEvents.Add(CreateDerivedDeathEvent(rawNotification));
             }
@@ -306,23 +276,14 @@ namespace ntbs_service.DataMigration
             return treatmentEvents;
         }
 
-        private void PopulateTreatmentOutcomesOnEvents(Notification notification)
-        {
-            foreach (var treatmentOutcome in notification.TreatmentEvents)
-            {
-                treatmentOutcome.TreatmentOutcome = Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes()
-                    .FirstOrDefault(to => to.TreatmentOutcomeId == treatmentOutcome.TreatmentOutcomeId);
-            }
-        }
-
-        private void AlterStillOnTreatmentEventDateIfCompletedOutcomePresent(Notification notification)
+        private void AlterStillOnTreatmentEventDateIfEndingOutcomePresent(Notification notification)
         {
             if (notification.ClinicalDetails.StartingDate == null)
             {
                 return;
             }
 
-            var lastEndingEvent = notification.TreatmentEvents.Where(te => _endingOutcomeIds.Contains(te.TreatmentOutcomeId ?? 0)).GetMostRecentTreatmentEvent();
+            var lastEndingEvent = notification.TreatmentEvents.Where(te => te.TreatmentEventIsEndingEvent).GetMostRecentTreatmentEvent();
             var mostRecentOutcomeYear = TreatmentOutcomesHelper.GetMostRecentExpectedOutcomeYear(notification);
 
             if (mostRecentOutcomeYear != 0
@@ -336,14 +297,19 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        private TreatmentEvent CreateDerivedDeathEvent(MigrationDbNotification rawNotification) =>
-            new TreatmentEvent
+        private TreatmentEvent CreateDerivedDeathEvent(MigrationDbNotification rawNotification)
+        {
+            var postMortemOutcomeType = Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes()
+                .First(o => o.TreatmentOutcomeType == TreatmentOutcomeType.Died &&
+                            o.TreatmentOutcomeSubType == TreatmentOutcomeSubType.Unknown);
+            return new TreatmentEvent
             {
-                EventDate = rawNotification.DeathDate,
-                TreatmentEventType = TreatmentEventType.TreatmentOutcome,
-                TreatmentOutcomeId = _postMortemOutcomeType.TreatmentOutcomeId,
-                TreatmentOutcome = _postMortemOutcomeType
-            };
+               EventDate = rawNotification.DeathDate,
+               TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+               TreatmentOutcomeId = postMortemOutcomeType.TreatmentOutcomeId,
+               TreatmentOutcome = postMortemOutcomeType
+           };
+        }
 
         private MBovisDetails ExtractMBovisDetails(ICollection<MBovisAnimalExposure> animalExposures,
             ICollection<MBovisExposureToKnownCase> exposureToKnownCase,
