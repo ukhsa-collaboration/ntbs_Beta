@@ -153,9 +153,10 @@ namespace ntbs_service.DataMigration
                     notificationTransferEvents.Add(await _treatmentEventMapper.AsTransferEvent(transfer, context, runId));
                 }
                 var notificationOutcomeEvents = new List<TreatmentEvent>();
+                var allOutcomes = await _referenceDataRepository.GetAllTreatmentOutcomes();
                 foreach (var outcome in outcomeEvents.Where(sc => sc.OldNotificationId == id))
                 {
-                    notificationOutcomeEvents.Add(await _treatmentEventMapper.AsOutcomeEvent(outcome, context, runId));
+                    notificationOutcomeEvents.Add(await _treatmentEventMapper.AsOutcomeEvent(outcome, allOutcomes, context, runId));
                 }
                 var notificationMBovisAnimalExposures = mbovisAnimalExposures
                     .Where(sc => sc.OldNotificationId == id)
@@ -215,7 +216,7 @@ namespace ntbs_service.DataMigration
             int runId)
         {
             return notification.ClinicalDetails.IsPostMortem == true
-                ? TreatmentEventsForPostMortemNotification(rawNotification, notificationOutcomeEvents)
+                ? await TreatmentEventsForPostMortemNotification(rawNotification, notificationOutcomeEvents)
                 : await TreatmentEventsForPreMortemNotification(
                     notification,
                     rawNotification,
@@ -225,7 +226,7 @@ namespace ntbs_service.DataMigration
                     runId);
         }
 
-        private List<TreatmentEvent> TreatmentEventsForPostMortemNotification(MigrationDbNotification rawNotification,
+        private async Task<List<TreatmentEvent>> TreatmentEventsForPostMortemNotification(MigrationDbNotification rawNotification,
             IEnumerable<TreatmentEvent> notificationOutcomeEvents)
         {
             // For post mortem cases the death event is the ONLY event we want to import so the final outcome is
@@ -239,7 +240,7 @@ namespace ntbs_service.DataMigration
             }
             else
             {
-                eventToReturn = CreateDerivedDeathEvent(rawNotification);
+                eventToReturn = await CreateDerivedDeathEvent(rawNotification);
             }
 
             return new List<TreatmentEvent> {eventToReturn};
@@ -270,7 +271,7 @@ namespace ntbs_service.DataMigration
             // If there is a death date but no death treatment event, add one in
             if (rawNotification.DeathDate != null && !treatmentEvents.Any(e => e.TreatmentEventIsDeathEvent))
             {
-                treatmentEvents.Add(CreateDerivedDeathEvent(rawNotification));
+                treatmentEvents.Add(await CreateDerivedDeathEvent(rawNotification));
             }
 
             return treatmentEvents;
@@ -278,32 +279,35 @@ namespace ntbs_service.DataMigration
 
         private void AlterStillOnTreatmentEventDateIfEndingOutcomePresent(Notification notification)
         {
-            if (notification.ClinicalDetails.StartingDate == null)
+            var lastEndingEvent = notification.TreatmentEvents.Where(te => te.TreatmentEventIsEndingEvent)
+                .GetMostRecentTreatmentEvent();
+            if (!notification.ClinicalDetails.StartingDate.HasValue || lastEndingEvent == null || !lastEndingEvent.EventDate.HasValue)
             {
                 return;
             }
 
-            var lastEndingEvent = notification.TreatmentEvents.Where(te => te.TreatmentEventIsEndingEvent).GetMostRecentTreatmentEvent();
-            var mostRecentOutcomeYear = TreatmentOutcomesHelper.GetMostRecentExpectedOutcomeYear(notification);
+            var expectedEndingOutcomeYear = GetExpectedEndingOutcomeYear(notification, lastEndingEvent);
+            var stillOnTreatmentEvent = notification.TreatmentEvents.OrderForEpisodes().LastOrDefault(o => o.TreatmentOutcome?.TreatmentOutcomeSubType == TreatmentOutcomeSubType.StillOnTreatment);
 
-            if (mostRecentOutcomeYear != 0
-                && lastEndingEvent != null
-                && lastEndingEvent.TreatmentOutcomeId != null
-                && lastEndingEvent.EventDate < notification.ClinicalDetails.StartingDate.Value.AddYears(mostRecentOutcomeYear)
-                && TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(notification, mostRecentOutcomeYear)?.TreatmentOutcomeSubType == TreatmentOutcomeSubType.StillOnTreatment)
+            if (TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(notification, expectedEndingOutcomeYear)?.TreatmentOutcomeId != lastEndingEvent.TreatmentOutcomeId
+                && stillOnTreatmentEvent != null)
             {
-                var stillOnTreatmentEvent = notification.TreatmentEvents.OrderForEpisodes().Last(o => o.TreatmentOutcome?.TreatmentOutcomeSubType == TreatmentOutcomeSubType.StillOnTreatment);
                 var additionalNote = "Outcome date adjusted from initial date calculated in legacy system.";
                 stillOnTreatmentEvent.EventDate = lastEndingEvent.EventDate.Value.AddDays(-1);
                 stillOnTreatmentEvent.Note += additionalNote;
             }
         }
 
-        private TreatmentEvent CreateDerivedDeathEvent(MigrationDbNotification rawNotification)
+        private int GetExpectedEndingOutcomeYear(Notification notification, TreatmentEvent endingEvent)
         {
-            var postMortemOutcomeType = Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes()
-                .First(o => o.TreatmentOutcomeType == TreatmentOutcomeType.Died &&
-                            o.TreatmentOutcomeSubType == TreatmentOutcomeSubType.Unknown);
+            return new []{1, 2, 3}
+                .Where(n => notification.ClinicalDetails.StartingDate.Value.AddYears(n).AddDays(-1) > endingEvent.EventDate)
+                .DefaultIfEmpty(3).Min();
+        }
+
+        private async Task<TreatmentEvent> CreateDerivedDeathEvent(MigrationDbNotification rawNotification)
+        {
+            var postMortemOutcomeType = await _referenceDataRepository.GetTreatmentOutcomeForTypeAndSubType(TreatmentOutcomeType.Died, TreatmentOutcomeSubType.Unknown);
             return new TreatmentEvent
             {
                EventDate = rawNotification.DeathDate,

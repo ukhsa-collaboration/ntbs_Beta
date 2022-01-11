@@ -46,6 +46,7 @@ namespace ntbs_service.DataAccess
         Task<IList<SampleType>> GetSampleTypesAsync();
         Task<IList<SampleType>> GetSampleTypesForManualTestType(int manualTestTypeId);
         Task<IList<VenueType>> GetAllVenueTypesAsync();
+        Task<List<TreatmentOutcome>> GetAllTreatmentOutcomes();
         Task<IList<TreatmentOutcome>> GetTreatmentOutcomesForType(TreatmentOutcomeType type);
         Task<TreatmentOutcome> GetTreatmentOutcomeForTypeAndSubType(TreatmentOutcomeType type, TreatmentOutcomeSubType? subType);
         Task<string> GetLocationPhecCodeForPostcodeAsync(string postcode);
@@ -280,6 +281,11 @@ namespace ntbs_service.DataAccess
             return await _context.TreatmentOutcome
                 .Where(t => t.TreatmentOutcomeType == type)
                 .ToListAsync();
+        }
+
+        public async Task<List<TreatmentOutcome>> GetAllTreatmentOutcomes()
+        {
+            return await _context.TreatmentOutcome.ToListAsync();
         }
 
         public async Task<IList<VenueType>> GetAllVenueTypesAsync()

@@ -79,15 +79,12 @@ namespace ntbs_service_unit_tests.DataMigration
             _referenceDataRepositoryMock.Setup(repo => repo.GetTbServiceFromHospitalIdAsync(It.IsAny<Guid>()))
                 .Returns((Guid guid) => Task.FromResult(_hospitalToTbServiceCodeDict[guid]));
             _referenceDataRepositoryMock.Setup(repo =>
-                    repo.GetTreatmentOutcomeForTypeAndSubType(
-                        TreatmentOutcomeType.Died,
-                        TreatmentOutcomeSubType.Unknown))
-                .ReturnsAsync(new TreatmentOutcome
-                {
-                    TreatmentOutcomeType = TreatmentOutcomeType.Died,
-                    TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown,
-                    TreatmentOutcomeId = 10
-                });
+                    repo.GetAllTreatmentOutcomes())
+                .ReturnsAsync(ntbs_service.Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes().ToList);
+            _referenceDataRepositoryMock.Setup(repo =>
+                    repo.GetTreatmentOutcomeForTypeAndSubType(It.IsAny<TreatmentOutcomeType>(), It.IsAny<TreatmentOutcomeSubType>()))
+                .ReturnsAsync(ntbs_service.Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes()
+                    .FirstOrDefault(o => o.TreatmentOutcomeType == TreatmentOutcomeType.Died && o.TreatmentOutcomeSubType == TreatmentOutcomeSubType.Unknown));
             _postcodeService.Setup(service => service.FindPostcodeAsync(It.IsAny<string>()))
                 .ReturnsAsync((string postcode) => new PostcodeLookup { Postcode = postcode.Replace(" ", "").ToUpper() });
 

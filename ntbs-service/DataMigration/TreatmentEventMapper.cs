@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using ntbs_service.DataMigration.RawModels;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.ReferenceEntities;
 using Serilog;
 
 namespace ntbs_service.DataMigration
@@ -16,7 +18,7 @@ namespace ntbs_service.DataMigration
     public interface ITreatmentEventMapper
     {
         Task<TreatmentEvent> AsTransferEvent(MigrationDbTransferEvent rawEvent, PerformContext context, int runId);
-        Task<TreatmentEvent> AsOutcomeEvent(MigrationDbOutcomeEvent rawEvent, PerformContext context, int runId);
+        Task<TreatmentEvent> AsOutcomeEvent(MigrationDbOutcomeEvent rawEvent, List<TreatmentOutcome> allOutcomes, PerformContext context, int runId);
     }
     public class TreatmentEventMapper : ITreatmentEventMapper
     {
@@ -44,15 +46,14 @@ namespace ntbs_service.DataMigration
             return ev;
         }
 
-        public async Task<TreatmentEvent> AsOutcomeEvent(MigrationDbOutcomeEvent rawEvent, PerformContext context, int runId)
+        public async Task<TreatmentEvent> AsOutcomeEvent(MigrationDbOutcomeEvent rawEvent, List<TreatmentOutcome> allOutcomes, PerformContext context, int runId)
         {
-            var outcomes = Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes();
             var ev = new TreatmentEvent
             {
                 EventDate = rawEvent.EventDate,
                 TreatmentEventType = Converter.GetEnumValue<TreatmentEventType>(rawEvent.TreatmentEventType),
                 TreatmentOutcomeId = rawEvent.TreatmentOutcomeId,
-                TreatmentOutcome = outcomes.First(o => o.TreatmentOutcomeId == rawEvent.TreatmentOutcomeId),
+                TreatmentOutcome = allOutcomes.SingleOrDefault(o => o.TreatmentOutcomeId == rawEvent.TreatmentOutcomeId),
                 Note = rawEvent.Note
             };
 
