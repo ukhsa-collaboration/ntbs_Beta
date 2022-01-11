@@ -59,6 +59,10 @@ namespace ntbs_service_unit_tests.DataMigration
         const string LeedsGeneralCode = "TBS0106";
         const string SalfordRoyalCode = "TBS0193";
         const string MalvernCode = "TBS0656";
+        const string NorthwickParkCode = "TBS0115";
+        const string KingsDenmarkHillCode = "TBS0101";
+
+        const int KingsUserId = 4;
 
         private readonly Guid RoyalBerkshireGuid = new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A");
 
@@ -671,6 +675,23 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal(NotificationStatus.Notified, notification.NotificationStatus);
         }
 
+        [Fact]
+        public async Task WhenNotifyingServiceAndCaseManagerAreSet_TheyAreAddedToTheInitialTreatmentEvent()
+        {
+            // Arrange
+            const string legacyId = "102-1";
+            SetupNotificationsInGroups((legacyId, "12"));
+
+            // Act
+            var notification = await GetSingleNotification(legacyId);
+
+            // Assert
+            var initialTreatmentEvent = notification.TreatmentEvents.OrderBy(te => te.EventDate).FirstOrDefault();
+            Assert.NotNull(initialTreatmentEvent);
+            Assert.Equal(KingsDenmarkHillCode, initialTreatmentEvent.TbServiceCode);
+            Assert.Equal(KingsUserId, initialTreatmentEvent.CaseManagerId);
+        }
+
         private void SetupNotificationsInGroups(params (string, string)[] legacyIdAndLegacyGroup)
         {
             var grouped = new List<(string notificationId, string groupId)>(legacyIdAndLegacyGroup)
@@ -702,6 +723,8 @@ namespace ntbs_service_unit_tests.DataMigration
                 { new Guid("44C3608F-231E-4DD7-963C-4492D804E894"), new TBService { Code = FrimleyParkCode } },
                 { new Guid("0EEE2EC2-1F3E-4175-BE90-85AA33F0686C"), new TBService { Code = ColchesterGeneralCode } },
                 { new Guid("33464912-E5B1-4998-AFCA-083C3AE65A80"), new TBService { Code = MalvernCode } },
+                { new Guid("54D734B4-327A-4595-96EF-2F6633735C60"), new TBService { Code = NorthwickParkCode } },
+                { new Guid("DF433BC5-840A-42B2-B329-04DF152DE40E"), new TBService { Code = KingsDenmarkHillCode } }
             };
 
         private static Dictionary<string, User> GetUserDict()
@@ -709,7 +732,9 @@ namespace ntbs_service_unit_tests.DataMigration
             return new Dictionary<string, User>
             {
                 { "Nancy.Pickering@ntbs.phe.com", new User{ Id = 1 } },
-                { "Robert.Greene@ntbs.phe.com", new User { Id = 2 } }
+                { "Robert.Greene@ntbs.phe.com", new User { Id = 2 } },
+                { "katherine.bintley@nhs.net", new User { Id = 3 } },
+                { "kings.user@nhs.net", new User { Id = KingsUserId } }
             };
         }
 
