@@ -15,12 +15,12 @@
 
 <partial name="_ContactDetailsPartial" model="@Model.ContactDetails"/>
 
-@if (Model.ContactDetails.CaseManagerTbServices.Any())
-{
-    <partial name ="_TbServiceMembershipDetailsPartial" model="Model.ContactDetails.CaseManagerTbServices" />
-}
-
 @if (Model.RegionalMemberships.Any())
 {
     <partial name="_RegionalMembershipDetailsPartial" model="@Model.RegionalMemberships"/>
+}
+
+@if (Model.ContactDetails.CaseManagerTbServices.Any())
+{
+    <partial name ="_TbServiceMembershipDetailsPartial" model="Model.ContactDetails.CaseManagerTbServices" />
 }
