@@ -684,6 +684,7 @@ namespace ntbs_service_unit_tests.DataMigration
             var mostRecentEvent = notification.TreatmentEvents.GetMostRecentTreatmentEvent();
             Assert.NotEqual(new DateTime(2020, 05, 04), stillOnTreatmentEvent.EventDate);
             Assert.Equal(3, mostRecentEvent.TreatmentOutcomeId);
+            Assert.Contains("Outcome date adjusted from initial date calculated in legacy system.", stillOnTreatmentEvent.Note);
         }
 
         [Fact]

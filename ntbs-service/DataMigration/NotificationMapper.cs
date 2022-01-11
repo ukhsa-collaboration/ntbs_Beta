@@ -293,7 +293,9 @@ namespace ntbs_service.DataMigration
                 && TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(notification, mostRecentOutcomeYear)?.TreatmentOutcomeSubType == TreatmentOutcomeSubType.StillOnTreatment)
             {
                 var stillOnTreatmentEvent = notification.TreatmentEvents.OrderForEpisodes().Last(o => o.TreatmentOutcome?.TreatmentOutcomeSubType == TreatmentOutcomeSubType.StillOnTreatment);
+                var additionalNote = "Outcome date adjusted from initial date calculated in legacy system.";
                 stillOnTreatmentEvent.EventDate = lastEndingEvent.EventDate.Value.AddDays(-1);
+                stillOnTreatmentEvent.Note += additionalNote;
             }
         }
 
