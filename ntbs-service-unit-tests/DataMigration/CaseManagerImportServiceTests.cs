@@ -61,7 +61,7 @@ namespace ntbs_service_unit_tests.DataMigration
             await GivenLegacyUserHasPermissionsForTbServiceInHospital(CASE_MANAGER_USERNAME_1, "TBS00TEST", HOSPITAL_GUID_1);
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateLegacyUser(CASE_MANAGER_USERNAME_1, "TBS00TEST", null, BATCH_ID);
+            await _caseManagerImportService.ImportOrUpdateLegacyUser(CASE_MANAGER_USERNAME_1, null, BATCH_ID);
 
             // Assert
             var addedUser = _context.User.SingleOrDefault();
@@ -82,7 +82,7 @@ namespace ntbs_service_unit_tests.DataMigration
             await GivenUserExistsInNtbsWithName("Jon", "Jonston", isActive: false);
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateLegacyUser(CASE_MANAGER_USERNAME_1, "TBS99HULL", null, BATCH_ID);
+            await _caseManagerImportService.ImportOrUpdateLegacyUser(CASE_MANAGER_USERNAME_1, null, BATCH_ID);
 
             // Assert
             var updatedUser = _context.User.Single();
@@ -101,7 +101,7 @@ namespace ntbs_service_unit_tests.DataMigration
             await GivenUserExistsInNtbsWithName("Ben", "Kingsly", isActive: true);
 
             // Act
-            await _caseManagerImportService.ImportOrUpdateLegacyUser(CASE_MANAGER_USERNAME_1, "TBS99HULL", null, BATCH_ID);
+            await _caseManagerImportService.ImportOrUpdateLegacyUser(CASE_MANAGER_USERNAME_1, null, BATCH_ID);
 
             // Assert
             var updatedUser = _context.User.Single();

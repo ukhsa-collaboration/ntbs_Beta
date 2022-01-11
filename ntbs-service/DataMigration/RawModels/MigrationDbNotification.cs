@@ -67,6 +67,8 @@ namespace ntbs_service.DataMigration.RawModels
         public DateTime? DiagnosisDate { get; set; }
         public DateTime? StartOfTreatmentDate { get; set; }
         public int? DidNotStartTreatment { get; set; }
+        public Guid? NotifyingHospitalId { get; set; }
+        public string NotifyingCaseManager { get; set; }
         public int? IsPostMortem { get; set; }
         public string TreatmentRegimen { get; set; }
         public DateTime? MDRTreatmentStartDate { get; set; }

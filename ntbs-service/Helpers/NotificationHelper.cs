@@ -1,4 +1,4 @@
-using ntbs_service.Models.Entities;
+﻿using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Helpers
@@ -22,11 +22,22 @@ namespace ntbs_service.Helpers
 
         public static TreatmentEvent CreateTreatmentStartEvent(Notification notification)
         {
+            return CreateTreatmentStartEvent(
+                notification,
+                notification.HospitalDetails.CaseManagerId,
+                notification.HospitalDetails.TBServiceCode);
+        }
+
+        public static TreatmentEvent CreateTreatmentStartEvent(
+            Notification notification,
+            int? caseManagerId,
+            string tbServiceCode)
+        {
             var treatmentStartEvent = new TreatmentEvent
             {
                 NotificationId = notification.NotificationId,
-                CaseManager = notification.HospitalDetails.CaseManager,
-                TbService = notification.HospitalDetails.TBService
+                CaseManagerId = caseManagerId,
+                TbServiceCode = tbServiceCode
             };
             SetStartingEventDate(treatmentStartEvent, notification.ClinicalDetails);
             return treatmentStartEvent;
