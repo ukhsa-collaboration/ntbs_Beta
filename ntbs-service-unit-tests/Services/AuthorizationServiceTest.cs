@@ -142,8 +142,7 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Theory]
-        [InlineData(UserType.NhsUser)]
-        [InlineData(UserType.PheUser)]
+        [InlineData(UserType.ServiceOrRegionalUser)]
         [InlineData(UserType.NationalTeam)]
         public async Task FilterAlertsForUser_FiltersByTheUsersTbServicesForAllUserTypes(UserType userType)
         {
@@ -176,7 +175,7 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
-        public async Task FilterAlertsForUser_DoesNotFilterAnyAlertsForPheUser()
+        public async Task FilterAlertsForUser_DoesNotFilterAnyAlertsForRegionalUser()
         {
             // Arrange
             var testUser = new ClaimsPrincipal(new ClaimsIdentity("TestDev"));
@@ -208,7 +207,7 @@ namespace ntbs_service_unit_tests.Services
             _mockUserService.Setup(us => us.GetTbServicesAsync(It.IsAny<ClaimsPrincipal>()))
                 .Returns(Task.FromResult((new List<TBService> {tbService}).AsEnumerable()));
             _mockUserService.Setup(us => us.GetUserType(It.IsAny<ClaimsPrincipal>()))
-                .Returns(UserType.PheUser);
+                .Returns(UserType.ServiceOrRegionalUser);
 
             // Act
             var result = await _authorizationService.FilterAlertsForUserAsync(testUser, alertsToExpect);

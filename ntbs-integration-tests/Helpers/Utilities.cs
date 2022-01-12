@@ -42,6 +42,7 @@ namespace ntbs_integration_tests.Helpers
         public const int DRAFT_WITH_TBSERVICE = 10042;
         public const int NOTIFIED_WITH_ACTIVE_HOSPITAL = 10043;
         public const int NOTIFIED_WITH_INACTIVE_CASEMANAGER = 10111;
+        public const int NOTIFIED_WITH_ACTIVE_CASEMANAGER_NOT_IN_TB_SERVICE = 10555;
         public const int NOTIFIED_WITH_LEGACY_HOSPITAL = 10044;
         public const int MDR_DETAILS_EXIST = 10050;
 
@@ -403,8 +404,8 @@ namespace ntbs_integration_tests.Helpers
 
         public static void SetServiceCodeForNotification(NtbsContext context, int notificationId, string code)
         {
-            var notification = context.Notification.Find(notificationId);
-            notification.HospitalDetails.TBServiceCode = code;
+            var hospitalDetails = context.HospitalDetails.Find(notificationId);
+            hospitalDetails.TBServiceCode = code;
             context.SaveChanges();
         }
 

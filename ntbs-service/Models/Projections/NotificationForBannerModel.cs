@@ -28,6 +28,7 @@ namespace ntbs_service.Models.Projections
         public NotificationStatus NotificationStatus { get; set; }
 
         public ICollection<TreatmentEvent> TreatmentEvents { get; set; }
+        public bool IsPostMortemWithCorrectEvents { get; set; }
 
         public IEnumerable<string> PreviousTbServiceCodes { get; set; }
         public IEnumerable<string> PreviousPhecCodes { get; set; }

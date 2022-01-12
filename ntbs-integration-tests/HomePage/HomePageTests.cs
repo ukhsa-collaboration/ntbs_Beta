@@ -16,7 +16,7 @@ namespace ntbs_integration_tests.HomePage
         [Fact]
         public async Task DismissAlert_CorrectlyDismissesAlertAndReturnsHomePage()
         {
-            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                 .WithNotificationAndTbServiceConnected(Utilities.NOTIFIED_ID, Utilities.PERMITTED_SERVICE_CODE)
                 .CreateClientWithoutRedirects())
             {
@@ -49,9 +49,9 @@ namespace ntbs_integration_tests.HomePage
         }
 
         [Fact]
-        public async Task ShowingHomepageKpis_WhenUserIsNhsUser()
+        public async Task ShowingHomepageKpis_WhenUserIsServiceUser()
         {
-            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                                         .CreateClientWithoutRedirects())
             {
                 // Arrange
@@ -64,9 +64,9 @@ namespace ntbs_integration_tests.HomePage
         }
 
         [Fact]
-        public async Task ShowingHomepageKpis_WhenUserIsPheUser()
+        public async Task ShowingHomepageKpis_WhenUserIsRegionalUser()
         {
-            using (var client = Factory.WithUserAuth(TestUser.PheUserWithPermittedPhecCode)
+            using (var client = Factory.WithUserAuth(TestUser.RegionalUserWithPermittedPhecCode)
                                         .CreateClientWithoutRedirects())
             {
                 // Arrange

@@ -37,7 +37,7 @@ namespace ntbs_service.Helpers
                         case "ImmunosuppressionDetails":
                             model = typeof(ComorbidityDetails);
                             break;
-                        case "HasDeathEventForPostMortemCase":
+                        case "HasDeathEventIfPostMortemCase":
                             model = typeof(TreatmentEvent);
                             break;
                         default:

@@ -1,0 +1,5 @@
+﻿Id,OriginalId,EntityType,EventType,AuditData,AuditDateTime,AuditUser,AuditDetails,RootEntity,RootId
+9998,305160,Notification,Insert,"{""NotificationId"":1463,""ClusterId"":null,""CreationDate"":""2020-07-01T11:40:42.405727+00:00"",""DeletionReason"":null,""ETSID"":null,""GroupId"":null,""LTBRID"":null,""LTBRPatientId"":null,""NotificationDate"":null,""NotificationStatus"":""Draft"",""SubmissionDate"":null}",2021-09-21 06:34:26.4166667,Developer@ntbs.phe.com,Added,Notification,10
+9999,305160,Notification,Update,"[{""ColumnName"":""NotificationStatus"",""OriginalValue"":""Draft"",""NewValue"":""Notified""},{""ColumnName"":""SubmissionDate"",""NewValue"":""2020-07-01T11:45:54.0461774Z""}]",2021-09-22 06:34:26.4166667,Developer2@ntbs.phe.com,Notified,Notification,10
+10001,H123,Specimen,Match,,2021-09-26 06:34:26.4166667,SYSTEM,,Notification,10
+10002,H124,Specimen,Match,,2021-09-26 06:34:26.4166667,SYSTEM,,Notification,10

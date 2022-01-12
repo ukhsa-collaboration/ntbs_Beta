@@ -4,22 +4,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
-using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    [Owned]
     [Display(Name = "Hospital details")]
     public partial class HospitalDetails : ModelBase, IOwnedEntityForAuditing
     {
+        public int NotificationId { get; set; }
+
         [MaxLength(200)]
         [RegularExpression(ValidationRegexes.CharacterValidationAsciiBasic, ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Consultant")]
         public string Consultant { get; set; }
 
-        [AssertThat("CaseManagerAllowedForTbService", ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
+        [AssertThat("CaseManagerId == ExistingCaseManagerId || CaseManagerAllowedForTbService", ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
         [Display(Name = "Case Manager")]
         public int? CaseManagerId { get; set; }
         public virtual User CaseManager { get; set; }
@@ -62,6 +62,9 @@ namespace ntbs_service.Models.Entities
         [NotMapped]
         [Display(Name = "Case Manager")]
         public string CaseManagerName => CaseManager?.DisplayName;
+        
+        [NotMapped]
+        public int? ExistingCaseManagerId { get; set; }
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }

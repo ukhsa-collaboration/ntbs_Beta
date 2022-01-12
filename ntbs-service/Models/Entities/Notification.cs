@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using EFAuditer;
@@ -127,10 +126,25 @@ namespace ntbs_service.Models.Entities
                                        || NotificationStatus == NotificationStatus.Closed
                                        || NotificationStatus == NotificationStatus.Legacy;
 
-        [AssertThat(@"ShouldValidateFull && HasDeathEventForPostMortemCase", ErrorMessage = ValidationMessages.DeathEventRequiredForPostMortemCase)]
-        public bool HasDeathEventForPostMortemCase =>
-            ClinicalDetails.IsPostMortem != true || (TreatmentEvents != null && TreatmentEvents.Any(x =>
-                x.TreatmentEventTypeIsOutcome && x.TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.Died));
+        [AssertThat(@"ShouldValidateFull && HasDeathEventIfPostMortemCase", ErrorMessage = ValidationMessages.DeathEventRequiredForPostMortemCase)]
+        public bool HasDeathEventIfPostMortemCase =>
+            ClinicalDetails.IsPostMortem != true
+            || (TreatmentEvents != null && TreatmentEvents.Any(x => x.TreatmentEventIsDeathEvent));
+
+        public bool HasNonPostMortemEvents => TreatmentEvents != null && TreatmentEvents
+            .Any(te => te.TreatmentEventType != TreatmentEventType.DiagnosisMade && !te.TreatmentEventIsDeathEvent);
+
+        public bool IsPostMortemAndHasCorrectEvents =>
+            (ClinicalDetails?.IsPostMortem == true)
+            && TreatmentEvents != null
+            && (TreatmentEvents.Any(x => x.TreatmentEventIsDeathEvent)
+            && (TreatmentEvents.Count == 1 || HasCorrectDiagnosisMadeEvent));
+
+        private bool HasCorrectDiagnosisMadeEvent =>
+            TreatmentEvents.Count == 2
+            && TreatmentEvents.Any(x => x.TreatmentEventType == TreatmentEventType.DiagnosisMade)
+            && TreatmentEvents.Single(x => x.TreatmentEventType == TreatmentEventType.DiagnosisMade).EventDate
+                >= TreatmentEvents.Single(x => x.TreatmentEventTypeIsOutcome).EventDate;
 
         public bool ShouldBeClosed()
         {

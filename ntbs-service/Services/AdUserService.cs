@@ -37,7 +37,7 @@ namespace ntbs_service.Services
                 Log.Information($"Updating user {user.Username}");
                 user.IsActive = false;
                 user.AdGroups = null;
-                await _userRepository.AddOrUpdateUser(user, user.CaseManagerTbServices.Select(cmtb => cmtb.TbService));
+                await _userRepository.AddOrUpdateUser(user, new List<TBService>());
             }
         }
     }

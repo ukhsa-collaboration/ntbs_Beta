@@ -173,6 +173,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 ModelState.AddModelError("ClinicalDetails.IsMDRTreatment", ValidationMessages.MDRCantChange);
             }
+
+            AddPostMortemErrorsIfApplicable();
+
             if (ModelState.IsValid)
             {
                 await Service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
@@ -181,6 +184,23 @@ namespace ntbs_service.Pages.Notifications.Edit
                 if (mdrChanged)
                 {
                     await _enhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(Notification);
+                }
+            }
+        }
+
+        private void AddPostMortemErrorsIfApplicable()
+        {
+            // Only validate if a case is changing to post mortem
+            if (ClinicalDetails.IsPostMortem == true && Notification.ClinicalDetails.IsPostMortem != true)
+            {
+                if (Notification.HasNonPostMortemEvents)
+                {
+                    ModelState.AddModelError("ClinicalDetails.IsPostMortem", ValidationMessages.IsPostMortemButTreatmentEventsDoNotMatch);
+                }
+
+                if (ClinicalDetails.StartedTreatment == true)
+                {
+                    ModelState.AddModelError("ClinicalDetails.IsPostMortem", ValidationMessages.IsPostMortemButStartedTreatment);
                 }
             }
         }

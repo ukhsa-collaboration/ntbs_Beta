@@ -538,8 +538,8 @@ namespace ntbs_service_unit_tests.Services
             Notification notification,
             TreatmentOutcomeType? expectedOutcomeAt2Years)
         {
-            var treatmentOutcomeAt1Year = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(notification, 2);
-            Assert.Equal(treatmentOutcomeAt1Year?.TreatmentOutcomeType, expectedOutcomeAt2Years);
+            var treatmentOutcomeAt2Years = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(notification, 2);
+            Assert.Equal(treatmentOutcomeAt2Years?.TreatmentOutcomeType, expectedOutcomeAt2Years);
         }
 
         [Theory, MemberData(nameof(NotificationsAndExpectedOutcomesAtYear3))]
@@ -547,8 +547,8 @@ namespace ntbs_service_unit_tests.Services
             Notification notification,
             TreatmentOutcomeType? expectedOutcomeAt3Years)
         {
-            var treatmentOutcomeAt1Year = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(notification, 3);
-            Assert.Equal(treatmentOutcomeAt1Year?.TreatmentOutcomeType, expectedOutcomeAt3Years);
+            var treatmentOutcomeAt3Years = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(notification, 3);
+            Assert.Equal(treatmentOutcomeAt3Years?.TreatmentOutcomeType, expectedOutcomeAt3Years);
         }
 
         private static Notification CreateNotificationWithNotificationEvents(int notificationId, IList<TreatmentEvent> treatmentEvents)

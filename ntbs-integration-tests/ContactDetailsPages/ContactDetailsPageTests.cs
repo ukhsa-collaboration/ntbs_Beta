@@ -38,7 +38,7 @@ namespace ntbs_integration_tests.ContactDetailsPages
         [Fact]
         public async Task BreadcrumbForRegionPresentForRegionalUser()
         {
-            var user = TestUser.PheUserWithPermittedPhecCode;
+            var user = TestUser.RegionalUserWithPermittedPhecCode;
             var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Id, null));
             using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
             {

@@ -257,6 +257,24 @@ namespace ntbs_service_unit_tests.Services
                 c => Assert.Null(c.UserId)); // System audit user
         }
 
+        [Fact]
+        public async Task MultipleSpecimenMatchesAreEachDisplayed()
+        {
+            const int notificationId = 10;
+            var auditLogs = GetAuditLogs("auditLogsWithMultipleMatches");
+            _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(notificationId))
+                .ReturnsAsync(auditLogs);
+
+            // Act
+            var changes = (await _changesService.GetChangesList(notificationId)).ToList();
+
+            Assert.Equal(4, changes.Count);
+            // The first two changes are creating the notification and then notifying it
+            Assert.Equal("matched", changes[2].Action);
+            Assert.Equal("matched", changes[3].Action);
+            _logServiceMock.Verify(log => log.LogWarning(It.IsAny<string>()), Times.Never);
+        }
+
         private static List<AuditLog> GetAuditLogs(string filename)
         {
             return GetRecordsFromCsv($"../../../TestData/{filename}.csv", ParseAuditLog)
@@ -264,20 +282,23 @@ namespace ntbs_service_unit_tests.Services
                 .ToList();
         }
 
-        private static AuditLog ParseAuditLog(CsvReader csvReader) =>
-            new AuditLog
+        private static AuditLog ParseAuditLog(CsvReader csvReader)
+        {
+            var rawAuditDetails = csvReader.GetField(nameof(AuditLog.AuditDetails));
+            return new AuditLog
             {
                 Id = csvReader.GetField<int>(nameof(AuditLog.Id)),
                 OriginalId = csvReader.GetField(nameof(AuditLog.OriginalId)),
                 EntityType = csvReader.GetField(nameof(AuditLog.EntityType)),
                 EventType = csvReader.GetField(nameof(AuditLog.EventType)),
-                AuditDetails = csvReader.GetField(nameof(AuditLog.AuditDetails)),
+                AuditDetails = string.IsNullOrEmpty(rawAuditDetails) ? null : rawAuditDetails,
                 AuditData = csvReader.GetField(nameof(AuditLog.AuditData)),
                 AuditDateTime = csvReader.GetField<DateTime>(nameof(AuditLog.AuditDateTime)),
                 AuditUser = csvReader.GetField(nameof(AuditLog.AuditUser)),
                 RootEntity = csvReader.GetField(nameof(AuditLog.RootEntity)),
                 RootId = csvReader.GetField(nameof(AuditLog.RootId)),
             };
+}
 
         private static IEnumerable<string> PrintInOrder(IEnumerable<NotificationHistoryListItemModel> changes)
         {

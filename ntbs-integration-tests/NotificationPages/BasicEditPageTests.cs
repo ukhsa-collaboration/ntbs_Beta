@@ -41,10 +41,10 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public void Get_ReturnsOk_ForNhsUserWithPermission()
+        public void Get_ReturnsOk_ForServiceUserWithPermission()
         {
             // Arrange
-            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
@@ -61,10 +61,10 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public void Get_ReturnsRedirect_ForNhsUserWithoutPermission()
+        public void Get_ReturnsRedirect_ForServiceUserWithoutPermission()
         {
             // Arrange
-            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
@@ -81,30 +81,30 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public void Get_ReturnsOk_ForPheUserWithMatchingServicePermission()
+        public void Get_ReturnsOk_ForRegionalUserWithMatchingServicePermission()
         {
             // Arrange
-            using (var client = Factory.WithUserAuth(TestUser.PheUserWithPermittedPhecCode)
+            using (var client = Factory.WithUserAuth(TestUser.RegionalUserWithPermittedPhecCode)
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
                 EditSubPaths.ForEach(subPath =>
-               {
-                   // Act
-                   var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
+                {
+                    // Act
+                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
-                   _output.WriteLine("Testing subpath {0}", subPath);
-                   // Assert
-                   Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-               });
+                    _output.WriteLine("Testing subpath {0}", subPath);
+                    // Assert
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                });
             }
         }
 
         [Fact]
-        public void Get_ReturnsRedirectToOverview_ForPheUserWithMatchingPostcodePermission()
+        public void Get_ReturnsRedirectToOverview_ForRegionalUserWithMatchingPostcodePermission()
         {
             // Arrange
-            using (var client = Factory.WithUserAuth(TestUser.PheUserWithPermittedPhecCode)
+            using (var client = Factory.WithUserAuth(TestUser.RegionalUserWithPermittedPhecCode)
                                         .WithNotificationAndPostcodeConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_POSTCODE)
                                         .CreateClientWithoutRedirects())
             {
@@ -162,10 +162,10 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public void Get_ReturnsRedirect_ForPheUserWithoutMatchingServicePermission()
+        public void Get_ReturnsRedirect_ForRegionalUserWithoutMatchingServicePermission()
         {
             // Arrange
-            using (var client = Factory.WithUserAuth(TestUser.PheUserWithPermittedPhecCode)
+            using (var client = Factory.WithUserAuth(TestUser.RegionalUserWithPermittedPhecCode)
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
@@ -182,10 +182,10 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public void Get_ReturnsRedirect_ForPheUserWithoutMatchingPostcodePermission()
+        public void Get_ReturnsRedirect_ForRegionalUserWithoutMatchingPostcodePermission()
         {
             // Arrange
-            using (var client = Factory.WithUserAuth(TestUser.PheUserWithPermittedPhecCode)
+            using (var client = Factory.WithUserAuth(TestUser.RegionalUserWithPermittedPhecCode)
                                         .WithNotificationAndPostcodeConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_POSTCODE)
                                         .CreateClientWithoutRedirects())
             {

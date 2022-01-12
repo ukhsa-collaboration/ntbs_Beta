@@ -20,7 +20,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task GetCreate_ReturnsRedirect()
         {
             // Arrange
-            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                 .CreateClientWithoutRedirects())
             {
                 // Act
@@ -50,7 +50,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task GetCreate_ReturnsNotification_WithDefaultDrugResistanceProfile()
         {
             // Arrange
-            using (var client = Factory.WithUserAuth(TestUser.NhsUserForAbingdonAndPermitted)
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
                 .CreateClientWithoutRedirects())
             {
                 // Act
