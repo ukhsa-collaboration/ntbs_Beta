@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
+using ntbs_integration_tests.TestServices;
 using ntbs_service;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
@@ -63,11 +65,41 @@ namespace ntbs_integration_tests.TransferPages
         public async Task NavigatingToPendingTransfer_ReturnsReadOnlyPartial_WhenTransferAlertAlreadyExists()
         {
             // Arrange
-            const int id = Utilities.NOTIFIED_ID;
+            const int id = Utilities.NOTIFIED_ID_2;
             var url = GetCurrentPathForId(id);
             var initialDocument = await GetDocumentForUrlAsync(url);
 
             Assert.NotNull(initialDocument.QuerySelector("#cancel-transfer-button"));
+        }
+
+        [Fact]
+        public async Task TransferPageDisplaysServiceDirectoryLink()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_WITH_TBSERVICE;
+            var url = GetCurrentPathForId(id);
+            var document = await GetDocumentForUrlAsync(url);
+            var directoryLinkText = document.QuerySelectorAll("h3")
+                .FirstOrDefault(e => e.InnerHtml.Contains("You can search for TB services and case managers"));
+            
+            // Assert
+            Assert.NotNull(directoryLinkText);
+        }
+
+        [Fact]
+        public async Task NTBSServiceDirectoryLink_LinksToServiceDirectoryPage()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_WITH_TBSERVICE;
+            var url = GetCurrentPathForId(id);
+            var initialDocument = await GetDocumentForUrlAsync(url);
+            var directoryLink = initialDocument.QuerySelectorAll("h3 > a")
+                .SingleOrDefault(
+                    e => e.Attributes.GetNamedItem("href")?.Value == "/ServiceDirectory" 
+                         && e.InnerHtml.Contains("NTBS service directory"));
+            
+            //Assert
+            Assert.NotNull(directoryLink);
         }
     }
 }
