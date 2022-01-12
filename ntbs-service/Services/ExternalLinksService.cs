@@ -7,6 +7,7 @@ namespace ntbs_service.Services
     {
         string GetReportingPageUrl();
         string GetSharePointHomePageUrl();
+        string GetSharePointFAQPageUrl();
         string GetClusterReport(string clusterId);
     }
 
@@ -23,6 +24,7 @@ namespace ntbs_service.Services
         public string GetReportingPageUrl() => _externalLinks.ReportingOverview;
 
         public string GetSharePointHomePageUrl() => _externalLinks.SharePointHomePage;
+        public string GetSharePointFAQPageUrl() => _externalLinks.SharePointFAQPage;
 
         public string GetClusterReport(string clusterId)
         {

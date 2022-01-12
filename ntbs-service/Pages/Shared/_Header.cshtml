@@ -98,9 +98,18 @@
                             </a>
                             <ul ref="navigation-submenu" v-if="showMenu" class="nav-submenu-list">
                                 <li class="header-navigation-link nav-submenu-list-item">
-                                    <a class="govuk-header__link header-navigation-list-item" href="/Help">
-                                        FAQ
-                                    </a>
+                                    @if (string.IsNullOrEmpty(_externalLinksService.GetSharePointFAQPageUrl()))
+                                    {
+                                        <a class="govuk-header__link header-navigation-list-item" href="/Help">
+                                            FAQ
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a class="govuk-header__link header-navigation-list-item" href="@(_externalLinksService.GetSharePointFAQPageUrl())" target="_blank" rel="noopener noreferrer">
+                                            FAQ
+                                        </a>
+                                    }
                                 </li>
                                 <li class="header-navigation-link nav-submenu-list-item">
                                     <a class="govuk-header__link header-navigation-list-item" href="/ServiceDirectory">
