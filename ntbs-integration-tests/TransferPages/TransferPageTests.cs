@@ -79,11 +79,11 @@ namespace ntbs_integration_tests.TransferPages
             const int id = Utilities.NOTIFIED_WITH_TBSERVICE;
             var url = GetCurrentPathForId(id);
             var document = await GetDocumentForUrlAsync(url);
-            var directoryLinkText = document.QuerySelectorAll("h3")
-                .FirstOrDefault(e => e.InnerHtml.Contains("You can search for TB services and case managers"));
+            var directoryLinkText = document.QuerySelector("#ntbs-service-directory-hint");
             
             // Assert
             Assert.NotNull(directoryLinkText);
+            Assert.Contains("You can search for TB services and case managers", directoryLinkText.InnerHtml);
         }
 
         [Fact]
@@ -92,14 +92,13 @@ namespace ntbs_integration_tests.TransferPages
             // Arrange
             const int id = Utilities.NOTIFIED_WITH_TBSERVICE;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrlAsync(url);
-            var directoryLink = initialDocument.QuerySelectorAll("h3 > a")
-                .SingleOrDefault(
-                    e => e.Attributes.GetNamedItem("href")?.Value == "/ServiceDirectory" 
-                         && e.InnerHtml.Contains("NTBS service directory"));
-            
+            var document = await GetDocumentForUrlAsync(url);
+            var directoryLink = document.QuerySelector("#ntbs-service-directory-hint > a");
+
             //Assert
             Assert.NotNull(directoryLink);
+            Assert.Contains("NTBS service directory", directoryLink.InnerHtml);
+            Assert.Equal("/ServiceDirectory", directoryLink.GetAttribute("href"));
         }
     }
 }
