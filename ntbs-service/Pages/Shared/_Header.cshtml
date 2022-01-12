@@ -98,7 +98,7 @@
                             </a>
                             <ul ref="navigation-submenu" v-if="showMenu" class="nav-submenu-list">
                                 <li class="header-navigation-link nav-submenu-list-item">
-                                    @if (string.IsNullOrEmpty(_externalLinksService.GetSharePointFAQPageUrl()))
+                                    @if (string.IsNullOrEmpty(_externalLinksService.GetSharePointFaqPageUrl()))
                                     {
                                         <a class="govuk-header__link header-navigation-list-item" href="/Help">
                                             FAQ
@@ -106,7 +106,7 @@
                                     }
                                     else
                                     {
-                                        <a class="govuk-header__link header-navigation-list-item" href="@(_externalLinksService.GetSharePointFAQPageUrl())" target="_blank" rel="noopener noreferrer">
+                                        <a class="govuk-header__link header-navigation-list-item" href="@(_externalLinksService.GetSharePointFaqPageUrl())" target="_blank" rel="noopener noreferrer">
                                             FAQ
                                         </a>
                                     }

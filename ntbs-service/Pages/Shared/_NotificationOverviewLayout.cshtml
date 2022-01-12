@@ -1,12 +1,14 @@
 @model ntbs_service.Pages.Notifications.NotificationModelBase
 @using ntbs_service.Helpers
-@using ntbs_service.Models
 @using ntbs_service.Models.Enums
+@inject Services.IExternalLinksService _externalLinksService
+
 
 @{
     Layout = "./_NotificationLayout.cshtml";
     var currentPage = (string) ViewData["CurrentPage"];
     var isOverviewPage = currentPage == NotificationSubPaths.Overview;
+
 
     var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.Notification.NotificationStatus);
     var linksClass = $"notification-banner-links notification-banner-links{classSuffix}";
@@ -30,22 +32,17 @@
         <nhs-grid-column grid-column-width="Full">
             @if (!string.IsNullOrEmpty(Model.PermissionReason) && isOverviewPage)
             {
-                <div class="notification-overview-details-container no-print" >
+                <div class="notification-overview-details-container no-print">
                     <nhs-inset-text classes="nhs-inset-text--ntbs">
                         <span>
                             @Model.PermissionReason
-                            @if (Model.PermissionLevel == PermissionLevel.ReadOnly)
+                            @if (Model.PermissionLevel == PermissionLevel.ReadOnly || Model.PermissionLevel == PermissionLevel.None)
                             {
-                                <span> 
-                                    See 
-                                    <a href="@RouteHelper.GetFaqPageWithSectionAnchor("no-permission-to-edit-a-record")">help</a> 
-                                    for more information.
-                                </span>
-                            } else if (Model.PermissionLevel == PermissionLevel.None)
-                            {
-                                <span> 
-                                    See 
-                                    <a href="@RouteHelper.GetFaqPageWithSectionAnchor("no-permission-to-view-a-record")">help</a> 
+                                <span>
+                                    See
+                                    <a href=@(_externalLinksService.GetSharePointFaqPageWithAnchor(Model.PermissionLevel))
+                                       target="_blank"
+                                       rel="noopener noreferrer">help</a>
                                     for more information.
                                 </span>
                             }

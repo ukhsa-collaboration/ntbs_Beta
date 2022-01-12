@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using ntbs_service.Models.Enums;
 using ntbs_service.Properties;
 
 namespace ntbs_service.Services
@@ -7,7 +8,8 @@ namespace ntbs_service.Services
     {
         string GetReportingPageUrl();
         string GetSharePointHomePageUrl();
-        string GetSharePointFAQPageUrl();
+        string GetSharePointFaqPageUrl();
+        string GetSharePointFaqPageWithAnchor(PermissionLevel permissionLevel);
         string GetClusterReport(string clusterId);
     }
 
@@ -24,7 +26,18 @@ namespace ntbs_service.Services
         public string GetReportingPageUrl() => _externalLinks.ReportingOverview;
 
         public string GetSharePointHomePageUrl() => _externalLinks.SharePointHomePage;
-        public string GetSharePointFAQPageUrl() => _externalLinks.SharePointFAQPage;
+        public string GetSharePointFaqPageUrl() => _externalLinks.SharePointFAQPage;
+
+        public string GetSharePointFaqPageWithAnchor(PermissionLevel permissionLevel)
+        {
+            return permissionLevel switch
+            {
+                PermissionLevel.ReadOnly => $"{_externalLinks.SharePointFAQPage}#why-do-i-not-have-permission-to-edit-a-record",
+                PermissionLevel.None => $"{_externalLinks.SharePointFAQPage}#why-can’t-i-view-the-full-details-of-a-record",
+                _ => null
+            };
+        }
+
 
         public string GetClusterReport(string clusterId)
         {
