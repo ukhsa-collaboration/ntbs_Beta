@@ -36,7 +36,7 @@
                     <nhs-inset-text classes="nhs-inset-text--ntbs">
                         <span>
                             @Model.PermissionReason
-                            @if (Model.PermissionLevel == PermissionLevel.ReadOnly || Model.PermissionLevel == PermissionLevel.None)
+                            @if (Model.PermissionLevel != PermissionLevel.Edit)
                             {
                                 <span>
                                     See
