@@ -39,7 +39,7 @@ namespace ntbs_service.Helpers
                 CaseManagerId = caseManagerId,
                 TbServiceCode = tbServiceCode
             };
-            SetStartingEventDate(treatmentStartEvent, notification.ClinicalDetails);
+            SetStartingEventDateAndType(treatmentStartEvent, notification.ClinicalDetails);
             return treatmentStartEvent;
         }
 
@@ -47,7 +47,7 @@ namespace ntbs_service.Helpers
         // "starting event" when no treatment start is recorded.
         // We need two distinct types so the labels are correct though!
         // We don't want both events in, since we want the outcome dates to be based off of treatment start
-        public static void SetStartingEventDate(TreatmentEvent treatmentStartEvent, ClinicalDetails clinicalDetails)
+        public static void SetStartingEventDateAndType(TreatmentEvent treatmentStartEvent, ClinicalDetails clinicalDetails)
         {
             treatmentStartEvent.EventDate = clinicalDetails.StartingDate;
             treatmentStartEvent.TreatmentEventType = clinicalDetails.TreatmentStartDate != null

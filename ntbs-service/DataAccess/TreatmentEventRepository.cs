@@ -31,7 +31,7 @@ namespace ntbs_service.DataAccess
             var startingEvent = notification.TreatmentEvents.SingleOrDefault(t => t.IsStartingEvent);
             if (startingEvent != null)
             {
-                NotificationHelper.SetStartingEventDate(startingEvent, clinicalDetails);
+                NotificationHelper.SetStartingEventDateAndType(startingEvent, clinicalDetails);
                 await UpdateAsync(notification, startingEvent);
             }
         }

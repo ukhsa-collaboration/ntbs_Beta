@@ -327,10 +327,8 @@ namespace ntbs_service.Services
             notification.SubmissionDate = DateTime.UtcNow;
 
             await _notificationRepository.SaveChangesAsync(NotificationAuditType.Notified);
-            if (notification.ClinicalDetails.IsPostMortem != true)
-            {
-                await CreateTreatmentEventNotificationStart(notification);
-            }
+            await CreateTreatmentEventNotificationStart(notification);
+
             await _alertService.AutoDismissAlertAsync<DataQualityDraftAlert>(notification);
         }
 
