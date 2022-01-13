@@ -1,14 +1,17 @@
-﻿using ntbs_service.Helpers;
+﻿using EFAuditer;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Models.Entities.Alerts
 {
-    public class UnmatchedLabResultAlert : Alert
+    public class UnmatchedLabResultAlert : Alert, IHasRootEntityForAuditing
     {
         public UnmatchedLabResultAlert()
         {
             AlertType = AlertType.UnmatchedLabResult;
         }
+        public string RootEntityType => RootEntities.Notification;
+        public string RootId => NotificationId.ToString();
 
         public string SpecimenId { get; set; }
 

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq.Expressions;
+using EFAuditer;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Models.Entities.Alerts
 {
-    public class DataQualityBirthCountryAlert : Alert
+    public class DataQualityBirthCountryAlert : Alert, IHasRootEntityForAuditing
     {
         public static readonly Expression<Func<Notification, bool>> NotificationQualifiesExpression =
             n => n.NotificationStatus == NotificationStatus.Notified
@@ -25,5 +26,7 @@ namespace ntbs_service.Models.Entities.Alerts
         {
             AlertType = AlertType.DataQualityBirthCountry;
         }
+        public string RootEntityType => RootEntities.Notification;
+        public string RootId => NotificationId.ToString();
     }
 }
