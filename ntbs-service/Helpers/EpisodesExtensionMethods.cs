@@ -9,15 +9,6 @@ namespace ntbs_service.Helpers
 {
     public static class EpisodesExtensionMethods
     {
-        private static readonly List<TreatmentOutcomeType> EpisodeEndingOutcomeTypes = new List<TreatmentOutcomeType>
-        {
-            TreatmentOutcomeType.Completed,
-            TreatmentOutcomeType.Cured,
-            TreatmentOutcomeType.Died,
-            TreatmentOutcomeType.Lost,
-            TreatmentOutcomeType.Failed,
-            TreatmentOutcomeType.TreatmentStopped
-        };
 
         public static List<TreatmentPeriod> GroupEpisodesIntoPeriods(this IEnumerable<TreatmentEvent> treatmentEvents, bool isPostMortemWithCorrectEvents = false)
         {
@@ -77,21 +68,7 @@ namespace ntbs_service.Helpers
             return treatmentEvent.TreatmentEventType == TreatmentEventType.Denotification
                    || treatmentEvent.TreatmentEventType == TreatmentEventType.TransferOut
                    || (treatmentEvent.TreatmentOutcome != null
-                       && (EpisodeEndingOutcomeTypes.Contains(treatmentEvent.TreatmentOutcome.TreatmentOutcomeType)
-                           || EventIsAnEndingNotEvaluatedOutcome(treatmentEvent))
-                       );
-        }
-
-        private static bool EventIsAnEndingNotEvaluatedOutcome(TreatmentEvent treatmentEvent)
-        {
-            var endingSubTypes = new List<TreatmentOutcomeSubType>
-            {
-                TreatmentOutcomeSubType.TransferredAbroad,
-                TreatmentOutcomeSubType.Other
-            };
-            return treatmentEvent.TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.NotEvaluated
-                   && treatmentEvent.TreatmentOutcome.TreatmentOutcomeSubType.HasValue
-                   && endingSubTypes.Contains(treatmentEvent.TreatmentOutcome.TreatmentOutcomeSubType.Value);
+                       && treatmentEvent.TreatmentOutcome.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment);
         }
 
         public static IEnumerable<TreatmentEvent> OrderForEpisodes(this IEnumerable<TreatmentEvent> treatmentEvents)

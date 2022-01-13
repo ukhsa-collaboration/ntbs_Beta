@@ -262,10 +262,11 @@ namespace ntbs_service_unit_tests.DataMigration
             var notification = await GetSingleNotification(legacyId);
 
             // Assert
+            Assert.Single(notification.TreatmentEvents.Where(te => te.TreatmentEventIsDeathEvent));
             var deathEvent = notification.TreatmentEvents.Single(te => te.TreatmentEventIsDeathEvent);
             Assert.True(notification.ClinicalDetails.IsPostMortem);
             Assert.Equal(NotificationStatus.Closed, notification.NotificationStatus);
-            // For post mortem cases with no death event we want to a death event and a diagnosis event
+            // For post mortem cases with no death event we want a death event and a diagnosis event
             Assert.Collection(notification.TreatmentEvents,
                 te => Assert.Equal(TreatmentOutcomeType.Died, te.TreatmentOutcome.TreatmentOutcomeType),
                 te => Assert.Equal(TreatmentEventType.DiagnosisMade, te.TreatmentEventType));

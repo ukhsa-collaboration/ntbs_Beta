@@ -151,10 +151,10 @@ namespace ntbs_service.Models.Entities
             var mostRecentTreatmentEvent = TreatmentEvents.GetMostRecentTreatmentEvent();
 
             return NotificationStatus == NotificationStatus.Notified 
-                   && (EventIsOutcomeAndNotStillOnTreatmentAndOlderThanOneYear(mostRecentTreatmentEvent)
+                   && (EventIsEndingAndOlderThanOneYear(mostRecentTreatmentEvent)
                        || IsPostMortemAndOlderThanOneYear());
 
-            bool EventIsOutcomeAndNotStillOnTreatmentAndOlderThanOneYear(TreatmentEvent treatmentEvent)
+            bool EventIsEndingAndOlderThanOneYear(TreatmentEvent treatmentEvent)
             {
                 if (mostRecentTreatmentEvent?.TreatmentOutcomeId == null ||
                     !mostRecentTreatmentEvent.TreatmentEventTypeIsOutcome)
@@ -166,7 +166,7 @@ namespace ntbs_service.Models.Entities
                                        ?? SeedData.TreatmentOutcomes.GetTreatmentOutcomes()
                                            .Single(oc => oc.TreatmentOutcomeId == treatmentEvent.TreatmentOutcomeId);
 
-                return treatmentOutcome.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment 
+                return treatmentOutcome.TreatmentOutcomeSubType != TreatmentOutcomeSubType.StillOnTreatment
                        && treatmentEvent.EventDate < DateTime.Today.AddYears(-1);
             }
 
