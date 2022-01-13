@@ -132,8 +132,8 @@ namespace ntbs_service_unit_tests.Services
         [InlineData(NotificationStatus.Closed, true)]
         [InlineData(NotificationStatus.Deleted, true)]
         [InlineData(NotificationStatus.Denotified, true)]
-        [InlineData(NotificationStatus.Draft, false)]
-        [InlineData(NotificationStatus.Notified, false)]
+        [InlineData(NotificationStatus.Draft, true)]
+        [InlineData(NotificationStatus.Notified, true)]
         public async Task DismissAllOpenAlerts_DismissesDuplicateNotificationAlert(
             NotificationStatus duplicateNotificationStatus, bool shouldDismissAlert)
         {
@@ -151,15 +151,10 @@ namespace ntbs_service_unit_tests.Services
                 AlertStatus = AlertStatus.Open,
                 DuplicateId = duplicateNotification.NotificationId
             };
-            var alerts = new List<Alert> { alert1 };
-
+            
             _mockAlertRepository
                 .Setup(s => s.GetAllOpenAlertsByNotificationId(notificationId))
-                .Returns(Task.FromResult(alerts));
-
-            _mockNotificationRepository
-                .Setup(r => r.GetNotificationForAlertCreationAsync(duplicateNotification.NotificationId))
-                .Returns(Task.FromResult(duplicateNotification));
+                .Returns(Task.FromResult(new List<Alert> { alert1 }));
 
             // Act
             await _alertService.DismissAllOpenAlertsForNotification(notificationId);
@@ -174,6 +169,52 @@ namespace ntbs_service_unit_tests.Services
                 AssertAlertNotClosed(alert1);
             }
             _mockAlertRepository.Verify(r => r.SaveAlertChangesAsync(NotificationAuditType.Edited), Times.Once);
+        }
+
+        [Fact]
+        public async Task DismissingDuplicateNotificationAlert_AlsoRemovesAlertOnTwinnedRecord()
+        {
+            // Arrange
+            var notification = new Notification
+            {
+                NotificationId = 1,
+                NotificationStatus = NotificationStatus.Notified
+            };
+            
+            var twinnedNotification = new Notification
+            {
+                NotificationId = 2,
+                NotificationStatus = NotificationStatus.Notified
+            };
+
+            var alert = new DataQualityPotentialDuplicateAlert
+            {
+                AlertId = 101,
+                AlertStatus = AlertStatus.Open,
+                DuplicateId = twinnedNotification.NotificationId
+            };
+            
+            var twinnedAlert = new DataQualityPotentialDuplicateAlert
+            {
+                AlertId = 102,
+                AlertStatus = AlertStatus.Open,
+                DuplicateId = notification.NotificationId
+            };
+            
+            _mockAlertRepository
+                .Setup(s => s.GetAllOpenAlertsByNotificationId(notification.NotificationId))
+                .Returns(Task.FromResult(new List<Alert>{alert}));
+            
+            _mockAlertRepository
+                .Setup(s => s.GetAllOpenAlertsByNotificationId(twinnedNotification.NotificationId))
+                .Returns(Task.FromResult(new List<Alert>{twinnedAlert}));
+
+            // Act
+            await _alertService.DismissAllOpenAlertsForNotification(notification.NotificationId);
+            
+            // Assert
+            AssertAlertClosedRecently(alert);
+            AssertAlertClosedRecently(twinnedAlert);
         }
 
         [Fact]
