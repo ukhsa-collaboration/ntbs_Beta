@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using EFAuditer;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
@@ -7,7 +8,7 @@ using ntbs_service.Services;
 namespace ntbs_service.Models.Entities.Alerts
 {
     // ReSharper disable once ClassNeverInstantiated.Global - actually instantiated in DataQualityAlertsJob
-    public class DataQualityTreatmentOutcome36 : Alert
+    public class DataQualityTreatmentOutcome36 : Alert, IHasRootEntityForAuditing
     {
         public static readonly Expression<Func<Notification, bool>> NotificationInQualifyingRangeExpression =
             // This corresponds to n.ClinicalDetails.StartingDate but we can't use it directly as LINQ->SQL gives up
@@ -33,5 +34,7 @@ namespace ntbs_service.Models.Entities.Alerts
         {
             AlertType = AlertType.DataQualityTreatmentOutcome36;
         }
+        public string RootEntityType => RootEntities.Notification;
+        public string RootId => NotificationId.ToString();
     }
 }
