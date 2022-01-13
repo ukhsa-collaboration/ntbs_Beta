@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MoreLinq.Extensions;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -78,7 +77,21 @@ namespace ntbs_service.Helpers
             return treatmentEvent.TreatmentEventType == TreatmentEventType.Denotification
                    || treatmentEvent.TreatmentEventType == TreatmentEventType.TransferOut
                    || (treatmentEvent.TreatmentOutcome != null
-                       && EpisodeEndingOutcomeTypes.Contains(treatmentEvent.TreatmentOutcome.TreatmentOutcomeType));
+                       && (EpisodeEndingOutcomeTypes.Contains(treatmentEvent.TreatmentOutcome.TreatmentOutcomeType)
+                           || EventIsAnEndingNotEvaluatedOutcome(treatmentEvent))
+                       );
+        }
+
+        private static bool EventIsAnEndingNotEvaluatedOutcome(TreatmentEvent treatmentEvent)
+        {
+            var endingSubTypes = new List<TreatmentOutcomeSubType>
+            {
+                TreatmentOutcomeSubType.TransferredAbroad,
+                TreatmentOutcomeSubType.Other
+            };
+            return treatmentEvent.TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.NotEvaluated
+                   && treatmentEvent.TreatmentOutcome.TreatmentOutcomeSubType.HasValue
+                   && endingSubTypes.Contains(treatmentEvent.TreatmentOutcome.TreatmentOutcomeSubType.Value);
         }
 
         public static IEnumerable<TreatmentEvent> OrderForEpisodes(this IEnumerable<TreatmentEvent> treatmentEvents)
