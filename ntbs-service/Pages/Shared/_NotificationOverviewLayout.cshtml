@@ -3,12 +3,10 @@
 @using ntbs_service.Models.Enums
 @inject Services.IExternalLinksService _externalLinksService
 
-
 @{
     Layout = "./_NotificationLayout.cshtml";
     var currentPage = (string) ViewData["CurrentPage"];
     var isOverviewPage = currentPage == NotificationSubPaths.Overview;
-
 
     var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.Notification.NotificationStatus);
     var linksClass = $"notification-banner-links notification-banner-links{classSuffix}";

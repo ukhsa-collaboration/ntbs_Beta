@@ -26,6 +26,7 @@ namespace ntbs_service.Services
         public string GetReportingPageUrl() => _externalLinks.ReportingOverview;
 
         public string GetSharePointHomePageUrl() => _externalLinks.SharePointHomePage;
+        
         public string GetSharePointFaqPageUrl() => _externalLinks.SharePointFAQPage;
 
         public string GetSharePointFaqPageWithAnchor(PermissionLevel permissionLevel)
