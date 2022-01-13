@@ -216,6 +216,97 @@ namespace ntbs_service_unit_tests.Services
             AssertAlertClosedRecently(alert);
             AssertAlertClosedRecently(twinnedAlert);
         }
+        
+        [Fact]
+        public async Task DismissingDuplicateNotificationAlert_OnlyRemovesRelatedNotification_OnTwinnedRecord()
+        {
+            // This test looks at the edge case where there are three duplicate notifications
+            // pointing to one another in a triangle. Closing a notification at one vertex should close the duplicate 
+            // notifications along its connecting paths, but the duplicate notifications between the other two vertices
+            // should remain.
+            
+            // Arrange
+            var notification1 = new Notification
+            {
+                NotificationId = 1, NotificationStatus = NotificationStatus.Notified
+            };
+            
+            var notification2 = new Notification
+            {
+                NotificationId = 2, NotificationStatus = NotificationStatus.Notified
+            };
+
+            var notification3 = new Notification
+            {
+                NotificationId = 3, NotificationStatus = NotificationStatus.Notified
+            };
+
+            var alert1To2 = new DataQualityPotentialDuplicateAlert
+            {
+                AlertId = 101,
+                AlertStatus = AlertStatus.Open,
+                DuplicateId = notification2.NotificationId
+            };
+            
+            var alert1To3 = new DataQualityPotentialDuplicateAlert
+            {
+                AlertId = 102,
+                AlertStatus = AlertStatus.Open,
+                DuplicateId = notification3.NotificationId
+            };
+            
+            var alert2To1 = new DataQualityPotentialDuplicateAlert
+            {
+                AlertId = 103,
+                AlertStatus = AlertStatus.Open,
+                DuplicateId = notification1.NotificationId
+            };
+            
+            var alert2To3 = new DataQualityPotentialDuplicateAlert
+            {
+                AlertId = 104,
+                AlertStatus = AlertStatus.Open,
+                DuplicateId = notification3.NotificationId
+            };
+            
+            var alert3To1 = new DataQualityPotentialDuplicateAlert
+            {
+                AlertId = 105,
+                AlertStatus = AlertStatus.Open,
+                DuplicateId = notification1.NotificationId
+            };
+            
+            
+            var alert3To2 = new DataQualityPotentialDuplicateAlert
+            {
+                AlertId = 106,
+                AlertStatus = AlertStatus.Open,
+                DuplicateId = notification2.NotificationId
+            };
+
+            _mockAlertRepository
+                .Setup(s => s.GetAllOpenAlertsByNotificationId(notification1.NotificationId))
+                .Returns(Task.FromResult(new List<Alert>{alert1To2, alert1To3}));
+            
+            _mockAlertRepository
+                .Setup(s => s.GetAllOpenAlertsByNotificationId(notification2.NotificationId))
+                .Returns(Task.FromResult(new List<Alert>{alert2To1, alert2To3}));
+            
+            _mockAlertRepository
+                .Setup(s => s.GetAllOpenAlertsByNotificationId(notification3.NotificationId))
+                .Returns(Task.FromResult(new List<Alert>{alert3To1, alert3To2}));
+
+            // Act
+            await _alertService.DismissAllOpenAlertsForNotification(notification1.NotificationId);
+            
+            // Assert
+            AssertAlertClosedRecently(alert1To2);
+            AssertAlertClosedRecently(alert2To1);
+            AssertAlertClosedRecently(alert1To3);
+            AssertAlertClosedRecently(alert3To1);
+            AssertAlertNotClosed(alert2To3);
+            AssertAlertNotClosed(alert3To2);
+        }
 
         [Fact]
         public async Task AddUniqueAlert_CreatesAlertWithCurrentTimestamp()

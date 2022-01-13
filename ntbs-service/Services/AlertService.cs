@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
@@ -119,22 +118,39 @@ namespace ntbs_service.Services
 
             foreach (var alert in alerts)
             {
+                // notification may have multiple duplicate alerts to be dismissed
                 if (alert is DataQualityPotentialDuplicateAlert duplicateAlert)
                 {
-                    var twinnedAlerts = await _alertRepository.GetAllOpenAlertsByNotificationId(duplicateAlert.DuplicateId);
-                    if (twinnedAlerts != null)
-                    {
-                        var twinnedDuplicateAlert = twinnedAlerts.Single(a => a is DataQualityPotentialDuplicateAlert);
-                        twinnedDuplicateAlert.ClosureDate = DateTime.Now;
-                        twinnedDuplicateAlert.AlertStatus = AlertStatus.Closed;
-                    }
+                    await DismissTwinnedRecordDuplicationAlerts(notificationId, duplicateAlert);
                 }
 
-                alert.ClosureDate = DateTime.Now;
-                alert.AlertStatus = AlertStatus.Closed;
+                SetAlertClosureDateAndAlertStatus(alert);
             }
 
             await _alertRepository.SaveAlertChangesAsync();
+        }
+
+        private async Task DismissTwinnedRecordDuplicationAlerts(int notificationId, DataQualityPotentialDuplicateAlert duplicateAlert)
+        {
+            var twinRecordAlerts = await _alertRepository.GetAllOpenAlertsByNotificationId(duplicateAlert.DuplicateId);
+            if (twinRecordAlerts != null)
+            {
+                foreach (var twinRecordAlert in twinRecordAlerts)
+                {
+                    if (twinRecordAlert is DataQualityPotentialDuplicateAlert twinRecordDuplicateAlert &&
+                        // Only want to dismiss duplicate alerts where the duplicateId is equal to the original notification being denotified
+                        twinRecordDuplicateAlert.DuplicateId == notificationId)
+                    {
+                        SetAlertClosureDateAndAlertStatus(twinRecordDuplicateAlert);
+                    }
+                }
+            }
+        }
+
+        private static void SetAlertClosureDateAndAlertStatus(Alert alert)
+        {
+            alert.ClosureDate = DateTime.Now;
+            alert.AlertStatus = AlertStatus.Closed;
         }
 
         public async Task<bool> AddUniqueAlertAsync<T>(T alert) where T : Alert
