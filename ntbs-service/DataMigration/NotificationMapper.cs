@@ -287,14 +287,15 @@ namespace ntbs_service.DataMigration
             }
 
             var expectedEndingOutcomeYear = GetExpectedEndingOutcomeYear(notification, lastEndingEvent);
-            var stillOnTreatmentEvent = notification.TreatmentEvents.OrderForEpisodes().LastOrDefault(o => o.TreatmentOutcome?.TreatmentOutcomeSubType == TreatmentOutcomeSubType.StillOnTreatment);
+            var eventsAfterEndingEvent = notification.TreatmentEvents.Where(te => te.EventDate > lastEndingEvent.EventDate).ToList();
+            var stillOnTreatmentEvent = eventsAfterEndingEvent.LastOrDefault(o => o.TreatmentOutcome?.TreatmentOutcomeSubType == TreatmentOutcomeSubType.StillOnTreatment);
 
-            if (TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(notification, expectedEndingOutcomeYear)?.TreatmentOutcomeId != lastEndingEvent.TreatmentOutcomeId
+            if (expectedEndingOutcomeYear != 0
+                && eventsAfterEndingEvent.Count == 1
                 && stillOnTreatmentEvent != null)
             {
-                var additionalNote = "Outcome date adjusted from initial date calculated in legacy system.";
                 stillOnTreatmentEvent.EventDate = lastEndingEvent.EventDate.Value.AddDays(-1);
-                stillOnTreatmentEvent.Note += additionalNote;
+                stillOnTreatmentEvent.Note += "Outcome date adjusted from initial date calculated in legacy system.";
             }
         }
 
@@ -302,7 +303,7 @@ namespace ntbs_service.DataMigration
         {
             return new []{1, 2, 3}
                 .Where(n => notification.ClinicalDetails.StartingDate.Value.AddYears(n).AddDays(-1) > endingEvent.EventDate)
-                .DefaultIfEmpty(3).Min();
+                .DefaultIfEmpty(0).Min();
         }
 
         private async Task<TreatmentEvent> CreateDerivedDeathEvent(MigrationDbNotification rawNotification)
