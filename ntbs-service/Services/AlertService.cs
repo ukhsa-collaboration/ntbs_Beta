@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
@@ -120,12 +121,12 @@ namespace ntbs_service.Services
             {
                 if (alert is DataQualityPotentialDuplicateAlert duplicateAlert)
                 {
-                    var duplicate =
-                        await _notificationRepository.GetNotificationForAlertCreationAsync(duplicateAlert.DuplicateId);
-
-                    if (duplicate.NotificationStatus.IsOpen())
+                    var twinnedAlerts = await _alertRepository.GetAllOpenAlertsByNotificationId(duplicateAlert.DuplicateId);
+                    if (twinnedAlerts != null)
                     {
-                        continue;
+                        var twinnedDuplicateAlert = twinnedAlerts.Single(a => a is DataQualityPotentialDuplicateAlert);
+                        twinnedDuplicateAlert.ClosureDate = DateTime.Now;
+                        twinnedDuplicateAlert.AlertStatus = AlertStatus.Closed;
                     }
                 }
 
