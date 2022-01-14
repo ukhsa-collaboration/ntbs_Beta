@@ -8,7 +8,6 @@ using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
-using ntbs_service.Models.QueryEntities;
 using ntbs_service.Services;
 using Xunit;
 
@@ -172,7 +171,7 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
-        public async Task DismissingDuplicateNotificationAlert_AlsoRemovesAlertOnTwinnedRecord()
+        public async Task DismissingDuplicateNotificationAlert_AlsoRemovesAlertOnDuplicateRecord()
         {
             // Arrange
             var notification = new Notification
@@ -181,7 +180,7 @@ namespace ntbs_service_unit_tests.Services
                 NotificationStatus = NotificationStatus.Notified
             };
             
-            var twinnedNotification = new Notification
+            var duplicateNotification = new Notification
             {
                 NotificationId = 2,
                 NotificationStatus = NotificationStatus.Notified
@@ -191,10 +190,10 @@ namespace ntbs_service_unit_tests.Services
             {
                 AlertId = 101,
                 AlertStatus = AlertStatus.Open,
-                DuplicateId = twinnedNotification.NotificationId
+                DuplicateId = duplicateNotification.NotificationId
             };
             
-            var twinnedAlert = new DataQualityPotentialDuplicateAlert
+            var duplicateAlert = new DataQualityPotentialDuplicateAlert
             {
                 AlertId = 102,
                 AlertStatus = AlertStatus.Open,
@@ -206,23 +205,23 @@ namespace ntbs_service_unit_tests.Services
                 .Returns(Task.FromResult(new List<Alert>{alert}));
             
             _mockAlertRepository
-                .Setup(s => s.GetAllOpenAlertsByNotificationId(twinnedNotification.NotificationId))
-                .Returns(Task.FromResult(new List<Alert>{twinnedAlert}));
+                .Setup(s => s.GetAllOpenAlertsByNotificationId(duplicateNotification.NotificationId))
+                .Returns(Task.FromResult(new List<Alert>{duplicateAlert}));
 
             // Act
             await _alertService.DismissAllOpenAlertsForNotification(notification.NotificationId);
             
             // Assert
             AssertAlertClosedRecently(alert);
-            AssertAlertClosedRecently(twinnedAlert);
+            AssertAlertClosedRecently(duplicateAlert);
         }
         
         [Fact]
-        public async Task DismissingDuplicateNotificationAlert_OnlyRemovesRelatedNotification_OnTwinnedRecord()
+        public async Task DismissingDuplicateNotificationAlert_OnlyRemovesRelatedNotification_OnDuplicateRecords()
         {
             // This test looks at the edge case where there are three duplicate notifications
             // pointing to one another in a triangle. Closing a notification at one vertex should close the duplicate 
-            // notifications along its connecting paths, but the duplicate notifications between the other two vertices
+            // alerts along its connecting paths, but the duplicate alerts between the other two vertices
             // should remain.
             
             // Arrange
