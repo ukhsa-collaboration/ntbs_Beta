@@ -174,42 +174,31 @@ namespace ntbs_service_unit_tests.Services
         public async Task DismissingDuplicateNotificationAlert_AlsoRemovesAlertOnDuplicateRecord()
         {
             // Arrange
-            var notification = new Notification
-            {
-                NotificationId = 1,
-                NotificationStatus = NotificationStatus.Notified
-            };
-            
-            var duplicateNotification = new Notification
-            {
-                NotificationId = 2,
-                NotificationStatus = NotificationStatus.Notified
-            };
 
             var alert = new DataQualityPotentialDuplicateAlert
             {
                 AlertId = 101,
                 AlertStatus = AlertStatus.Open,
-                DuplicateId = duplicateNotification.NotificationId
+                DuplicateId = 1
             };
             
             var duplicateAlert = new DataQualityPotentialDuplicateAlert
             {
                 AlertId = 102,
                 AlertStatus = AlertStatus.Open,
-                DuplicateId = notification.NotificationId
+                DuplicateId = 2
             };
             
             _mockAlertRepository
-                .Setup(s => s.GetAllOpenAlertsByNotificationId(notification.NotificationId))
+                .Setup(s => s.GetAllOpenAlertsByNotificationId(1))
                 .Returns(Task.FromResult(new List<Alert>{alert}));
             
             _mockAlertRepository
-                .Setup(s => s.GetAllOpenAlertsByNotificationId(duplicateNotification.NotificationId))
+                .Setup(s => s.GetAllOpenAlertsByNotificationId(2))
                 .Returns(Task.FromResult(new List<Alert>{duplicateAlert}));
 
             // Act
-            await _alertService.DismissAllOpenAlertsForNotification(notification.NotificationId);
+            await _alertService.DismissAllOpenAlertsForNotification(1);
             
             // Assert
             AssertAlertClosedRecently(alert);
@@ -225,54 +214,40 @@ namespace ntbs_service_unit_tests.Services
             // should remain.
             
             // Arrange
-            var notification1 = new Notification
-            {
-                NotificationId = 1, NotificationStatus = NotificationStatus.Notified
-            };
             
-            var notification2 = new Notification
-            {
-                NotificationId = 2, NotificationStatus = NotificationStatus.Notified
-            };
-
-            var notification3 = new Notification
-            {
-                NotificationId = 3, NotificationStatus = NotificationStatus.Notified
-            };
-
             var alert1To2 = new DataQualityPotentialDuplicateAlert
             {
                 AlertId = 101,
                 AlertStatus = AlertStatus.Open,
-                DuplicateId = notification2.NotificationId
+                DuplicateId = 2
             };
             
             var alert1To3 = new DataQualityPotentialDuplicateAlert
             {
                 AlertId = 102,
                 AlertStatus = AlertStatus.Open,
-                DuplicateId = notification3.NotificationId
+                DuplicateId = 3
             };
             
             var alert2To1 = new DataQualityPotentialDuplicateAlert
             {
                 AlertId = 103,
                 AlertStatus = AlertStatus.Open,
-                DuplicateId = notification1.NotificationId
+                DuplicateId = 1
             };
             
             var alert2To3 = new DataQualityPotentialDuplicateAlert
             {
                 AlertId = 104,
                 AlertStatus = AlertStatus.Open,
-                DuplicateId = notification3.NotificationId
+                DuplicateId = 3
             };
             
             var alert3To1 = new DataQualityPotentialDuplicateAlert
             {
                 AlertId = 105,
                 AlertStatus = AlertStatus.Open,
-                DuplicateId = notification1.NotificationId
+                DuplicateId = 1
             };
             
             
@@ -280,23 +255,23 @@ namespace ntbs_service_unit_tests.Services
             {
                 AlertId = 106,
                 AlertStatus = AlertStatus.Open,
-                DuplicateId = notification2.NotificationId
+                DuplicateId = 2
             };
 
             _mockAlertRepository
-                .Setup(s => s.GetAllOpenAlertsByNotificationId(notification1.NotificationId))
+                .Setup(s => s.GetAllOpenAlertsByNotificationId(1))
                 .Returns(Task.FromResult(new List<Alert>{alert1To2, alert1To3}));
             
             _mockAlertRepository
-                .Setup(s => s.GetAllOpenAlertsByNotificationId(notification2.NotificationId))
+                .Setup(s => s.GetAllOpenAlertsByNotificationId(2))
                 .Returns(Task.FromResult(new List<Alert>{alert2To1, alert2To3}));
             
             _mockAlertRepository
-                .Setup(s => s.GetAllOpenAlertsByNotificationId(notification3.NotificationId))
+                .Setup(s => s.GetAllOpenAlertsByNotificationId(3))
                 .Returns(Task.FromResult(new List<Alert>{alert3To1, alert3To2}));
 
             // Act
-            await _alertService.DismissAllOpenAlertsForNotification(notification1.NotificationId);
+            await _alertService.DismissAllOpenAlertsForNotification(1);
             
             // Assert
             AssertAlertClosedRecently(alert1To2);

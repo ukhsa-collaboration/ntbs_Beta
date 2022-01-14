@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
@@ -133,16 +134,16 @@ namespace ntbs_service.Services
         private async Task DismissDuplicationAlertsOnDuplicateRecord(int notificationId, int duplicateAlertId)
         {
             var duplicateRecordAlerts = await _alertRepository.GetAllOpenAlertsByNotificationId(duplicateAlertId);
-            if (duplicateRecordAlerts != null)
+            if (!(duplicateRecordAlerts is null))
             {
-                foreach (var alert in duplicateRecordAlerts)
+                foreach (
+                    var alert in duplicateRecordAlerts
+                        .Where(al => al is DataQualityPotentialDuplicateAlert duplicateAlert && 
+                                     duplicateAlert.DuplicateId == notificationId)
+                         )
                 {
-                    if (alert is DataQualityPotentialDuplicateAlert duplicateAlert && 
-                        duplicateAlert.DuplicateId == notificationId)
-                        // Only want to dismiss duplicate alerts where the duplicateId is equal to the original notificationId being closed
-                    {
-                        CloseAlert(duplicateAlert);
-                    }
+                    // Only want to dismiss duplicate alerts where the duplicateId is equal to the original notificationId being closed
+                    CloseAlert(alert);
                 }
             }
         }
