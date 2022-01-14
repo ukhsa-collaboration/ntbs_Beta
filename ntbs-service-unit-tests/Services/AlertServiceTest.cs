@@ -179,14 +179,14 @@ namespace ntbs_service_unit_tests.Services
             {
                 AlertId = 101,
                 AlertStatus = AlertStatus.Open,
-                DuplicateId = 1
+                DuplicateId = 2
             };
             
             var duplicateAlert = new DataQualityPotentialDuplicateAlert
             {
                 AlertId = 102,
                 AlertStatus = AlertStatus.Open,
-                DuplicateId = 2
+                DuplicateId = 1
             };
             
             _mockAlertRepository
@@ -214,7 +214,6 @@ namespace ntbs_service_unit_tests.Services
             // should remain.
             
             // Arrange
-            
             var alert1To2 = new DataQualityPotentialDuplicateAlert
             {
                 AlertId = 101,

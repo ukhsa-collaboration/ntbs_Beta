@@ -49,9 +49,7 @@ namespace ntbs_service.Services
 
             if (alert != null)
             {
-                alert.ClosingUserId = userId;
-                alert.ClosureDate = DateTime.Now;
-                alert.AlertStatus = AlertStatus.Closed;
+                SetClosedAndAddClosureDate(alert, userId);
 
                 await _alertRepository.SaveAlertChangesAsync();
             }
@@ -63,9 +61,7 @@ namespace ntbs_service.Services
 
             if (alert != null)
             {
-                alert.ClosingUserId = userId;
-                alert.ClosureDate = DateTime.Now;
-                alert.AlertStatus = AlertStatus.Closed;
+                SetClosedAndAddClosureDate(alert, userId);
             }
         }
 
@@ -125,7 +121,7 @@ namespace ntbs_service.Services
                     await DismissDuplicationAlertsOnDuplicateRecord(notificationId, duplicateAlert.DuplicateId);
                 }
                 
-                CloseAlert(alert);
+                SetClosedAndAddClosureDate(alert);
             }
 
             await _alertRepository.SaveAlertChangesAsync();
@@ -143,13 +139,14 @@ namespace ntbs_service.Services
                          )
                 {
                     // Only want to dismiss duplicate alerts where the duplicateId is equal to the original notificationId being closed
-                    CloseAlert(alert);
+                    SetClosedAndAddClosureDate(alert);
                 }
             }
         }
 
-        private static void CloseAlert(Alert alert)
+        private static void SetClosedAndAddClosureDate(Alert alert, string userId = null)
         {
+            alert.ClosingUserId = userId;
             alert.ClosureDate = DateTime.Now;
             alert.AlertStatus = AlertStatus.Closed;
         }
