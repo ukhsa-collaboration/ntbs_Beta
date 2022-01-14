@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using MoreLinq;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -129,19 +130,12 @@ namespace ntbs_service.Services
 
         private async Task DismissDuplicationAlertsOnDuplicateRecord(int notificationId, int duplicateAlertId)
         {
-            var duplicateRecordAlerts = await _alertRepository.GetAllOpenAlertsByNotificationId(duplicateAlertId);
-            if (!(duplicateRecordAlerts is null))
-            {
-                foreach (
-                    var alert in duplicateRecordAlerts
-                        .Where(al => al is DataQualityPotentialDuplicateAlert duplicateAlert && 
-                                     duplicateAlert.DuplicateId == notificationId)
-                         )
-                {
-                    // Only want to dismiss duplicate alerts where the duplicateId is equal to the original notificationId being closed
-                    SetClosedAndAddClosureDate(alert);
-                }
-            }
+            var duplicateRecordAlerts = (await _alertRepository.GetAllOpenAlertsByNotificationId(duplicateAlertId))?
+                .Where(al =>
+                    al is DataQualityPotentialDuplicateAlert duplicateAlert &&
+                    duplicateAlert.DuplicateId == notificationId);
+            
+            duplicateRecordAlerts?.ForEach(a => SetClosedAndAddClosureDate(a));
         }
 
         private static void SetClosedAndAddClosureDate(Alert alert, string userId = null)
