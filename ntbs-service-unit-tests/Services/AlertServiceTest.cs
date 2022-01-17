@@ -9,6 +9,7 @@ using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
+using ntbs_service_unit_tests.Helpers;
 using Xunit;
 
 namespace ntbs_service_unit_tests.Services
@@ -197,48 +198,13 @@ namespace ntbs_service_unit_tests.Services
             // related to it, but the duplicate alerts between the two other notifications should remain
             
             // Arrange
-            var alert1To2 = new DataQualityPotentialDuplicateAlert
-            {
-                AlertId = 101,
-                AlertStatus = AlertStatus.Open,
-                DuplicateId = 2
-            };
-            
-            var alert1To3 = new DataQualityPotentialDuplicateAlert
-            {
-                AlertId = 102,
-                AlertStatus = AlertStatus.Open,
-                DuplicateId = 3
-            };
-            
-            var alert2To1 = new DataQualityPotentialDuplicateAlert
-            {
-                AlertId = 103,
-                AlertStatus = AlertStatus.Open,
-                DuplicateId = 1
-            };
-            
-            var alert2To3 = new DataQualityPotentialDuplicateAlert
-            {
-                AlertId = 104,
-                AlertStatus = AlertStatus.Open,
-                DuplicateId = 3
-            };
-            
-            var alert3To1 = new DataQualityPotentialDuplicateAlert
-            {
-                AlertId = 105,
-                AlertStatus = AlertStatus.Open,
-                DuplicateId = 1
-            };
-            
-            
-            var alert3To2 = new DataQualityPotentialDuplicateAlert
-            {
-                AlertId = 106,
-                AlertStatus = AlertStatus.Open,
-                DuplicateId = 2
-            };
+
+            var alert1To2 = AlertHelper.CreateOpenDuplicateAlert(1, 2, 101);
+            var alert1To3 = AlertHelper.CreateOpenDuplicateAlert(1, 3, 102);
+            var alert2To1 = AlertHelper.CreateOpenDuplicateAlert(2, 1, 103);
+            var alert2To3 = AlertHelper.CreateOpenDuplicateAlert(2, 3, 104);
+            var alert3To1 = AlertHelper.CreateOpenDuplicateAlert(3, 1, 105);
+            var alert3To2 = AlertHelper.CreateOpenDuplicateAlert(3, 2, 106);
 
             _mockAlertRepository
                 .Setup(s => s.GetAllOpenAlertsByNotificationId(1))
