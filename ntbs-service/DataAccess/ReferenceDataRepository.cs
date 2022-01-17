@@ -16,6 +16,7 @@ namespace ntbs_service.DataAccess
         Task<IList<Country>> GetAllHighTbIncidenceCountriesAsync();
         Task<IList<Country>> GetAllCountriesApartFromUkAsync();
         Task<Country> GetCountryByIdAsync(int id);
+        Task<IList<TBService>> GetAllActiveTbServicesAsync();
         Task<IList<TBService>> GetAllTbServicesAsync();
         Task<TBService> GetTbServiceByCodeAsync(string code);
         Task<TBService> GetTbServiceFromHospitalIdAsync(Guid hospitalId);
@@ -92,9 +93,14 @@ namespace ntbs_service.DataAccess
             return await _context.Country.FindAsync(countryId);
         }
 
-        public async Task<IList<TBService>> GetAllTbServicesAsync()
+        public async Task<IList<TBService>> GetAllActiveTbServicesAsync()
         {
             return await GetActiveTbServicesOrderedByNameQueryable().ToListAsync();
+        }
+
+        public async Task<IList<TBService>> GetAllTbServicesAsync()
+        {
+            return await _context.TbService.OrderBy(s => s.Name).ToListAsync();
         }
 
         public async Task<TBService> GetTbServiceByCodeAsync(string code)

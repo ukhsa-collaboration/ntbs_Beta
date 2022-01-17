@@ -78,6 +78,8 @@ namespace ntbs_service_unit_tests.DataMigration
                 .Returns((string username) => Task.FromResult(_usernameToUserDict[username]));
             _referenceDataRepositoryMock.Setup(repo => repo.GetTbServiceFromHospitalIdAsync(It.IsAny<Guid>()))
                 .Returns((Guid guid) => Task.FromResult(_hospitalToTbServiceCodeDict[guid]));
+            _referenceDataRepositoryMock.Setup(repo => repo.GetAllTbServicesAsync())
+                .Returns(() => Task.FromResult<IList<TBService>>(new List<TBService> {new TBService {Code = "TBS003", PHECCode = "result"}}));
             _referenceDataRepositoryMock.Setup(repo =>
                     repo.GetTreatmentOutcomeForTypeAndSubType(
                         TreatmentOutcomeType.Died,
@@ -640,6 +642,25 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.True(notification.ImmunosuppressionDetails.HasOther);
             Assert.Equal("No immunosuppression type was provided in the legacy record",
                 notification.ImmunosuppressionDetails.OtherDescription);
+        }
+
+        [Fact]
+        public async Task correctlyMaps_PreviousTbService()
+        {
+            // Arrange
+            const string legacyId = "130331";
+            SetupNotificationsInGroups((legacyId, "12"));
+            
+            
+            // Act
+            var notification = await GetSingleNotification(legacyId);
+            
+            //TODO Phec code
+            //TODO PreviousTbServiceId?
+            //TODO how to test on app?
+            
+            // Assert
+            Assert.Equal("TBS003", notification.PreviousTbServices.First().TbServiceCode);
         }
 
         [Fact]

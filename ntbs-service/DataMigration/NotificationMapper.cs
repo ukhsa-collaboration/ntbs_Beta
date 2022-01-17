@@ -40,6 +40,7 @@ namespace ntbs_service.DataMigration
         private readonly TreatmentOutcome _postMortemOutcomeType;
         private readonly List<TreatmentOutcome> _diedOutcomes;
         private readonly List<int> _diedOutcomeIds;
+        private readonly List<TBService> _tbServices;
         private readonly IPostcodeService _postcodeService;
         private readonly ICaseManagerImportService _caseManagerImportService;
         private readonly ITreatmentEventMapper _treatmentEventMapper;
@@ -67,6 +68,9 @@ namespace ntbs_service.DataMigration
                 .ToList();
             _diedOutcomeIds = _diedOutcomes
                 .Select(outcome => outcome.TreatmentOutcomeId)
+                .ToList();
+            _tbServices = _referenceDataRepository.GetAllTbServicesAsync()
+                .Result
                 .ToList();
         }
 
@@ -213,6 +217,8 @@ namespace ntbs_service.DataMigration
                 {
                     notification.NotificationStatus = NotificationStatus.Closed;
                 }
+
+                notification.PreviousTbServices = ExtractPreviousTbServices(notificationTransferEvents);
 
                 notificationsToReturn.Add(notification);
             }
@@ -512,6 +518,20 @@ namespace ntbs_service.DataMigration
             return details;
         }
 
+        private ICollection<PreviousTbService> ExtractPreviousTbServices(IEnumerable<TreatmentEvent> notificationTransferEvents)
+        {
+            return notificationTransferEvents
+                .Where(e => e.TreatmentEventType is TreatmentEventType.TransferOut && e.EventDate.HasValue)
+                .Select(e => new PreviousTbService
+                {
+                    TbServiceCode = e.TbServiceCode,
+                    TransferDate = e.EventDate.Value,
+                    NotificationId = e.NotificationId,
+                    PhecCode = _tbServices.Single(tbs => tbs.Code == e.TbServiceCode).PHECCode
+                })
+                .ToList();
+        }
+        
         private static ClinicalDetails ExtractClinicalDetails(MigrationDbNotification notification)
         {
             var details = new ClinicalDetails

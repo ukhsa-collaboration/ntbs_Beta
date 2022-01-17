@@ -53,7 +53,7 @@ namespace ntbs_service_unit_tests.Pages
 
             IList<TBService> tbServices = new List<TBService>();
             var tbServiceList = Task.FromResult(tbServices);
-            _mockReferenceDataRepository.Setup(s => s.GetAllTbServicesAsync()).Returns(tbServiceList);
+            _mockReferenceDataRepository.Setup(s => s.GetAllActiveTbServicesAsync()).Returns(tbServiceList);
 
             _mockNotificationRepository
                 .Setup(s => s.GetQueryableNotificationByStatus(It.IsAny<List<NotificationStatus>>()))

@@ -60,7 +60,7 @@ namespace ntbs_service.Pages.Search
 
             Sexes = referenceDataRepository.GetAllSexesAsync().Result.ToList();
             TbServices = new SelectList(
-                referenceDataRepository.GetAllTbServicesAsync().Result,
+                referenceDataRepository.GetAllActiveTbServicesAsync().Result,
                 nameof(TBService.Code),
                 nameof(TBService.Name));
             Countries = new SelectList(
