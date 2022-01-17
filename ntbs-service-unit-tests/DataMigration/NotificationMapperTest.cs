@@ -262,14 +262,15 @@ namespace ntbs_service_unit_tests.DataMigration
             var notification = await GetSingleNotification(legacyId);
 
             // Assert
-            Assert.Single(notification.TreatmentEvents);
+            Assert.Single(notification.TreatmentEvents.Where(te => te.TreatmentEventIsDeathEvent));
+            var deathEvent = notification.TreatmentEvents.Single(te => te.TreatmentEventIsDeathEvent);
             Assert.True(notification.ClinicalDetails.IsPostMortem);
             Assert.Equal(NotificationStatus.Closed, notification.NotificationStatus);
-            // For post mortem cases with no death event we *only* want to create the single death event so outcomes reporting is correct
+            // For post mortem cases with no death event we want a death event and a diagnosis event
             Assert.Collection(notification.TreatmentEvents,
-                te => Assert.Equal(TreatmentOutcomeType.Died, te.TreatmentOutcome.TreatmentOutcomeType));
-            Assert.Collection(notification.TreatmentEvents,
-                te => Assert.Equal(TreatmentOutcomeUnknownDeathId, te.TreatmentOutcome.TreatmentOutcomeId));
+                te => Assert.Equal(TreatmentOutcomeType.Died, te.TreatmentOutcome.TreatmentOutcomeType),
+                te => Assert.Equal(TreatmentEventType.DiagnosisMade, te.TreatmentEventType));
+             Assert.Equal(TreatmentOutcomeUnknownDeathId, deathEvent.TreatmentOutcome.TreatmentOutcomeId);
         }
 
         // This is based on NTBS-2869
@@ -284,8 +285,9 @@ namespace ntbs_service_unit_tests.DataMigration
             var notification = await GetSingleNotification(legacyId);
 
             // Assert
-            Assert.Single(notification.TreatmentEvents);
-            var deathEvent = notification.TreatmentEvents.Single();
+            var diagnosisEvent = notification.TreatmentEvents.SingleOrDefault(te => te.TreatmentEventType == TreatmentEventType.DiagnosisMade);
+            Assert.NotNull(diagnosisEvent);
+            var deathEvent = notification.TreatmentEvents.Single(te => te.TreatmentEventIsDeathEvent);
             Assert.True(notification.ClinicalDetails.IsPostMortem);
             // For post mortem cases we *only* want to import the single death event so outcomes reporting is correct
             Assert.Equal(TreatmentOutcomeType.Died, deathEvent.TreatmentOutcome.TreatmentOutcomeType);
