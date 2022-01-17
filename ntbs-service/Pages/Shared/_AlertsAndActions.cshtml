@@ -26,7 +26,7 @@
                                     <br/>
                                     @alert.Action
                                 </div>
-                                @if (alert.AlertType != AlertType.DataQualityPotientialDuplicate)
+                                @if (alert.ActionLink != Context.Request.Path)
                                 {
                                     <a href="@alert.ActionLink" class="alert-take-action-link">Take action</a>
                                 }
