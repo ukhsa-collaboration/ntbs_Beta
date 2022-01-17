@@ -127,28 +127,17 @@ namespace ntbs_service_unit_tests.Services
             _mockAlertRepository.Verify(r => r.SaveAlertChangesAsync(NotificationAuditType.Edited), Times.Once);
         }
 
-        [Theory]
-        [InlineData(NotificationStatus.Closed, true)]
-        [InlineData(NotificationStatus.Deleted, true)]
-        [InlineData(NotificationStatus.Denotified, true)]
-        [InlineData(NotificationStatus.Draft, true)]
-        [InlineData(NotificationStatus.Notified, true)]
-        public async Task DismissAllOpenAlerts_DismissesDuplicateNotificationAlert(
-            NotificationStatus duplicateNotificationStatus, bool shouldDismissAlert)
+        [Fact]
+        public async Task DismissAllOpenAlerts_DismissesDuplicateNotificationAlert()
         {
             // Arrange
             const int notificationId = 1;
-            var duplicateNotification = new Notification
-            {
-                NotificationId = 2,
-                NotificationStatus = duplicateNotificationStatus
-            };
 
             var alert1 = new DataQualityPotentialDuplicateAlert
             {
                 AlertId = 101,
                 AlertStatus = AlertStatus.Open,
-                DuplicateId = duplicateNotification.NotificationId
+                DuplicateId = 2
             };
             
             _mockAlertRepository
@@ -159,14 +148,8 @@ namespace ntbs_service_unit_tests.Services
             await _alertService.DismissAllOpenAlertsForNotification(notificationId);
 
             // Assert
-            if (shouldDismissAlert)
-            {
-                AssertAlertClosedRecently(alert1);
-            }
-            else
-            {
-                AssertAlertNotClosed(alert1);
-            }
+            AssertAlertClosedRecently(alert1);
+
             _mockAlertRepository.Verify(r => r.SaveAlertChangesAsync(NotificationAuditType.Edited), Times.Once);
         }
 
