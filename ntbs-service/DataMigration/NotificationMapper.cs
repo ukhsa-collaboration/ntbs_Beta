@@ -37,9 +37,6 @@ namespace ntbs_service.DataMigration
         private readonly IMigrationRepository _migrationRepository;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IImportLogger _logger;
-        private readonly TreatmentOutcome _postMortemOutcomeType;
-        private readonly List<TreatmentOutcome> _diedOutcomes;
-        private readonly List<int> _diedOutcomeIds;
         private readonly IPostcodeService _postcodeService;
         private readonly ICaseManagerImportService _caseManagerImportService;
         private readonly ITreatmentEventMapper _treatmentEventMapper;
@@ -57,17 +54,6 @@ namespace ntbs_service.DataMigration
             _postcodeService = postcodeService;
             _caseManagerImportService = caseManagerImportService;
             _treatmentEventMapper = treatmentEventMapper;
-
-            // These are database-based values, but static from the runtime point of view, so we fetch them once here
-            _postMortemOutcomeType = _referenceDataRepository.GetTreatmentOutcomeForTypeAndSubType(
-                TreatmentOutcomeType.Died,
-                TreatmentOutcomeSubType.Unknown).Result;
-            _diedOutcomes = _referenceDataRepository.GetTreatmentOutcomesForType(TreatmentOutcomeType.Died)
-                .Result
-                .ToList();
-            _diedOutcomeIds = _diedOutcomes
-                .Select(outcome => outcome.TreatmentOutcomeId)
-                .ToList();
         }
 
         public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
@@ -167,9 +153,10 @@ namespace ntbs_service.DataMigration
                     notificationTransferEvents.Add(await _treatmentEventMapper.AsTransferEvent(transfer, context, runId));
                 }
                 var notificationOutcomeEvents = new List<TreatmentEvent>();
+                var allOutcomes = await _referenceDataRepository.GetAllTreatmentOutcomes();
                 foreach (var outcome in outcomeEvents.Where(sc => sc.OldNotificationId == id))
                 {
-                    notificationOutcomeEvents.Add(await _treatmentEventMapper.AsOutcomeEvent(outcome, context, runId));
+                    notificationOutcomeEvents.Add(await _treatmentEventMapper.AsOutcomeEvent(outcome, allOutcomes, context, runId));
                 }
                 var notificationMBovisAnimalExposures = mbovisAnimalExposures
                     .Where(sc => sc.OldNotificationId == id)
@@ -203,6 +190,7 @@ namespace ntbs_service.DataMigration
                     notificationOutcomeEvents,
                     context,
                     runId);
+                AlterStillOnTreatmentEventDateIfEndingOutcomePresent(notification);
 
                 notification.MBovisDetails = ExtractMBovisDetails(notificationMBovisAnimalExposures,
                     notificationMBovisExposureToKnownCase,
@@ -228,7 +216,7 @@ namespace ntbs_service.DataMigration
             int runId)
         {
             return notification.ClinicalDetails.IsPostMortem == true
-                ? TreatmentEventsForPostMortemNotification(rawNotification, notificationOutcomeEvents)
+                ? await TreatmentEventsForPostMortemNotification(rawNotification, notificationOutcomeEvents)
                 : await TreatmentEventsForPreMortemNotification(
                     notification,
                     rawNotification,
@@ -238,24 +226,21 @@ namespace ntbs_service.DataMigration
                     runId);
         }
 
-        private List<TreatmentEvent> TreatmentEventsForPostMortemNotification(MigrationDbNotification rawNotification,
+        private async Task<List<TreatmentEvent>> TreatmentEventsForPostMortemNotification(MigrationDbNotification rawNotification,
             IEnumerable<TreatmentEvent> notificationOutcomeEvents)
         {
             // For post mortem cases the death event is the ONLY event we want to import so the final outcome is
             // correctly reported.
-            var deathEvents = notificationOutcomeEvents.Where(e => _diedOutcomeIds.Contains(e.TreatmentOutcomeId ?? 0)).ToList();
+            var deathEvents = notificationOutcomeEvents.Where(e => e.TreatmentEventIsDeathEvent).ToList();
             TreatmentEvent eventToReturn;
             if (deathEvents.Any())
             {
                 eventToReturn = deathEvents.First();
                 eventToReturn.EventDate = rawNotification.DeathDate;
-                // We add the treatment outcome manually to make sure it is loaded for the HasDeathEventForPostMortemCase check
-                eventToReturn.TreatmentOutcome =
-                    _diedOutcomes.Single(te => te.TreatmentOutcomeId == eventToReturn.TreatmentOutcomeId);
             }
             else
             {
-                eventToReturn = CreateDerivedDeathEvent(rawNotification);
+                eventToReturn = await CreateDerivedDeathEvent(rawNotification);
             }
 
             return new List<TreatmentEvent> {eventToReturn};
@@ -284,23 +269,54 @@ namespace ntbs_service.DataMigration
             treatmentEvents.AddRange(notificationOutcomeEvents);
 
             // If there is a death date but no death treatment event, add one in
-            if (rawNotification.DeathDate != null
-                && !treatmentEvents.Any(e => _diedOutcomeIds.Contains(e.TreatmentOutcomeId ?? 0)))
+            if (rawNotification.DeathDate != null && !treatmentEvents.Any(e => e.TreatmentEventIsDeathEvent))
             {
-                treatmentEvents.Add(CreateDerivedDeathEvent(rawNotification));
+                treatmentEvents.Add(await CreateDerivedDeathEvent(rawNotification));
             }
 
             return treatmentEvents;
         }
 
-        private TreatmentEvent CreateDerivedDeathEvent(MigrationDbNotification rawNotification) =>
-            new TreatmentEvent
+        private void AlterStillOnTreatmentEventDateIfEndingOutcomePresent(Notification notification)
+        {
+            var lastEndingEvent = notification.TreatmentEvents.Where(te => te.TreatmentEventIsEndingEvent)
+                .GetMostRecentTreatmentEvent();
+            if (!notification.ClinicalDetails.StartingDate.HasValue || lastEndingEvent == null || !lastEndingEvent.EventDate.HasValue)
             {
-                EventDate = rawNotification.DeathDate,
-                TreatmentEventType = TreatmentEventType.TreatmentOutcome,
-                TreatmentOutcomeId = _postMortemOutcomeType.TreatmentOutcomeId,
-                TreatmentOutcome = _postMortemOutcomeType
-            };
+                return;
+            }
+
+            var expectedEndingOutcomeYear = GetExpectedEndingOutcomeYear(notification, lastEndingEvent);
+            var eventsAfterEndingEvent = notification.TreatmentEvents.Where(te => te.EventDate > lastEndingEvent.EventDate).ToList();
+            var stillOnTreatmentEvent = eventsAfterEndingEvent.LastOrDefault(o => o.TreatmentOutcome?.TreatmentOutcomeSubType == TreatmentOutcomeSubType.StillOnTreatment);
+
+            if (expectedEndingOutcomeYear != 0
+                && eventsAfterEndingEvent.Count == 1
+                && stillOnTreatmentEvent != null)
+            {
+                stillOnTreatmentEvent.EventDate = lastEndingEvent.EventDate.Value.AddDays(-1);
+                stillOnTreatmentEvent.Note += "Outcome date adjusted from initial date calculated in legacy system.";
+            }
+        }
+
+        private int GetExpectedEndingOutcomeYear(Notification notification, TreatmentEvent endingEvent)
+        {
+            return new []{1, 2, 3}
+                .Where(n => notification.ClinicalDetails.StartingDate.Value.AddYears(n).AddDays(-1) > endingEvent.EventDate)
+                .DefaultIfEmpty(0).Min();
+        }
+
+        private async Task<TreatmentEvent> CreateDerivedDeathEvent(MigrationDbNotification rawNotification)
+        {
+            var postMortemOutcomeType = await _referenceDataRepository.GetTreatmentOutcomeForTypeAndSubType(TreatmentOutcomeType.Died, TreatmentOutcomeSubType.Unknown);
+            return new TreatmentEvent
+            {
+               EventDate = rawNotification.DeathDate,
+               TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+               TreatmentOutcomeId = postMortemOutcomeType.TreatmentOutcomeId,
+               TreatmentOutcome = postMortemOutcomeType
+           };
+        }
 
         private MBovisDetails ExtractMBovisDetails(ICollection<MBovisAnimalExposure> animalExposures,
             ICollection<MBovisExposureToKnownCase> exposureToKnownCase,

@@ -79,23 +79,12 @@ namespace ntbs_service_unit_tests.DataMigration
             _referenceDataRepositoryMock.Setup(repo => repo.GetTbServiceFromHospitalIdAsync(It.IsAny<Guid>()))
                 .Returns((Guid guid) => Task.FromResult(_hospitalToTbServiceCodeDict[guid]));
             _referenceDataRepositoryMock.Setup(repo =>
-                    repo.GetTreatmentOutcomeForTypeAndSubType(
-                        TreatmentOutcomeType.Died,
-                        TreatmentOutcomeSubType.Unknown))
-                .ReturnsAsync(new TreatmentOutcome
-                {
-                    TreatmentOutcomeType = TreatmentOutcomeType.Died,
-                    TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown,
-                    TreatmentOutcomeId = 10
-                });
+                    repo.GetAllTreatmentOutcomes())
+                .ReturnsAsync(ntbs_service.Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes().ToList);
             _referenceDataRepositoryMock.Setup(repo =>
-                    repo.GetTreatmentOutcomesForType(TreatmentOutcomeType.Died))
-                .ReturnsAsync(new List<TreatmentOutcome> {
-                    new TreatmentOutcome { TreatmentOutcomeId = 7, TreatmentOutcomeType = TreatmentOutcomeType.Died, TreatmentOutcomeSubType = TreatmentOutcomeSubType.TbCausedDeath },
-                    new TreatmentOutcome { TreatmentOutcomeId = 8, TreatmentOutcomeType = TreatmentOutcomeType.Died, TreatmentOutcomeSubType = TreatmentOutcomeSubType.TbContributedToDeath },
-                    new TreatmentOutcome { TreatmentOutcomeId = 9, TreatmentOutcomeType = TreatmentOutcomeType.Died, TreatmentOutcomeSubType = TreatmentOutcomeSubType.TbIncidentalToDeath },
-                    new TreatmentOutcome { TreatmentOutcomeId = 10, TreatmentOutcomeType = TreatmentOutcomeType.Died, TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown }
-                });
+                    repo.GetTreatmentOutcomeForTypeAndSubType(It.IsAny<TreatmentOutcomeType>(), It.IsAny<TreatmentOutcomeSubType>()))
+                .ReturnsAsync(ntbs_service.Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes()
+                    .FirstOrDefault(o => o.TreatmentOutcomeType == TreatmentOutcomeType.Died && o.TreatmentOutcomeSubType == TreatmentOutcomeSubType.Unknown));
             _postcodeService.Setup(service => service.FindPostcodeAsync(It.IsAny<string>()))
                 .ReturnsAsync((string postcode) => new PostcodeLookup { Postcode = postcode.Replace(" ", "").ToUpper() });
 
@@ -673,6 +662,26 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Assert
             Assert.Equal(NotificationStatus.Notified, notification.NotificationStatus);
+        }
+
+        // Data for this has been taken from an edited test notification, relating to NTBS-2966
+        [Fact]
+        public async Task
+            whenEndingEventHappenedBeforeOutcomeDateButThereIsStillOnTreatmentOutcome_EditStillOnTreatmentEventDate()
+        {
+            // Arrange
+            const string legacyId = "301337";
+            SetupNotificationsInGroups((legacyId, "13"));
+
+            // Act
+            var notification = await GetSingleNotification(legacyId);
+
+            // Assert
+            var stillOnTreatmentEvent = notification.TreatmentEvents.First(te => te.TreatmentOutcomeId == 16);
+            var mostRecentEvent = notification.TreatmentEvents.GetMostRecentTreatmentEvent();
+            Assert.NotEqual(new DateTime(2020, 05, 04), stillOnTreatmentEvent.EventDate);
+            Assert.Equal(3, mostRecentEvent.TreatmentOutcomeId);
+            Assert.Contains("Outcome date adjusted from initial date calculated in legacy system.", stillOnTreatmentEvent.Note);
         }
 
         [Fact]
