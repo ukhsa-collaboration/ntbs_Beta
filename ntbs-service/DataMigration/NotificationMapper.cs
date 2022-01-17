@@ -216,7 +216,7 @@ namespace ntbs_service.DataMigration
             int runId)
         {
             return notification.ClinicalDetails.IsPostMortem == true
-                ? await TreatmentEventsForPostMortemNotification(rawNotification, notificationOutcomeEvents)
+                ? await TreatmentEventsForPostMortemNotification(notification, rawNotification, notificationOutcomeEvents)
                 : await TreatmentEventsForPreMortemNotification(
                     notification,
                     rawNotification,
@@ -226,24 +226,25 @@ namespace ntbs_service.DataMigration
                     runId);
         }
 
-        private async Task<List<TreatmentEvent>> TreatmentEventsForPostMortemNotification(MigrationDbNotification rawNotification,
-            IEnumerable<TreatmentEvent> notificationOutcomeEvents)
+        private async Task<List<TreatmentEvent>> TreatmentEventsForPostMortemNotification(Notification notification,
+            MigrationDbNotification rawNotification, IEnumerable<TreatmentEvent> notificationOutcomeEvents)
         {
-            // For post mortem cases the death event is the ONLY event we want to import so the final outcome is
-            // correctly reported.
+            // For post mortem cases the death event and the diagnosis made events are the ONLY events we want to
+            // import so the final outcome is correctly reported.
             var deathEvents = notificationOutcomeEvents.Where(e => e.TreatmentEventIsDeathEvent).ToList();
-            TreatmentEvent eventToReturn;
+            TreatmentEvent deathEventToReturn;
             if (deathEvents.Any())
             {
-                eventToReturn = deathEvents.First();
-                eventToReturn.EventDate = rawNotification.DeathDate;
+                deathEventToReturn = deathEvents.First();
+                deathEventToReturn.EventDate = rawNotification.DeathDate;
             }
             else
             {
-                eventToReturn = await CreateDerivedDeathEvent(rawNotification);
+                deathEventToReturn = await CreateDerivedDeathEvent(rawNotification);
             }
+            var diagnosisMadeEvent = NotificationHelper.CreateTreatmentStartEvent(notification);
 
-            return new List<TreatmentEvent> {eventToReturn};
+            return new List<TreatmentEvent> {deathEventToReturn, diagnosisMadeEvent};
         }
 
         private async Task<List<TreatmentEvent>> TreatmentEventsForPreMortemNotification(Notification notification,
