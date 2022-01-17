@@ -135,7 +135,13 @@ namespace ntbs_service.Services
                     al is DataQualityPotentialDuplicateAlert duplicateAlert &&
                     duplicateAlert.DuplicateId == notificationId);
             
-            duplicateRecordAlerts?.ForEach(a => SetClosedAndAddClosureDate(a));
+            if (duplicateRecordAlerts != null)
+            {
+                foreach (var duplicateAlert in duplicateRecordAlerts)
+                {
+                    SetClosedAndAddClosureDate(duplicateAlert);
+                }
+            }
         }
 
         private static void SetClosedAndAddClosureDate(Alert alert, string userId = null)
