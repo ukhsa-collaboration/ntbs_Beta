@@ -137,7 +137,6 @@ namespace ntbs_service_unit_tests.Services
             {
                 AlertId = 101,
                 AlertStatus = AlertStatus.Open,
-                DuplicateId = 2
             };
             
             _mockAlertRepository
@@ -162,13 +161,15 @@ namespace ntbs_service_unit_tests.Services
             {
                 AlertId = 101,
                 AlertStatus = AlertStatus.Open,
-                DuplicateId = 2
+                NotificationId = 1,
+                DuplicateId = 2,
             };
             
             var duplicateAlert = new DataQualityPotentialDuplicateAlert
             {
                 AlertId = 102,
                 AlertStatus = AlertStatus.Open,
+                NotificationId = 2,
                 DuplicateId = 1
             };
             
@@ -192,9 +193,8 @@ namespace ntbs_service_unit_tests.Services
         public async Task DismissingDuplicateNotificationAlert_OnlyRemovesRelatedNotification_OnDuplicateRecords()
         {
             // This test looks at the edge case where there are three duplicate notifications
-            // pointing to one another in a triangle. Closing a notification at one vertex should close the duplicate 
-            // alerts along its connecting paths, but the duplicate alerts between the other two vertices
-            // should remain.
+            // pointing to one another in a triangle. Closing one notification should close the duplicate alerts
+            // related to it, but the duplicate alerts between the two other notifications should remain
             
             // Arrange
             var alert1To2 = new DataQualityPotentialDuplicateAlert
