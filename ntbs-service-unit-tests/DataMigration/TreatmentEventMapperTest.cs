@@ -138,9 +138,10 @@ namespace ntbs_service_unit_tests.DataMigration
                 TreatmentOutcomeId = 2,
                 Note = "The patient had a specific outcome"
             };
+            var allOutcomes = ntbs_service.Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes().ToList();
 
             // Act
-            var mappedEvent = await _treatmentEventMapper.AsOutcomeEvent(migrationTransferEvent, null, 1);
+            var mappedEvent = await _treatmentEventMapper.AsOutcomeEvent(migrationTransferEvent, allOutcomes, null, 1);
 
             // Assert
             Assert.Equal(DateTime.Parse("12/12/2012"), mappedEvent.EventDate);
@@ -165,9 +166,10 @@ namespace ntbs_service_unit_tests.DataMigration
                 TreatmentOutcomeId = 2,
                 Note = "The patient had a specific outcome"
             };
+            var allOutcomes = ntbs_service.Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes().ToList();
 
             // Act
-            var mappedEvent = await _treatmentEventMapper.AsOutcomeEvent(migrationTransferEvent, null, 1);
+            var mappedEvent = await _treatmentEventMapper.AsOutcomeEvent(migrationTransferEvent, allOutcomes, null, 1);
 
             // Assert
             Assert.Equal(DateTime.Parse("12/12/2012"), mappedEvent.EventDate);
