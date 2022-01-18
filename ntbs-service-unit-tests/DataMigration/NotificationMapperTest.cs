@@ -650,7 +650,7 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyMaps_PreviousTbService()
         {
             // Arrange
-            const string legacyId = WestonGeneralCode;
+            const string legacyId = "130331";
             SetupNotificationsInGroups((legacyId, "12"));
             
             // Act
