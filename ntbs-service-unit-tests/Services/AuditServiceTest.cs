@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Graph;
+using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.SeedData;
 using ntbs_service.Services;
 using Xunit;
@@ -47,6 +47,30 @@ namespace ntbs_service_unit_tests.Services
             Assert.Equal(2, notificationLogs.Count);
             Assert.Empty(notificationLogs.Where(log => log.EventType == AuditEventType.PRINT_EVENT));
             Assert.Empty(notificationLogs.Where(log => log.EventType == AuditEventType.READ_EVENT));
+            Assert.Contains("Used matches", notificationLogs.Select(log => log.AuditData));
+            Assert.Contains("Put down matches", notificationLogs.Select(log => log.AuditData));
+        }
+
+        [Fact]
+        public async Task CorrectlyFiltersAlertAuditLogs()
+        {
+            // Arrange
+            _context.AuditLogs.AddRange(new List<AuditLog>
+            {
+                new AuditLog{RootEntity = RootEntities.Notification, RootId = "32", EventType = AuditEventType.MATCH_EVENT, AuditData = "Used matches"},
+                new AuditLog{RootEntity = RootEntities.Notification, RootId = "32", EventType = AuditEventType.UNMATCH_EVENT, AuditData = "Put down matches"},
+                new AuditLog{RootEntity = RootEntities.Notification, RootId = "32", EventType = "Insert", EntityType = nameof(MBovisAlert), AuditData = "Alerted to fire"},
+                new AuditLog{RootEntity = RootEntities.Notification, RootId = "32", EventType = "Insert", EntityType = nameof(DataQualityClusterAlert), AuditData = "Assessed quality of fire"}
+            });
+            _context.SaveChanges();
+            
+            // Act
+            var notificationLogs = await _auditService.GetWriteAuditsForNotification(32);
+
+            // Assert
+            Assert.Equal(2, notificationLogs.Count);
+            Assert.Empty(notificationLogs.Where(log => log.EntityType == nameof(MBovisAlert)));
+            Assert.Empty(notificationLogs.Where(log => log.EntityType == nameof(DataQualityClusterAlert)));
             Assert.Contains("Used matches", notificationLogs.Select(log => log.AuditData));
             Assert.Contains("Put down matches", notificationLogs.Select(log => log.AuditData));
         }
