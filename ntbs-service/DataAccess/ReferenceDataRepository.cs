@@ -100,7 +100,7 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<TBService>> GetAllTbServicesAsync()
         {
-            return await _context.TbService.OrderBy(s => s.Name).ToListAsync();
+            return await _context.TbService.ToListAsync();
         }
 
         public async Task<TBService> GetTbServiceByCodeAsync(string code)
