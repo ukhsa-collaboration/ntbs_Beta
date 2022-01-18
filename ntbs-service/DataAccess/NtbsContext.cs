@@ -60,7 +60,6 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<TreatmentEvent> TreatmentEvent { get; set; }
         public virtual DbSet<TreatmentOutcome> TreatmentOutcome { get; set; }
         public virtual DbSet<SocialContextAddress> SocialContextAddress { get; set; }
-        public virtual DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestion { get; set; }
         public virtual DbSet<UserLoginEvent> UserLoginEvent { get; set; }
         public virtual DbSet<MBovisExposureToKnownCase> MBovisExposureToKnownCase { get; set; }
         public virtual DbSet<MBovisUnpasteurisedMilkConsumption> MBovisUnpasteurisedMilkConsumption { get; set; }
@@ -841,10 +840,6 @@ namespace ntbs_service.DataAccess
                 entity.ToTable(nameof(TreatmentOutcome), ReferenceDataSchemaName);
 
                 entity.HasData(Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes());
-            });
-
-            modelBuilder.Entity<FrequentlyAskedQuestion>(entity =>
-            {
             });
 
             modelBuilder.Entity<UserLoginEvent>(entity =>
