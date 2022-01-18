@@ -660,11 +660,11 @@ namespace ntbs_service_unit_tests.DataMigration
             
             Assert.Equal(1, (notification.PreviousTbServices.Count(ptb => ptb.TbServiceCode == WestonGeneralCode)));
 
-            var foundPreviousTbServices = notification.PreviousTbServices
+            var foundPreviousTbService = notification.PreviousTbServices
                 .Single(ptb => ptb.TbServiceCode == WestonGeneralCode);
             
-            Assert.Equal(PhecResult, foundPreviousTbServices.PhecCode);
-            Assert.Equal(DateTime.Parse("2016-01-15 12:53:14.630"), foundPreviousTbServices.TransferDate);
+            Assert.Equal(PhecResult, foundPreviousTbService.PhecCode);
+            Assert.Equal(DateTime.Parse("2016-01-15 12:53:14.630"), foundPreviousTbService.TransferDate);
         }
 
         [Fact]
