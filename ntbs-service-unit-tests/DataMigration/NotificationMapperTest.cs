@@ -79,7 +79,7 @@ namespace ntbs_service_unit_tests.DataMigration
             _referenceDataRepositoryMock.Setup(repo => repo.GetTbServiceFromHospitalIdAsync(It.IsAny<Guid>()))
                 .Returns((Guid guid) => Task.FromResult(_hospitalToTbServiceCodeDict[guid]));
             _referenceDataRepositoryMock.Setup(repo => repo.GetAllTbServicesAsync())
-                .Returns(() => Task.FromResult<IList<TBService>>(new List<TBService> {new TBService {Code = "TBS003", PHECCode = "result"}}));
+                .Returns(() => Task.FromResult<IList<TBService>>(new List<TBService> {new TBService {Code = "TBS003", PHECCode = "PHECResult"}}));
             _referenceDataRepositoryMock.Setup(repo =>
                     repo.GetTreatmentOutcomeForTypeAndSubType(
                         TreatmentOutcomeType.Died,
@@ -651,16 +651,18 @@ namespace ntbs_service_unit_tests.DataMigration
             const string legacyId = "130331";
             SetupNotificationsInGroups((legacyId, "12"));
             
-            
             // Act
             var notification = await GetSingleNotification(legacyId);
-            
-            //TODO Phec code
-            //TODO PreviousTbServiceId?
-            //TODO how to test on app?
-            
+
             // Assert
-            Assert.Equal("TBS003", notification.PreviousTbServices.First().TbServiceCode);
+            
+            Assert.Equal(1, (notification.PreviousTbServices.Count(ptb => ptb.TbServiceCode == "TBS003")));
+
+            var foundPreviousTbServices = notification.PreviousTbServices
+                .Single(ptb => ptb.TbServiceCode == "TBS003");
+            
+            Assert.Equal("PHECResult", foundPreviousTbServices.PhecCode);
+            Assert.Equal(DateTime.Parse("2016-01-15 12:53:14.630"), foundPreviousTbServices.TransferDate);
         }
 
         [Fact]
