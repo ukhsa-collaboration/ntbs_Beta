@@ -62,6 +62,8 @@ namespace ntbs_service_unit_tests.DataMigration
         const string NorthwickParkCode = "TBS0115";
         const string KingsDenmarkHillCode = "TBS0101";
 
+        private const string PhecResult = "PHECResult";
+
         const int KingsUserId = 4;
 
         private readonly Guid RoyalBerkshireGuid = new Guid("B8AA918D-233F-4C41-B9AE-BE8A8DC8BE7A");
@@ -79,7 +81,7 @@ namespace ntbs_service_unit_tests.DataMigration
             _referenceDataRepositoryMock.Setup(repo => repo.GetTbServiceFromHospitalIdAsync(It.IsAny<Guid>()))
                 .Returns((Guid guid) => Task.FromResult(_hospitalToTbServiceCodeDict[guid]));
             _referenceDataRepositoryMock.Setup(repo => repo.GetAllTbServicesAsync())
-                .Returns(() => Task.FromResult<IList<TBService>>(new List<TBService> {new TBService {Code = "TBS003", PHECCode = "PHECResult"}}));
+                .Returns(() => Task.FromResult<IList<TBService>>(new List<TBService> {new TBService {Code = WestonGeneralCode, PHECCode = PhecResult}}));
             _referenceDataRepositoryMock.Setup(repo =>
                     repo.GetTreatmentOutcomeForTypeAndSubType(
                         TreatmentOutcomeType.Died,
@@ -648,7 +650,7 @@ namespace ntbs_service_unit_tests.DataMigration
         public async Task correctlyMaps_PreviousTbService()
         {
             // Arrange
-            const string legacyId = "130331";
+            const string legacyId = WestonGeneralCode;
             SetupNotificationsInGroups((legacyId, "12"));
             
             // Act
@@ -656,12 +658,12 @@ namespace ntbs_service_unit_tests.DataMigration
 
             // Assert
             
-            Assert.Equal(1, (notification.PreviousTbServices.Count(ptb => ptb.TbServiceCode == "TBS003")));
+            Assert.Equal(1, (notification.PreviousTbServices.Count(ptb => ptb.TbServiceCode == WestonGeneralCode)));
 
             var foundPreviousTbServices = notification.PreviousTbServices
-                .Single(ptb => ptb.TbServiceCode == "TBS003");
+                .Single(ptb => ptb.TbServiceCode == WestonGeneralCode);
             
-            Assert.Equal("PHECResult", foundPreviousTbServices.PhecCode);
+            Assert.Equal(PhecResult, foundPreviousTbServices.PhecCode);
             Assert.Equal(DateTime.Parse("2016-01-15 12:53:14.630"), foundPreviousTbServices.TransferDate);
         }
 
