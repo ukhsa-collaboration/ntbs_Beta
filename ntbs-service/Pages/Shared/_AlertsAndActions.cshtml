@@ -26,7 +26,10 @@
                                     <br/>
                                     @alert.Action
                                 </div>
-                                <a href="@alert.ActionLink" class="alert-take-action-link">Take action</a>
+                                @if (alert.ActionLink.TrimEnd('/') != Context.Request.Path.ToString().TrimEnd('/'))
+                                {
+                                    <a href="@alert.ActionLink" class="alert-take-action-link">Take action</a>
+                                }
                                 @if (!alert.NotDismissable)
                                 {
                                     <form method="post" action="@RouteHelper.GetAlertPath(@alert.AlertId, AlertSubPaths.Dismiss)?page=Overview"
