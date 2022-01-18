@@ -526,7 +526,6 @@ namespace ntbs_service.DataMigration
                 {
                     TbServiceCode = e.TbServiceCode,
                     TransferDate = e.EventDate.Value,
-                    NotificationId = e.NotificationId,
                     PhecCode = _tbServices.Single(tbs => tbs.Code == e.TbServiceCode).PHECCode
                 })
                 .ToList();
