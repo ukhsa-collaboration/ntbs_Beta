@@ -212,7 +212,6 @@ namespace ntbs_service
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IDataQualityRepository, DataQualityRepository>();
             services.AddScoped<IDrugResistanceProfileRepository, DrugResistanceProfileRepository>();
-            services.AddScoped<IFaqRepository, FaqRepository>();
 
             // Services
             services.AddScoped<INotificationService, NotificationService>();

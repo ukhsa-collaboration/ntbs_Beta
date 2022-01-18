@@ -59,6 +59,9 @@ namespace ntbs_service.Models.Entities
         public bool TreatmentEventTypeIsOutcome => TreatmentEventType == Enums.TreatmentEventType.TreatmentOutcome;
         public bool TreatmentEventTypeIsNotRestart => TreatmentEventType != Enums.TreatmentEventType.TreatmentRestart;
         public bool TreatmentEventIsDeathEvent => TreatmentOutcome?.TreatmentOutcomeType == TreatmentOutcomeType.Died;
+        public bool TreatmentEventIsEndingEvent => TreatmentOutcome?.TreatmentOutcomeType == TreatmentOutcomeType.Died
+                                                   || TreatmentOutcome?.TreatmentOutcomeType == TreatmentOutcomeType.Cured
+                                                   || TreatmentOutcome?.TreatmentOutcomeType == TreatmentOutcomeType.Completed;
         public bool AfterNotificationDateUnlessPostMortem => EventDateAfterNotificationDate || (IsNotificationPostMortem && TreatmentEventIsDeathEvent);
         public bool EventDateAfterDob => Dob == null || EventDate >= Dob;
         private bool EventDateAfterNotificationDate => DateOfNotification == null || EventDate >= DateOfNotification;

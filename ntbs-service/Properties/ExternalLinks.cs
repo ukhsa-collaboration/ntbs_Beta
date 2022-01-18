@@ -11,6 +11,7 @@
         public string ReleaseNotes { get; set; }
         public string ReportingOverview { get; set; }
         public string SharePointHomePage { get; set; }
+        public string SharePointFAQPage { get; set; }
         public string ClusterReport { get; set; }
     }
 }
