@@ -14,6 +14,9 @@
 <nhs-width-container container-width="Standard">
     <form method="post" autocomplete="off">
         <h2> You are about to transfer this notification </h2>
+        <nhs-hint nhs-hint-type="Standard" id="ntbs-service-directory-hint">
+            You can search for TB services and case managers in the <a class="nhsuk-action-link" href=/ServiceDirectory>NTBS service directory</a> if you are not sure of the TB service name
+        </nhs-hint> <br>
         <div>
             <filtered-dropdown filter-handler-path="FilteredCaseManagersListByTbServiceCode" :filtering-refs="['caseManagers']" :should-filter-on-load="true" inline-template>
                 <div>

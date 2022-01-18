@@ -47,12 +47,13 @@ namespace ntbs_service_unit_tests.Models.Entities
 
         [Theory]
         [MemberData(nameof(ShouldBeClosedTestData))]
-        public void NotificationSetsShouldBeClosedCorrectly(DateTime treatmentOutcomeDate, DateTime? treatmentOtherDate, NotificationStatus status, bool expectedValue)
+        public void SetsShouldBeClosedCorrectlyForNonPostMortemNotification(DateTime treatmentOutcomeDate, DateTime? treatmentOtherDate, NotificationStatus status, bool expectedValue)
         {
             // Arrange
             var notification = new Notification
             {
                 NotificationStatus = status,
+                ClinicalDetails = new ClinicalDetails{ IsPostMortem = false },
                 TreatmentEvents = new List<TreatmentEvent> {
                     new TreatmentEvent
                     {
@@ -71,6 +72,34 @@ namespace ntbs_service_unit_tests.Models.Entities
 
             // Assert
             Assert.Equal(expectedValue, notification.ShouldBeClosed());
+        }
+
+        [Fact]
+        public void SetsShouldBeClosedCorrectlyForPostMortemNotification()
+        {
+            // Arrange
+            var notification = new Notification
+            {
+                NotificationStatus = NotificationStatus.Notified,
+                ClinicalDetails = new ClinicalDetails{ IsPostMortem = true },
+                TreatmentEvents = new List<TreatmentEvent> {
+                    new TreatmentEvent
+                    {
+                        TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                        TreatmentOutcomeId = 7,
+                        TreatmentOutcome = new TreatmentOutcome{ TreatmentOutcomeType = TreatmentOutcomeType.Died, TreatmentOutcomeSubType = TreatmentOutcomeSubType.TbCausedDeath },
+                        EventDate = new DateTime(2017, 1, 1)
+                    },
+                    new TreatmentEvent
+                    {
+                        TreatmentEventType = TreatmentEventType.DiagnosisMade,
+                        EventDate = new DateTime(2017, 2, 2)
+                    }
+                }
+            };
+
+            // Assert
+            Assert.True(notification.ShouldBeClosed());
         }
 
         [Fact]
