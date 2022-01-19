@@ -345,7 +345,8 @@ namespace ntbs_service_unit_tests.Services
                             Dob = new DateTime(1990, 1, 1),
                             PostcodeToLookup = "SW12RT"
                         },
-                    HospitalDetails = new HospitalDetails {TBServiceCode = "Ashford hospital"}
+                    HospitalDetails = new HospitalDetails {TBServiceCode = "Ashford hospital"},
+                    DrugResistanceProfile = new DrugResistanceProfile { Species = string.Empty, DrugResistanceProfileString = string.Empty }
                 },
                 new Notification
                 {
@@ -365,7 +366,8 @@ namespace ntbs_service_unit_tests.Services
                             Dob = new DateTime(1991, 1, 1),
                             PostcodeToLookup = "SW294FB"
                         },
-                    HospitalDetails = new HospitalDetails {TBServiceCode = "Not Ashford"}
+                    HospitalDetails = new HospitalDetails {TBServiceCode = "Not Ashford"},
+                    DrugResistanceProfile = new DrugResistanceProfile { Species = string.Empty, DrugResistanceProfileString = string.Empty }
                 }
             });
             context.SaveChanges();

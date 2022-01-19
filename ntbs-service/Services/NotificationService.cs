@@ -340,8 +340,10 @@ namespace ntbs_service.Services
         public async Task<Notification> CreateLinkedNotificationAsync(Notification notification, ClaimsPrincipal user)
         {
             var linkedNotification = await CreateNewNotificationForUserAsync(user);
+            var defaultPatientDetails = notification.PatientDetails.Clone();
+            defaultPatientDetails.NotificationId = linkedNotification.NotificationId;
             _context.Attach(linkedNotification);
-            _context.SetValues(linkedNotification.PatientDetails, notification.PatientDetails);
+            _context.SetValues(linkedNotification.PatientDetails, defaultPatientDetails);
             await _notificationRepository.SaveChangesAsync();
 
             if (notification.GroupId != null)

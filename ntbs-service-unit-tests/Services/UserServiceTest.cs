@@ -149,7 +149,7 @@ namespace ntbs_service_unit_tests.Services
             var claim = new Claim("User", NationalTeam);
             SetupClaimMocking(new List<Claim>{claim});
             var mockTbServiceQuery = new List<TBService> { tbService }.AsQueryable().BuildMock();
-            _mockReferenceDataRepository.Setup(c => c.GetTbServicesQueryable())
+            _mockReferenceDataRepository.Setup(c => c.GetActiveTbServicesOrderedByNameQueryable())
                 .Returns(mockTbServiceQuery.Object);
             // Act
             var result = await _service.GetDefaultTbService(_mockUser.Object);
