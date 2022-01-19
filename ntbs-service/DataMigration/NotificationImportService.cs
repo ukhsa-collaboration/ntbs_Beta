@@ -183,6 +183,28 @@ namespace ntbs_service.DataMigration
                 return importResult;
             }
 
+            var hasAnyRecordAlreadyBeenImported = false;
+            foreach (var notification in notifications)
+            {
+                // Check that record hasn't already been imported
+                var foundLtbr = await _notificationRepository.NotificationWithLegacyIdExistsAsync(notification.LTBRID);
+                var foundEts = await _notificationRepository.NotificationWithLegacyIdExistsAsync(notification.ETSID);
+                if (foundEts || foundLtbr)
+                {
+                    hasAnyRecordAlreadyBeenImported = true;
+                    var errorId = foundLtbr ? "LTBRId = " + notification.LTBRID : "ETSId = " + notification.ETSID;
+                    var errorMessage = $"A notification has already been imported with {errorId}. " +
+                                "Please contact your system administrator to fix this issue.";
+                    importResult.AddNotificationError(notification.LegacyId, errorMessage);
+                }
+            }
+
+            if (hasAnyRecordAlreadyBeenImported)
+            {
+                await _logger.LogImportGroupFailure(context, runId, notifications, "due to notification having already been imported");
+                return importResult;
+            }
+
             var isAnyNotificationInvalid = false;
             foreach (var notification in notifications)
             {
