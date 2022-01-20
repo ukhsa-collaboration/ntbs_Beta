@@ -37,7 +37,6 @@ namespace ntbs_service.DataMigration
         private readonly IMigrationRepository _migrationRepository;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IImportLogger _logger;
-        private readonly List<TBService> _tbServices;
         private readonly IPostcodeService _postcodeService;
         private readonly ICaseManagerImportService _caseManagerImportService;
         private readonly ITreatmentEventMapper _treatmentEventMapper;
