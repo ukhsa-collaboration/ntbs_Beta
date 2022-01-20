@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
 namespace ntbs_service.Migrations
 {
     public partial class RemoveFaqTable : Migration
