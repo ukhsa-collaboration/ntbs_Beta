@@ -120,7 +120,7 @@ namespace ntbs_service.Pages.Alerts
 
         private async Task SetDropdownsAsync()
         {
-            var tbServices = await _referenceDataRepository.GetAllTbServicesAsync();
+            var tbServices = await _referenceDataRepository.GetAllActiveTbServicesAsync();
             TbServices = new SelectList(tbServices, nameof(TBService.Code), nameof(TBService.Name));
             var caseManagers = await _referenceDataRepository.GetAllActiveCaseManagers();
             CaseManagers = new SelectList(caseManagers,
@@ -144,7 +144,7 @@ namespace ntbs_service.Pages.Alerts
         {
             var filteredTbServices = value != null
                 ? await _referenceDataRepository.GetTbServicesFromPhecCodeAsync(value)
-                : await _referenceDataRepository.GetAllTbServicesAsync();
+                : await _referenceDataRepository.GetAllActiveTbServicesAsync();
 
             return new JsonResult(
                 new FilteredTransferPageSelectLists

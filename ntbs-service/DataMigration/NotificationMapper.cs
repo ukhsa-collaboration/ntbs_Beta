@@ -202,6 +202,8 @@ namespace ntbs_service.DataMigration
                     notification.NotificationStatus = NotificationStatus.Closed;
                 }
 
+                notification.PreviousTbServices = await ExtractPreviousTbServices(notificationTransferEvents);
+
                 notificationsToReturn.Add(notification);
             }
 
@@ -529,6 +531,21 @@ namespace ntbs_service.DataMigration
             return details;
         }
 
+        private async Task<ICollection<PreviousTbService>> ExtractPreviousTbServices(IEnumerable<TreatmentEvent> notificationTransferEvents)
+        {
+            var tbServices = await _referenceDataRepository.GetAllTbServicesAsync();
+            
+            return notificationTransferEvents
+                .Where(e => e.TreatmentEventType is TreatmentEventType.TransferOut && e.EventDate.HasValue)
+                .Select(e => new PreviousTbService
+                {
+                    TbServiceCode = e.TbServiceCode,
+                    TransferDate = e.EventDate.Value,
+                    PhecCode = tbServices.Single(tbs => tbs.Code == e.TbServiceCode).PHECCode
+                })
+                .ToList();
+        }
+        
         private static ClinicalDetails ExtractClinicalDetails(MigrationDbNotification notification)
         {
             var details = new ClinicalDetails
