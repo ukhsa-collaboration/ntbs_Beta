@@ -118,7 +118,7 @@ namespace ntbs_service.Services
             var roles = GetRoles(user);
             
             return type == UserType.NationalTeam
-                ? _referenceDataRepository.GetActiveTbServicesOrderedByNameQueryable()
+                ? _referenceDataRepository.GetTbServicesQueryable()
                 : _referenceDataRepository.GetDefaultTbServicesForUserQueryable(roles);
         }
 
