@@ -58,7 +58,7 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("NotificationId", "AlertType");
 
-                    b.ToTable("Alert");
+                    b.ToTable("Alert", (string)null);
 
                     b.HasDiscriminator<string>("AlertType");
                 });
@@ -92,7 +92,7 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("LegacyImportMigrationRunId");
 
-                    b.ToTable("LegacyImportNotificationOutcome");
+                    b.ToTable("LegacyImportNotificationOutcome", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.CaseManagerTbService", b =>
@@ -108,7 +108,7 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("TbServiceCode");
 
-                    b.ToTable("CaseManagerTbService");
+                    b.ToTable("CaseManagerTbService", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.DrugResistanceProfile", b =>
@@ -133,6 +133,31 @@ namespace ntbs_service.Migrations
                     b.HasKey("NotificationId");
 
                     b.ToTable("DrugResistanceProfile", (string)null);
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.FrequentlyAskedQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AnchorLink")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Answer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Question")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FrequentlyAskedQuestion", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.HospitalDetails", b =>
@@ -195,7 +220,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("LegacyImportMigrationRunId");
 
-                    b.ToTable("LegacyImportMigrationRun");
+                    b.ToTable("LegacyImportMigrationRun", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.LegacyImportNotificationLogMessage", b =>
@@ -226,7 +251,7 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("LegacyImportMigrationRunId");
 
-                    b.ToTable("LegacyImportNotificationLogMessage");
+                    b.ToTable("LegacyImportNotificationLogMessage", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
@@ -268,7 +293,7 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("SampleTypeId");
 
-                    b.ToTable("ManualTestResult");
+                    b.ToTable("ManualTestResult", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.MBovisAnimalExposure", b =>
@@ -536,7 +561,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("NotificationGroupId");
 
-                    b.ToTable("NotificationGroup");
+                    b.ToTable("NotificationGroup", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.NotificationSite", b =>
@@ -554,7 +579,7 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("NotificationSite");
+                    b.ToTable("NotificationSite", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.PatientDetails", b =>
@@ -662,7 +687,7 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("NotificationId");
 
-                    b.ToTable("SocialContextAddress");
+                    b.ToTable("SocialContextAddress", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.SocialContextVenue", b =>
@@ -710,7 +735,7 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("VenueTypeId");
 
-                    b.ToTable("SocialContextVenue");
+                    b.ToTable("SocialContextVenue", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.TestData", b =>
@@ -723,7 +748,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("NotificationId");
 
-                    b.ToTable("TestData");
+                    b.ToTable("TestData", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.TreatmentEvent", b =>
@@ -769,7 +794,7 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("TreatmentOutcomeId");
 
-                    b.ToTable("TreatmentEvent");
+                    b.ToTable("TreatmentEvent", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.User", b =>
@@ -838,7 +863,7 @@ namespace ntbs_service.Migrations
                         .IsUnique()
                         .HasFilter("[Username] IS NOT NULL");
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.UserLoginEvent", b =>
@@ -864,7 +889,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserLoginEvent");
+                    b.ToTable("UserLoginEvent", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.VenueType", b =>
@@ -1448,7 +1473,7 @@ namespace ntbs_service.Migrations
                     b.Property<int>("NotificationId")
                         .HasColumnType("int");
 
-                    b.ToTable("NotificationAndDuplicateIds");
+                    b.ToTable("NotificationAndDuplicateIds", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Country", b =>
@@ -4962,49 +4987,37 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("Version");
 
-                    b.ToTable("ReleaseVersion");
+                    b.ToTable("ReleaseVersion", (string)null);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.DataQualityBirthCountryAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
-
-                    b.HasDiscriminator().HasValue("DataQualityBirthCountry");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.DataQualityChildECMLevel", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
-
-                    b.HasDiscriminator().HasValue("DataQualityChildECMLevel");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.DataQualityClinicalDatesAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
-
-                    b.HasDiscriminator().HasValue("DataQualityClinicalDates");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.DataQualityClusterAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
-
-                    b.HasDiscriminator().HasValue("DataQualityCluster");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.DataQualityDotVotAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
-
-                    b.HasDiscriminator().HasValue("DataQualityDotVotAlert");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.DataQualityDraftAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
-
-                    b.HasDiscriminator().HasValue("DataQualityDraft");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.DataQualityPotentialDuplicateAlert", b =>
@@ -5016,50 +5029,36 @@ namespace ntbs_service.Migrations
 
                     b.Property<bool>("NhsNumberMismatch")
                         .HasColumnType("bit");
-
-                    b.HasDiscriminator().HasValue("DataQualityPotientialDuplicate");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.DataQualityTreatmentOutcome12", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
-
-                    b.HasDiscriminator().HasValue("DataQualityTreatmentOutcome12");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.DataQualityTreatmentOutcome24", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
-
-                    b.HasDiscriminator().HasValue("DataQualityTreatmentOutcome24");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.DataQualityTreatmentOutcome36", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
-
-                    b.HasDiscriminator().HasValue("DataQualityTreatmentOutcome36");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.MBovisAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
-
-                    b.HasDiscriminator().HasValue("EnhancedSurveillanceMBovis");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.MdrAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
-
-                    b.HasDiscriminator().HasValue("EnhancedSurveillanceMDR");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.TestAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
-
-                    b.HasDiscriminator().HasValue("Test");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.TransferAlert", b =>
@@ -5090,8 +5089,6 @@ namespace ntbs_service.Migrations
                     b.HasIndex("CaseManagerId");
 
                     b.HasIndex("TbServiceCode");
-
-                    b.HasDiscriminator().HasValue("TransferRequest");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.TransferRejectedAlert", b =>
@@ -5105,8 +5102,6 @@ namespace ntbs_service.Migrations
                     b.Property<string>("RejectionReason")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
-
-                    b.HasDiscriminator().HasValue("TransferRejected");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.UnmatchedLabResultAlert", b =>
@@ -5286,7 +5281,7 @@ namespace ntbs_service.Migrations
                         .WithMany("Notifications")
                         .HasForeignKey("GroupId");
 
-                    b.OwnsOne("ntbs_service.Models.Entities.ClinicalDetails", "ClinicalDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.Notification.ClinicalDetails#ntbs_service.Models.Entities.ClinicalDetails", "ClinicalDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId")
                                 .HasColumnType("int");
@@ -5382,7 +5377,7 @@ namespace ntbs_service.Migrations
                                 .HasForeignKey("NotificationId");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.Entities.ComorbidityDetails", "ComorbidityDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.Notification.ComorbidityDetails#ntbs_service.Models.Entities.ComorbidityDetails", "ComorbidityDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId")
                                 .HasColumnType("int");
@@ -5415,7 +5410,7 @@ namespace ntbs_service.Migrations
                                 .HasForeignKey("NotificationId");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.Entities.ContactTracing", "ContactTracing", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.Notification.ContactTracing#ntbs_service.Models.Entities.ContactTracing", "ContactTracing", b1 =>
                         {
                             b1.Property<int>("NotificationId")
                                 .HasColumnType("int");
@@ -5464,7 +5459,7 @@ namespace ntbs_service.Migrations
                                 .HasForeignKey("NotificationId");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.Entities.DenotificationDetails", "DenotificationDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.Notification.DenotificationDetails#ntbs_service.Models.Entities.DenotificationDetails", "DenotificationDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId")
                                 .HasColumnType("int");
@@ -5489,7 +5484,7 @@ namespace ntbs_service.Migrations
                                 .HasForeignKey("NotificationId");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.Entities.ImmunosuppressionDetails", "ImmunosuppressionDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.Notification.ImmunosuppressionDetails#ntbs_service.Models.Entities.ImmunosuppressionDetails", "ImmunosuppressionDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId")
                                 .HasColumnType("int");
@@ -5519,7 +5514,7 @@ namespace ntbs_service.Migrations
                                 .HasForeignKey("NotificationId");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.Entities.MDRDetails", "MDRDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.Notification.MDRDetails#ntbs_service.Models.Entities.MDRDetails", "MDRDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId")
                                 .HasColumnType("int");
@@ -5568,7 +5563,7 @@ namespace ntbs_service.Migrations
                             b1.Navigation("Country");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.Entities.PreviousTbHistory", "PreviousTbHistory", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.Notification.PreviousTbHistory#ntbs_service.Models.Entities.PreviousTbHistory", "PreviousTbHistory", b1 =>
                         {
                             b1.Property<int>("NotificationId")
                                 .HasColumnType("int");
@@ -5603,7 +5598,7 @@ namespace ntbs_service.Migrations
                             b1.Navigation("PreviousTreatmentCountry");
                         });
 
-                    b.OwnsMany("ntbs_service.Models.Entities.PreviousTbService", "PreviousTbServices", b1 =>
+                    b.OwnsMany("ntbs_service.Models.Entities.Notification.PreviousTbServices#ntbs_service.Models.Entities.PreviousTbService", "PreviousTbServices", b1 =>
                         {
                             b1.Property<int>("PreviousTbServiceId")
                                 .ValueGeneratedOnAdd()
@@ -5635,7 +5630,7 @@ namespace ntbs_service.Migrations
                             b1.Navigation("Notification");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.Entities.SocialRiskFactors", "SocialRiskFactors", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.Notification.SocialRiskFactors#ntbs_service.Models.Entities.SocialRiskFactors", "SocialRiskFactors", b1 =>
                         {
                             b1.Property<int>("NotificationId")
                                 .HasColumnType("int");
@@ -5663,7 +5658,7 @@ namespace ntbs_service.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("NotificationId");
 
-                            b1.OwnsOne("ntbs_service.Models.Entities.RiskFactorDetails", "RiskFactorDrugs", b2 =>
+                            b1.OwnsOne("ntbs_service.Models.Entities.Notification.SocialRiskFactors#ntbs_service.Models.Entities.SocialRiskFactors.RiskFactorDrugs#ntbs_service.Models.Entities.RiskFactorDetails", "RiskFactorDrugs", b2 =>
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId")
                                         .HasColumnType("int");
@@ -5696,7 +5691,7 @@ namespace ntbs_service.Migrations
                                         .HasForeignKey("SocialRiskFactorsNotificationId");
                                 });
 
-                            b1.OwnsOne("ntbs_service.Models.Entities.RiskFactorDetails", "RiskFactorHomelessness", b2 =>
+                            b1.OwnsOne("ntbs_service.Models.Entities.Notification.SocialRiskFactors#ntbs_service.Models.Entities.SocialRiskFactors.RiskFactorHomelessness#ntbs_service.Models.Entities.RiskFactorDetails", "RiskFactorHomelessness", b2 =>
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId")
                                         .HasColumnType("int");
@@ -5729,7 +5724,7 @@ namespace ntbs_service.Migrations
                                         .HasForeignKey("SocialRiskFactorsNotificationId");
                                 });
 
-                            b1.OwnsOne("ntbs_service.Models.Entities.RiskFactorDetails", "RiskFactorImprisonment", b2 =>
+                            b1.OwnsOne("ntbs_service.Models.Entities.Notification.SocialRiskFactors#ntbs_service.Models.Entities.SocialRiskFactors.RiskFactorImprisonment#ntbs_service.Models.Entities.RiskFactorDetails", "RiskFactorImprisonment", b2 =>
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId")
                                         .HasColumnType("int");
@@ -5762,7 +5757,7 @@ namespace ntbs_service.Migrations
                                         .HasForeignKey("SocialRiskFactorsNotificationId");
                                 });
 
-                            b1.OwnsOne("ntbs_service.Models.Entities.RiskFactorDetails", "RiskFactorSmoking", b2 =>
+                            b1.OwnsOne("ntbs_service.Models.Entities.Notification.SocialRiskFactors#ntbs_service.Models.Entities.SocialRiskFactors.RiskFactorSmoking#ntbs_service.Models.Entities.RiskFactorDetails", "RiskFactorSmoking", b2 =>
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId")
                                         .HasColumnType("int");
@@ -5804,7 +5799,7 @@ namespace ntbs_service.Migrations
                             b1.Navigation("RiskFactorSmoking");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.Entities.TravelDetails", "TravelDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.Notification.TravelDetails#ntbs_service.Models.Entities.TravelDetails", "TravelDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId")
                                 .HasColumnType("int");
@@ -5866,7 +5861,7 @@ namespace ntbs_service.Migrations
                             b1.Navigation("Country3");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.Entities.VisitorDetails", "VisitorDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.Notification.VisitorDetails#ntbs_service.Models.Entities.VisitorDetails", "VisitorDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId")
                                 .HasColumnType("int");
