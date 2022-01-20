@@ -7,8 +7,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 
-#nullable disable
-
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
@@ -19,18 +17,16 @@ namespace ntbs_service.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.Alert", b =>
                 {
                     b.Property<int>("AlertId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AlertId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AlertStatus")
                         .IsRequired()
@@ -69,9 +65,8 @@ namespace ntbs_service.Migrations
                 {
                     b.Property<int>("LegacyImportNotificationOutcomeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LegacyImportNotificationOutcomeId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("LegacyImportMigrationRunId")
                         .HasColumnType("int");
@@ -134,45 +129,15 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("NotificationId");
 
-                    b.ToTable("DrugResistanceProfile", (string)null);
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.HospitalDetails", b =>
-                {
-                    b.Property<int>("NotificationId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CaseManagerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Consultant")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<Guid?>("HospitalId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("TBServiceCode")
-                        .HasColumnType("nvarchar(16)");
-
-                    b.HasKey("NotificationId");
-
-                    b.HasIndex("CaseManagerId");
-
-                    b.HasIndex("HospitalId");
-
-                    b.HasIndex("TBServiceCode");
-
-                    b.ToTable("HospitalDetails", (string)null);
+                    b.ToTable("DrugResistanceProfile");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.LegacyImportMigrationRun", b =>
                 {
                     b.Property<int>("LegacyImportMigrationRunId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LegacyImportMigrationRunId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AppRelease")
                         .HasColumnType("nvarchar(max)");
@@ -204,9 +169,8 @@ namespace ntbs_service.Migrations
                 {
                     b.Property<int>("LegacyImportNotificationLogMessageId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LegacyImportNotificationLogMessageId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("LegacyImportMigrationRunId")
                         .HasColumnType("int");
@@ -231,55 +195,12 @@ namespace ntbs_service.Migrations
                     b.ToTable("LegacyImportNotificationLogMessage");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
-                {
-                    b.Property<int>("ManualTestResultId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ManualTestResultId"), 1L, 1);
-
-                    b.Property<int?>("ManualTestTypeId")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<string>("NoResultReason")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<int>("NotificationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Result")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<int?>("SampleTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("TestDate")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ManualTestResultId");
-
-                    b.HasIndex("ManualTestTypeId");
-
-                    b.HasIndex("NotificationId");
-
-                    b.HasIndex("SampleTypeId");
-
-                    b.ToTable("ManualTestResult");
-                });
-
             modelBuilder.Entity("ntbs_service.Models.Entities.MBovisAnimalExposure", b =>
                 {
                     b.Property<int>("MBovisAnimalExposureId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MBovisAnimalExposureId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Animal")
                         .HasMaxLength(35)
@@ -315,7 +236,7 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("NotificationId");
 
-                    b.ToTable("MBovisAnimalExposure", (string)null);
+                    b.ToTable("MBovisAnimalExposure");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.MBovisDetails", b =>
@@ -341,16 +262,15 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("NotificationId");
 
-                    b.ToTable("MBovisDetails", (string)null);
+                    b.ToTable("MBovisDetails");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.MBovisExposureToKnownCase", b =>
                 {
                     b.Property<int>("MBovisExposureToKnownCaseId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MBovisExposureToKnownCaseId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("ExposureNotificationId")
                         .HasColumnType("int");
@@ -379,16 +299,15 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("NotificationId");
 
-                    b.ToTable("MBovisExposureToKnownCase", (string)null);
+                    b.ToTable("MBovisExposureToKnownCase");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.MBovisOccupationExposure", b =>
                 {
                     b.Property<int>("MBovisOccupationExposureId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MBovisOccupationExposureId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("CountryId")
                         .HasColumnType("int");
@@ -416,16 +335,15 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("NotificationId");
 
-                    b.ToTable("MBovisOccupationExposures", (string)null);
+                    b.ToTable("MBovisOccupationExposures");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.MBovisUnpasteurisedMilkConsumption", b =>
                 {
                     b.Property<int>("MBovisUnpasteurisedMilkConsumptionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MBovisUnpasteurisedMilkConsumptionId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ConsumptionFrequency")
                         .HasMaxLength(30)
@@ -454,16 +372,56 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("NotificationId");
 
-                    b.ToTable("MBovisUnpasteurisedMilkConsumption", (string)null);
+                    b.ToTable("MBovisUnpasteurisedMilkConsumption");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
+                {
+                    b.Property<int>("ManualTestResultId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ManualTestTypeId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<string>("NoResultReason")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("NotificationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Result")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int?>("SampleTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("TestDate")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ManualTestResultId");
+
+                    b.HasIndex("ManualTestTypeId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex("SampleTypeId");
+
+                    b.ToTable("ManualTestResult");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Notification", b =>
                 {
                     b.Property<int>("NotificationId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ClusterId")
                         .HasColumnType("nvarchar(450)");
@@ -525,16 +483,15 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("NotificationStatus", "SubmissionDate");
 
-                    b.ToTable("Notification", (string)null);
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.NotificationGroup", b =>
                 {
                     b.Property<int>("NotificationGroupId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationGroupId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.HasKey("NotificationGroupId");
 
@@ -559,86 +516,12 @@ namespace ntbs_service.Migrations
                     b.ToTable("NotificationSite");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Entities.PatientDetails", b =>
-                {
-                    b.Property<int>("NotificationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Address")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<int?>("CountryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Dob")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("EthnicityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FamilyName")
-                        .HasMaxLength(35)
-                        .HasColumnType("nvarchar(35)");
-
-                    b.Property<string>("GivenName")
-                        .HasMaxLength(35)
-                        .HasColumnType("nvarchar(35)");
-
-                    b.Property<string>("LocalPatientId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("NhsNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("NhsNumberNotKnown")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("NoFixedAbode")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("OccupationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OccupationOther")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<string>("Postcode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PostcodeToLookup")
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<int?>("SexId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("YearOfUkEntry")
-                        .HasColumnType("int");
-
-                    b.HasKey("NotificationId");
-
-                    b.HasIndex("CountryId");
-
-                    b.HasIndex("EthnicityId");
-
-                    b.HasIndex("OccupationId");
-
-                    b.HasIndex("PostcodeToLookup");
-
-                    b.HasIndex("SexId");
-
-                    b.ToTable("Patients", (string)null);
-                });
-
             modelBuilder.Entity("ntbs_service.Models.Entities.SocialContextAddress", b =>
                 {
                     b.Property<int>("SocialContextAddressId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SocialContextAddressId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Address")
                         .HasMaxLength(150)
@@ -671,9 +554,8 @@ namespace ntbs_service.Migrations
                 {
                     b.Property<int>("SocialContextVenueId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SocialContextVenueId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Address")
                         .HasMaxLength(150)
@@ -732,9 +614,8 @@ namespace ntbs_service.Migrations
                 {
                     b.Property<int>("TreatmentEventId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TreatmentEventId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("CaseManagerId")
                         .HasColumnType("int");
@@ -778,9 +659,8 @@ namespace ntbs_service.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AdGroups")
                         .HasColumnType("nvarchar(max)");
@@ -847,9 +727,8 @@ namespace ntbs_service.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("LoginDate")
                         .HasColumnType("datetime2");
@@ -873,9 +752,8 @@ namespace ntbs_service.Migrations
                 {
                     b.Property<int>("VenueTypeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VenueTypeId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
@@ -1457,9 +1335,8 @@ namespace ntbs_service.Migrations
                 {
                     b.Property<int>("CountryId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CountryId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("HasHighTbOccurence")
                         .HasColumnType("bit");
@@ -3511,9 +3388,8 @@ namespace ntbs_service.Migrations
                 {
                     b.Property<int>("EthnicityId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EthnicityId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Code")
                         .HasMaxLength(50)
@@ -3703,9 +3579,8 @@ namespace ntbs_service.Migrations
                 {
                     b.Property<int>("ManualTestTypeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ManualTestTypeId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
                         .HasMaxLength(40)
@@ -4189,9 +4064,8 @@ namespace ntbs_service.Migrations
                 {
                     b.Property<int>("OccupationId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OccupationId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("HasFreeTextField")
                         .HasColumnType("bit");
@@ -4454,9 +4328,8 @@ namespace ntbs_service.Migrations
                 {
                     b.Property<int>("SampleTypeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SampleTypeId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Category")
                         .HasMaxLength(40)
@@ -4615,9 +4488,8 @@ namespace ntbs_service.Migrations
                 {
                     b.Property<int>("SexId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SexId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Label")
                         .HasMaxLength(200)
@@ -4649,9 +4521,8 @@ namespace ntbs_service.Migrations
                 {
                     b.Property<int>("SiteId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SiteId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -4809,9 +4680,8 @@ namespace ntbs_service.Migrations
                 {
                     b.Property<int>("TreatmentOutcomeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TreatmentOutcomeId"), 1L, 1);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("TreatmentOutcomeSubType")
                         .HasMaxLength(30)
@@ -5166,33 +5036,6 @@ namespace ntbs_service.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Entities.HospitalDetails", b =>
-                {
-                    b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
-                        .WithMany()
-                        .HasForeignKey("CaseManagerId");
-
-                    b.HasOne("ntbs_service.Models.ReferenceEntities.Hospital", "Hospital")
-                        .WithMany()
-                        .HasForeignKey("HospitalId");
-
-                    b.HasOne("ntbs_service.Models.Entities.Notification", null)
-                        .WithOne("HospitalDetails")
-                        .HasForeignKey("ntbs_service.Models.Entities.HospitalDetails", "NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TBService")
-                        .WithMany()
-                        .HasForeignKey("TBServiceCode");
-
-                    b.Navigation("CaseManager");
-
-                    b.Navigation("Hospital");
-
-                    b.Navigation("TBService");
-                });
-
             modelBuilder.Entity("ntbs_service.Models.Entities.LegacyImportNotificationLogMessage", b =>
                 {
                     b.HasOne("ntbs_service.Models.Entities.LegacyImportMigrationRun", null)
@@ -5200,27 +5043,6 @@ namespace ntbs_service.Migrations
                         .HasForeignKey("LegacyImportMigrationRunId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
-                {
-                    b.HasOne("ntbs_service.Models.ReferenceEntities.ManualTestType", "ManualTestType")
-                        .WithMany()
-                        .HasForeignKey("ManualTestTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ntbs_service.Models.Entities.TestData", null)
-                        .WithMany("ManualTestResults")
-                        .HasForeignKey("NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ntbs_service.Models.ReferenceEntities.SampleType", "SampleType")
-                        .WithMany()
-                        .HasForeignKey("SampleTypeId");
-
-                    b.Navigation("ManualTestType");
-
-                    b.Navigation("SampleType");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.MBovisAnimalExposure", b =>
@@ -5280,6 +5102,27 @@ namespace ntbs_service.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.ManualTestType", "ManualTestType")
+                        .WithMany()
+                        .HasForeignKey("ManualTestTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ntbs_service.Models.Entities.TestData", null)
+                        .WithMany("ManualTestResults")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.SampleType", "SampleType")
+                        .WithMany()
+                        .HasForeignKey("SampleTypeId");
+
+                    b.Navigation("ManualTestType");
+
+                    b.Navigation("SampleType");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Notification", b =>
@@ -5378,7 +5221,7 @@ namespace ntbs_service.Migrations
 
                             b1.HasKey("NotificationId");
 
-                            b1.ToTable("ClinicalDetails", (string)null);
+                            b1.ToTable("ClinicalDetails");
 
                             b1.WithOwner()
                                 .HasForeignKey("NotificationId");
@@ -5411,7 +5254,7 @@ namespace ntbs_service.Migrations
 
                             b1.HasKey("NotificationId");
 
-                            b1.ToTable("ComorbidityDetails", (string)null);
+                            b1.ToTable("ComorbidityDetails");
 
                             b1.WithOwner()
                                 .HasForeignKey("NotificationId");
@@ -5460,7 +5303,7 @@ namespace ntbs_service.Migrations
 
                             b1.HasKey("NotificationId");
 
-                            b1.ToTable("ContactTracing", (string)null);
+                            b1.ToTable("ContactTracing");
 
                             b1.WithOwner()
                                 .HasForeignKey("NotificationId");
@@ -5485,10 +5328,60 @@ namespace ntbs_service.Migrations
 
                             b1.HasKey("NotificationId");
 
-                            b1.ToTable("DenotificationDetails", (string)null);
+                            b1.ToTable("DenotificationDetails");
 
                             b1.WithOwner()
                                 .HasForeignKey("NotificationId");
+                        });
+
+                    b.OwnsOne("ntbs_service.Models.Entities.HospitalDetails", "HospitalDetails", b1 =>
+                        {
+                            b1.Property<int>("NotificationId")
+                                .HasColumnType("int");
+
+                            b1.Property<int?>("CaseManagerId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Consultant")
+                                .HasMaxLength(200)
+                                .HasColumnType("nvarchar(200)");
+
+                            b1.Property<Guid?>("HospitalId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("TBServiceCode")
+                                .HasColumnType("nvarchar(16)");
+
+                            b1.HasKey("NotificationId");
+
+                            b1.HasIndex("CaseManagerId");
+
+                            b1.HasIndex("HospitalId");
+
+                            b1.HasIndex("TBServiceCode");
+
+                            b1.ToTable("HospitalDetails");
+
+                            b1.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
+                                .WithMany()
+                                .HasForeignKey("CaseManagerId");
+
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Hospital", "Hospital")
+                                .WithMany()
+                                .HasForeignKey("HospitalId");
+
+                            b1.WithOwner()
+                                .HasForeignKey("NotificationId");
+
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TBService")
+                                .WithMany()
+                                .HasForeignKey("TBServiceCode");
+
+                            b1.Navigation("CaseManager");
+
+                            b1.Navigation("Hospital");
+
+                            b1.Navigation("TBService");
                         });
 
                     b.OwnsOne("ntbs_service.Models.Entities.ImmunosuppressionDetails", "ImmunosuppressionDetails", b1 =>
@@ -5515,7 +5408,7 @@ namespace ntbs_service.Migrations
 
                             b1.HasKey("NotificationId");
 
-                            b1.ToTable("ImmunosuppressionDetails", (string)null);
+                            b1.ToTable("ImmunosuppressionDetails");
 
                             b1.WithOwner()
                                 .HasForeignKey("NotificationId");
@@ -5558,7 +5451,7 @@ namespace ntbs_service.Migrations
 
                             b1.HasIndex("CountryId");
 
-                            b1.ToTable("MDRDetails", (string)null);
+                            b1.ToTable("MDRDetails");
 
                             b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
                                 .WithMany()
@@ -5568,6 +5461,112 @@ namespace ntbs_service.Migrations
                                 .HasForeignKey("NotificationId");
 
                             b1.Navigation("Country");
+                        });
+
+                    b.OwnsOne("ntbs_service.Models.Entities.PatientDetails", "PatientDetails", b1 =>
+                        {
+                            b1.Property<int>("NotificationId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Address")
+                                .HasMaxLength(150)
+                                .HasColumnType("nvarchar(150)");
+
+                            b1.Property<int?>("CountryId")
+                                .HasColumnType("int");
+
+                            b1.Property<DateTime?>("Dob")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<int?>("EthnicityId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("FamilyName")
+                                .HasMaxLength(35)
+                                .HasColumnType("nvarchar(35)");
+
+                            b1.Property<string>("GivenName")
+                                .HasMaxLength(35)
+                                .HasColumnType("nvarchar(35)");
+
+                            b1.Property<string>("LocalPatientId")
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)");
+
+                            b1.Property<string>("NhsNumber")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<bool>("NhsNumberNotKnown")
+                                .HasColumnType("bit");
+
+                            b1.Property<bool>("NoFixedAbode")
+                                .HasColumnType("bit");
+
+                            b1.Property<int?>("OccupationId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("OccupationOther")
+                                .HasMaxLength(150)
+                                .HasColumnType("nvarchar(150)");
+
+                            b1.Property<string>("Postcode")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("PostcodeToLookup")
+                                .HasColumnType("nvarchar(10)");
+
+                            b1.Property<int?>("SexId")
+                                .HasColumnType("int");
+
+                            b1.Property<int?>("YearOfUkEntry")
+                                .HasColumnType("int");
+
+                            b1.HasKey("NotificationId");
+
+                            b1.HasIndex("CountryId");
+
+                            b1.HasIndex("EthnicityId");
+
+                            b1.HasIndex("OccupationId");
+
+                            b1.HasIndex("PostcodeToLookup");
+
+                            b1.HasIndex("SexId");
+
+                            b1.ToTable("Patients");
+
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
+                                .WithMany()
+                                .HasForeignKey("CountryId");
+
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Ethnicity", "Ethnicity")
+                                .WithMany()
+                                .HasForeignKey("EthnicityId");
+
+                            b1.WithOwner()
+                                .HasForeignKey("NotificationId");
+
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Occupation", "Occupation")
+                                .WithMany()
+                                .HasForeignKey("OccupationId");
+
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.PostcodeLookup", "PostcodeLookup")
+                                .WithMany()
+                                .HasForeignKey("PostcodeToLookup");
+
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Sex", "Sex")
+                                .WithMany()
+                                .HasForeignKey("SexId");
+
+                            b1.Navigation("Country");
+
+                            b1.Navigation("Ethnicity");
+
+                            b1.Navigation("Occupation");
+
+                            b1.Navigation("PostcodeLookup");
+
+                            b1.Navigation("Sex");
                         });
 
                     b.OwnsOne("ntbs_service.Models.Entities.PreviousTbHistory", "PreviousTbHistory", b1 =>
@@ -5593,7 +5592,7 @@ namespace ntbs_service.Migrations
 
                             b1.HasIndex("PreviousTreatmentCountryId");
 
-                            b1.ToTable("PreviousTbHistory", (string)null);
+                            b1.ToTable("PreviousTbHistory");
 
                             b1.WithOwner()
                                 .HasForeignKey("NotificationId");
@@ -5609,9 +5608,8 @@ namespace ntbs_service.Migrations
                         {
                             b1.Property<int>("PreviousTbServiceId")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("PreviousTbServiceId"), 1L, 1);
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                             b1.Property<int>("NotificationId")
                                 .HasColumnType("int");
@@ -5629,7 +5627,7 @@ namespace ntbs_service.Migrations
 
                             b1.HasIndex("NotificationId");
 
-                            b1.ToTable("PreviousTbService", (string)null);
+                            b1.ToTable("PreviousTbService");
 
                             b1.WithOwner("Notification")
                                 .HasForeignKey("NotificationId");
@@ -5660,7 +5658,7 @@ namespace ntbs_service.Migrations
 
                             b1.HasKey("NotificationId");
 
-                            b1.ToTable("SocialRiskFactors", (string)null);
+                            b1.ToTable("SocialRiskFactors");
 
                             b1.WithOwner()
                                 .HasForeignKey("NotificationId");
@@ -5692,7 +5690,7 @@ namespace ntbs_service.Migrations
 
                                     b2.HasKey("SocialRiskFactorsNotificationId");
 
-                                    b2.ToTable("RiskFactorDrugs", (string)null);
+                                    b2.ToTable("RiskFactorDrugs");
 
                                     b2.WithOwner()
                                         .HasForeignKey("SocialRiskFactorsNotificationId");
@@ -5725,7 +5723,7 @@ namespace ntbs_service.Migrations
 
                                     b2.HasKey("SocialRiskFactorsNotificationId");
 
-                                    b2.ToTable("RiskFactorHomelessness", (string)null);
+                                    b2.ToTable("RiskFactorHomelessness");
 
                                     b2.WithOwner()
                                         .HasForeignKey("SocialRiskFactorsNotificationId");
@@ -5758,7 +5756,7 @@ namespace ntbs_service.Migrations
 
                                     b2.HasKey("SocialRiskFactorsNotificationId");
 
-                                    b2.ToTable("RiskFactorImprisonment", (string)null);
+                                    b2.ToTable("RiskFactorImprisonment");
 
                                     b2.WithOwner()
                                         .HasForeignKey("SocialRiskFactorsNotificationId");
@@ -5791,7 +5789,7 @@ namespace ntbs_service.Migrations
 
                                     b2.HasKey("SocialRiskFactorsNotificationId");
 
-                                    b2.ToTable("RiskFactorSmoking", (string)null);
+                                    b2.ToTable("RiskFactorSmoking");
 
                                     b2.WithOwner()
                                         .HasForeignKey("SocialRiskFactorsNotificationId");
@@ -5844,7 +5842,7 @@ namespace ntbs_service.Migrations
 
                             b1.HasIndex("Country3Id");
 
-                            b1.ToTable("TravelDetails", (string)null);
+                            b1.ToTable("TravelDetails");
 
                             b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country1")
                                 .WithMany()
@@ -5906,7 +5904,7 @@ namespace ntbs_service.Migrations
 
                             b1.HasIndex("Country3Id");
 
-                            b1.ToTable("VisitorDetails", (string)null);
+                            b1.ToTable("VisitorDetails");
 
                             b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country1")
                                 .WithMany()
@@ -5940,9 +5938,13 @@ namespace ntbs_service.Migrations
 
                     b.Navigation("Group");
 
+                    b.Navigation("HospitalDetails");
+
                     b.Navigation("ImmunosuppressionDetails");
 
                     b.Navigation("MDRDetails");
+
+                    b.Navigation("PatientDetails");
 
                     b.Navigation("PreviousTbHistory");
 
@@ -5970,45 +5972,6 @@ namespace ntbs_service.Migrations
                         .IsRequired();
 
                     b.Navigation("Site");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.PatientDetails", b =>
-                {
-                    b.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryId");
-
-                    b.HasOne("ntbs_service.Models.ReferenceEntities.Ethnicity", "Ethnicity")
-                        .WithMany()
-                        .HasForeignKey("EthnicityId");
-
-                    b.HasOne("ntbs_service.Models.Entities.Notification", null)
-                        .WithOne("PatientDetails")
-                        .HasForeignKey("ntbs_service.Models.Entities.PatientDetails", "NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ntbs_service.Models.ReferenceEntities.Occupation", "Occupation")
-                        .WithMany()
-                        .HasForeignKey("OccupationId");
-
-                    b.HasOne("ntbs_service.Models.ReferenceEntities.PostcodeLookup", "PostcodeLookup")
-                        .WithMany()
-                        .HasForeignKey("PostcodeToLookup");
-
-                    b.HasOne("ntbs_service.Models.ReferenceEntities.Sex", "Sex")
-                        .WithMany()
-                        .HasForeignKey("SexId");
-
-                    b.Navigation("Country");
-
-                    b.Navigation("Ethnicity");
-
-                    b.Navigation("Occupation");
-
-                    b.Navigation("PostcodeLookup");
-
-                    b.Navigation("Sex");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.SocialContextAddress", b =>
@@ -6173,13 +6136,9 @@ namespace ntbs_service.Migrations
 
                     b.Navigation("DrugResistanceProfile");
 
-                    b.Navigation("HospitalDetails");
-
                     b.Navigation("MBovisDetails");
 
                     b.Navigation("NotificationSites");
-
-                    b.Navigation("PatientDetails");
 
                     b.Navigation("SocialContextAddresses");
 
