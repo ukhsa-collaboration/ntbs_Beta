@@ -187,12 +187,17 @@ namespace ntbs_service.DataMigration
             foreach (var notification in notifications)
             {
                 // Check that record hasn't already been imported
-                var foundLtbr = await _notificationRepository.NotificationWithLegacyIdExistsAsync(notification.LTBRID);
-                var foundEts = await _notificationRepository.NotificationWithLegacyIdExistsAsync(notification.ETSID);
+                var foundLtbr = notification.LTBRID is null
+                    ? false
+                    : await _notificationRepository.NotificationWithLegacyIdExistsAsync(notification.LTBRID);
+                var foundEts = notification.ETSID is null
+                    ? false
+                    : await _notificationRepository.NotificationWithLegacyIdExistsAsync(notification.ETSID);
+                
                 if (foundEts || foundLtbr)
                 {
                     hasAnyRecordAlreadyBeenImported = true;
-                    var errorId = foundLtbr ? "LTBRId = " + notification.LTBRID : "ETSId = " + notification.ETSID;
+                    var errorId = foundLtbr ? $"LTBRId = {notification.LTBRID}" : $"ETSId = {notification.ETSID}";
                     var errorMessage = $"A notification has already been imported with {errorId}. " +
                                 "Please contact your system administrator to fix this issue.";
                     importResult.AddNotificationError(notification.LegacyId, errorMessage);
