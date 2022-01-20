@@ -69,5 +69,34 @@ namespace ntbs_integration_tests.TransferPages
 
             Assert.NotNull(initialDocument.QuerySelector("#cancel-transfer-button"));
         }
+
+        [Fact]
+        public async Task TransferPageDisplaysServiceDirectoryLink()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_WITH_TBSERVICE;
+            var url = GetCurrentPathForId(id);
+            var document = await GetDocumentForUrlAsync(url);
+            var directoryLinkText = document.QuerySelector("#ntbs-service-directory-hint");
+            
+            // Assert
+            Assert.NotNull(directoryLinkText);
+            Assert.Contains("You can search for TB services and case managers", directoryLinkText.InnerHtml);
+        }
+
+        [Fact]
+        public async Task NTBSServiceDirectoryLink_LinksToServiceDirectoryPage()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_WITH_TBSERVICE;
+            var url = GetCurrentPathForId(id);
+            var document = await GetDocumentForUrlAsync(url);
+            var directoryLink = document.QuerySelector("#ntbs-service-directory-hint > a");
+
+            //Assert
+            Assert.NotNull(directoryLink);
+            Assert.Contains("NTBS service directory", directoryLink.InnerHtml);
+            Assert.Equal("/ServiceDirectory", directoryLink.GetAttribute("href"));
+        }
     }
 }

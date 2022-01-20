@@ -5,6 +5,7 @@ using EFAuditer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.SeedData;
 
@@ -37,6 +38,23 @@ namespace ntbs_service.Services
         private readonly AuditDatabaseContext _auditContext;
         
         public static string SPECIMEN_ENTITY_TYPE = "Specimen";
+
+        private static List<string> ALERT_ENTITY_TYPES = new List<string>
+        {
+            nameof(DataQualityChildECMLevel),
+            nameof(DataQualityClusterAlert),
+            nameof(DataQualityDraftAlert),
+            nameof(DataQualityTreatmentOutcome12),
+            nameof(DataQualityTreatmentOutcome24),
+            nameof(DataQualityTreatmentOutcome36),
+            nameof(DataQualityBirthCountryAlert),
+            nameof(DataQualityClinicalDatesAlert),
+            nameof(DataQualityDotVotAlert),
+            nameof(DataQualityPotentialDuplicateAlert),
+            nameof(MBovisAlert),
+            nameof(MdrAlert),
+            nameof(UnmatchedLabResultAlert)
+        };
 
         public AuditService(AuditDatabaseContext auditContext)
         {
@@ -118,6 +136,7 @@ namespace ntbs_service.Services
         {
             return await _auditContext.AuditLogs
                 .Where(log => log.EventType != AuditEventType.READ_EVENT && log.EventType != AuditEventType.PRINT_EVENT)
+                .Where(log => !ALERT_ENTITY_TYPES.Contains(log.EntityType))
                 .Where(log => log.RootEntity == RootEntities.Notification)
                 .Where(log => log.RootId == notificationId.ToString())
                 .ToListAsync();
