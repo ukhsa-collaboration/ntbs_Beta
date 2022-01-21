@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
@@ -26,14 +27,15 @@ namespace ntbs_service.Pages.Alerts
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var alertToDismiss = await alertRepository.GetOpenAlertByIdAsync(AlertId);
+            var alertToDismiss = await alertRepository.GetAlertByIdAsync(AlertId);
 
-            if (await authorizationService.IsUserAuthorizedToManageAlert(User, alertToDismiss))
+            if (alertToDismiss is not null
+                && await authorizationService.IsUserAuthorizedToManageAlert(User, alertToDismiss))
             {
                 await alertService.DismissAlertAsync(AlertId, User.Username());
             }
 
-            if (Request.Query["page"] == "Overview")
+            if (Request.Query["page"] == "Overview" && alertToDismiss is not null)
             {
                 return RedirectToPage("/Notifications/Overview", new { alertToDismiss.NotificationId });
             }
