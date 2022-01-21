@@ -1,0 +1,46 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: run-gradle
+  namespace: ntbs-build
+spec:
+  params:
+    - description: The url of the site under test
+      name: url
+      type: string
+    - description: The authenticated token used to make requests to the site under test
+      name: token
+      type: string
+    - description: The directory in which to run gradle
+      name: gradle_directory
+      type: string
+    - description: The length of the test in minutes
+      name: length_in_minutes
+      type: string
+    - description: The ID of the first notification in the range under test
+      name: first_notification
+      type: string
+    - description: The number of notifications in the range under test
+      name: number_of_notifications
+      type: string
+  steps:
+    - env:
+        - name: COOKIE_HEADER
+          value: $(params.token)
+        - name: LOAD_TEST_DURATION_IN_MINUTES
+          value: $(params.length_in_minutes)
+        - name: FIRST_NOTIFICATION
+          value: $(params.first_notification)
+        - name: NUMBER_OF_NOTIFICATIONS
+          value: $(params.number_of_notifications)
+        - name: URL_UNDER_TEST
+          value: $(params.url)
+      image: >-
+        image-registry.openshift-image-registry.svc:5000/ntbs-build/ntbs-image-stream:jre
+      name: run-gradle
+      script: |
+        cd $(workspaces.output.path)/$(params.gradle_directory)
+        bash gradlew gatlingRun-NtbsLoadTest --rerun-tasks
+  workspaces:
+    - description: The volume storing the gradle code
+      name: output
