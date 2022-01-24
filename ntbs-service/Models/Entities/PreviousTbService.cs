@@ -1,10 +1,13 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 
 namespace ntbs_service.Models.Entities
 {
     [Owned]
+    [Display(Name = "Previous TB Service")]
+
     public class PreviousTbService : ModelBase, IHasRootEntityForAuditing
     {
         public int PreviousTbServiceId { get; set; }
