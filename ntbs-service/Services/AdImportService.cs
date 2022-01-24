@@ -27,7 +27,7 @@ namespace ntbs_service.Services
 
         public async Task RunCaseManagerImportAsync()
         {
-            var tbServices = await _referenceDataRepository.GetAllTbServicesAsync();
+            var tbServices = await _referenceDataRepository.GetAllActiveTbServicesAsync();
             using (var adDirectoryService = _adDirectoryServiceFactory.Create())
             {
                 var usersInAd = adDirectoryService.LookupUsers(tbServices);
