@@ -23,6 +23,20 @@ Before you can run tests, you first need to acquire authentication cookies. One 
  
 Then to run the tests, simply run the command `bash gradlew gatlingRun-NtbsLoadTest --rerun-tasks` from Git Bash in the [gradle](gradle) directory.
 
+### Running the tests through OpenShift
+
+To run the tests against one of the UKHSA environments (either `dev` or `uat` - they should never be run against `live`!) do the following:
+
+- Log into the UKHSA VPN and remote desktop to the dev box.
+- Log into the OpenShift portal at [https://console-openshift-console.apps.ocp-por.unix.phe.gov.uk/](https://console-openshift-console.apps.ocp-por.unix.phe.gov.uk/)
+- Go to the Pipelines page, and ensure that the `ntbs-build` project is selected
+- Select the `run-load-tests` pipeline
+- In the actions menu, select Start
+- Set values for the relevant parameters. Most of these should be self-explanatory (and most of the time you'll probably want to stick with the default parameters) except:
+  - For `token` follow the process above to get an authenticated cookie header
+  - For `shared-workspace` select PVC, and then `ntbs-build-pvc`
+- Select Start
+
 ## Using the Gatling recorder
 
 Gatling provides a "record" feature, which is a useful tool in developing new scenarios.

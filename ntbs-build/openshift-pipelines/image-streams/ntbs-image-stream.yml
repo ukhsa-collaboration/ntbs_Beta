@@ -23,6 +23,30 @@ spec:
         scheduled: true
       referencePolicy:
         type: Local
+    - name: gradle
+      from:
+        kind: DockerImage
+        name: 'gradle:latest'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Local
+    - name: jre
+      from:
+        kind: DockerImage
+        name: 'openjdk:8-jre'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Local
+    - name: node-alpine
+      from:
+        kind: DockerImage
+        name: 'node:16-alpine'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Local
     - name: openshift-cli
       from:
         kind: DockerImage
@@ -35,6 +59,14 @@ spec:
       from:
         kind: DockerImage
         name: 'ntbscontainerregistry.azurecr.io/publish-dacpac:latest'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Local
+    - name: ubuntu
+      from:
+        kind: DockerImage
+        name: 'ubuntu:latest'
       importPolicy:
         scheduled: true
       referencePolicy:
