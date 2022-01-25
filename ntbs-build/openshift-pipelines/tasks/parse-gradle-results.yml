@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: parse-gradle-results
+  namespace: ntbs-build
+spec:
+  params:
+    - name: gradle_directory
+      type: string
+  steps:
+    - image: >-
+        image-registry.openshift-image-registry.svc:5000/ntbs-build/ntbs-image-stream:node-alpine
+      name: parse-results
+      script: |
+        cd $(workspaces.output.path)/$(params.gradle_directory)
+        export "STATS_FILE=$(find . -name 'stats.js')"
+        node result-parser/result-parser.js $STATS_FILE
+  workspaces:
+    - description: The volume storing the gradle code
+      name: output
