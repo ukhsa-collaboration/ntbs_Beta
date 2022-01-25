@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using Xunit;
@@ -73,7 +74,7 @@ namespace ntbs_integration_tests.Alerts
             var response = await Client.SendVerificationPostAsync(initialPage, initialDocument, Dismiss(notAnAlertId), null);
 
             // Assert
-            response.AssertRedirectTo("/");
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
     }
 }
