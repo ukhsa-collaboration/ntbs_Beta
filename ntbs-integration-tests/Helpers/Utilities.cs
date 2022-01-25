@@ -113,6 +113,8 @@ namespace ntbs_integration_tests.Helpers
         public const int TRANSFER_ALERT_ID_TO_ACCEPT_2 = 20006;
 
         public const int DRAFT_DATA_QUALITY_ALERT = 20007;
+        public const int ALERT_TO_DISMISS_ID = 20008;
+        public const int CLOSED_ALERT_ID = 20009;
 
         public const int PATIENT_NOTIFICATION_GROUP_ID = 30001;
 
@@ -398,6 +400,18 @@ namespace ntbs_integration_tests.Helpers
                     AlertId = TRANSFER_REJECTED_ID,
                     NotificationId = NOTIFIED_ID,
                     AlertStatus = AlertStatus.Open
+                },
+                new DataQualityTreatmentOutcome12
+                {
+                    AlertId = ALERT_TO_DISMISS_ID,
+                    NotificationId = NOTIFIED_ID,
+                    AlertStatus = AlertStatus.Open
+                },
+                new DataQualityTreatmentOutcome12
+                {
+                    AlertId = CLOSED_ALERT_ID,
+                    NotificationId = NOTIFIED_ID,
+                    AlertStatus = AlertStatus.Closed
                 }
             };
         }

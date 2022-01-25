@@ -32,14 +32,19 @@
                                 }
                                 @if (!alert.NotDismissable)
                                 {
-                                    <form method="post" action="@RouteHelper.GetAlertPath(@alert.AlertId, AlertSubPaths.Dismiss)?page=Overview"
-                                          class="dismiss-alert-button--overview-view">
-                                        @Html.AntiForgeryToken()
-                                        <button class="button-link nhsuk-link govuk-link--no-visited-state govuk-link"
-                                                aria-label="Dismiss alert">
-                                            X
-                                        </button>
-                                    </form>
+                                    <single-submit-form inline-template>
+                                        <form method="post"
+                                              action="@RouteHelper.GetAlertPath(@alert.AlertId, AlertSubPaths.Dismiss)?page=Overview"
+                                              class="dismiss-alert-button--overview-view"
+                                              v-on:submit="disableButton">
+                                            @Html.AntiForgeryToken()
+                                            <button class="button-link nhsuk-link govuk-link--no-visited-state govuk-link"
+                                                    aria-label="Dismiss alert"
+                                                    ref="submitButton">
+                                                X
+                                            </button>
+                                        </form>
+                                    </single-submit-form>
                                 }
                             </div>
                         }
