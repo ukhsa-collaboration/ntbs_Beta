@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq.Expressions;
+using EFAuditer;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Models.Entities.Alerts
 
 {
-    public class DataQualityDraftAlert : Alert
+    public class DataQualityDraftAlert : Alert, IHasRootEntityForAuditing
     {
         private const int MinNumberDaysDraftForAlert = 90;
 
@@ -27,5 +28,7 @@ namespace ntbs_service.Models.Entities.Alerts
         {
             AlertType = AlertType.DataQualityDraft;
         }
+        public string RootEntityType => RootEntities.Notification;
+        public string RootId => NotificationId.ToString();
     }
 }

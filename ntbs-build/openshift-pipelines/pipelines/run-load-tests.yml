@@ -1,0 +1,91 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: run-load-tests
+  namespace: ntbs-build
+spec:
+  params:
+    - default: live
+      description: The version of the load tests to run
+      name: branch
+      type: string
+    - default: 'https://ntbs-uat.phe.nhs.uk'
+      description: The url of the site under test
+      name: url
+      type: string
+    - description: The authenticated token used to make requests to the site under test
+      name: token
+      type: string
+    - default: '30'
+      description: The length of the test in minutes
+      name: length_in_minutes
+      type: string
+    - default: '329414'
+      description: The ID of the first notification in the range under test
+      name: first_notification
+      type: string
+    - default: '2000'
+      description: The number of notifications in the range under test
+      name: number_of_notifications
+      type: string
+  tasks:
+    - name: git-clone
+      params:
+        - name: url
+          value: 'https://github.com/publichealthengland/ntbs_Beta.git'
+        - name: revision
+          value: $(params.branch)
+        - name: submodules
+          value: 'false'
+        - name: depth
+          value: '1'
+        - name: sslVerify
+          value: 'true'
+        - name: deleteExisting
+          value: 'true'
+        - name: verbose
+          value: 'true'
+        - name: subdirectory
+          value: ntbs
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: run-gradle
+      params:
+        - name: token
+          value: $(params.token)
+        - name: gradle_directory
+          value: ntbs/load-tests/gradle
+        - name: url
+          value: $(params.url)
+        - name: length_in_minutes
+          value: $(params.length_in_minutes)
+        - name: first_notification
+          value: $(params.first_notification)
+        - name: number_of_notifications
+          value: $(params.number_of_notifications)
+      runAfter:
+        - git-clone
+      taskRef:
+        kind: Task
+        name: run-gradle
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: parse-results
+      params:
+        - name: gradle_directory
+          value: ntbs/load-tests/gradle
+      runAfter:
+        - run-gradle
+      taskRef:
+        kind: Task
+        name: parse-gradle-results
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+  workspaces:
+    - name: shared-workspace

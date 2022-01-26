@@ -10,6 +10,7 @@ namespace ntbs_service.Models.Enums
         Imported,
         Full,
         Closed,
-        SystemEdited
+        SystemEdited,
+        SystemAdded
     }
 }

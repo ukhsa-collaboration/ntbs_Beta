@@ -10,6 +10,7 @@ namespace ntbs_service.DataAccess
 {
     public interface IAlertRepository
     {
+        Task<Alert> GetAlertByIdAsync(int alertId);
         Task<Alert> GetOpenAlertByIdAsync(int? alertId);
         Task<T> GetAlertByNotificationIdAndTypeAsync<T>(int notificationId) where T : Alert;
         Task<UnmatchedLabResultAlert> GetUnmatchedLabResultAlertForNotificationAndSpecimenAsync(int notificationId,
@@ -41,6 +42,11 @@ namespace ntbs_service.DataAccess
         public AlertRepository(NtbsContext context)
         {
             _context = context;
+        }
+
+        public async Task<Alert> GetAlertByIdAsync(int alertId)
+        {
+            return await _context.Alert.SingleOrDefaultAsync(m => m.AlertId == alertId);
         }
 
         public async Task<Alert> GetOpenAlertByIdAsync(int? alertId)

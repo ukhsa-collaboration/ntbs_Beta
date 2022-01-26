@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using MoreLinq;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -48,9 +50,7 @@ namespace ntbs_service.Services
 
             if (alert != null)
             {
-                alert.ClosingUserId = userId;
-                alert.ClosureDate = DateTime.Now;
-                alert.AlertStatus = AlertStatus.Closed;
+                SetClosedAndAddClosureDate(alert, userId);
 
                 await _alertRepository.SaveAlertChangesAsync();
             }
@@ -62,9 +62,7 @@ namespace ntbs_service.Services
 
             if (alert != null)
             {
-                alert.ClosingUserId = userId;
-                alert.ClosureDate = DateTime.Now;
-                alert.AlertStatus = AlertStatus.Closed;
+                SetClosedAndAddClosureDate(alert, userId);
             }
         }
 
@@ -118,22 +116,39 @@ namespace ntbs_service.Services
 
             foreach (var alert in alerts)
             {
+                // notification may have a duplicate alert to be dismissed on multiple other records
                 if (alert is DataQualityPotentialDuplicateAlert duplicateAlert)
                 {
-                    var duplicate =
-                        await _notificationRepository.GetNotificationForAlertCreationAsync(duplicateAlert.DuplicateId);
-
-                    if (duplicate.NotificationStatus.IsOpen())
-                    {
-                        continue;
-                    }
+                    await DismissDuplicationAlertsOnDuplicateRecord(notificationId, duplicateAlert.DuplicateId);
                 }
-
-                alert.ClosureDate = DateTime.Now;
-                alert.AlertStatus = AlertStatus.Closed;
+                
+                SetClosedAndAddClosureDate(alert);
             }
 
             await _alertRepository.SaveAlertChangesAsync();
+        }
+
+        private async Task DismissDuplicationAlertsOnDuplicateRecord(int notificationId, int duplicateAlertId)
+        {
+            var duplicateRecordAlerts = (await _alertRepository.GetAllOpenAlertsByNotificationId(duplicateAlertId))?
+                .Where(al =>
+                    al is DataQualityPotentialDuplicateAlert duplicateAlert &&
+                    duplicateAlert.DuplicateId == notificationId);
+            
+            if (duplicateRecordAlerts != null)
+            {
+                foreach (var duplicateAlert in duplicateRecordAlerts)
+                {
+                    SetClosedAndAddClosureDate(duplicateAlert);
+                }
+            }
+        }
+
+        private static void SetClosedAndAddClosureDate(Alert alert, string userId = null)
+        {
+            alert.ClosingUserId = userId;
+            alert.ClosureDate = DateTime.Now;
+            alert.AlertStatus = AlertStatus.Closed;
         }
 
         public async Task<bool> AddUniqueAlertAsync<T>(T alert) where T : Alert

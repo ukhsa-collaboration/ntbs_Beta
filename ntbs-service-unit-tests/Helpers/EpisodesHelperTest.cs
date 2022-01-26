@@ -265,6 +265,41 @@ namespace ntbs_service_unit_tests.Helpers
             AssertTreatmentPeriodMatchesExpected(expectedPeriod, periods.Single());
         }
 
+        [Theory]
+        [InlineData(TreatmentEventType.Denotification, null, null, true)]
+        [InlineData(TreatmentEventType.TransferOut, null, null, true)]
+        [InlineData(TreatmentEventType.TransferIn, null, null, false)]
+        [InlineData(TreatmentEventType.TreatmentRestart, null, null, false)]
+        [InlineData(TreatmentEventType.TreatmentOutcome, TreatmentOutcomeType.Completed, null, true)]
+        [InlineData(TreatmentEventType.TreatmentOutcome, TreatmentOutcomeType.Cured, null, true)]
+        [InlineData(TreatmentEventType.TreatmentOutcome, TreatmentOutcomeType.Died, null, true)]
+        [InlineData(TreatmentEventType.TreatmentOutcome, TreatmentOutcomeType.Lost, null, true)]
+        [InlineData(TreatmentEventType.TreatmentOutcome, TreatmentOutcomeType.Failed, null, true)]
+        [InlineData(TreatmentEventType.TreatmentOutcome, TreatmentOutcomeType.TreatmentStopped, null, true)]
+        [InlineData(TreatmentEventType.TreatmentOutcome, TreatmentOutcomeType.NotEvaluated, TreatmentOutcomeSubType.StillOnTreatment, false)]
+        [InlineData(TreatmentEventType.TreatmentOutcome, TreatmentOutcomeType.NotEvaluated, TreatmentOutcomeSubType.Other, true)]
+        [InlineData(TreatmentEventType.TreatmentOutcome, TreatmentOutcomeType.NotEvaluated, TreatmentOutcomeSubType.TransferredAbroad, true)]
+        public void IsEpisodeEndingTreatmentEvent_CorrectlyIdentifiesEndingEvents
+            (TreatmentEventType eventType, TreatmentOutcomeType? outcomeType, TreatmentOutcomeSubType? subType, bool expectedEnding)
+        {
+            // Arrange
+            var possibleEndingEvent = new TreatmentEvent
+            {
+                TreatmentEventType = eventType,
+                TreatmentOutcome = outcomeType.HasValue
+                    ? new TreatmentOutcome {
+                        TreatmentOutcomeType = outcomeType.Value,
+                        TreatmentOutcomeSubType = subType }
+                    : null
+            };
+
+            // Act
+            var isEnding = possibleEndingEvent.IsEpisodeEndingTreatmentEvent();
+
+            // Assert
+            Assert.Equal(expectedEnding, isEnding);
+        }
+
         private void AssertTreatmentPeriodMatchesExpected(TreatmentPeriod expected, TreatmentPeriod actual)
         {
             Assert.Equal(expected.TreatmentEvents, actual.TreatmentEvents);

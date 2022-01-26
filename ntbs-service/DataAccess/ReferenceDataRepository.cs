@@ -16,6 +16,7 @@ namespace ntbs_service.DataAccess
         Task<IList<Country>> GetAllHighTbIncidenceCountriesAsync();
         Task<IList<Country>> GetAllCountriesApartFromUkAsync();
         Task<Country> GetCountryByIdAsync(int id);
+        Task<IList<TBService>> GetAllActiveTbServicesAsync();
         Task<IList<TBService>> GetAllTbServicesAsync();
         Task<TBService> GetTbServiceByCodeAsync(string code);
         Task<TBService> GetTbServiceFromHospitalIdAsync(Guid hospitalId);
@@ -46,6 +47,7 @@ namespace ntbs_service.DataAccess
         Task<IList<SampleType>> GetSampleTypesAsync();
         Task<IList<SampleType>> GetSampleTypesForManualTestType(int manualTestTypeId);
         Task<IList<VenueType>> GetAllVenueTypesAsync();
+        Task<List<TreatmentOutcome>> GetAllTreatmentOutcomes();
         Task<IList<TreatmentOutcome>> GetTreatmentOutcomesForType(TreatmentOutcomeType type);
         Task<TreatmentOutcome> GetTreatmentOutcomeForTypeAndSubType(TreatmentOutcomeType type, TreatmentOutcomeSubType? subType);
         Task<string> GetLocationPhecCodeForPostcodeAsync(string postcode);
@@ -92,9 +94,14 @@ namespace ntbs_service.DataAccess
             return await _context.Country.FindAsync(countryId);
         }
 
-        public async Task<IList<TBService>> GetAllTbServicesAsync()
+        public async Task<IList<TBService>> GetAllActiveTbServicesAsync()
         {
             return await GetTbServicesQueryable().ToListAsync();
+        }
+
+        public async Task<IList<TBService>> GetAllTbServicesAsync()
+        {
+            return await _context.TbService.ToListAsync();
         }
 
         public async Task<TBService> GetTbServiceByCodeAsync(string code)
@@ -282,6 +289,11 @@ namespace ntbs_service.DataAccess
             return await _context.TreatmentOutcome
                 .Where(t => t.TreatmentOutcomeType == type)
                 .ToListAsync();
+        }
+
+        public async Task<List<TreatmentOutcome>> GetAllTreatmentOutcomes()
+        {
+            return await _context.TreatmentOutcome.ToListAsync();
         }
 
         public async Task<IList<VenueType>> GetAllVenueTypesAsync()

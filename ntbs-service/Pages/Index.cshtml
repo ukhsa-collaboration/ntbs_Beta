@@ -86,12 +86,18 @@
                                 <nhs-table-item heading-text="Dismiss">
                                     @if (!item.NotDismissable)
                                     {
-                                        <form method="post" action="@RouteHelper.GetAlertPath(@item.AlertId, AlertSubPaths.Dismiss)">
-                                            @Html.AntiForgeryToken()
-                                            <button class="button-link nhsuk-link govuk-link--no-visited-state govuk-link" aria-label="Dismiss alert">
-                                                X
-                                            </button>
-                                        </form>
+                                        <single-submit-form inline-template>
+                                            <form method="post"
+                                                  action="@RouteHelper.GetAlertPath(@item.AlertId, AlertSubPaths.Dismiss)"
+                                                  v-on:submit="disableButton">
+                                                @Html.AntiForgeryToken()
+                                                <button class="button-link nhsuk-link govuk-link--no-visited-state govuk-link"
+                                                        aria-label="Dismiss alert"
+                                                        ref="submitButton">
+                                                    X
+                                                </button>
+                                            </form>
+                                        </single-submit-form>
                                     }
                                 </nhs-table-item>
                             </nhs-table-body-row>

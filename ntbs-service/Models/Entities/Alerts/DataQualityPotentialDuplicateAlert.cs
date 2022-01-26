@@ -1,10 +1,11 @@
-﻿using ntbs_service.Helpers;
+﻿using EFAuditer;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Models.Entities.Alerts
 
 {
-    public class DataQualityPotentialDuplicateAlert : Alert
+    public class DataQualityPotentialDuplicateAlert : Alert, IHasRootEntityForAuditing
     {
         public int DuplicateId { get; set; }
 
@@ -23,5 +24,7 @@ namespace ntbs_service.Models.Entities.Alerts
         {
             AlertType = AlertType.DataQualityPotientialDuplicate;
         }
+        public string RootEntityType => RootEntities.Notification;
+        public string RootId => NotificationId.ToString();
     }
 }

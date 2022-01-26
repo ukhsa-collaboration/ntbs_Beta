@@ -26,17 +26,25 @@
                                     <br/>
                                     @alert.Action
                                 </div>
-                                <a href="@alert.ActionLink" class="alert-take-action-link">Take action</a>
+                                @if (alert.ActionLink.TrimEnd('/') != Context.Request.Path.ToString().TrimEnd('/'))
+                                {
+                                    <a href="@alert.ActionLink" class="alert-take-action-link">Take action</a>
+                                }
                                 @if (!alert.NotDismissable)
                                 {
-                                    <form method="post" action="@RouteHelper.GetAlertPath(@alert.AlertId, AlertSubPaths.Dismiss)?page=Overview"
-                                          class="dismiss-alert-button--overview-view">
-                                        @Html.AntiForgeryToken()
-                                        <button class="button-link nhsuk-link govuk-link--no-visited-state govuk-link"
-                                                aria-label="Dismiss alert">
-                                            X
-                                        </button>
-                                    </form>
+                                    <single-submit-form inline-template>
+                                        <form method="post"
+                                              action="@RouteHelper.GetAlertPath(@alert.AlertId, AlertSubPaths.Dismiss)?page=Overview"
+                                              class="dismiss-alert-button--overview-view"
+                                              v-on:submit="disableButton">
+                                            @Html.AntiForgeryToken()
+                                            <button class="button-link nhsuk-link govuk-link--no-visited-state govuk-link"
+                                                    aria-label="Dismiss alert"
+                                                    ref="submitButton">
+                                                X
+                                            </button>
+                                        </form>
+                                    </single-submit-form>
                                 }
                             </div>
                         }
