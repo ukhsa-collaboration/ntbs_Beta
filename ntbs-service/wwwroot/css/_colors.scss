@@ -1,4 +1,5 @@
 $ukhsa-teal: #007C91;
+$ukhsa-teal-dull: #005665;
 $ukhsa-yellow: #FFB81C;
 $ukhsa-tangerine: #FF7F31;
 $grey: #999999;
@@ -6,7 +7,7 @@ $lighter-grey: #CCCCCC;
 $shaded-background-color: #F0F4F5;
 
 $application-brand: $ukhsa-teal;
-$application-brand-dull: #005665;
+$application-brand-dull: $ukhsa-teal-dull;
 $ref-lab-header: #003B5C;
 $phe-yellow: $ukhsa-yellow;
 
