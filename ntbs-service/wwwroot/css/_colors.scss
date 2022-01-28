@@ -1,15 +1,15 @@
 $ukhsa-teal: #007C91;
 $ukhsa-teal-dull: #005665;
-$ukhsa-yellow: #FFB81C;
+$ukhsa-sunny: #FFB81C;
 $ukhsa-tangerine: #FF7F31;
 $grey: #999999;
 $lighter-grey: #CCCCCC;
-$shaded-background-color: #F0F4F5;
 
+$shaded-background-color: #F0F4F5;
 $application-brand: $ukhsa-teal;
 $application-brand-dull: $ukhsa-teal-dull;
 $ref-lab-header: #003B5C;
-$phe-yellow: $ukhsa-yellow;
+$phe-yellow: $ukhsa-sunny;
 
 $primary-button: $application-brand;
 $primary-button-focus: $application-brand-dull;
@@ -22,7 +22,8 @@ $warning-button-focus: #aa2a16;
 $warning-button-drop-shadow: shade($warning-button, 50%);
 
 $manage-notification-circle: $application-brand;
-$manage-notification-expander-background: #e5e5e5;
+// TODO rename below?
+$manage-notification-expander-background: #ececec;
 $inset-text-border: $application-brand;
 
 $specimen-card-border: $ref-lab-header;
@@ -33,9 +34,12 @@ $header-submenu-background: #f9f9f9;
 $breadcrumb-trail-background: #DDDACF;
 $kpi-card: $application-brand;
 
-$button-link-hover: $ukhsa-yellow;
-//TODO remove below?
-$button-link-focus: $color_nhsuk-warm-yellow;
+// TODO should these be different?
+$button-link-hover: $ukhsa-sunny;
+$button-link-focus: $ukhsa-sunny;
+
+// TODO use ukhsa green? - $ukhsa-grass: #84bd00
+$success-green: #00a551;
 
 $banner-header--draft: #cce4e9;
 $banner-border--draft: application-brand;
