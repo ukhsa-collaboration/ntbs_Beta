@@ -34,7 +34,7 @@ class NtbsLoadTest extends Simulation {
         )
     }
     val creationFeeder = Iterator.continually(newNotificationInfomation())
-    val notificationFeeder = Iterator.continually(Map("notificationId" -> (300001 + Random.nextInt(10000))))
+    val notificationFeeder = Iterator.continually(Map("notificationId" -> (Config.firstNotification + Random.nextInt(Config.numberOfNotifications))))
 
     val dashboard = DashboardScenarioBuilder.build()
     val searchByFamilyName = SearchScenarioBuilder.buildFamilyNameSearch("Test")
