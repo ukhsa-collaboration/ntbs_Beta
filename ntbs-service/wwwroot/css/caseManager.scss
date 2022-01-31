@@ -2,7 +2,7 @@
 
 .case-manager-details-edit-container {
     display: flex;
-    border-bottom: 1px solid $lighter-grey;
+    border-bottom: 1px solid $border-colour-lighter;
     padding-top: 10px;
     width: 70%;
 }
@@ -28,7 +28,7 @@
 .case-manager-search-result-container {
     width: 70%;
     margin-bottom: 18px;
-    border-bottom: 1px solid $lighter-grey;
+    border-bottom: 1px solid $border-colour-lighter;
 
     a {
         text-decoration: none;
@@ -42,7 +42,7 @@
 .case-manager-results-summary {
     width: 70%;
     margin-bottom: 18px;
-    border-bottom: 1px solid $lighter-grey;
+    border-bottom: 1px solid $border-colour-lighter;
 }
 
 .case-manager-search-result-item-summary {

@@ -2,8 +2,8 @@
 
 .notification-overview-type-and-edit-container {
   display: flex;
-  border-bottom: 1px solid $lighter-grey;
-  border-top: 1px solid $lighter-grey;
+  border-bottom: 1px solid $border-colour-lighter;
+  border-top: 1px solid $border-colour-lighter;
   padding-top: 10px;
   width: 100%;
 }
@@ -47,11 +47,11 @@
 }
 
 .overview-alerts-container {
-  border-top: 1px $lighter-grey solid;
+  border-top: 1px $border-colour-lighter solid;
 }
 
 .overview-alert {
-  border-bottom: 1px $lighter-grey solid;
+  border-bottom: 1px $border-colour-lighter solid;
   padding: 10px 0;
 }
 
