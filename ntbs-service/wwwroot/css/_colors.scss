@@ -1,58 +1,87 @@
+// Colour definitions
 $ukhsa-midnight: #003B5C;
 $ukhsa-teal-dull: #005665;
 $ukhsa-teal: #007C91;
 $ukhsa-tangerine: #FF7F32;
 $ukhsa-sunny: #FFB81C;
 
+$strong-red: #d4351c;
+$strong-red-dull: #aa2a16;
+$green: #00a551;
+$light-cyan: #cce4e9;
+$pale-orange: #FFD8C1;
+
+$black: #000000;
+$very-dark-grey: #787878;
+$dark-grey: #7a7a7a;
 $grey: #999999;
-$lighter-grey: #CCCCCC;
+$light-grey: #CCCCCC;
+$very-light-grey: #ececec;
 $light-greyish-cyan: #F0F4F5;
+$mostly-light-grey: #f9f9f9;
+$light-greyish-yellow: #DDDACF;
 
-
+// Rename colours based on function
 $application-brand: $ukhsa-teal;
 $application-brand-dull: $ukhsa-teal-dull;
 $ref-lab-header: $ukhsa-midnight;
+
 $secondary-button-color: $grey;
+$secondary-button-focus-colour: $dark-grey;
 $border-color: $grey;
-$border-colour-lighter: $lighter-grey;
+$border-colour-lighter: $light-grey;
 $shaded-background-color: $light-greyish-cyan;
+$notification-expander-background-colour: $very-light-grey;
+$submenu-background-colour: $mostly-light-grey;
+$submenu-background-colour: $mostly-light-grey;
+$breadcrumb-background: $light-greyish-yellow;
+
 $focus: $ukhsa-sunny;
+$warning-colour: $strong-red;
+$warning-colour-focus: $strong-red-dull;
+$success: $green;
+
+$draft-header: $light-cyan;
+$denotified-header: $very-dark-grey;
+$denotified-border: $black;
+$legacy-header: $pale-orange;
 $legacy-border: $ukhsa-tangerine;
 
+// Assign colours to components
 $primary-button: $application-brand;
 $primary-button-focus: $application-brand-dull;
 $primary-button-drop-shadow: shade($primary-button, 50%);
 $secondary-button: $secondary-button-color;
-$secondary-button-focus: #7a7a7a;
+$secondary-button-focus: $secondary-button-focus-colour;
 $secondary-button-drop-shadow: shade($secondary-button, 50%);
-$warning-button: #d4351c;
-$warning-button-focus: #aa2a16;
+$warning-button: $warning-colour;
+$warning-button-focus: $warning-colour-focus;
 $warning-button-drop-shadow: shade($warning-button, 50%);
 
 $manage-notification-circle: $application-brand;
-$manage-notification-expander-background: #ececec;
+$manage-notification-expander-background: $notification-expander-background-colour;
 $inset-text-border: $application-brand;
 
-$success-flash-message-border: #00a551;
+$success-flash-message-border: $success;
 $specimen-card-border: $ref-lab-header;
 
 $live-data-warning-background: $focus;
 $header-navigation-background: $application-brand;
-$header-submenu-background: #f9f9f9;
-$breadcrumb-trail-background: #DDDACF;
+$header-submenu-background: $submenu-background-colour;
+$breadcrumb-trail-background: $breadcrumb-background;
 $kpi-card: $application-brand;
 
 $button-link-hover: $focus;
 $button-link-focus: $focus;
 
-$banner-header--draft: #cce4e9;
-$banner-border--draft: application-brand;
+$banner-header--draft: $draft-header;
+$banner-border--draft: $application-brand;
 $banner-header--notified: $application-brand;
 $banner-border--notified: $application-brand;
-$banner-header--denotified: #787878;
-$banner-border--denotified: black;
-$banner-header--legacy: #FFD8C1;
-$banner-border--legacy: $ukhsa-tangerine;
+$banner-header--denotified: $denotified-header;
+$banner-border--denotified: $denotified-border;
+$banner-header--legacy: $legacy-header;
+$banner-border--legacy: $legacy-border;
 
 // Translate CSS colours into strings that can be used in URL-encoded SVGs,
 // such as the "Manage notification" circle.
