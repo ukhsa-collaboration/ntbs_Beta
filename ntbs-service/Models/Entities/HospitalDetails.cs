@@ -4,16 +4,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
-using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    [Owned]
     [Display(Name = "Hospital details")]
     public partial class HospitalDetails : ModelBase, IOwnedEntityForAuditing
     {
+        public int NotificationId { get; set; }
+
         [MaxLength(200)]
         [RegularExpression(ValidationRegexes.CharacterValidationAsciiBasic, ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Consultant")]

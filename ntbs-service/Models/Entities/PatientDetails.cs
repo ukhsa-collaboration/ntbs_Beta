@@ -2,17 +2,17 @@
 using System.ComponentModel.DataAnnotations;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
-using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Interfaces;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    [Owned]
     [Display(Name = "Personal details")]
     public partial class PatientDetails : ModelBase, IHasPostcode, IOwnedEntityForAuditing
     {
+        public int NotificationId { get; set; }
+
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [StringLength(35)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
