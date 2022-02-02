@@ -34,7 +34,7 @@
                         <autocomplete-select ref="filterContainer" v-on:mounted="filteringMounted" v-on:input-changed="filteringChanged"
                                              placeholder="Select TB service" emit-change-on="select" inline-template>
                             <select ref="selectField" nhs-select-type="@tbServiceCodeSelectErrorState" asp-for="TransferRequest.TbServiceCode"
-                                asp-items="Model.TbServices">
+                                asp-items="Model.TbServices" name="selectTBService" id="selectTBService" autocomplete="false">
                                 <option value=""></option>
                             </select>
                         </autocomplete-select>
