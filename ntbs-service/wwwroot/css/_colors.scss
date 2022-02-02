@@ -1,7 +1,9 @@
 // Colour definitions
-$ukhsa-midnight: #003B5C;
-$ukhsa-teal-dull: #005665;
+$ukhsa-moonlight: #1D57A5;
 $ukhsa-teal: #007C91;
+$ukhsa-teal-dull: #005665;
+$ukhsa-midnight: #003B5C;
+$ukhsa-midnight-dull: #002c48;
 $ukhsa-tangerine: #FF7F32;
 $ukhsa-sunny: #FFB81C;
 
@@ -13,7 +15,6 @@ $pale-orange: #FFD8C1;
 
 $black: #000000;
 $very-dark-grey: #787878;
-$dark-grey: #7a7a7a;
 $grey: #999999;
 $light-grey: #CCCCCC;
 $very-light-grey: #ececec;
@@ -24,10 +25,10 @@ $light-greyish-yellow: #DDDACF;
 // Rename colours based on function
 $application-brand: $ukhsa-teal;
 $application-brand-dull: $ukhsa-teal-dull;
-$ref-lab-header: $ukhsa-midnight;
+$ref-lab-header: $ukhsa-moonlight;
 
-$secondary-button-color: $grey;
-$secondary-button-focus-colour: $dark-grey;
+$secondary-button-color: $ukhsa-midnight;
+$secondary-button-focus-colour: $ukhsa-midnight-dull;
 $border-color: $grey;
 $border-colour-lighter: $light-grey;
 $shaded-background-color: $light-greyish-cyan;
