@@ -28,11 +28,7 @@ namespace ntbs_service.Models.Entities
         public DateTime? FirstPresentationDate { get; set; }
         
         [Display(Name = "Referral to TB service received")]
-        // [AssertThat(@"AfterDob(FirstPresentationDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
-        // Assert that BeforeDob(TBServicePresentationDate)
-        // Assert that BeforeDob(DiagnosisDate)
-        // Assert that BeforeDob(Today)
-        // Assert that AfterDob(01/01/2010) - this is ValidClinicalDate
+        [ValidClinicalDate] 
         public DateTime? TBServiceReferralDate { get; set; }
 
         [Display(Name = "Presentation to TB service")]
