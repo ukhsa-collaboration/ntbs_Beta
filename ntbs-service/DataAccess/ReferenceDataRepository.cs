@@ -209,6 +209,7 @@ namespace ntbs_service.DataAccess
         {
             return await _context.Hospital
                 .Where(h => tbServices.Contains(h.TBServiceCode))
+                .OrderBy(h => h.Name)
                 .ToListAsync();
         }
 
