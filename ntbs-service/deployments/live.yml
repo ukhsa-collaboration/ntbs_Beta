@@ -129,7 +129,7 @@ spec:
             - name: ScheduledJobsConfig__UnmatchedLabResultAlertsCron
               value: "00 08 * * *"
             - name: ScheduledJobsConfig__DataQualityAlertsCron
-              value: "00 08 * * *"
+              value: "10 08 * * *"
             - name: ScheduledJobsConfig__MarkImportedNotificationsAsImportedCron
               value: "00 08 * * *"
             - name: ScheduledJobsConfig__UpdateTableCountsJobCron

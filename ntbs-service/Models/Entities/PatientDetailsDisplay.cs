@@ -44,5 +44,10 @@ namespace ntbs_service.Models.Entities
 
         public string LocalAuthorityName => PostcodeLookup?.LocalAuthority?.Name;
         public string ResidencePHECName => PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHEC?.Name;
+
+        internal PatientDetails Clone()
+        {
+            return (PatientDetails)MemberwiseClone();
+        }
     }
 }
