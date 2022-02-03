@@ -23,7 +23,7 @@ namespace ntbs_service.DataAccess
         Task<IList<TBService>> GetTbServicesFromHospitalIdsAsync(IEnumerable<Guid> hospitalIds);
         Task<IList<TBService>> GetTbServicesFromPhecCodeAsync(string phecCode);
         Task<IList<TBService>> GetTbServicesWithCaseManagersFromPhecCodeAsync(string phecCode);
-        IQueryable<TBService> GetTbServicesQueryable();
+        IQueryable<TBService> GetActiveTbServicesOrderedByNameQueryable();
         IQueryable<TBService> GetDefaultTbServicesForUserQueryable(IEnumerable<string> roles);
         Task<IList<PHEC>> GetAllPhecs();
         Task<PHEC> GetPhecByCode(string phecCode);
@@ -96,7 +96,7 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<TBService>> GetAllActiveTbServicesAsync()
         {
-            return await GetTbServicesQueryable().ToListAsync();
+            return await GetActiveTbServicesOrderedByNameQueryable().ToListAsync();
         }
 
         public async Task<IList<TBService>> GetAllTbServicesAsync()
@@ -128,14 +128,14 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<TBService>> GetTbServicesFromPhecCodeAsync(string phecCode)
         {
-            return await GetTbServicesQueryable()
+            return await GetActiveTbServicesOrderedByNameQueryable()
                 .Where(s => s.PHECCode == phecCode)
                 .ToListAsync();
         }
 
         public async Task<IList<TBService>> GetTbServicesWithCaseManagersFromPhecCodeAsync(string phecCode)
         {
-            return await GetTbServicesQueryable()
+            return await GetActiveTbServicesOrderedByNameQueryable()
                 .Where(t => phecCode.Contains(t.PHECCode))
                 .Include(tb => tb.CaseManagerTbServices)
                 .ThenInclude(c => c.CaseManager)
@@ -144,16 +144,14 @@ namespace ntbs_service.DataAccess
 
         public IQueryable<TBService> GetDefaultTbServicesForUserQueryable(IEnumerable<string> roles)
         {
-            return GetTbServicesQueryable()
+            return GetActiveTbServicesOrderedByNameQueryable()
                 .Include(tb => tb.PHEC)
                 .Where(tb => roles.Contains(tb.PHEC.AdGroup) || roles.Contains(tb.ServiceAdGroup));
         }
 
-        public IQueryable<TBService> GetTbServicesQueryable()
+        public IQueryable<TBService> GetActiveTbServicesOrderedByNameQueryable()
         {
-            return _context.TbService
-                .Where(s => s.IsLegacy == false)
-                .OrderBy(s => s.Name);
+            return GetActiveTbServicesQueryable().OrderBy(s => s.Name);
         }
 
         public async Task<IList<PHEC>> GetAllPhecs()
@@ -198,7 +196,7 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<User>> GetActiveCaseManagersByTbServiceCodesAsync(IEnumerable<string> tbServiceCodes)
         {
-            return await GetTbServicesQueryable()
+            return await GetActiveTbServicesQueryable()
                 .Where(t => tbServiceCodes.Contains(t.Code))
                 .SelectMany(t => t.CaseManagerTbServices.Select(join => join.CaseManager))
                 .Where(user => user.IsCaseManager && user.IsActive)
@@ -247,7 +245,7 @@ namespace ntbs_service.DataAccess
 
         public async Task<List<string>> GetTbServiceCodesMatchingRolesAsync(IEnumerable<string> roles)
         {
-            return await GetTbServicesQueryable().Where(tb => roles.Contains(tb.ServiceAdGroup)).Select(tb => tb.Code).ToListAsync();
+            return await GetActiveTbServicesOrderedByNameQueryable().Where(tb => roles.Contains(tb.ServiceAdGroup)).Select(tb => tb.Code).ToListAsync();
         }
 
         public async Task<List<string>> GetPhecCodesMatchingRolesAsync(IEnumerable<string> roles)
@@ -341,6 +339,11 @@ namespace ntbs_service.DataAccess
             }
             var adGroups = adGroupsString.Split(",");
             return await _context.PHEC.Where(phec => adGroups.Contains(phec.AdGroup)).ToListAsync();
+        }
+
+        private IQueryable<TBService> GetActiveTbServicesQueryable()
+        {
+            return _context.TbService.Where(s => s.IsLegacy == false);
         }
     }
 }
