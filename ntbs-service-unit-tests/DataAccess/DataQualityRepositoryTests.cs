@@ -303,7 +303,7 @@ namespace ntbs_service_unit_tests.DataAccess
             Assert.Empty(notificationIds);
         }
 
-        public static IEnumerable<object[]> Get_TBServiceReferralDate_CorrectlyTriggersDataQualityAlert_Data()
+        public static IEnumerable<object[]> GetData_TBServiceReferralDate_CorrectlyTriggersDataQualityAlert()
         {
             yield return new object[] {DateTime.Parse("01-01-2020"), DateTime.Parse("02-01-2020"), DateTime.Parse("03-01-2020"), false};
             yield return new object[] {DateTime.Parse("01-01-2020"), DateTime.Parse("01-01-2020"), DateTime.Parse("01-01-2020"), false};
@@ -314,7 +314,7 @@ namespace ntbs_service_unit_tests.DataAccess
         }
 
         [Theory]
-        [MemberData(nameof(Get_TBServiceReferralDate_CorrectlyTriggersDataQualityAlert_Data))]
+        [MemberData(nameof(GetData_TBServiceReferralDate_CorrectlyTriggersDataQualityAlert))]
         public async Task TBServiceReferralDate_CorrectlyTriggersDataQualityAlert(
             DateTime? firstPresentationDate, DateTime? tbServiceReferralDate, DateTime? tbServicePresentationDate, bool alertTriggered)
         {
