@@ -57,7 +57,7 @@
     <PackageReference Include="Sentry.Serilog" Version="3.13.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
     <PackageReference Include="TimeZoneConverter" Version="5.0.0" />
-    <PackageReference Include="ZNetCS.AspNetCore.Authentication.Basic" Version="5.0.0" />
+    <PackageReference Include="ZNetCS.AspNetCore.Authentication.Basic" Version="6.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Models/SeedData/*.csv">
