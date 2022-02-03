@@ -32,6 +32,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public FormattedDate FormattedSymptomDate { get; set; }
         public FormattedDate FormattedFirstPresentationDate { get; set; }
+        public FormattedDate FormattedTBServiceReferralDate { get; set; }
         public FormattedDate FormattedTbServicePresentationDate { get; set; }
         public FormattedDate FormattedDiagnosisDate { get; set; }
         public FormattedDate FormattedTreatmentDate { get; set; }
@@ -74,6 +75,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             FormattedSymptomDate = ClinicalDetails.SymptomStartDate.ConvertToFormattedDate();
             FormattedFirstPresentationDate = ClinicalDetails.FirstPresentationDate.ConvertToFormattedDate();
+            FormattedTBServiceReferralDate = ClinicalDetails.TBServiceReferralDate.ConvertToFormattedDate();
             FormattedTbServicePresentationDate = ClinicalDetails.TBServicePresentationDate.ConvertToFormattedDate();
             FormattedDiagnosisDate = ClinicalDetails.DiagnosisDate.ConvertToFormattedDate();
             FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
@@ -211,6 +213,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 (nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate),
                 (nameof(ClinicalDetails.FirstPresentationDate), FormattedFirstPresentationDate),
+                (nameof(ClinicalDetails.TBServiceReferralDate), FormattedTBServiceReferralDate),
                 (nameof(ClinicalDetails.TBServicePresentationDate), FormattedTbServicePresentationDate),
                 (nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate),
                 (nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate),
