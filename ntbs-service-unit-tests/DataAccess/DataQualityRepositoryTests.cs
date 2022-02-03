@@ -303,6 +303,44 @@ namespace ntbs_service_unit_tests.DataAccess
             Assert.Empty(notificationIds);
         }
 
+        public static IEnumerable<object[]> Get_TBServiceReferralDate_CorrectlyTriggersDataQualityAlert_Data()
+        {
+            yield return new object[] {DateTime.Parse("01-01-2020"), DateTime.Parse("02-01-2020"), DateTime.Parse("03-01-2020"), false};
+            yield return new object[] {DateTime.Parse("01-01-2020"), DateTime.Parse("01-01-2020"), DateTime.Parse("01-01-2020"), false};
+            yield return new object[] {DateTime.Parse("01-01-2020"), null, DateTime.Parse("03-01-2020"), false};
+            yield return new object[] {DateTime.Parse("03-01-2020"), DateTime.Parse("02-01-2020"), DateTime.Parse("01-01-2020"), true};
+            yield return new object[] {DateTime.Parse("02-01-2020"), DateTime.Parse("02-01-2020"), DateTime.Parse("01-01-2020"), true};
+            yield return new object[] {DateTime.Parse("02-01-2020"), DateTime.Parse("01-01-2020"), DateTime.Parse("01-01-2020"), true};
+        }
+
+        [Theory]
+        [MemberData(nameof(Get_TBServiceReferralDate_CorrectlyTriggersDataQualityAlert_Data))]
+        public async Task TBServiceReferralDate_CorrectlyTriggersDataQualityAlert(
+            DateTime? firstPresentationDate, DateTime? tbServiceReferralDate, DateTime? tbServicePresentationDate, bool alertTriggered)
+        {
+            var notificationDate = DateTime.Parse("01-01-2019");
+            var notification = new Notification()
+            {
+                NotificationStatus = NotificationStatus.Notified,
+                NotificationDate = notificationDate,
+                ClinicalDetails =
+                {
+                    FirstPresentationDate = firstPresentationDate,
+                    TBServiceReferralDate = tbServiceReferralDate,
+                    TBServicePresentationDate = tbServicePresentationDate
+                }
+            };
+
+            await _context.Notification.AddRangeAsync(notification);
+            await _context.SaveChangesAsync();
+            
+            var repo = new DataQualityRepository(_context);
+            var alerts = await repo.GetNotificationsEligibleForDqClinicalDatesAlertsCountAsync();
+            var expectedAlerts = alertTriggered ? 1 : 0;
+            
+            Assert.Equal(expectedAlerts, alerts);
+        }
+
         private static void AssertDuplicatePairIsFound(IList<NotificationAndDuplicateIds> notificationIds,
             int notificationId1, int notificationId2)
         {
