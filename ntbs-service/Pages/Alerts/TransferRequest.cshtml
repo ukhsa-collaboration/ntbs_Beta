@@ -120,6 +120,46 @@
                 </div>
             </nhs-fieldset>
         </nhs-form-group>
+        
+        <validate-date model="TransferRequest" property="TransferDate" notification_id="@Model.Notification.NotificationId" inline-template>
+            @{
+                var hasEventDateError = !Model.ValidationService.IsValid("TransferRequest.TransferDate");
+                var eventDateGroupState = hasEventDateError ? Error : Standard;
+            }
+    
+            <nhs-form-group nhs-form-group-type=@eventDateGroupState>
+                <nhs-fieldset aria-describedby="transfer-date-error" role="group">
+                    <nhs-fieldset-legend nhs-legend-size="Standard" classes="govuk-visually-hidden">
+                        Transfer date
+                    </nhs-fieldset-legend>
+                    <span nhs-span-type="ErrorMessage" ref="errorField"
+                          id="transfer-date-error" asp-validation-for="TransferRequest.TransferDate" has-error="@hasEventDateError"></span>
+                    <nhs-date-input id="notification-date">
+                        <nhs-date-input-item>
+                            <nhs-form-group nhs-form-group-type="Standard">
+                                <label nhs-label-type="Date" asp-for="FormattedTransferDate.Day">Day</label>
+                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
+                                       is-error-input=@hasEventDateError asp-for="FormattedTransferDate.Day" />
+                            </nhs-form-group>
+                        </nhs-date-input-item>
+                        <nhs-date-input-item>
+                            <nhs-form-group nhs-form-group-type="Standard">
+                                <label nhs-label-type="Date" asp-for="FormattedTransferDate.Month">Month</label>
+                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
+                                       is-error-input=@hasEventDateError asp-for="FormattedTransferDate.Month" />
+                            </nhs-form-group>
+                        </nhs-date-input-item>
+                        <nhs-date-input-item>
+                            <nhs-form-group nhs-form-group-type="Standard">
+                                <label nhs-label-type="Date" asp-for="FormattedTransferDate.Year">Year</label>
+                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
+                                       is-error-input=@hasEventDateError asp-for="FormattedTransferDate.Year" />
+                            </nhs-form-group>
+                        </nhs-date-input-item>
+                    </nhs-date-input>
+                </nhs-fieldset>
+            </nhs-form-group>
+        </validate-date>
 
         @{
             var hasRequestNoteError = !Model.ValidationService.IsValid("TransferRequest.TransferRequestNote");

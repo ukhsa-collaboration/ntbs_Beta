@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.Validations;
 using ntbs_service.Models.ViewModels;
 using ntbs_service.Pages.Notifications;
 using ntbs_service.Services;
@@ -27,6 +29,9 @@ namespace ntbs_service.Pages.Alerts
 
         [BindProperty]
         public TransferRequestViewModel TransferRequest { get; set; }
+
+        [BindProperty]
+        public FormattedDate FormattedTransferDate { get; set; }
 
         [BindProperty]
         public int AlertId { get; set; }
@@ -69,7 +74,13 @@ namespace ntbs_service.Pages.Alerts
                 return Partial("_TransferPendingPartial", this);
             }
 
-            TransferRequest = new TransferRequestViewModel();
+            TransferRequest = new TransferRequestViewModel
+            {
+                TransferDate = DateTime.Now.Date,
+                NotificationStartDate = Notification.ClinicalDetails.StartingDate ?? Notification.NotificationDate,
+                LatestTransferDate = Notification.TreatmentEvents.FirstOrDefault(te => te.TreatmentEventType == TreatmentEventType.TransferIn)?.EventDate
+            };
+            FormattedTransferDate = TransferRequest.TransferDate.ConvertToFormattedDate();
             await SetDropdownsAsync();
             return Page();
         }
@@ -90,6 +101,7 @@ namespace ntbs_service.Pages.Alerts
             var transferAlert = new TransferAlert
             {
                 NotificationId = NotificationId,
+                TransferDate = TransferRequest.TransferDate,
                 TbServiceCode = TransferRequest.TbServiceCode,
                 CaseManagerId = TransferRequest.CaseManagerId,
                 TransferReason = TransferRequest.TransferReason,
@@ -171,6 +183,18 @@ namespace ntbs_service.Pages.Alerts
                         Text = n.DisplayName
                     })
                 });
+        }
+
+        public async Task<ContentResult> OnPostValidateTransferRequestDate([FromBody] DateValidationModel validationData)
+        {
+            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            var transferRequestWithData = new TransferRequestViewModel
+            {
+                NotificationStartDate = Notification.ClinicalDetails.StartingDate ?? Notification.NotificationDate,
+                LatestTransferDate = Notification.TreatmentEvents
+                    .FirstOrDefault(te => te.TreatmentEventType == TreatmentEventType.TransferIn)?.EventDate
+            };
+            return ValidationService.GetDateValidationResult(transferRequestWithData, validationData.Key, validationData.Day, validationData.Month, validationData.Year);
         }
     }
 }

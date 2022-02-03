@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using EFAuditer;
 using ntbs_service.Helpers;
@@ -30,6 +31,7 @@ namespace ntbs_service.Models.Entities.Alerts
             ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
         [Display(Name = "Optional note")]
         public string TransferRequestNote { get; set; }
+        
         public override string Action => "Transfer request to your TB service";
         public override string ActionLink => RouteHelper.GetNotificationPath(NotificationId.GetValueOrDefault(), NotificationSubPaths.ActionTransferRequest);
         public override bool NotDismissable => true;
@@ -38,11 +40,15 @@ namespace ntbs_service.Models.Entities.Alerts
 
         public string RootEntityType => RootEntities.Notification;
         public string RootId => NotificationId.ToString();
+        
         [Display(Name = "TB Service")]
         public string TbServiceCode { get; set; }
         public virtual TBService TbService { get; set; }
+        
         [Display(Name = "Case Manager")]
         public int? CaseManagerId { get; set; }
         public virtual User CaseManager { get; set; }
+        
+        public DateTime TransferDate { get; set; }
     }
 }
