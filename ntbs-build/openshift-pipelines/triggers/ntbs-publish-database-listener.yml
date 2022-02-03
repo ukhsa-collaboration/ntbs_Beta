@@ -1,0 +1,11 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: ntbs-publish-database-listener
+  namespace: ntbs-build
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    - name: publish-uat-databases
+      template:
+        name: ntbs-publish-database-trigger
