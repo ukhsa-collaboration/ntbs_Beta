@@ -69,7 +69,7 @@
                                 </span>
                                 <div ref="selectField" class="@countrySelectErrorClass">
                                     <autocomplete-select v-on:input-changed="validate" placeholder="Please select" emit-change-on="blur" inline-template>
-                                        <select asp-for="MBovisAnimalExposure.CountryId" asp-items="Model.Countries" ref="selectField" id="selectAnimalExposureCountry">
+                                        <select asp-for="MBovisAnimalExposure.CountryId" asp-items="Model.Countries" ref="selectField">
                                             <option value=""></option>
                                         </select>
                                     </autocomplete-select>
