@@ -1,0 +1,21 @@
+kind: CronJob
+apiVersion: batch/v1beta1
+metadata:
+  name: publish-uat-databases-cron
+  namespace: ntbs-build
+spec:
+  schedule: 0 12 * * 0
+  concurrencyPolicy: Allow
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: notify-event-listener
+              image: busybox
+              args:
+                - wget
+                - '--spider'
+                - >-
+                  el-ntbs-publish-database-listener.ntbs-build.svc.cluster.local:8080
+          restartPolicy: Never
