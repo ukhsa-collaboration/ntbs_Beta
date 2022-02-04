@@ -49,6 +49,6 @@ namespace ntbs_service.Models.Entities.Alerts
         public int? CaseManagerId { get; set; }
         public virtual User CaseManager { get; set; }
         
-        public DateTime TransferDate { get; set; }
+        public DateTime? TransferDate { get; set; }
     }
 }

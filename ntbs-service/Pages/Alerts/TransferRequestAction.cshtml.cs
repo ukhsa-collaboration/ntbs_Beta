@@ -69,7 +69,7 @@ namespace ntbs_service.Pages.Alerts
 
             await SetDropdownsAsync();
             TransferRequest.TargetCaseManagerId = TransferRequest.TransferAlert.CaseManagerId;
-            TransferRequest.TransferDate = TransferRequest.TransferAlert.TransferDate;
+            TransferRequest.TransferDate = TransferRequest.TransferAlert.TransferDate ?? DateTime.Now.Date;
             FormattedTransferDate = TransferRequest.TransferDate.ConvertToFormattedDate();
             return Page();
         }
@@ -80,6 +80,12 @@ namespace ntbs_service.Pages.Alerts
             ValidationService.TrySetFormattedDate(TransferRequest, "TransferRequest", nameof(TransferRequest.TransferDate), FormattedTransferDate);
             ModelState.Clear();
             TryValidateModel(TransferRequest, nameof(TransferRequest));
+            
+            if (TransferRequest.AcceptTransfer != true)
+            {
+                ModelState.Remove("TransferRequest.TransferDate");
+            }
+            
             if (!ModelState.IsValid)
             {
                 await SetDropdownsAsync();

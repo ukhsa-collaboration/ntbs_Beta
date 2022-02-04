@@ -49,7 +49,10 @@ namespace ntbs_integration_tests.TransferPages
             var formData = new Dictionary<string, string>
             {
                 ["TransferRequest.TbServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
-                ["TransferRequest.TransferReason"] = nameof(TransferReason.Relocation)
+                ["TransferRequest.TransferReason"] = nameof(TransferReason.Relocation),
+                ["FormattedTransferDate.Day"] = "3",
+                ["FormattedTransferDate.Month"] = "12",
+                ["FormattedTransferDate.Year"] = "2021",
             };
 
             // Act

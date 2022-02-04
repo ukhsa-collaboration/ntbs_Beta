@@ -41,6 +41,7 @@ namespace ntbs_integration_tests.TransferPage
                 {
                     NotificationId = Utilities.NOTIFICATION_WITH_TRANSFER_REQUEST_TO_ACCEPT,
                     NotificationStatus = NotificationStatus.Notified,
+                    ClinicalDetails = new ClinicalDetails{ DiagnosisDate = new DateTime(2020,12,12) },
                     HospitalDetails = new HospitalDetails
                     {
                         TBServiceCode = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID,
@@ -62,8 +63,8 @@ namespace ntbs_integration_tests.TransferPage
 
             var formData = new Dictionary<string, string>
             {
-                ["AcceptTransfer"] = "false",
-                ["DeclineTransferReason"] = "£££",
+                ["TransferRequest.AcceptTransfer"] = "false",
+                ["TransferRequest.DeclineTransferReason"] = "£££",
             };
 
             // Act
@@ -102,9 +103,12 @@ namespace ntbs_integration_tests.TransferPage
 
             var formData = new Dictionary<string, string>
             {
-                ["AcceptTransfer"] = "true",
-                ["TargetCaseManagerId"] = Utilities.CASEMANAGER_ABINGDON_ID.ToString(),
-                ["TargetHospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID
+                ["TransferRequest.AcceptTransfer"] = "true",
+                ["FormattedTransferDate.Day"] = "3",
+                ["FormattedTransferDate.Month"] = "12",
+                ["FormattedTransferDate.Year"] = "2021",
+                ["TransferRequest.TargetCaseManagerId"] = Utilities.CASEMANAGER_ABINGDON_ID.ToString(),
+                ["TransferRequest.TargetHospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID
             };
 
             // Act
@@ -139,9 +143,12 @@ namespace ntbs_integration_tests.TransferPage
 
             var formData = new Dictionary<string, string>
             {
-                ["AcceptTransfer"] = "true",
-                ["TargetCaseManagerId"] = Utilities.CASEMANAGER_ABINGDON_ID.ToString(),
-                ["TargetHospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID
+                ["TransferRequest.AcceptTransfer"] = "true",
+                ["FormattedTransferDate.Day"] = "3",
+                ["FormattedTransferDate.Month"] = "12",
+                ["FormattedTransferDate.Year"] = "2021",
+                ["TransferRequest.TargetCaseManagerId"] = Utilities.CASEMANAGER_ABINGDON_ID.ToString(),
+                ["TransferRequest.TargetHospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID
             };
 
             // Act
@@ -170,8 +177,8 @@ namespace ntbs_integration_tests.TransferPage
 
             var formData = new Dictionary<string, string>
             {
-                ["AcceptTransfer"] = "false",
-                ["DeclineTransferReason"] = "nah"
+                ["TransferRequest.AcceptTransfer"] = "false",
+                ["TransferRequest.DeclineTransferReason"] = "nah"
             };
 
             // Act

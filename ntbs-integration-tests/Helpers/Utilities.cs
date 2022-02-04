@@ -294,7 +294,7 @@ namespace ntbs_integration_tests.Helpers
                     {
                         Dob = new DateTime(1970, 1, 1)
                     },
-                    ClinicalDetails = new ClinicalDetails { TreatmentRegimen = TreatmentRegimen.MdrTreatment },
+                    ClinicalDetails = new ClinicalDetails { TreatmentRegimen = TreatmentRegimen.MdrTreatment, DiagnosisDate = new DateTime(2020, 12, 12)},
                 },
                 new Notification
                 {
