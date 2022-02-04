@@ -88,7 +88,8 @@
                                         <autocomplete-select v-on:input-changed="validate" placeholder="Select country of treatment" emit-change-on="blur" inline-template>
                                             <select asp-for="PreviousTbHistory.PreviousTreatmentCountryId"
                                                     asp-items="Model.Countries" 
-                                                    ref="selectField">
+                                                    ref="selectField"
+                                                    id="selectCountryOfTreatment">
                                                 <option value=""></option>
                                             </select>
                                         </autocomplete-select>
