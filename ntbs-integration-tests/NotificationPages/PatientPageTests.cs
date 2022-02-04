@@ -240,7 +240,7 @@ namespace ntbs_integration_tests.NotificationPages
             reloadedDocument.AssertInputTextValue("PatientDetails_Postcode", string.Empty);
             reloadedDocument.AssertInputTextValue("PatientDetails_LocalPatientId", localPatientId);
             reloadedDocument.AssertInputSelectValue("PatientDetails_EthnicityId", ethnicityId);
-            reloadedDocument.AssertInputSelectValue("selectBirthCountry", countryId);
+            reloadedDocument.AssertInputSelectValue("PatientDetails_CountryId", countryId);
             reloadedDocument.AssertInputSelectValue("PatientDetails_OccupationId", occupationId);
             reloadedDocument.AssertInputRadioValue("sexId-2", true);
             reloadedDocument.AssertTextAreaValue("PatientDetails_Address", address);

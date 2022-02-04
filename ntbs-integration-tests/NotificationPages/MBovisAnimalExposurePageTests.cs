@@ -217,7 +217,7 @@ namespace ntbs_integration_tests.NotificationPages
             newAnimalExposureDocument.AssertInputTextValue("MBovisAnimalExposure_YearOfExposure", "2010");
             newAnimalExposureDocument.AssertInputSelectValue("MBovisAnimalExposure_AnimalType",
                 ((int)AnimalType.Pet).ToString());
-            newAnimalExposureDocument.AssertInputSelectValue("selectAnimalExposureCountry", "3");
+            newAnimalExposureDocument.AssertInputSelectValue("MBovisAnimalExposure_CountryId", "3");
             newAnimalExposureDocument.AssertInputTextValue("MBovisAnimalExposure_Animal", "Badger");
             newAnimalExposureDocument.AssertInputSelectValue("MBovisAnimalExposure_AnimalTbStatus",
                 ((int)AnimalTbStatus.SuspectedTb).ToString());

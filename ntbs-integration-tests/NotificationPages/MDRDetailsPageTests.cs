@@ -196,7 +196,7 @@ namespace ntbs_integration_tests.NotificationPages
             reloadedDocument.AssertInputTextValue("MDRDetails_RelationshipToCase", "Cousins");
             reloadedDocument.AssertInputRadioValue("notified-no", false);
             reloadedDocument.AssertInputTextValue("MDRDetails_RelatedNotificationId", "");
-            reloadedDocument.AssertInputSelectValue("selectMDRDetailsCountry", "1");
+            reloadedDocument.AssertInputSelectValue("MDRDetails_CountryId", "1");
             reloadedDocument.AssertInputTextValue("FormattedMdrTreatmentDate_Day", "2");
             reloadedDocument.AssertInputTextValue("FormattedMdrTreatmentDate_Month", "3");
             reloadedDocument.AssertInputTextValue("FormattedMdrTreatmentDate_Year", "2021");

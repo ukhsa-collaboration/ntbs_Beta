@@ -209,7 +209,7 @@ namespace ntbs_integration_tests.NotificationPages
             var newOccupationExposureDocument = await GetDocumentForUrlAsync(occupationExposureUrl);
 
             newOccupationExposureDocument.AssertInputTextValue("MBovisOccupationExposure_YearOfExposure", "2010");
-            newOccupationExposureDocument.AssertInputSelectValue("selectMBovisExposureCountry", "3");
+            newOccupationExposureDocument.AssertInputSelectValue("MBovisOccupationExposure_CountryId", "3");
             newOccupationExposureDocument.AssertInputSelectValue("MBovisOccupationExposure_OccupationSetting",
                 ((int)OccupationSetting.Vet).ToString());
             newOccupationExposureDocument.AssertInputTextValue("MBovisOccupationExposure_OccupationDuration", "5");
