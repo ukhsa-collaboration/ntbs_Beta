@@ -207,7 +207,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             newMilkExposureDocument.AssertInputTextValue("MBovisUnpasteurisedMilkConsumption_YearOfConsumption",
                 "2010");
-            newMilkExposureDocument.AssertInputSelectValue("MBovisUnpasteurisedMilkConsumption_CountryId", "3");
+            newMilkExposureDocument.AssertInputSelectValue("selectMilkConsumptionCountry", "3");
             newMilkExposureDocument.AssertInputSelectValue("MBovisUnpasteurisedMilkConsumption_MilkProductType",
                 ((int)MilkProductType.Milk).ToString());
             newMilkExposureDocument.AssertInputSelectValue("MBovisUnpasteurisedMilkConsumption_ConsumptionFrequency",
