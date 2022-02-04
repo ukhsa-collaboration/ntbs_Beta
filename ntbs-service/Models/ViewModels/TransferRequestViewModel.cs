@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +9,7 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.ViewModels
 {
-    public class TransferRequestViewModel
+    public class TransferRequestViewModel : TransferViewModel
     {
         [BindProperty]
         [Display(Name = "TB Service")]
@@ -31,17 +30,6 @@ namespace ntbs_service.Models.ViewModels
 
         [BindProperty]
         public TransferReason TransferReason { get; set; }
-        
-        [BindProperty]
-        [Display(Name = "Transfer date")]
-        [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
-        [ValidDateRange(ValidDates.EarliestBirthDate)]
-        [AssertThat(nameof(TransferDateAfterNotificationStart), ErrorMessage = ValidationMessages.DateShouldBeLaterThanNotificationStart)]
-        [AssertThat(nameof(TransferDateAfterLatestTransfer), ErrorMessage = ValidationMessages.DateShouldBeLaterThanLatestTransfer)]
-        public DateTime TransferDate { get; set; }
-        
-        public DateTime? NotificationStartDate { get; set; }
-        public DateTime? LatestTransferDate { get; set; }
 
         [BindProperty]
         [Display(Name = "Other description")]
@@ -83,8 +71,5 @@ namespace ntbs_service.Models.ViewModels
         public string NotificationTbServiceCode { get; set; }
 
         public bool TransferDestinationNotCurrentTbService => TbServiceCode != NotificationTbServiceCode;
-
-        public bool TransferDateAfterNotificationStart => TransferDate > NotificationStartDate;
-        public bool TransferDateAfterLatestTransfer => LatestTransferDate is null || TransferDate > LatestTransferDate;
     }
 }

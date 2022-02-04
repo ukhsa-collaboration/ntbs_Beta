@@ -11,7 +11,7 @@
 
 <nhs-width-container container-width="Standard">
     <form method="post" autocomplete="off">
-        <input type="hidden" asp-for="TransferAlert.NotificationId" />
+        <input type="hidden" asp-for="TransferRequest.TransferAlert.NotificationId" />
         <h2> Action transfer request </h2>
 
         <div> This action will be recorded in the change log. </div>
@@ -30,27 +30,32 @@
         
         <div class="transfer-request-information flex-container">
             <div class="transfer-request-information-label"> Reason for transfer: </div>
-            <div> @Model.TransferAlert.TransferReasonString </div>
+            <div> @Model.TransferRequest.TransferAlert.TransferReasonString </div>
+        </div>
+        
+        <div class="transfer-request-information flex-container">
+            <div class="transfer-request-information-label"> Date of transfer: </div>
+            <div> @Model.TransferRequest.TransferAlert.TransferDate.ConvertToString() </div>
         </div>
         
         <div class="transfer-request-information flex-container">
             <div class="transfer-request-information-label"> Note accompanying transfer: </div>
-            <div> @Model.TransferAlert.TransferRequestNote </div>
+            <div> @Model.TransferRequest.TransferAlert.TransferRequestNote </div>
         </div>
 
         <br>
 
         @{
-            var hasActionError = !Model.ValidationService.IsValid("AcceptTransfer");
+            var hasActionError = !Model.ValidationService.IsValid("TransferRequest.AcceptTransfer");
             var actionFormGroupType = hasActionError ? Error : Standard;
         }
         <nhs-form-group nhs-form-group-type="@actionFormGroupType">
             <nhs-fieldset aria-describedby="action-error">
-                <span id="action-error" nhs-span-type="ErrorMessage" asp-validation-for="AcceptTransfer" has-error="@hasActionError"></span>
+                <span id="action-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferRequest.AcceptTransfer" has-error="@hasActionError"></span>
 
                 <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                     <div class="nhsuk-radios__item">
-                        <input asp-for="AcceptTransfer" nhs-input-type="Radios" type="radio"
+                        <input asp-for="TransferRequest.AcceptTransfer" nhs-input-type="Radios" type="radio"
                             value="true" id="accept-transfer-input" data-aria-controls="conditional-radio-accept" aria-describedby="action-error">
                         <label nhs-label-type="Radios" for="accept-transfer-input">
                             Accept transfer
@@ -60,25 +65,63 @@
                     <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio-accept">
                         <nhs-grid-row>
                             <nhs-grid-column grid-column-width="OneHalf">
-                                <label asp-for="TargetHospitalId" nhs-label-type="Standard">
+                                <label asp-for="TransferRequest.TargetHospitalId" nhs-label-type="Standard">
                                     Hospital
                                 </label>
-                                <select nhs-select-type="Standard" asp-items="Model.Hospitals" asp-for="TargetHospitalId">
+                                <select nhs-select-type="Standard" asp-items="Model.TransferRequest.Hospitals" asp-for="TransferRequest.TargetHospitalId">
                                 </select>
                             </nhs-grid-column>
                             <nhs-grid-column grid-column-width="OneHalf">
-                                <label asp-for="TargetCaseManagerId" nhs-label-type="Standard">
+                                <label asp-for="TransferRequest.TargetCaseManagerId" nhs-label-type="Standard">
                                     Case manager
                                 </label>
-                                <select nhs-select-type="Standard" asp-items="Model.CaseManagers" asp-for="TargetCaseManagerId">
+                                <select nhs-select-type="Standard" asp-items="Model.TransferRequest.CaseManagers" asp-for="TransferRequest.TargetCaseManagerId">
                                     <option value="" selected> No Case Manager </option>
                                 </select>
                             </nhs-grid-column>
+                        </nhs-grid-row><br>
+                        
+                        <nhs-grid-row>
+                            @{
+                                var hasEventDateError = !Model.ValidationService.IsValid("TransferRequest.TransferDate");
+                            }
+                            <validate-date model="TransferRequest" property="TransferDate" notification_id="@Model.Notification.NotificationId" inline-template>
+                                <nhs-grid-column grid-column-width="OneHalf">
+                                    <label asp-for="TransferRequest.TransferDate" nhs-label-type="Standard">
+                                        Transfer Date
+                                    </label>
+                                    <span nhs-span-type="ErrorMessage" ref="errorField"
+                                          id="transfer-date-error" asp-validation-for="TransferRequest.TransferDate" has-error="@hasEventDateError"></span>
+                                    <nhs-date-input id="notification-date">
+                                        <nhs-date-input-item>
+                                            <nhs-form-group nhs-form-group-type="Standard">
+                                                <label nhs-label-type="Date" asp-for="FormattedTransferDate.Day">Day</label>
+                                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
+                                                       is-error-input=@hasEventDateError asp-for="FormattedTransferDate.Day"/>
+                                            </nhs-form-group>
+                                        </nhs-date-input-item>
+                                        <nhs-date-input-item>
+                                            <nhs-form-group nhs-form-group-type="Standard">
+                                                <label nhs-label-type="Date" asp-for="FormattedTransferDate.Month">Month</label>
+                                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
+                                                       is-error-input=@hasEventDateError asp-for="FormattedTransferDate.Month"/>
+                                            </nhs-form-group>
+                                        </nhs-date-input-item>
+                                        <nhs-date-input-item>
+                                            <nhs-form-group nhs-form-group-type="Standard">
+                                                <label nhs-label-type="Date" asp-for="FormattedTransferDate.Year">Year</label>
+                                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
+                                                       is-error-input=@hasEventDateError asp-for="FormattedTransferDate.Year"/>
+                                            </nhs-form-group>
+                                        </nhs-date-input-item>
+                                    </nhs-date-input>
+                                </nhs-grid-column>
+                            </validate-date>
                         </nhs-grid-row>
                     </div>
                                         
                     <div class="nhsuk-radios__item">
-                        <input asp-for="AcceptTransfer" nhs-input-type="Radios" type="radio"
+                        <input asp-for="TransferRequest.AcceptTransfer" nhs-input-type="Radios" type="radio"
                             value="false" id="decline-transfer-input" data-aria-controls="conditional-radio-decline" aria-describedby="action-error">
                         <label nhs-label-type="Radios" for="decline-transfer-input">
                             Decline transfer
@@ -86,17 +129,17 @@
                     </div>
 
                     @{
-                        var hasCommentError = !Model.ValidationService.IsValid("DeclineTransferReason");
+                        var hasCommentError = !Model.ValidationService.IsValid("TransferRequest.DeclineTransferReason");
                         var commentFormGroupType = hasCommentError ? Error : Standard;
                     }
 
                     <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio-decline">
                         <nhs-form-group nhs-form-group-type="@commentFormGroupType">
-                            <label asp-for="DeclineTransferReason" nhs-label-type="Standard">
+                            <label asp-for="TransferRequest.DeclineTransferReason" nhs-label-type="Standard">
                                 Provide explanatory comment
                             </label>
-                            <span id="comment-error" nhs-span-type="ErrorMessage" asp-validation-for="DeclineTransferReason" has-error="@hasCommentError"></span>
-                            <input asp-for="DeclineTransferReason" nhs-input-type="Standard" is-error-input="@hasCommentError" aria-describedby="comment-error" />
+                            <span id="comment-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferRequest.DeclineTransferReason" has-error="@hasCommentError"></span>
+                            <input asp-for="TransferRequest.DeclineTransferReason" nhs-input-type="Standard" is-error-input="@hasCommentError" aria-describedby="comment-error" />
                         </nhs-form-group>
                     </div>
                 </div>

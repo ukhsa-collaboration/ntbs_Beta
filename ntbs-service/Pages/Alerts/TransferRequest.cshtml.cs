@@ -74,12 +74,8 @@ namespace ntbs_service.Pages.Alerts
                 return Partial("_TransferPendingPartial", this);
             }
 
-            TransferRequest = new TransferRequestViewModel
-            {
-                TransferDate = DateTime.Now.Date,
-                NotificationStartDate = Notification.ClinicalDetails.StartingDate ?? Notification.NotificationDate,
-                LatestTransferDate = Notification.TreatmentEvents.FirstOrDefault(te => te.TreatmentEventType == TreatmentEventType.TransferIn)?.EventDate
-            };
+            TransferRequest = new TransferRequestViewModel { TransferDate = DateTime.Now.Date };
+            SetDatesOnRequestForValidation(TransferRequest);
             FormattedTransferDate = TransferRequest.TransferDate.ConvertToFormattedDate();
             await SetDropdownsAsync();
             return Page();
@@ -88,7 +84,7 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnPostAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            await GetRelatedEntities();
+            await SetValuesForValidation();
             ModelState.Clear();
             TryValidateModel(TransferRequest, nameof(TransferRequest));
             if (!ModelState.IsValid)
@@ -111,6 +107,21 @@ namespace ntbs_service.Pages.Alerts
             await _alertService.AddUniqueOpenAlertAsync(transferAlert);
 
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
+        }
+
+        private async Task SetValuesForValidation()
+        {
+            await GetRelatedEntities();
+            ValidationService.TrySetFormattedDate(TransferRequest, "TransferRequest", nameof(TransferRequest.TransferDate), FormattedTransferDate);
+            SetDatesOnRequestForValidation(TransferRequest);
+        }
+
+        private void SetDatesOnRequestForValidation(TransferViewModel transferRequest)
+        {
+            transferRequest.NotificationStartDate =
+                Notification.ClinicalDetails.StartingDate ?? Notification.NotificationDate;
+            transferRequest.LatestTransferDate = Notification.TreatmentEvents
+                .FirstOrDefault(te => te.TreatmentEventType == TreatmentEventType.TransferIn)?.EventDate;
         }
 
         private async Task GetRelatedEntities()
@@ -188,13 +199,9 @@ namespace ntbs_service.Pages.Alerts
         public async Task<ContentResult> OnPostValidateTransferRequestDate([FromBody] DateValidationModel validationData)
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            var transferRequestWithData = new TransferRequestViewModel
-            {
-                NotificationStartDate = Notification.ClinicalDetails.StartingDate ?? Notification.NotificationDate,
-                LatestTransferDate = Notification.TreatmentEvents
-                    .FirstOrDefault(te => te.TreatmentEventType == TreatmentEventType.TransferIn)?.EventDate
-            };
-            return ValidationService.GetDateValidationResult(transferRequestWithData, validationData.Key, validationData.Day, validationData.Month, validationData.Year);
+            var transferRequest = new TransferViewModel();
+            SetDatesOnRequestForValidation(transferRequest);
+            return ValidationService.GetDateValidationResult(transferRequest, validationData.Key, validationData.Day, validationData.Month, validationData.Year);
         }
     }
 }
