@@ -1,9 +1,7 @@
 // Colour definitions
-$ukhsa-moonlight: #1D57A5;
 $ukhsa-teal: #007C91;
 $ukhsa-teal-dull: #005665;
 $ukhsa-midnight: #003B5C;
-$ukhsa-midnight-dull: #002c48;
 $ukhsa-tangerine: #FF7F32;
 $ukhsa-sunny: #FFB81C;
 
@@ -25,7 +23,7 @@ $light-greyish-yellow: #DDDACF;
 // Rename colours based on function
 $application-brand: $ukhsa-teal;
 $application-brand-dull: $ukhsa-teal-dull;
-$ref-lab-header: $ukhsa-moonlight;
+$ref-lab-header: $ukhsa-midnight;
 
 $secondary-button-color: white;
 $secondary-button-focus-colour: $very-light-grey;
