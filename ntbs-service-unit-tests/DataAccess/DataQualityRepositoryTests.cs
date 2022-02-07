@@ -303,15 +303,16 @@ namespace ntbs_service_unit_tests.DataAccess
             Assert.Empty(notificationIds);
         }
 
-        public static IEnumerable<object[]> GetData_TBServiceReferralDate_CorrectlyTriggersDataQualityAlert()
+        public static TheoryData<DateTime, DateTime?, DateTime, bool> GetData_TBServiceReferralDate_CorrectlyTriggersDataQualityAlert => 
+            new()
         {
-            yield return new object[] {DateTime.Parse("01-01-2020"), DateTime.Parse("02-01-2020"), DateTime.Parse("03-01-2020"), false};
-            yield return new object[] {DateTime.Parse("01-01-2020"), DateTime.Parse("01-01-2020"), DateTime.Parse("01-01-2020"), false};
-            yield return new object[] {DateTime.Parse("01-01-2020"), null, DateTime.Parse("03-01-2020"), false};
-            yield return new object[] {DateTime.Parse("03-01-2020"), DateTime.Parse("02-01-2020"), DateTime.Parse("01-01-2020"), true};
-            yield return new object[] {DateTime.Parse("02-01-2020"), DateTime.Parse("02-01-2020"), DateTime.Parse("01-01-2020"), true};
-            yield return new object[] {DateTime.Parse("02-01-2020"), DateTime.Parse("01-01-2020"), DateTime.Parse("01-01-2020"), true};
-        }
+            {DateTime.Parse("01-01-2020"), DateTime.Parse("02-01-2020"), DateTime.Parse("03-01-2020"), false},
+            {DateTime.Parse("01-01-2020"), DateTime.Parse("01-01-2020"), DateTime.Parse("01-01-2020"), false},
+            {DateTime.Parse("01-01-2020"), null, DateTime.Parse("03-01-2020"), false},
+            {DateTime.Parse("03-01-2020"), DateTime.Parse("02-01-2020"), DateTime.Parse("01-01-2020"), true},
+            {DateTime.Parse("02-01-2020"), DateTime.Parse("02-01-2020"), DateTime.Parse("01-01-2020"), true},
+            {DateTime.Parse("02-01-2020"), DateTime.Parse("01-01-2020"), DateTime.Parse("01-01-2020"), true},
+        };
 
         [Theory]
         [MemberData(nameof(GetData_TBServiceReferralDate_CorrectlyTriggersDataQualityAlert))]
