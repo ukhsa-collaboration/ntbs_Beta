@@ -77,6 +77,9 @@ Feature: Notification editing
     And I enter 2010 into 'FormattedFirstPresentationDate_Year'
     And I check 'healtcare-setting-other'
     And I enter Sexual health clinic into 'ClinicalDetails_HealthcareDescription'
+    And I enter 01 into 'FormattedTBServiceReferralDate_Day'
+    And I enter 11 into 'FormattedTBServiceReferralDate_Month'
+    And I enter 2010 into 'FormattedTBServiceReferralDate_Year'
     And I enter 9 into 'FormattedTbServicePresentationDate_Day'
     And I enter 11 into 'FormattedTbServicePresentationDate_Month'
     And I enter 2010 into 'FormattedTbServicePresentationDate_Year'
@@ -103,8 +106,10 @@ Feature: Notification editing
     And I can see the value '14 Jul 2010' for the field 'presentation-date' in the 'ClinicalDetails' overview section
     And I can see the value '163' for the field 'onset-to-presentation' in the 'ClinicalDetails' overview section
     And I can see the value 'Other - Sexual health clinic' for the field 'healthcare-setting' in the 'ClinicalDetails' overview section
+    And I can see the value '01 Nov 2010' for the field 'tbservice-referral-date' in the 'ClinicalDetails' overview section
+    And I can see the value '110' for the field 'presentation-to-referral' in the 'ClinicalDetails' overview section
     And I can see the value '9 Nov 2010' for the field 'service-presentation-date' in the 'ClinicalDetails' overview section
-    And I can see the value '118' for the field 'presentation-to-service' in the 'ClinicalDetails' overview section
+    And I can see the value '8' for the field 'referral-to-service' in the 'ClinicalDetails' overview section
     And I can see the value '23 Dec 2010' for the field 'diagnosis-date' in the 'ClinicalDetails' overview section
     And I can see the value '44' for the field 'service-to-diagnosis' in the 'ClinicalDetails' overview section
     And I can see the value '7 Jan 2011' for the field 'treatment-start-date' in the 'ClinicalDetails' overview section

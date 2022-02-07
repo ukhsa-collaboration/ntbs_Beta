@@ -64,29 +64,32 @@ Feature: Notification input errors
     When I enter '14/07/2010' into date fields with id 'FormattedFirstPresentationDate'
     Then I see the warning 'Presentation to any health service is earlier than Symptom onset date' for 'date-warning-text-1'
     
+    When I enter '12/01/2009' into date fields with id 'FormattedTBServiceReferralDate'
+    Then I see the warning 'Referral to TB service received is earlier than Presentation to any health service' for 'date-warning-text-2'
+    
     When I enter '09/11/2010' into date fields with id 'FormattedTbServicePresentationDate'
-    Then I see the warning 'Presentation to TB service is earlier than Symptom onset date' for 'date-warning-text-2'
-
+    Then I see the warning 'Presentation to TB service is earlier than Symptom onset date' for 'date-warning-text-3'
+   
     When I enter '09/11/2012' into date fields with id 'FormattedFirstPresentationDate'
     When I enter '16/10/2012' into date fields with id 'FormattedTbServicePresentationDate'
-    Then I see the warning 'Presentation to TB service is earlier than Presentation to any health service' for 'date-warning-text-2'
+    Then I see the warning 'Presentation to TB service is earlier than Presentation to any health service' for 'date-warning-text-3'
 
     When I enter '09/06/2012' into date fields with id 'FormattedFirstPresentationDate'
     When I enter '11/09/2012' into date fields with id 'FormattedDiagnosisDate'
-    Then I see the warning 'Diagnosis date is earlier than Presentation to TB service' for 'date-warning-text-3'
+    Then I see the warning 'Diagnosis date is earlier than Presentation to TB service' for 'date-warning-text-4'
 
     When I check 'treatment-yes'
     And I enter '30/08/2012' into date fields with id 'FormattedTreatmentDate'
-    Then I see the warning 'Treatment start date is earlier than Diagnosis date' for 'date-warning-text-4'
+    Then I see the warning 'Treatment start date is earlier than Diagnosis date' for 'date-warning-text-5'
     
     When I check 'home-visit-yes'
     And I enter '01/09/2012' into date fields with id 'FormattedHomeVisitDate'
-    Then I see the warning 'First home visit date is earlier than Diagnosis date' for 'date-warning-text-5'
+    Then I see the warning 'First home visit date is earlier than Diagnosis date' for 'date-warning-text-6'
 
     When I check 'home-visit-yes'
     When I enter '16/01/2010' into date fields with id 'FormattedTbServicePresentationDate'
     And I enter '20/01/2010' into date fields with id 'FormattedHomeVisitDate'
-    Then I see the warning 'First home visit date is earlier than Treatment start date' for 'date-warning-text-5'
+    Then I see the warning 'First home visit date is earlier than Treatment start date' for 'date-warning-text-6'
     
   Scenario: Contact tracing verification shows correct errors
     When I click 'Contact tracing' on the navigation bar
