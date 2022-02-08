@@ -12,7 +12,8 @@ namespace ntbs_service.Models.Entities.Alerts
             n => n.NotificationStatus == NotificationStatus.Notified
                  && (n.ClinicalDetails.SymptomStartDate > n.ClinicalDetails.TreatmentStartDate
                      || n.ClinicalDetails.SymptomStartDate > n.ClinicalDetails.FirstPresentationDate
-                     || n.ClinicalDetails.FirstPresentationDate > n.ClinicalDetails.TBServicePresentationDate
+                     || n.ClinicalDetails.FirstPresentationDate > n.ClinicalDetails.TBServiceReferralDate
+                     || n.ClinicalDetails.TBServiceReferralDate > n.ClinicalDetails.TBServicePresentationDate
                      || n.ClinicalDetails.TBServicePresentationDate > n.ClinicalDetails.DiagnosisDate
                      || n.ClinicalDetails.DiagnosisDate > n.ClinicalDetails.TreatmentStartDate);
 

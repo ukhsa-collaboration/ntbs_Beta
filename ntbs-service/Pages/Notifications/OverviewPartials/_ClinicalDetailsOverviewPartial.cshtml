@@ -57,6 +57,17 @@
             <div class="cell-min-height" id="@sectionId-healthcare-setting"> @Model.Notification.ClinicalDetails.FormattedHealthcareSettingState </div>
         </nhs-grid-column>
     </nhs-grid-row>
+    
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <div class="notification-details-label"> Referral to TB service received date </div>
+            <div class="cell-min-height" id="@sectionId-tbservice-referral-date"> @Model.Notification.ClinicalDetails.FormattedTBServiceReferralDate </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Health service presentation to TB service referral received</div>
+            <div class="cell-min-height" id="@sectionId-presentation-to-referral"> @Model.Notification.ClinicalDetails.DaysFromFirstPresentationToTBServiceReferralReceived </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
 
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
@@ -64,8 +75,8 @@
             <div class="cell-min-height" id="@sectionId-service-presentation-date"> @Model.Notification.ClinicalDetails.FormattedPresentationToTbServiceDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> Health service to TB service presentation </div>
-            <div class="cell-min-height" id="@sectionId-presentation-to-service"> @Model.Notification.ClinicalDetails.DaysFromFirstPresentationToTBServicePresentation </div>
+            <div class="notification-details-label"> Referral received to TB service presentation </div>
+            <div class="cell-min-height" id="@sectionId-referral-to-service"> @Model.Notification.ClinicalDetails.DaysFromReferralReceivedToTBServicePresentation </div>
         </nhs-grid-column>
     </nhs-grid-row>
 
