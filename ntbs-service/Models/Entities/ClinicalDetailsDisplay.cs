@@ -16,7 +16,8 @@ namespace ntbs_service.Models.Entities
         public string IsSymptomaticYesNo => IsSymptomatic.FormatYesNo();
         public string DaysFromOnsetToTreatment => FormatNullableDateDifference(TreatmentStartDate, SymptomStartDate);
         public string DaysFromOnsetToFirstPresentation => FormatNullableDateDifference(FirstPresentationDate, SymptomStartDate);
-        public string DaysFromFirstPresentationToTBServicePresentation => FormatNullableDateDifference(TBServicePresentationDate, FirstPresentationDate);
+        public string DaysFromFirstPresentationToTBServiceReferralReceived => FormatNullableDateDifference(TBServiceReferralDate, FirstPresentationDate);
+        public string DaysFromReferralReceivedToTBServicePresentation => FormatNullableDateDifference(TBServicePresentationDate, TBServiceReferralDate);
         public string DaysFromTBServicePresentationToDiagnosis => FormatNullableDateDifference(DiagnosisDate, TBServicePresentationDate);
         public string DaysFromDiagnosisToTreatment => FormatNullableDateDifference(TreatmentStartDate, DiagnosisDate);
         public string BCGVaccinationStateAndYear => FormatStateAndYear(BCGVaccinationState, BCGVaccinationYear);
@@ -63,6 +64,7 @@ namespace ntbs_service.Models.Entities
         public string FormattedSymptomStartDate => SymptomStartDate.ConvertToString();
         public string FormattedPresentationToAnyHealthServiceDate => FirstPresentationDate.ConvertToString();
         public string FormattedPresentationToTbServiceDate => TBServicePresentationDate.ConvertToString();
+        public string FormattedTBServiceReferralDate => TBServiceReferralDate.ConvertToString();
         public string FormattedDiagnosisDate => DiagnosisDate.ConvertToString();
         public string FormattedTreatmentStartDate => TreatmentStartDate.ConvertToString();
         public string GetHIVTestState => HIVTestState?.GetDisplayName() ?? string.Empty;

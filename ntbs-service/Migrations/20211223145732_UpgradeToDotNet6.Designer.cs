@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 
@@ -11,9 +12,10 @@ using ntbs_service.DataAccess;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20211223145732_UpgradeToDotNet6")]
+    partial class UpgradeToDotNet6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,6 +135,31 @@ namespace ntbs_service.Migrations
                     b.HasKey("NotificationId");
 
                     b.ToTable("DrugResistanceProfile", (string)null);
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.FrequentlyAskedQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AnchorLink")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Answer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Question")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FrequentlyAskedQuestion");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.HospitalDetails", b =>
@@ -5361,9 +5388,6 @@ namespace ntbs_service.Migrations
                                 .HasColumnType("datetime2");
 
                             b1.Property<DateTime?>("TBServicePresentationDate")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<DateTime?>("TBServiceReferralDate")
                                 .HasColumnType("datetime2");
 
                             b1.Property<string>("TreatmentRegimen")

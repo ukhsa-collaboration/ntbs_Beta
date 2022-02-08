@@ -1,0 +1,31 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: ntbs-publish-database-trigger
+  namespace: ntbs-build
+spec:
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: ntbs-publish-database-
+      spec:
+        params:
+          - name: deploy-migration
+            value: 'yes'
+          - name: deploy-specimen-matching
+            value: 'yes'
+          - name: deploy-reporting
+            value: 'no'
+          - name: environment
+            value: uat
+          - name: branch
+            value: live
+        pipelineRef:
+          name: ntbs-publish-database
+        serviceAccountName: pipeline
+        timeout: 15m0s
+        workspaces:
+          - name: shared-workspace
+            persistentVolumeClaim:
+              claimName: ntbs-build-pvc

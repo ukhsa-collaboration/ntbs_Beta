@@ -109,6 +109,9 @@ Feature: Notification creation
     And I enter 3 into 'FormattedFirstPresentationDate_Month'
     And I enter 2017 into 'FormattedFirstPresentationDate_Year'
     And I check 'healtcare-setting-AccidentAndEmergency'
+    And I enter 10 into 'FormattedTBServiceReferralDate_Day'
+    And I enter 3 into 'FormattedTBServiceReferralDate_Month'
+    And I enter 2017 into 'FormattedTBServiceReferralDate_Year'
     And I enter 4 into 'FormattedTbServicePresentationDate_Day'
     And I enter 4 into 'FormattedTbServicePresentationDate_Month'
     And I enter 2017 into 'FormattedTbServicePresentationDate_Year'
@@ -139,8 +142,10 @@ Feature: Notification creation
     And I can see the value '03 Mar 2017' for the field 'presentation-date' in the 'ClinicalDetails' overview section
     And I can see the value '29' for the field 'onset-to-presentation' in the 'ClinicalDetails' overview section
     And I can see the value 'A&E' for the field 'healthcare-setting' in the 'ClinicalDetails' overview section
+    And I can see the value '10 Mar 2017' for the field 'tbservice-referral-date' in the 'ClinicalDetails' overview section
+    And I can see the value '7' for the field 'presentation-to-referral' in the 'ClinicalDetails' overview section
     And I can see the value '04 Apr 2017' for the field 'service-presentation-date' in the 'ClinicalDetails' overview section
-    And I can see the value '32' for the field 'presentation-to-service' in the 'ClinicalDetails' overview section
+    And I can see the value '25' for the field 'referral-to-service' in the 'ClinicalDetails' overview section
     And I can see the value '01 Jan 2018' for the field 'diagnosis-date' in the 'ClinicalDetails' overview section
     And I can see the value '272' for the field 'service-to-diagnosis' in the 'ClinicalDetails' overview section
     And I can see the value '02 Jan 2018' for the field 'treatment-start-date' in the 'ClinicalDetails' overview section
