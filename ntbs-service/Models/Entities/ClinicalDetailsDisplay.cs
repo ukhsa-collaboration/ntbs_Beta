@@ -16,8 +16,8 @@ namespace ntbs_service.Models.Entities
         public string IsSymptomaticYesNo => IsSymptomatic.FormatYesNo();
         public string DaysFromOnsetToTreatment => FormatNullableDateDifference(TreatmentStartDate, SymptomStartDate);
         public string DaysFromOnsetToFirstPresentation => FormatNullableDateDifference(FirstPresentationDate, SymptomStartDate);
-        public string DaysFromFirstPresentationToTBServiceReferralRecieved => FormatNullableDateDifference(TBServiceReferralDate, FirstPresentationDate);
-        public string DaysFromReferralRecievedToTBServicePresentation => FormatNullableDateDifference(TBServicePresentationDate, TBServiceReferralDate);
+        public string DaysFromFirstPresentationToTBServiceReferralReceived => FormatNullableDateDifference(TBServiceReferralDate, FirstPresentationDate);
+        public string DaysFromReferralReceivedToTBServicePresentation => FormatNullableDateDifference(TBServicePresentationDate, TBServiceReferralDate);
         public string DaysFromTBServicePresentationToDiagnosis => FormatNullableDateDifference(DiagnosisDate, TBServicePresentationDate);
         public string DaysFromDiagnosisToTreatment => FormatNullableDateDifference(TreatmentStartDate, DiagnosisDate);
         public string BCGVaccinationStateAndYear => FormatStateAndYear(BCGVaccinationState, BCGVaccinationYear);
