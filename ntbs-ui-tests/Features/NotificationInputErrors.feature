@@ -64,7 +64,7 @@ Feature: Notification input errors
     When I enter '14/07/2010' into date fields with id 'FormattedFirstPresentationDate'
     Then I see the warning 'Presentation to any health service is earlier than Symptom onset date' for 'date-warning-text-1'
     
-    When I enter '12/01/2009' into date fields with id 'FormattedTBServiceReferralDate'
+    When I enter '12/01/2010' into date fields with id 'FormattedTBServiceReferralDate'
     Then I see the warning 'Referral to TB service received is earlier than Presentation to any health service' for 'date-warning-text-2'
     
     When I enter '09/11/2010' into date fields with id 'FormattedTbServicePresentationDate'

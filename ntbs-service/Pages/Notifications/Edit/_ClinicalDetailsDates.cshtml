@@ -193,13 +193,13 @@
                 var referralTbServiceGroupState = hasReferralTbServiceError ? Error : Standard;
             }
             <nhs-form-group nhs-form-group-type=@referralTbServiceGroupState id="ClinicalDetails-TBServiceReferralDate">
-                <nhs-fieldset aria-describedby="tbservice-referral-error" role="group">
+                <nhs-fieldset aria-describedby="tb-service-referral-error" role="group">
                     <nhs-fieldset-legend nhs-legend-size="Standard">
                         @Html.DisplayNameFor(model => model.ClinicalDetails.TBServiceReferralDate)
                     </nhs-fieldset-legend>
                     <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.TBServiceReferralDate"
-                          has-error="@hasReferralTbServiceError" id="tbservice-referral-error"></span>
-                    <nhs-date-input id="referral-to-tbservice-received">
+                          has-error="@hasReferralTbServiceError" id="tb-service-referral-error"></span>
+                    <nhs-date-input id="referral-to-tb-service-received">
                         <nhs-date-input-item>
                             <nhs-form-group nhs-form-group-type="Standard">
                                 <label nhs-label-type="Date" asp-for="FormattedTBServiceReferralDate.Day">Day</label>
