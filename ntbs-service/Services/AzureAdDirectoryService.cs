@@ -66,10 +66,15 @@ namespace ntbs_service.Services
         {
             var roleClaims = new List<Claim>();
 
+            // If the username contains an apostrophe then we need to escape it by using a double apostrophe in
+            // the filter clause. I don't think other characters would cause an issue, as they will be URL encoded
+            // by the Graph API client.
+            var escapedUserName = userPrincipalName.Replace("'", "''");
+
             var foundUsers = await _graphServiceClient
                 .Users
                 .Request()
-                .Filter($"UserPrincipalName eq '{userPrincipalName}' or Mail eq '{userPrincipalName}'")
+                .Filter($"UserPrincipalName eq '{escapedUserName}' or Mail eq '{escapedUserName}'")
                 .GetAsync();
             var foundUser = foundUsers.FirstOrDefault();
 
