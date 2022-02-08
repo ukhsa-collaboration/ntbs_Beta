@@ -4,6 +4,7 @@ using System.Linq;
 using ntbs_integration_tests.LabResultsPage;
 using ntbs_integration_tests.NotificationPages;
 using ntbs_integration_tests.TransferPage;
+using ntbs_integration_tests.TransferPages;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
@@ -68,6 +69,7 @@ namespace ntbs_integration_tests.Helpers
 
         public const int NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT = 10091;
         public const int NOTIFICATION_WITH_TRANSFER_REQUEST_TO_ACCEPT = 10092;
+        public const int NOTIFICATION_WITH_TRANSFER = 10093;
 
 
         public static int SPECIMEN_MATCHING_NOTIFICATION_ID1 = MockSpecimenService.MockSpecimenNotificationId1; // 10100
@@ -181,6 +183,7 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(DeletePageTests.GetSeedingNotifications());
             context.Notification.AddRange(PatientPageTests.GetSeedingNotifications());
             context.Notification.AddRange(HospitalDetailsPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(TransferPageTests.GetSeedingNotifications());
             context.Notification.AddRange(ManualTestResultEditPagesTests.GetSeedingNotifications());
             context.Notification.AddRange(SocialContextVenueEditPageTests.GetSeedingNotifications());
             context.Notification.AddRange(SocialContextAddressEditPageTests.GetSeedingNotifications());
