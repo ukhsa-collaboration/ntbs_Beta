@@ -1,7 +1,7 @@
 // Colour definitions
-$ukhsa-midnight: #003B5C;
-$ukhsa-teal-dull: #005665;
 $ukhsa-teal: #007C91;
+$ukhsa-teal-dull: #005665;
+$ukhsa-midnight: #003B5C;
 $ukhsa-tangerine: #FF7F32;
 $ukhsa-sunny: #FFB81C;
 
@@ -13,7 +13,6 @@ $pale-orange: #FFD8C1;
 
 $black: #000000;
 $very-dark-grey: #787878;
-$dark-grey: #7a7a7a;
 $grey: #999999;
 $light-grey: #CCCCCC;
 $very-light-grey: #ececec;
@@ -26,8 +25,8 @@ $application-brand: $ukhsa-teal;
 $application-brand-dull: $ukhsa-teal-dull;
 $ref-lab-header: $ukhsa-midnight;
 
-$secondary-button-color: $grey;
-$secondary-button-focus-colour: $dark-grey;
+$secondary-button-color: white;
+$secondary-button-focus-colour: $very-light-grey;
 $border-color: $grey;
 $border-colour-lighter: $light-grey;
 $shaded-background-color: $light-greyish-cyan;
@@ -52,7 +51,8 @@ $primary-button-focus: $application-brand-dull;
 $primary-button-drop-shadow: shade($primary-button, 50%);
 $secondary-button: $secondary-button-color;
 $secondary-button-focus: $secondary-button-focus-colour;
-$secondary-button-drop-shadow: shade($secondary-button, 50%);
+$secondary-button-text: $application-brand;
+$secondary-button-drop-shadow: shade($secondary-button-text, 50%);
 $warning-button: $warning-colour;
 $warning-button-focus: $warning-colour-focus;
 $warning-button-drop-shadow: shade($warning-button, 50%);

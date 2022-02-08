@@ -61,14 +61,14 @@
                 {
                     <form method="post">
                         <input type="hidden" value="@Model.NotificationId" name="NotificationId"/>
-                        <button nhs-button-type="Standard" classes="ntbsuk-button--secondary" asp-page-handler="CreateLink" id="new-linked-notification-button">
+                        <button nhs-button-type="Standard" classes="ntbsuk-button--primary" asp-page-handler="CreateLink" id="new-linked-notification-button">
                             New notification for this patient
                         </button>
                     </form>
                 }
                 else if (Model.LatestLinkedNotificationId.HasValue && Model.LatestLinkedNotificationId != Model.NotificationId)
                 {
-                    <a id='new-linked-notification-button' class="nhsuk-button ntbsuk-button--secondary" role="button" href="@RouteHelper.GetNotificationPath(Model.LatestLinkedNotificationId.Value, NotificationSubPaths.Overview)">
+                    <a id='new-linked-notification-button' class="nhsuk-button ntbsuk-button--primary" role="button" href="@RouteHelper.GetNotificationPath(Model.LatestLinkedNotificationId.Value, NotificationSubPaths.Overview)">
                         Navigate to latest linked notification
                     </a>
                 }
@@ -76,7 +76,7 @@
                 @if (Model.Notification.NotificationStatus != NotificationStatus.Draft)
                 {
                     <print-button inline-template>
-                        <button nhs-button-type="Standard" classes="ntbsuk-button--secondary hidden" v-on:click="print" id="print-notification-overview-button">
+                        <button nhs-button-type="Standard" classes="ntbsuk-button--primary hidden" v-on:click="print" id="print-notification-overview-button">
                             Print notification overview
                         </button>
                     </print-button>
@@ -85,7 +85,7 @@
                 @if (Model.Notification.NotificationStatus == NotificationStatus.Notified && Model.PermissionLevel == PermissionLevel.Edit)
                 {
                     var transferRequestHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.TransferRequest);
-                    <a id='transfer-button' class="nhsuk-button ntbsuk-button--secondary" role="button" href="@transferRequestHref">
+                    <a id='transfer-button' class="nhsuk-button ntbsuk-button--primary" role="button" href="@transferRequestHref">
                         @if (@Model.Notification.TransferRequestPending)
                         {
                             @:Transfer pending

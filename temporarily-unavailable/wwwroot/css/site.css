@@ -14848,12 +14848,10 @@ body:not(.js-enabled) .nav-submenu-list {
 .header-logo {
     padding: 0 40px 5px 0;
     margin: 0;
-    width: 200px;
     box-sizing: content-box;
 }
 .header-logo img {
     height: 30px;
-    width: 200px;
 }
 
 .header-expand-menu-button {

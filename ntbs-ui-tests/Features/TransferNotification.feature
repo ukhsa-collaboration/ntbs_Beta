@@ -8,7 +8,7 @@ Feature: Transfer notification
 
     When I expand manage notification section
     And I click on the 'transfer-button' button
-    And I select West Yorkshire from input list 'TransferRequest_TbServiceCode'
+    And I select West Yorkshire from input list 'selectTBService'
     And I select Leeds UITester for 'TransferRequest_CaseManagerId'
     And I check 'transfer-radio-Other'
     And I enter Patient likes travel into 'TransferRequest_OtherReasonDescription'
