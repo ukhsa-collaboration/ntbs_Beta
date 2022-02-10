@@ -14,8 +14,12 @@
     background-color: $secondary-button;
     box-shadow: 0 4px 0 $secondary-button-drop-shadow;
     margin-bottom: 24px;
-
+    color: $secondary-button-text;
+    border: 2px solid $secondary-button-text;
+  
     &:hover {
+        //Necessary to include color here, otherwise overridden by nhs button styling
+        color: $secondary-button-text;
         background-color: $secondary-button-focus;
     }
 }

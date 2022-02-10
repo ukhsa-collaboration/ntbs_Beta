@@ -33,8 +33,12 @@
                               ref="errorField" asp-validation-for="TransferRequest.TbServiceCode"></span>
                         <autocomplete-select ref="filterContainer" v-on:mounted="filteringMounted" v-on:input-changed="filteringChanged"
                                              placeholder="Select TB service" emit-change-on="select" inline-template>
-                            <select ref="selectField" nhs-select-type="@tbServiceCodeSelectErrorState" asp-for="TransferRequest.TbServiceCode"
-                                asp-items="Model.TbServices">
+                            @* below id necessary to disable automcomplete in chrome - see https://adamsilver.io/blog/stopping-chrome-from-ignoring-autocomplete-off/ *@
+                            <select ref="selectField"
+                                    nhs-select-type="@tbServiceCodeSelectErrorState"
+                                    asp-for="TransferRequest.TbServiceCode"
+                                    asp-items="Model.TbServices"
+                                    id="selectTBService">
                                 <option value=""></option>
                             </select>
                         </autocomplete-select>
@@ -131,7 +135,7 @@
         </nhs-form-group>
 
         <div class="flex-container">
-            <button id="confirm-transfer-button" nhs-button-type="Standard" classes="confirm-transfer-button">
+            <button id="confirm-transfer-button" nhs-button-type="Standard" classes="confirm-transfer-button ntbsuk-button--primary">
                 Confirm transfer
             </button>
 

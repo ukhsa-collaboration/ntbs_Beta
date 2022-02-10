@@ -9,7 +9,7 @@
 
 <h2>Clinical Dates</h2>
 
-<date-comparison inline-template v-bind:number-of-dates="6">
+<date-comparison inline-template v-bind:number-of-dates="7">
     <div>
         <div class="hidden" ref="date-warning-0">
             <govuk-warning-text id="date-warning-text-0" ref="date-warning-text-0" class="reduced-margin-warning-text" v-if="dateWarnings[0]">
@@ -131,7 +131,7 @@
                 </nhs-fieldset>
             </nhs-form-group>
         </validate-date>
-        <br />
+        <br/>
         <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-HealthcareSetting">
             <nhs-fieldset>
                 <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(m => m.ClinicalDetails.HealthcareSetting)</nhs-fieldset-legend>
@@ -187,7 +187,55 @@
                 </div>
             </govuk-warning-text>
         </div>
-        <validate-date ref="date2" name="@Html.DisplayNameFor(m => m.ClinicalDetails.TBServicePresentationDate)" model="ClinicalDetails" property="TBServicePresentationDate" rank="2" v-model="dates[2]" inline-template>
+        <validate-date ref="date2" name="@Html.DisplayNameFor(model => model.ClinicalDetails.TBServiceReferralDate)" model="ClinicalDetails" property="TBServiceReferralDate" rank="2" v-model="dates[2]" inline-template>
+            @{
+                var hasReferralTbServiceError = !Model.IsValid("ClinicalDetails.TBServiceReferralDate");
+                var referralTbServiceGroupState = hasReferralTbServiceError ? Error : Standard;
+            }
+            <nhs-form-group nhs-form-group-type=@referralTbServiceGroupState id="ClinicalDetails-TBServiceReferralDate">
+                <nhs-fieldset aria-describedby="tb-service-referral-error" role="group">
+                    <nhs-fieldset-legend nhs-legend-size="Standard">
+                        @Html.DisplayNameFor(model => model.ClinicalDetails.TBServiceReferralDate)
+                    </nhs-fieldset-legend>
+                    <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.TBServiceReferralDate"
+                          has-error="@hasReferralTbServiceError" id="tb-service-referral-error"></span>
+                    <nhs-date-input id="referral-to-tb-service-received">
+                        <nhs-date-input-item>
+                            <nhs-form-group nhs-form-group-type="Standard">
+                                <label nhs-label-type="Date" asp-for="FormattedTBServiceReferralDate.Day">Day</label>
+                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
+                                       is-error-input=@hasReferralTbServiceError asp-for="FormattedTBServiceReferralDate.Day" />
+                            </nhs-form-group>
+                        </nhs-date-input-item>
+                        <nhs-date-input-item>
+                            <nhs-form-group nhs-form-group-type="Standard">
+                                <label nhs-label-type="Date" asp-for="FormattedTBServiceReferralDate.Month">Month</label>
+                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
+                                       is-error-input=@hasReferralTbServiceError asp-for="FormattedTBServiceReferralDate.Month" />
+                            </nhs-form-group>
+                        </nhs-date-input-item>
+                        <nhs-date-input-item>
+                            <nhs-form-group nhs-form-group-type="Standard">
+                                <label nhs-label-type="Date" asp-for="FormattedTBServiceReferralDate.Year">Year</label>
+                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
+                                       is-error-input=@hasReferralTbServiceError asp-for="FormattedTBServiceReferralDate.Year" />
+                            </nhs-form-group>
+                        </nhs-date-input-item>
+                    </nhs-date-input>
+                </nhs-fieldset>
+            </nhs-form-group>
+        </validate-date>
+        <br/>
+        <div class="hidden" ref="date-warning-3">
+            <govuk-warning-text id="date-warning-text-3" ref="date-warning-text-3" class="reduced-margin-warning-text" v-if="dateWarnings[3]">
+                <div class="warning-container">
+                    <p>
+                        <strong> {{dateWarnings[3].message}} </strong>
+                    </p>
+                </div>
+            </govuk-warning-text>
+        </div>
+        <validate-date ref="date3" name="@Html.DisplayNameFor(m => m.ClinicalDetails.TBServicePresentationDate)" model="ClinicalDetails" property="TBServicePresentationDate" rank="3" v-model="dates[3]" inline-template>
             @{
                 var hasPresentationTbServiceError = !Model.IsValid("ClinicalDetails.TBServicePresentationDate");
                 var presentationTbServiceGroupState = hasPresentationTbServiceError ? Error : Standard;
@@ -226,16 +274,16 @@
             </nhs-form-group>
         </validate-date>
         <br />
-        <div class="hidden" ref="date-warning-3">
-            <govuk-warning-text id="date-warning-text-3" ref="date-warning-text-3" class="reduced-margin-warning-text" v-if="dateWarnings[3]">
+        <div class="hidden" ref="date-warning-4">
+            <govuk-warning-text id="date-warning-text-4" ref="date-warning-text-4" class="reduced-margin-warning-text" v-if="dateWarnings[4]">
                 <div class="warning-container">
                     <p>
-                        <strong> {{dateWarnings[3].message}} </strong>
+                        <strong> {{dateWarnings[4].message}} </strong>
                     </p>
                 </div>
             </govuk-warning-text>
         </div>
-        <validate-date ref="date3" name="@Html.DisplayNameFor(m => m.ClinicalDetails.DiagnosisDate)" model="ClinicalDetails" property="DiagnosisDate" rank="3" v-model="dates[3]" inline-template>
+        <validate-date ref="date4" name="@Html.DisplayNameFor(m => m.ClinicalDetails.DiagnosisDate)" model="ClinicalDetails" property="DiagnosisDate" rank="4" v-model="dates[4]" inline-template>
             @{
                 var hasDiagnosisError = !Model.IsValid("ClinicalDetails.DiagnosisDate");
                 var diagnosisGroupState = hasDiagnosisError ? Error : Standard;
@@ -274,11 +322,11 @@
             </nhs-form-group>
         </validate-date>
         <br />
-        <div class="hidden" ref="date-warning-4">
-            <govuk-warning-text id="date-warning-text-4" ref="date-warning-text-4" class="reduced-margin-warning-text" v-if="dateWarnings[4]">
+        <div class="hidden" ref="date-warning-5">
+            <govuk-warning-text id="date-warning-text-5" ref="date-warning-text-5" class="reduced-margin-warning-text" v-if="dateWarnings[5]">
                 <div class="warning-container">
                     <p>
-                        <strong> {{dateWarnings[4].message}} </strong>
+                        <strong> {{dateWarnings[5].message}} </strong>
                     </p>
                 </div>
             </govuk-warning-text>
@@ -300,7 +348,7 @@
                             var hasTreatmentError = !Model.IsValid("ClinicalDetails.TreatmentStartDate");
                             var treatmentGroupState = hasTreatmentError ? Error : Standard;
                         }
-                        <validate-date ref="date4" name="@Html.DisplayNameFor(m => m.ClinicalDetails.TreatmentStartDate)" model="ClinicalDetails" property="TreatmentStartDate" rank="4" v-model="dates[4]" inline-template>
+                        <validate-date ref="date5" name="@Html.DisplayNameFor(m => m.ClinicalDetails.TreatmentStartDate)" model="ClinicalDetails" property="TreatmentStartDate" rank="5" v-model="dates[5]" inline-template>
                             <nhs-form-group nhs-form-group-type=@treatmentGroupState>
                                 <nhs-fieldset aria-describedby="treatment-error" role="group">
                                     <nhs-fieldset-legend nhs-legend-size="Standard">
@@ -345,11 +393,11 @@
             </nhs-fieldset>
         </nhs-form-group>
         <br />
-        <div class="hidden" ref="date-warning-5">
-            <govuk-warning-text id="date-warning-text-5" ref="date-warning-text-5" class="reduced-margin-warning-text" v-if="dateWarnings[5]">
+        <div class="hidden" ref="date-warning-6">
+            <govuk-warning-text id="date-warning-text-6" ref="date-warning-text-6" class="reduced-margin-warning-text" v-if="dateWarnings[6]">
                 <div class="warning-container">
                     <p>
-                        <strong> {{dateWarnings[5].message}} </strong>
+                        <strong> {{dateWarnings[6].message}} </strong>
                     </p>
                 </div>
             </govuk-warning-text>
@@ -369,7 +417,7 @@
                             var hasHomeVisitDateError = !Model.IsValid("ClinicalDetails.FirstHomeVisitDate");
                             var homeVisitDateGroupState = hasHomeVisitDateError ? Error : Standard;
                         }
-                        <validate-date ref="date5" name="@Html.DisplayNameFor(m => m.ClinicalDetails.FirstHomeVisitDate)" model="ClinicalDetails" property="FirstHomeVisitDate" rank="5" v-model="dates[5]"  inline-template>
+                        <validate-date ref="date6" name="@Html.DisplayNameFor(m => m.ClinicalDetails.FirstHomeVisitDate)" model="ClinicalDetails" property="FirstHomeVisitDate" rank="6" v-model="dates[6]"  inline-template>
                             <nhs-form-group nhs-form-group-type=@homeVisitDateGroupState>
                                 <nhs-fieldset aria-describedby="home-visit-error" role="group">
                                     <nhs-fieldset-legend nhs-legend-size="Standard">
