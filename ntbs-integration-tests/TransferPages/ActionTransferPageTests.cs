@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
@@ -182,6 +183,21 @@ namespace ntbs_integration_tests.TransferPage
             var alertsContainer = reloadedOverviewPage.QuerySelector(".overview-alerts-container");
             Assert.Null(alertsContainer.QuerySelector("#alert-20004"));
             Assert.Contains("Transfer request rejected", alertsContainer.InnerHtml);
+        }
+        
+        [Fact]
+        public async Task ActionTransferPage_ReturnsCorrectStatusCode_IfNoTransferPending()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID_2;
+            var actionTransferPath = GetPathForId(NotificationSubPaths.ActionTransferRequest, id);
+            
+            // Act
+            var response = await Client.GetAsync(actionTransferPath);
+            
+            // Assert
+            Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+            Assert.Contains(GetRedirectLocation(response), GetPathForId(NotificationSubPaths.Overview, id));
         }
     }
 }
