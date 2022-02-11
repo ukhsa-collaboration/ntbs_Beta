@@ -71,12 +71,7 @@ namespace ntbs_service.Pages.Alerts
             await AuthorizeAndSetBannerAsync();
 
             // Check edit permission of user and redirect if not allowed
-            if (!await _authorizationService.IsUserAuthorizedToManageAlert(User, TransferAlert))
-            {
-                return RedirectToPage("/Notifications/Overview", new { NotificationId });
-            }
-
-            if (TransferAlert == null)
+            if (TransferAlert is null || !await _authorizationService.IsUserAuthorizedToManageAlert(User, TransferAlert))
             {
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
