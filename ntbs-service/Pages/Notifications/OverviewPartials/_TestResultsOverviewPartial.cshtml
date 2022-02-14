@@ -28,6 +28,25 @@
 </div>
 
 <div class="notification-overview-details-container" id="@sectionId">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="Full">
+            <h4 class="notification-details-sub-header">Manually-entered test results</h4>
+        </nhs-grid-column>
+    </nhs-grid-row>
+
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <div class="notification-details-label"> @Html.DisplayNameFor(m => m.Notification.TestData.HasTestCarriedOut) </div>
+            <div class="cell-min-height" id="@sectionId-test-carried-out"> @testData.HasTestCarriedOut.FormatYesNo() </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+
+    @if (testData.HasTestCarriedOut == true)
+    {
+        var viewData = new ViewDataDictionary(ViewData) {{"RenderReducedSizeManualResultsTable", true}};
+        <partial name="Shared/_ManualTestResultTable" for="Notification.TestData.ManualTestResults" view-data="@viewData"/>
+    }
+
     @if (Model.CultureAndResistance != null)
     {
         <nhs-grid-row>
@@ -93,24 +112,5 @@
             </nhs-grid-column>
         </nhs-grid-row>
         <br/>
-    }
-
-    <nhs-grid-row>
-        <nhs-grid-column grid-column-width="Full">
-            <h4 class="notification-details-sub-header">Manually-entered test results</h4>
-        </nhs-grid-column>
-    </nhs-grid-row>
-
-    <nhs-grid-row>
-        <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> @Html.DisplayNameFor(m => m.Notification.TestData.HasTestCarriedOut) </div>
-            <div class="cell-min-height" id="@sectionId-test-carried-out"> @testData.HasTestCarriedOut.FormatYesNo() </div>
-        </nhs-grid-column>
-    </nhs-grid-row>
-
-    @if (testData.HasTestCarriedOut == true)
-    {
-        var viewData = new ViewDataDictionary(ViewData) {{"RenderReducedSizeManualResultsTable", true}};
-        <partial name="Shared/_ManualTestResultTable" for="Notification.TestData.ManualTestResults" view-data="@viewData"/>
     }
 </div>
