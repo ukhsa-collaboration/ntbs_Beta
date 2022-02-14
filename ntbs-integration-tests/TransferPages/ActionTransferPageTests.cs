@@ -165,6 +165,40 @@ namespace ntbs_integration_tests.TransferPage
         }
 
         [Fact]
+        public async Task AcceptTransferAlert_CreatesTransferWithDateFromFormInsteadOfDateFromAlert()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_WITH_ACTIVE_HOSPITAL;
+            var treatmentEventsUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditTreatmentEvents);
+            var initialTreatmentEventsPage = await GetDocumentForUrlAsync(treatmentEventsUrl);
+            Assert.Null(initialTreatmentEventsPage.QuerySelector("#treatment-events"));
+
+            var url = GetCurrentPathForId(id);
+            var initialDocument = await GetDocumentForUrlAsync(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["TransferRequest.AcceptTransfer"] = "true",
+                ["FormattedTransferDate.Day"] = "3",
+                ["FormattedTransferDate.Month"] = "12",
+                ["FormattedTransferDate.Year"] = "2021",
+                ["TransferRequest.TargetCaseManagerId"] = Utilities.CASEMANAGER_ABINGDON_ID.ToString(),
+                ["TransferRequest.TargetHospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID
+            };
+
+            // Act
+            await Client.SendPostFormWithData(initialDocument, formData, url);
+
+            var reloadedTreatmentEventsPage = await GetDocumentForUrlAsync(treatmentEventsUrl);
+
+            // Assert
+            var reloadedTreatmentEventsTable = reloadedTreatmentEventsPage.QuerySelector("#treatment-events");
+            Assert.Contains("Transfer in", reloadedTreatmentEventsTable.InnerHtml);
+            Assert.Contains("03 Dec 2021", reloadedTreatmentEventsTable.TextContent);
+            Assert.Contains("Transfer out", reloadedTreatmentEventsTable.InnerHtml);
+        }
+
+        [Fact]
         public async Task AcceptTransferAlert_ReturnsPageWithModelErrors_IfDateInvalid()
         {
             // Arrange

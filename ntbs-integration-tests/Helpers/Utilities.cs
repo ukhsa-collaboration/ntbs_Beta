@@ -113,6 +113,7 @@ namespace ntbs_integration_tests.Helpers
         public const int TRANSFER_ALERT_ID_TO_REJECT = 20004;
         public const int TRANSFER_REJECTED_ID = 20005;
         public const int TRANSFER_ALERT_ID_TO_ACCEPT_2 = 20006;
+        public const int TRANSFER_ALERT_WITH_DATE = 20010;
 
         public const int DRAFT_DATA_QUALITY_ALERT = 20007;
         public const int ALERT_TO_DISMISS_ID = 20008;
@@ -396,6 +397,16 @@ namespace ntbs_integration_tests.Helpers
                     TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                     CaseManagerId = CASEMANAGER_ABINGDON_ID,
                     AlertStatus = AlertStatus.Open
+                },
+                new TransferAlert
+                {
+                    AlertType = AlertType.TransferRequest,
+                    AlertId = TRANSFER_ALERT_WITH_DATE,
+                    NotificationId = NOTIFIED_WITH_ACTIVE_HOSPITAL,
+                    TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                    CaseManagerId = CASEMANAGER_ABINGDON_ID,
+                    AlertStatus = AlertStatus.Open,
+                    TransferDate = new DateTime(2010, 10, 10)
                 },
                 new TransferRejectedAlert
                 {
