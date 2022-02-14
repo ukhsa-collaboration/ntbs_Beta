@@ -174,7 +174,7 @@
 
     public static class ValidDates
     {
-        public const string EarliestBirthDate = "01/01/1900";
+        public const string EarliestAllowedDate = "01/01/1900";
         public const string EarliestClinicalDate = "01/01/2010";
         public const int EarliestYear = 1900;
     }

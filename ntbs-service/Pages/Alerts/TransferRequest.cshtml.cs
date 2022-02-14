@@ -120,8 +120,8 @@ namespace ntbs_service.Pages.Alerts
         {
             transferRequest.NotificationStartDate =
                 Notification.ClinicalDetails.StartingDate ?? Notification.NotificationDate;
-            transferRequest.LatestTransferDate = Notification.TreatmentEvents
-                .FirstOrDefault(te => te.TreatmentEventType == TreatmentEventType.TransferIn)?.EventDate;
+            transferRequest.LatestTransferDate = Notification.TreatmentEvents.OrderForEpisodes()
+                .LastOrDefault(te => te.TreatmentEventType == TreatmentEventType.TransferIn)?.EventDate;
         }
 
         private async Task GetRelatedEntities()

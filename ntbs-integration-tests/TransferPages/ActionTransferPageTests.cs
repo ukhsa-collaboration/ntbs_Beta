@@ -8,6 +8,7 @@ using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.TransferPage
@@ -159,7 +160,34 @@ namespace ntbs_integration_tests.TransferPage
             // Assert
             var reloadedTreatmentEventsTable = reloadedTreatmentEventsPage.QuerySelector("#treatment-events");
             Assert.Contains("Transfer in", reloadedTreatmentEventsTable.InnerHtml);
+            Assert.Contains("03 Dec 2021", reloadedTreatmentEventsTable.TextContent);
             Assert.Contains("Transfer out", reloadedTreatmentEventsTable.InnerHtml);
+        }
+
+        [Fact]
+        public async Task AcceptTransferAlert_ReturnsPageWithModelErrors_IfDateInvalid()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFICATION_WITH_TRANSFER_REQUEST_TO_ACCEPT;
+            var url = GetCurrentPathForId(id);
+            var initialDocument = await GetDocumentForUrlAsync(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["TransferRequest.AcceptTransfer"] = "true",
+                ["FormattedTransferDate.Day"] = "1",
+                ["FormattedTransferDate.Month"] = "11",
+                ["FormattedTransferDate.Year"] = "101",
+                ["TransferRequest.TargetCaseManagerId"] = Utilities.CASEMANAGER_ABINGDON_ID.ToString(),
+                ["TransferRequest.TargetHospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+            resultDocument.AssertErrorMessage("transfer-date", ValidationMessages.DateValidityRangeStart("Transfer date", ValidDates.EarliestAllowedDate));
         }
 
         [Fact]

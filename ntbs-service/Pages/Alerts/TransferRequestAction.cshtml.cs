@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using ExpressiveAnnotations.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Data.SqlClient.Server;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
@@ -18,7 +15,6 @@ using ntbs_service.Models.Validations;
 using ntbs_service.Models.ViewModels;
 using ntbs_service.Pages.Notifications;
 using ntbs_service.Services;
-using Sentry;
 
 namespace ntbs_service.Pages.Alerts
 {
@@ -199,8 +195,8 @@ namespace ntbs_service.Pages.Alerts
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             TransferRequest.NotificationStartDate = Notification.ClinicalDetails.StartingDate ?? Notification.NotificationDate;
-            TransferRequest.LatestTransferDate = Notification.TreatmentEvents
-                .FirstOrDefault(te => te.TreatmentEventType == TreatmentEventType.TransferIn)?.EventDate;
+            TransferRequest.LatestTransferDate = Notification.TreatmentEvents.OrderForEpisodes()
+                .LastOrDefault(te => te.TreatmentEventType == TreatmentEventType.TransferIn)?.EventDate;
         }
 
         public async Task<ContentResult> OnPostValidateTransferRequestDate([FromBody] DateValidationModel validationData)

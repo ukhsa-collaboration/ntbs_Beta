@@ -86,7 +86,7 @@ namespace ntbs_integration_tests.TransferPages
         {
             { _diagnosisDate.AddDays(-5), String.Format(ValidationMessages.DateShouldBeLaterThanNotificationStart, "Transfer date") },
             { _transferDate.AddDays(-5), String.Format(ValidationMessages.DateShouldBeLaterThanLatestTransfer, "Transfer date") },
-            { new DateTime(101, 1, 12), ValidationMessages.DateValidityRangeStart("Transfer date", ValidDates.EarliestBirthDate) }
+            { new DateTime(101, 1, 12), ValidationMessages.DateValidityRangeStart("Transfer date", ValidDates.EarliestAllowedDate) }
         };
 
         [Theory]

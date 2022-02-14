@@ -11,7 +11,7 @@ public class TransferViewModel
     [BindProperty]
     [Display(Name = "Transfer date")]
     [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
-    [ValidDateRange(ValidDates.EarliestBirthDate)]
+    [ValidDateRange(ValidDates.EarliestAllowedDate)]
     [AssertThat(nameof(TransferDateAfterNotificationStart), ErrorMessage = ValidationMessages.DateShouldBeLaterThanNotificationStart)]
     [AssertThat(nameof(TransferDateAfterLatestTransfer), ErrorMessage = ValidationMessages.DateShouldBeLaterThanLatestTransfer)]
     public DateTime TransferDate { get; set; }
