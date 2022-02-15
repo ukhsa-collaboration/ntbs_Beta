@@ -4,6 +4,7 @@ using System.Linq;
 using ntbs_integration_tests.LabResultsPage;
 using ntbs_integration_tests.NotificationPages;
 using ntbs_integration_tests.TransferPage;
+using ntbs_integration_tests.TransferPages;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
@@ -68,6 +69,7 @@ namespace ntbs_integration_tests.Helpers
 
         public const int NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT = 10091;
         public const int NOTIFICATION_WITH_TRANSFER_REQUEST_TO_ACCEPT = 10092;
+        public const int NOTIFICATION_WITH_TRANSFER = 10093;
 
 
         public static int SPECIMEN_MATCHING_NOTIFICATION_ID1 = MockSpecimenService.MockSpecimenNotificationId1; // 10100
@@ -111,6 +113,7 @@ namespace ntbs_integration_tests.Helpers
         public const int TRANSFER_ALERT_ID_TO_REJECT = 20004;
         public const int TRANSFER_REJECTED_ID = 20005;
         public const int TRANSFER_ALERT_ID_TO_ACCEPT_2 = 20006;
+        public const int TRANSFER_ALERT_WITH_DATE = 20010;
 
         public const int DRAFT_DATA_QUALITY_ALERT = 20007;
         public const int ALERT_TO_DISMISS_ID = 20008;
@@ -181,6 +184,7 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(DeletePageTests.GetSeedingNotifications());
             context.Notification.AddRange(PatientPageTests.GetSeedingNotifications());
             context.Notification.AddRange(HospitalDetailsPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(TransferPageTests.GetSeedingNotifications());
             context.Notification.AddRange(ManualTestResultEditPagesTests.GetSeedingNotifications());
             context.Notification.AddRange(SocialContextVenueEditPageTests.GetSeedingNotifications());
             context.Notification.AddRange(SocialContextAddressEditPageTests.GetSeedingNotifications());
@@ -294,7 +298,7 @@ namespace ntbs_integration_tests.Helpers
                     {
                         Dob = new DateTime(1970, 1, 1)
                     },
-                    ClinicalDetails = new ClinicalDetails { TreatmentRegimen = TreatmentRegimen.MdrTreatment },
+                    ClinicalDetails = new ClinicalDetails { TreatmentRegimen = TreatmentRegimen.MdrTreatment, DiagnosisDate = new DateTime(2020, 12, 12)},
                 },
                 new Notification
                 {
@@ -393,6 +397,16 @@ namespace ntbs_integration_tests.Helpers
                     TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                     CaseManagerId = CASEMANAGER_ABINGDON_ID,
                     AlertStatus = AlertStatus.Open
+                },
+                new TransferAlert
+                {
+                    AlertType = AlertType.TransferRequest,
+                    AlertId = TRANSFER_ALERT_WITH_DATE,
+                    NotificationId = NOTIFIED_WITH_ACTIVE_HOSPITAL,
+                    TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                    CaseManagerId = CASEMANAGER_ABINGDON_ID,
+                    AlertStatus = AlertStatus.Open,
+                    TransferDate = new DateTime(2010, 10, 10)
                 },
                 new TransferRejectedAlert
                 {
