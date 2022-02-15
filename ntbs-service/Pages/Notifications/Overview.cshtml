@@ -19,28 +19,28 @@
 
 <partial name="./OverviewPartials/_ClinicalDetailsOverviewPartial"/>
 
-<partial name="./OverviewPartials/_TreatmentEventsOverviewPartial"/>
-
-<partial name="./OverviewPartials/_ContactTracingOverviewPartial"/>
-
 <partial name="./OverviewPartials/_TestResultsOverviewPartial"/>
 
-<partial name="./OverviewPartials/_SocialRiskFactorsOverviewPartial"/>
-
-<partial name="./OverviewPartials/_TravelOverviewPartial"/>
-
-<partial name="./OverviewPartials/_ComorbiditiesAndImmunosuppresionOverviewPartial"/>
-
-<partial name="./OverviewPartials/_SocialContextAddressesOverviewPartial"/>
-
-<partial name="./OverviewPartials/_SocialContextVenuesOverviewPartial"/>
-
-<partial name="./OverviewPartials/_PreviousHistoryOverviewPartial"/>
+<partial name="./OverviewPartials/_TreatmentEventsOverviewPartial"/>
 
 @if (Model.Notification.IsMdr)
 {
     <partial name="./OverviewPartials/_MDRDetailsOverviewPartial"/>
 }
+
+<partial name="./OverviewPartials/_PreviousHistoryOverviewPartial"/>
+
+<partial name="./OverviewPartials/_ComorbiditiesAndImmunosuppresionOverviewPartial"/>
+
+<partial name="./OverviewPartials/_SocialRiskFactorsOverviewPartial"/>
+
+<partial name="./OverviewPartials/_TravelOverviewPartial"/>
+
+<partial name="./OverviewPartials/_ContactTracingOverviewPartial"/>
+
+<partial name="./OverviewPartials/_SocialContextAddressesOverviewPartial"/>
+
+<partial name="./OverviewPartials/_SocialContextVenuesOverviewPartial"/>
 
 @if (Model.Notification.IsMBovis)
 {
