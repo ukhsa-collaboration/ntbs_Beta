@@ -50,6 +50,7 @@ namespace ntbs_integration_tests.NotificationPages
                 {
                     NotificationId = Utilities.NOTIFIED_WITH_ACTIVE_HOSPITAL,
                     NotificationStatus = NotificationStatus.Notified,
+                    NotificationDate = new DateTime(2018,1,1),
                     HospitalDetails = new HospitalDetails
                     {
                         TBServiceCode = Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID,

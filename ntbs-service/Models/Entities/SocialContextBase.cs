@@ -25,13 +25,13 @@ namespace ntbs_service.Models.Entities
         public string Postcode { get; set; }
 
         [AssertThat(nameof(DateFromAfterDob), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
-        [ValidDateRange(ValidDates.EarliestBirthDate)]
+        [ValidDateRange(ValidDates.EarliestAllowedDate)]
         [Display(Name = "From")]
         public DateTime? DateFrom { get; set; }
 
         [AssertThat(nameof(DateToAfterDob), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         [AssertThat(@"DateFrom == null || DateTo >= DateFrom", ErrorMessage = ValidationMessages.VenueDateToShouldBeLaterThanDateFrom)]
-        [ValidDateRange(ValidDates.EarliestBirthDate)]
+        [ValidDateRange(ValidDates.EarliestAllowedDate)]
         [Display(Name = "To")]
         public DateTime? DateTo { get; set; }
 

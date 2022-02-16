@@ -9,7 +9,7 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.ViewModels
 {
-    public class TransferRequestViewModel
+    public class TransferRequestViewModel : TransferViewModel
     {
         [BindProperty]
         [Display(Name = "TB Service")]
