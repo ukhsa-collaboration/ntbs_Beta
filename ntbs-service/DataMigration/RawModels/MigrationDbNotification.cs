@@ -59,6 +59,7 @@ namespace ntbs_service.DataMigration.RawModels
         public DateTime? SymptomOnsetDate { get; set; }
         public int? IsSymptomatic { get; set; }
         public DateTime? FirstPresentationDate { get; set; }
+        public DateTime? TBServiceReferralDate { get; set; }
         public string HealthcareSetting { get; set; }
         public string HealthcareDescription { get; set; }
         public DateTime? FirstHomeVisitDate { get; set; }
