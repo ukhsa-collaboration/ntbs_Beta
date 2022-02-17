@@ -128,7 +128,7 @@ namespace ntbs_service.Pages.Alerts
             var transferInEvent = new TreatmentEvent
             {
                 NotificationId = NotificationId,
-                EventDate = TransferRequest.TransferDate.AddSeconds(1),
+                EventDate = TransferRequest.TransferDate.Value.AddSeconds(1),
                 TreatmentEventType = TreatmentEventType.TransferIn,
                 CaseManagerId = TransferRequest.TransferAlert.CaseManagerId,
                 TbServiceCode = TransferRequest.TransferAlert.TbServiceCode,
@@ -137,7 +137,7 @@ namespace ntbs_service.Pages.Alerts
 
             var previousTbService = new PreviousTbService()
             {
-                TransferDate = TransferRequest.TransferDate,
+                TransferDate = TransferRequest.TransferDate.Value,
                 TbServiceCode = Notification.HospitalDetails.TBServiceCode,
                 PhecCode = Notification.HospitalDetails?.TBService?.PHECCode
             };
@@ -194,7 +194,11 @@ namespace ntbs_service.Pages.Alerts
         private async Task GetNotificationAndSetValuesForValidation()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            TransferRequest.NotificationStartDate = Notification.ClinicalDetails.StartingDate ?? Notification.NotificationDate;
+            TransferRequest.NotificationStartDate =
+                NotificationHelper.EarliestOfThreeDates(
+                    Notification.ClinicalDetails.DiagnosisDate,
+                    Notification.ClinicalDetails.TreatmentStartDate,
+                    Notification.NotificationDate);
             TransferRequest.LatestTransferDate = Notification.TreatmentEvents.OrderForEpisodes()
                 .LastOrDefault(te => te.TreatmentEventType == TreatmentEventType.TransferIn)?.EventDate;
         }

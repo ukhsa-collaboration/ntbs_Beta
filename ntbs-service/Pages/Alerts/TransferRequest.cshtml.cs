@@ -119,7 +119,10 @@ namespace ntbs_service.Pages.Alerts
         private void SetDatesOnRequestForValidation(TransferViewModel transferRequest)
         {
             transferRequest.NotificationStartDate =
-                Notification.ClinicalDetails.StartingDate ?? Notification.NotificationDate;
+                NotificationHelper.EarliestOfThreeDates(
+                    Notification.ClinicalDetails.DiagnosisDate,
+                    Notification.ClinicalDetails.TreatmentStartDate,
+                    Notification.NotificationDate);
             transferRequest.LatestTransferDate = Notification.TreatmentEvents.OrderForEpisodes()
                 .LastOrDefault(te => te.TreatmentEventType == TreatmentEventType.TransferIn)?.EventDate;
         }

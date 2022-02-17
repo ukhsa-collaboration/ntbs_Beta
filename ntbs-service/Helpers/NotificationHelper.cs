@@ -1,4 +1,5 @@
-﻿using ntbs_service.Models.Entities;
+﻿using System;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Helpers
@@ -53,6 +54,16 @@ namespace ntbs_service.Helpers
             treatmentStartEvent.TreatmentEventType = clinicalDetails.TreatmentStartDate != null
                 ? TreatmentEventType.TreatmentStart
                 : TreatmentEventType.DiagnosisMade;
+        }
+        
+        public static DateTime? EarliestOfThreeDates(DateTime? date1, DateTime? date2, DateTime? date3)
+        {
+            return EarliestOfTwoDates(EarliestOfTwoDates(date1,date2),date3);
+        }
+
+        private static DateTime? EarliestOfTwoDates(DateTime? date1, DateTime? date2)
+        {
+            return date1 == null ? date2 : (date2 == null ? date1 : (date1 < date2) ? date1 : date2);
         }
     }
 }
