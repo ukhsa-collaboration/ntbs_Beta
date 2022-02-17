@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
@@ -32,7 +33,7 @@ namespace ntbs_ui_tests.Steps
         {
             WithErrorLogging(() =>
             {
-                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}");
+                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUriString}");
             });
         }
 
@@ -41,7 +42,7 @@ namespace ntbs_ui_tests.Steps
         {
             WithErrorLogging(() =>
             {
-                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}/{pageName}");
+                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUriString}/{pageName}");
             });
         }
 
@@ -50,7 +51,7 @@ namespace ntbs_ui_tests.Steps
         {
             WithErrorLogging(() =>
             {
-                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}");
+                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUriString}");
             });
         }
 
@@ -62,7 +63,7 @@ namespace ntbs_ui_tests.Steps
                 var notification = Utilities.GetNotificationForUser(notificationName, TestContext.LoggedInUser);
                 SaveNotificationInDatabase(notification);
 
-                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}/Notifications/{notification.NotificationId}");
+                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUriString}/Notifications/{notification.NotificationId}");
 
                 if (!Settings.IsHeadless)
                 {
@@ -80,17 +81,33 @@ namespace ntbs_ui_tests.Steps
         {
             WithErrorLogging(() =>
             {
-                var user = Settings.Users[userId];
-                user.UserId = GetUserIdFromUsername(user.Username);
-                const string nextButtonSelector = "input[type=submit][value=Next]";
-                Browser.WaitUntilElementIsClickable(By.CssSelector(nextButtonSelector), Settings.ImplicitWait);
-                Browser.FindElement(By.CssSelector("input[type=email]")).SendKeys(user.Username);
-                Browser.FindElement(By.CssSelector(nextButtonSelector)).Click();
-                const string signInButtonSelector = "input[type=submit][value='Sign in']";
-                Browser.WaitUntilElementIsClickable(By.CssSelector(signInButtonSelector), Settings.ImplicitWait);
-                Browser.FindElement(By.CssSelector("input[type=password]")).SendKeys(user.Password);
-                Browser.FindElement(By.CssSelector(signInButtonSelector)).Click();
-                TestContext.LoggedInUser = user;
+                if (Settings.UseCookieOverride)
+                {
+                    // First, go to NTBS so that cookies are added to the right domain
+                    Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUriString}/PostLogout");
+                    Browser.FindElement(By.Id("maincontent")); // Ensure page has loaded
+                    // Then, add the cookies provided in the config file
+                    var cookieContainer = new CookieContainer();
+                    cookieContainer.SetCookies(Settings.EnvironmentConfig.RootUri, Settings.AuthenticatedCookieHeader.Replace(';', ','));
+                    foreach (System.Net.Cookie cookie in cookieContainer.GetCookies(Settings.EnvironmentConfig.RootUri))
+                    {
+                        Browser.Manage().Cookies.AddCookie(new OpenQA.Selenium.Cookie(cookie.Name, cookie.Value));
+                    }
+                }
+                else
+                {
+                    var user = Settings.Users[userId];
+                    user.UserId = GetUserIdFromUsername(user.Username);
+                    const string nextButtonSelector = "input[type=submit][value=Next]";
+                    Browser.WaitUntilElementIsClickable(By.CssSelector(nextButtonSelector), Settings.ImplicitWait);
+                    Browser.FindElement(By.CssSelector("input[type=email]")).SendKeys(user.Username);
+                    Browser.FindElement(By.CssSelector(nextButtonSelector)).Click();
+                    const string signInButtonSelector = "input[type=submit][value='Sign in']";
+                    Browser.WaitUntilElementIsClickable(By.CssSelector(signInButtonSelector), Settings.ImplicitWait);
+                    Browser.FindElement(By.CssSelector("input[type=password]")).SendKeys(user.Password);
+                    Browser.FindElement(By.CssSelector(signInButtonSelector)).Click();
+                    TestContext.LoggedInUser = user;
+                }
             });
         }
 
@@ -99,7 +116,7 @@ namespace ntbs_ui_tests.Steps
         {
             WithErrorLogging(() =>
             {
-                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}");
+                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUriString}");
                 HtmlElementHelper.FindElementById(Browser, "otherTile").Click();
             });
         }

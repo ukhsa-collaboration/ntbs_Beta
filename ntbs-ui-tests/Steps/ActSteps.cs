@@ -33,7 +33,7 @@ namespace ntbs_ui_tests.Steps
         {
             WithErrorLogging(() =>
             {
-                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}/Notifications/{TestContext.AddedNotificationIds.Single()}");
+                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUriString}/Notifications/{TestContext.AddedNotificationIds.Single()}");
                 // Verify that the page has loaded
                 Assert.NotNull(Browser.FindElement(By.ClassName("notification-banner-title-text")));
             });
@@ -54,7 +54,7 @@ namespace ntbs_ui_tests.Steps
         {
             WithErrorLogging(() =>
             {
-                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUri}/Logout");
+                Browser.Navigate().GoToUrl($"{Settings.EnvironmentConfig.RootUriString}/Logout");
             });
         }
 

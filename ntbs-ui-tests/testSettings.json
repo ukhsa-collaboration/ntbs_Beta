@@ -4,32 +4,40 @@
       "Username": "birmingham-uitester@aptemus.com",
       "TbServiceCode": "TBS0019"
     },
-    "LeedsServiceUser":  {
+    "LeedsServiceUser": {
       "Username": "leeds-uitester@aptemus.com",
       "TbServiceCode": "TBS0003"
     },
-    "ReadOnlyUser":  {
+    "ReadOnlyUser": {
       "Username": "readonly-uitester@aptemus.com",
       "TbServiceCode": "TBS0003"
     }
   },
   "Environments": {
     "local": {
-      "RootUri": "https://localhost:5001",
+      "RootUriString": "https://localhost:5001",
       "ConnectionString": "data source=localhost;initial catalog=ntbsDev;trusted_connection=true;MultipleActiveResultSets=true;TrustServerCertificate=true",
       "MigrationConnectionString": "data source=localhost;initial catalog=ntbs_migration;trusted_connection=true;MultipleActiveResultSets=true;TrustServerCertificate=true",
       "SpecimenConnectionString": "data source=localhost;initial catalog=specimen-matching;trusted_connection=true;MultipleActiveResultSets=true;TrustServerCertificate=true",
       "ImportedNotificationNtbsEnvironment": "Dev"
     },
     "int": {
-      "RootUri": "https://ntbs-int.e32846b1ddf0432eb63f.northeurope.aksapp.io"
+      "RootUriString": "https://ntbs-int.e32846b1ddf0432eb63f.northeurope.aksapp.io"
     },
     "test": {
-      "RootUri": "https://ntbs-test.e32846b1ddf0432eb63f.northeurope.aksapp.io"
+      "RootUriString": "https://ntbs-test.e32846b1ddf0432eb63f.northeurope.aksapp.io"
     },
     "uat": {
-      "RootUri": "https://ntbs-uat.e32846b1ddf0432eb63f.northeurope.aksapp.io"
+      "RootUriString": "https://ntbs-uat.e32846b1ddf0432eb63f.northeurope.aksapp.io"
+    },
+    "phe-uat": {
+      "RootUriString": "https://ntbs-uat-hidden.apps.ocp-por.unix.phe.gov.uk",
+      "ConnectionString": "Server=SQLClusPorDC17.phe.gov.uk\\DC17;Database=NTBS_UAT;Integrated Security=true;TrustServerCertificate=true",
+      "MigrationConnectionString": "Server=SQLClusPorDC17.phe.gov.uk\\DC17;Database=NTBS_Migration_UAT;Integrated Security=true;TrustServerCertificate=true",
+      "SpecimenConnectionString": "Server=SQLClusPorDC17.phe.gov.uk\\DC17;Database=NTBS_Specimen_Matching_UAT;Integrated Security=true;TrustServerCertificate=true",
+      "ImportedNotificationNtbsEnvironment": "UatPheMigration"
     }
   },
-  "EnvironmentUnderTest": "local"
+  "EnvironmentUnderTest": "local",
+  "AuthenticatedCookieHeader": ""
 }
