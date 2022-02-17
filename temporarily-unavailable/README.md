@@ -12,10 +12,8 @@ the image.
 Before running the above script you must authenticate to the github container registry (information taken from https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
 * Navigate to https://github.com/settings/tokens/new?scopes=write:packages to generate a new personal access token with write:packages enabled.
 * In powershell navigate to the ntbs_Beta folder.
-* Run `$env:CR_PAT='YOUR_TOKEN'`
-* Run `echo $env:CR_PAT | docker login ghcr.io -u USERNAME --password-stdin`
+* Run `$env:GITHUB_TOKEN='YOUR_TOKEN'`
 * Run `scripts\publishTemporarilyUnavailablePageImage.ps1`
-
 
 ## Deploying
 The kubernetes definition files for the PHE environment include a set of resources to deploy the app. See comments in
