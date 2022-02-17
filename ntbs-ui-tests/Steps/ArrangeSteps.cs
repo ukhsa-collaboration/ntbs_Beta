@@ -9,6 +9,7 @@ using ntbs_ui_tests.Helpers;
 using ntbs_ui_tests.Hooks;
 using OpenQA.Selenium;
 using TechTalk.SpecFlow;
+using TechTalk.SpecFlow.UnitTestProvider;
 
 namespace ntbs_ui_tests.Steps
 {
@@ -18,12 +19,23 @@ namespace ntbs_ui_tests.Steps
         private readonly IWebDriver Browser;
         private readonly TestConfig Settings;
         private readonly TestContext TestContext;
+        private readonly IUnitTestRuntimeProvider RuntimeProvider;
 
-        public ArrangeSteps(IWebDriver driver, TestConfig settings, TestContext testContext)
+        public ArrangeSteps(IWebDriver driver, TestConfig settings, TestContext testContext, IUnitTestRuntimeProvider unitTestRuntimeProvider)
         {
             Browser = driver;
             Settings = settings;
             TestContext = testContext;
+            RuntimeProvider = unitTestRuntimeProvider;
+        }
+
+        [Given(@"Test is skipped when using cookie override for authentication")]
+        public void GivenTestIsSkippedWhenFlagIsSet()
+        {
+            if (Settings.UseCookieOverride)
+            {
+                RuntimeProvider.TestIgnore("Test skipped because it cannot be performed using cookie override for authentication.");
+            }
         }
 
         #region Navigation
