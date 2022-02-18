@@ -105,6 +105,9 @@ namespace ntbs_ui_tests.Steps
                     {
                         Browser.Manage().Cookies.AddCookie(new OpenQA.Selenium.Cookie(cookie.Name, cookie.Value));
                     }
+                    var user = Settings.Users["ManuallyLoggedInUser"];
+                    user.UserId = GetUserIdFromUsername(user.Username);
+                    TestContext.LoggedInUser = user;
                 }
                 else
                 {

@@ -11,6 +11,10 @@
     "ReadOnlyUser": {
       "Username": "readonly-uitester@aptemus.com",
       "TbServiceCode": "TBS0003"
+    },
+    "ManuallyLoggedInUser": {
+      "Username": "",
+      "TbServiceCode": "TBS0019"
     }
   },
   "Environments": {
