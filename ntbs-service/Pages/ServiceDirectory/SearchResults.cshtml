@@ -1,6 +1,5 @@
 ﻿@page "/ServiceDirectory/SearchResults/{handler?}"
 @using ntbs_service.Helpers
-@using ntbs_service.Models.Entities
 @model ntbs_service.Pages.ServiceDirectory.SearchResults
 
 @{
@@ -33,10 +32,30 @@
                 @foreach (var region in Model.RegionSearchResults)
                 {
                     <li>
-                        <div class="directory-search-result-container region-search-result" id="">
+                        <div class="directory-search-result-container non-user-search-result" id="">
                             <b>Region:</b>
                             <a class="link-without-visited-state" href=@($"/ServiceDirectory/Region/{region.Code}")>
                                 @region.Name
+                            </a>
+                        </div>
+                    </li>
+                }
+            }
+            
+            @if (Model.TbServiceSearchResults is not null)
+            {
+                @foreach (var tbService in Model.TbServiceSearchResults)
+                {
+                    <li>
+                        <div class="directory-search-result-container non-user-search-result" id="">
+                            <b>Service:</b>
+                            <a class="link-without-visited-state" href=@($"/ServiceDirectory/Region/{tbService.PHEC.Code}")>
+                                @tbService.PHEC?.Name
+                            </a>
+                            <span> > </span>
+                            <a class="link-without-visited-state"
+                               href=@($"/ServiceDirectory/Region/{tbService.PHECCode}#accordion-heading-{tbService.Code}")>
+                                @tbService.Name
                             </a>
                         </div>
                     </li>
@@ -50,7 +69,6 @@
                     <li>
                         <!-- Each search hit is displayed using a notification banner -->
                         <div class="directory-search-result-container" id="user-search-result-item">
-                            <b>User:</b>
                             <a class="case-manager-search-result-name" href="@RouteHelper.GetContactDetailsPath(user.Id)">
                                 @user.DisplayName
                             </a>

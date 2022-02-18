@@ -231,6 +231,7 @@ namespace ntbs_service
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
             services.AddScoped<IUserSearchService, UserSearchService>();
             services.AddScoped<IRegionSearchService, RegionSearchService>();
+            services.AddScoped<ITBServiceSearchService, TbServiceSearchService>();
             services.AddScoped<IServiceDirectoryService, ServiceDirectoryService>();
             services.AddScoped<IClusterImportService, ClusterImportService>();
             services.AddScoped<ISpecimenImportService, SpecimenImportService>();

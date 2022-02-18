@@ -52,14 +52,5 @@ namespace ntbs_service.Services
 
             return filteredCaseManagersAndRegionalUsers;
         }
-
-        // private IList<T> GetPaginatedItems<T>(IEnumerable<T> items,
-        //     PaginationParametersBase paginationParameters)
-        // {
-        //     return items
-        //         .Skip(paginationParameters.Offset ?? 0)
-        //         .Take(paginationParameters.PageSize)
-        //         .ToList();
-        // }
     }
 }

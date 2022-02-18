@@ -20,20 +20,28 @@ namespace ntbs_service.Pages.ServiceDirectory
         private readonly IUserSearchService _userSearchService;
         private readonly IRegionSearchService _regionSearchService;
         private readonly IServiceDirectoryService _serviceDirectoryService;
+        private readonly ITBServiceSearchService _tbServiceSearchService;
         private IReferenceDataRepository _referenceDataRepository;
         private PaginationParametersBase _paginationParameters;
         public PaginatedList<ServiceDirectoryItemWrapper> DirectorySearchResults;
         public IList<User> UserSearchResults;
         public IList<PHEC> RegionSearchResults;
+        public IList<TBService> TbServiceSearchResults;
         public IList<PHEC> AllPhecs;
         public string NextPageUrl;
         public string PreviousPageUrl;
 
-        public SearchResults(IUserSearchService userSearchService, IReferenceDataRepository referenceDataRepository, IRegionSearchService regionSearchService, IServiceDirectoryService serviceDirectoryService)
+        public SearchResults(
+            IUserSearchService userSearchService, 
+            IReferenceDataRepository referenceDataRepository, 
+            IRegionSearchService regionSearchService, 
+            ITBServiceSearchService tbServiceSearchService, 
+            IServiceDirectoryService serviceDirectoryService)
         {
             _userSearchService = userSearchService;
             _referenceDataRepository = referenceDataRepository;
             _regionSearchService = regionSearchService;
+            _tbServiceSearchService = tbServiceSearchService;
             _serviceDirectoryService = serviceDirectoryService;
         }
 
@@ -53,13 +61,21 @@ namespace ntbs_service.Pages.ServiceDirectory
 
             var usersToDisplay = await _userSearchService.OrderQueryableAsync(SearchKeyword);
             var regionsToDisplay = await _regionSearchService.OrderQueryableAsync(SearchKeyword);
+            var tbServicesToDisplay = await _tbServiceSearchService.OrderQueryableAsync(SearchKeyword);
 
-            var (paginatedResults, count) = _serviceDirectoryService.GetPaginatedItems(regionsToDisplay, usersToDisplay, _paginationParameters);
+            var (paginatedResults, count) = 
+                _serviceDirectoryService.GetPaginatedItems(
+                    regionsToDisplay,
+                    usersToDisplay,
+                    tbServicesToDisplay,
+                    _paginationParameters);
+            
             DirectorySearchResults = new PaginatedList<ServiceDirectoryItemWrapper>(paginatedResults, count, _paginationParameters);
 
-            UserSearchResults = DirectorySearchResults.Where(r => r.IsUser()).Select(r => r.user).ToList();
-            RegionSearchResults = DirectorySearchResults.Where(r => r.IsRegion()).Select(r => r.region).ToList();
-            
+            UserSearchResults = DirectorySearchResults.Where(r => r.IsUser()).Select(r => r.User).ToList();
+            RegionSearchResults = DirectorySearchResults.Where(r => r.IsRegion()).Select(r => r.Region).ToList();
+            TbServiceSearchResults = DirectorySearchResults.Where(r => r.IsTBService()).Select(r => r.TBService).ToList();
+
             AllPhecs = await _referenceDataRepository.GetAllPhecs();
 
             if (DirectorySearchResults.HasNextPage)

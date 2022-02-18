@@ -8,47 +8,58 @@ namespace ntbs_service.Services
 {
     public class ServiceDirectoryItemWrapper
     {
-        public User user { get; set; }
-        public PHEC region { get; set; }
+        public User User { get; }
+        public PHEC Region { get; }
+        public TBService TBService { get; }
 
-        public ServiceDirectoryItemWrapper(User user, PHEC region)
+        public ServiceDirectoryItemWrapper(User user = null, PHEC region = null, TBService tbService = null)
         {
-            this.user = user;
-            this.region = region;
+            this.User = user;
+            this.Region = region;
+            this.TBService = tbService;
         }
 
         public bool IsUser()
         {
-            return this.user != null;
+            return this.User is not null;
         }
 
         public bool IsRegion()
         {
-            return this.region != null;
+            return this.Region is not null;
+        }
+
+        public bool IsTBService()
+        {
+            return this.TBService is not null;
         }
     }
 
     public interface IServiceDirectoryService
     {
         (IList<ServiceDirectoryItemWrapper>, int) GetPaginatedItems(
-            IList<PHEC> regions, IList<User> users, PaginationParametersBase paginationParameters
+            IList<PHEC> regions, IList<User> users, IList<TBService> tbservices, PaginationParametersBase paginationParameters
             );
     }
 
     public class ServiceDirectoryService : IServiceDirectoryService
     {
-        public (IList<ServiceDirectoryItemWrapper>, int) GetPaginatedItems(IList<PHEC> regions, IList<User> users, PaginationParametersBase paginationParameters)
+        public (IList<ServiceDirectoryItemWrapper>, int) GetPaginatedItems(
+            IList<PHEC> regions, IList<User> users, IList<TBService> tbservices, PaginationParametersBase paginationParameters
+            )
         {
-            var serviceDirectoryItems = regions.Select(r => new ServiceDirectoryItemWrapper(user: null, region: r))
-                .Concat(
-                    users.Select(u => new ServiceDirectoryItemWrapper(user: u, region: null))
-                )
-                .ToList();
+            var serviceDirectoryItems = new List<ServiceDirectoryItemWrapper>();
+            
+            serviceDirectoryItems.AddRange(regions.Select(r  => new ServiceDirectoryItemWrapper(region: r)));
+            serviceDirectoryItems.AddRange(tbservices.Select(t => new ServiceDirectoryItemWrapper(tbService: t)));
+            serviceDirectoryItems.AddRange(users.Select(u => new ServiceDirectoryItemWrapper(user: u)));
+
             
             var paginatedServiceDirectoryItems = serviceDirectoryItems
                 .Skip(paginationParameters.Offset ?? 0)
                 .Take(paginationParameters.PageSize)
                 .ToList();
+            
             return (paginatedServiceDirectoryItems, serviceDirectoryItems.Count);
         }
     }
