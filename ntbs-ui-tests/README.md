@@ -46,13 +46,25 @@ it with `Ctrl+C` when you are done.
 ### Environments
 
 The tests require that the web app is already running in an environment.
-Four environments are supported by default: `local`, `int`, `test` and `uat`.
+Five environments are supported by default: `local`, `int`, `test`, `uat` and `phe-uat`.
 You can switch between these environments using the `EnvironmentUnderTest` setting in [testSettings.json](testSettings.json).
 
-The `int`, `test` and `uat` are hosted in Azure, and should always be running.
+The `int`, `test` and `uat` environments are hosted in Azure, and should always be running. The `phe-uat` environment is hosted in the
+UKHSA OpenShift cluster, and likewise is always running, though it is only accessible from the dev server on the UKHSA VPN.
 
 If you wish to run with the `local` configuration against your local copy of the code, then you first need to run the site locally.
 Follow the instructions in the [ntbs-service README](../ntbs-service/README.md) to do this (in short: run `dotnet run` in the project root).
+
+To run the tests using the `phe-uat` environment, you must bypass the usual log in journey (this is because there is no way to log in using two
+factor authentication within the tests). To do this you will need to:
+
+- Log in to the site under test using the user account which you want to use in the tests. (You will probably want to use a user with National Team permissions).
+- Open your browser's dev tools, and load any page on the site.
+- In the network tab, find the request you just made, and copy the value of the "cookie" header on the request.
+- Update the following config values:
+  - The `EnvironmentUnderTest` to `phe-uat`.
+  - The `AuthenticatedCookieHeader`to the value you copied from the "cookie" header.
+  - The `Username` of the `ManuallyLoggedInUser`. This is the username of the user you used to log in above.
 
 ## Troubleshooting
 
