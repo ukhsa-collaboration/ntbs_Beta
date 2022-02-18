@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 
@@ -56,14 +57,9 @@ namespace ntbs_service.Helpers
                 : TreatmentEventType.DiagnosisMade;
         }
         
-        public static DateTime? EarliestOfThreeDates(DateTime? date1, DateTime? date2, DateTime? date3)
+        public static DateTime? Earliest(DateTime?[] dates)
         {
-            return EarliestOfTwoDates(EarliestOfTwoDates(date1,date2),date3);
-        }
-
-        private static DateTime? EarliestOfTwoDates(DateTime? date1, DateTime? date2)
-        {
-            return date1 == null ? date2 : (date2 == null ? date1 : (date1 < date2) ? date1 : date2);
+            return dates.Where(d => d.HasValue).OrderBy(d => d).FirstOrDefault();
         }
     }
 }
