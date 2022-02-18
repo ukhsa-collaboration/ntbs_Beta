@@ -38,6 +38,7 @@
             var tbService = tbServiceWithCaseManagers.Key;
             var caseManagers = tbServiceWithCaseManagers.Value;
             var caseManagerTableModel = new _UserTablePartialModel {Users = caseManagers, TableId = $"case-managers-{tbService.Code}"};
+            var hospitals = Model.TbServicesWithHospitals[tbService].Select(h => h.Name).ToList();
             <div class="govuk-accordion__section">
                 <div class="govuk-accordion__section-header">
                     <h3 class="govuk-accordion__section-heading">
@@ -46,8 +47,12 @@
                         </span>
                     </h3>
                 </div>
-                <div id="accordion-content-@tbService.Code" class="govuk-accordion__section-content" 
-                    aria-labelledby="accordion-heading-@tbService.Code">
+                <div id="accordion-content-@tbService.Code" class="govuk-accordion__section-content"
+                     aria-labelledby="accordion-heading-@tbService.Code">
+                    @if (hospitals.Any())
+                    {
+                        <p>Hospitals: @string.Join(", ", hospitals)</p>
+                    }
                     @if (caseManagers.Any())
                     {
                         <partial name="Partials/_UserTablePartial" model="caseManagerTableModel"/>

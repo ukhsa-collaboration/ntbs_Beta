@@ -24,6 +24,7 @@ namespace ntbs_service.Pages.ServiceDirectory
         public string PhecCode { get; set; }
 
         public Dictionary<TBService, List<User>> TbServicesWithCaseManagers;
+        public Dictionary<TBService, List<Hospital>> TbServicesWithHospitals;
         public PHEC Phec;
         public IList<User> RegionalCaseManagers;
 
@@ -39,6 +40,14 @@ namespace ntbs_service.Pages.ServiceDirectory
                         .OrderBy(cm => cm.DisplayName)
                         .ToList()
                     );
+
+            var tbServices = (await _referenceDataRepository.GetTbServicesFromPhecCodeAsync(PhecCode)).Select(t => t.Code);
+            TbServicesWithHospitals = (await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(tbServices))
+                .Where(h => h.IsLegacy != true)
+                .GroupBy(h => h.TBService)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.ToList());
 
             Phec = await _referenceDataRepository.GetPhecByCode(PhecCode);
 
