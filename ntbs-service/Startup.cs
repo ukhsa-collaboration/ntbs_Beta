@@ -361,6 +361,7 @@ namespace ntbs_service
                     options.CorrelationCookie.SameSite = SameSiteMode.None;
                     options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.NonceCookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.Prompt = "select_account";
 
                     options.Events = new OpenIdConnectEvents();
                     options.Events.OnTokenValidated += async context =>
