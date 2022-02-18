@@ -78,10 +78,10 @@ namespace ntbs_service.Pages.ServiceDirectory
             
             DirectorySearchResults = new PaginatedList<ServiceDirectoryItemWrapper>(paginatedResults, count, _paginationParameters);
 
-            UserSearchResults = DirectorySearchResults.Where(r => r.IsUser()).Select(r => r.User).ToList();
-            RegionSearchResults = DirectorySearchResults.Where(r => r.IsRegion()).Select(r => r.Region).ToList();
-            TbServiceSearchResults = DirectorySearchResults.Where(r => r.IsTBService()).Select(r => r.TBService).ToList();
-            HospitalSearchResults = DirectorySearchResults.Where(r => r.IsHospital()).Select(r => r.Hospital).ToList();
+            UserSearchResults = paginatedResults.Where(r => r.IsUser()).Select(r => r.User).ToList();
+            RegionSearchResults = paginatedResults.Where(r => r.IsRegion()).Select(r => r.Region).ToList();
+            TbServiceSearchResults = paginatedResults.Where(r => r.IsTBService()).Select(r => r.TBService).ToList();
+            HospitalSearchResults = paginatedResults.Where(r => r.IsHospital()).Select(r => r.Hospital).ToList();
 
             AllPhecs = await _referenceDataRepository.GetAllPhecs();
 
@@ -92,7 +92,7 @@ namespace ntbs_service.Pages.ServiceDirectory
                     {
                         {"SearchKeyword", SearchKeyword},
                         {"pageIndex", (_paginationParameters.PageIndex + 1).ToString()},
-                        {"offset", (_paginationParameters.Offset + usersToDisplay.Count).ToString()}
+                        {"offset", (_paginationParameters.Offset + paginatedResults.Count).ToString()}
                     });
             }
 
