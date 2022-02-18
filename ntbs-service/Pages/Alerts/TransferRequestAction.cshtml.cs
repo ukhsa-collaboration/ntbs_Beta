@@ -118,7 +118,7 @@ namespace ntbs_service.Pages.Alerts
         {
             var transferDate = TransferRequest.LatestTransferDate?.Date == TransferRequest.TransferDate.Value.Date
                 ? TransferRequest.LatestTransferDate.Value.AddMinutes(1)
-                : TransferRequest.TransferDate;
+                : TransferRequest.TransferDate.Value;
             var transferOutEvent = new TreatmentEvent
             {
                 NotificationId = NotificationId,
@@ -131,7 +131,7 @@ namespace ntbs_service.Pages.Alerts
             var transferInEvent = new TreatmentEvent
             {
                 NotificationId = NotificationId,
-                EventDate = transferDate.Value.AddSeconds(1),
+                EventDate = transferDate.AddSeconds(1),
                 TreatmentEventType = TreatmentEventType.TransferIn,
                 CaseManagerId = TransferRequest.TransferAlert.CaseManagerId,
                 TbServiceCode = TransferRequest.TransferAlert.TbServiceCode,
@@ -140,7 +140,7 @@ namespace ntbs_service.Pages.Alerts
 
             var previousTbService = new PreviousTbService()
             {
-                TransferDate = transferDate.Value,
+                TransferDate = transferDate,
                 TbServiceCode = Notification.HospitalDetails.TBServiceCode,
                 PhecCode = Notification.HospitalDetails?.TBService?.PHECCode
             };

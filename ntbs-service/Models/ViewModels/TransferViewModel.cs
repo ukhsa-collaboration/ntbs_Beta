@@ -19,6 +19,6 @@ public class TransferViewModel
     public DateTime? NotificationStartDate { get; set; }
     public DateTime? LatestTransferDate { get; set; }
 
-    public bool TransferDateAfterNotificationStart => TransferDate >= NotificationStartDate;
-    public bool TransferDateAfterLatestTransfer => LatestTransferDate is null || TransferDate >= LatestTransferDate;
+    public bool TransferDateAfterNotificationStart => TransferDate?.Date >= NotificationStartDate?.Date;
+    public bool TransferDateAfterLatestTransfer => LatestTransferDate is null || TransferDate?.Date >= LatestTransferDate.Value.Date;
 }

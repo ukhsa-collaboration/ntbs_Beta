@@ -57,7 +57,7 @@ namespace ntbs_service.Helpers
                 : TreatmentEventType.DiagnosisMade;
         }
         
-        public static DateTime? Earliest(DateTime?[] dates)
+        public static DateTime? Earliest(params DateTime?[] dates)
         {
             return dates.Where(d => d.HasValue).OrderBy(d => d).FirstOrDefault();
         }
