@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -17,17 +18,23 @@ namespace ntbs_service.Pages.ServiceDirectory
     public class SearchResults : ServiceDirectorySearchBase
     {
         private readonly IUserSearchService _userSearchService;
+        private readonly IRegionSearchService _regionSearchService;
+        private readonly IServiceDirectoryService _serviceDirectoryService;
         private IReferenceDataRepository _referenceDataRepository;
         private PaginationParametersBase _paginationParameters;
-        public PaginatedList<User> UserSearchResults;
+        public PaginatedList<ServiceDirectoryItemWrapper> DirectorySearchResults;
+        public IList<User> UserSearchResults;
+        public IList<PHEC> RegionSearchResults;
         public IList<PHEC> AllPhecs;
         public string NextPageUrl;
         public string PreviousPageUrl;
 
-        public SearchResults(IUserSearchService userSearchService, IReferenceDataRepository referenceDataRepository)
+        public SearchResults(IUserSearchService userSearchService, IReferenceDataRepository referenceDataRepository, IRegionSearchService regionSearchService, IServiceDirectoryService serviceDirectoryService)
         {
             _userSearchService = userSearchService;
             _referenceDataRepository = referenceDataRepository;
+            _regionSearchService = regionSearchService;
+            _serviceDirectoryService = serviceDirectoryService;
         }
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex = null, int? offset = null)
@@ -44,14 +51,18 @@ namespace ntbs_service.Pages.ServiceDirectory
                 Offset = offset ?? 0
             };
 
-            var (usersToDisplay, count) =
-                await _userSearchService.OrderAndPaginateQueryableAsync(SearchKeyword, _paginationParameters);
+            var usersToDisplay = await _userSearchService.OrderQueryableAsync(SearchKeyword);
+            var regionsToDisplay = await _regionSearchService.OrderQueryableAsync(SearchKeyword);
 
-            UserSearchResults = new PaginatedList<User>(usersToDisplay, count, _paginationParameters);
+            var (paginatedResults, count) = _serviceDirectoryService.GetPaginatedItems(regionsToDisplay, usersToDisplay, _paginationParameters);
+            DirectorySearchResults = new PaginatedList<ServiceDirectoryItemWrapper>(paginatedResults, count, _paginationParameters);
 
+            UserSearchResults = DirectorySearchResults.Where(r => r.IsUser()).Select(r => r.user).ToList();
+            RegionSearchResults = DirectorySearchResults.Where(r => r.IsRegion()).Select(r => r.region).ToList();
+            
             AllPhecs = await _referenceDataRepository.GetAllPhecs();
 
-            if (UserSearchResults.HasNextPage)
+            if (DirectorySearchResults.HasNextPage)
             {
                 NextPageUrl = QueryHelpers.AddQueryString("/ServiceDirectory/SearchResults",
                     new Dictionary<string, string>
@@ -62,7 +73,7 @@ namespace ntbs_service.Pages.ServiceDirectory
                     });
             }
 
-            if (UserSearchResults.HasPreviousPage)
+            if (DirectorySearchResults.HasPreviousPage)
             {
                 PreviousPageUrl = QueryHelpers.AddQueryString("/ServiceDirectory/SearchResults",
                     new Dictionary<string, string>

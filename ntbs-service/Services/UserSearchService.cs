@@ -3,16 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
 using ntbs_service.DataAccess;
-using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
 {
     public interface IUserSearchService
     {
-        Task<(IList<User> users, int count)> OrderAndPaginateQueryableAsync(
-            string searchKeyword,
-            PaginationParametersBase paginationParameters);
+        Task<IList<User>> OrderQueryableAsync(string searchKeyword);
     }
 
     public class UserSearchService : IUserSearchService
@@ -26,9 +23,8 @@ namespace ntbs_service.Services
             _userRepository = userRepository;
         }
 
-        public async Task<(IList<User> users, int count)> OrderAndPaginateQueryableAsync(
-            string searchKeyword,
-            PaginationParametersBase paginationParameters)
+        public async Task<IList<User>> OrderQueryableAsync(
+            string searchKeyword)
         {
             var searchKeywords = searchKeyword.Split(" ")
                 .Where(x => !x.IsNullOrEmpty())
@@ -54,16 +50,16 @@ namespace ntbs_service.Services
                     || filteredPhecs.Any(phec => c.AdGroups != null && c.AdGroups.Split(",").Contains(phec.AdGroup)))
                 .ToList();
 
-            return (GetPaginatedItems(filteredCaseManagersAndRegionalUsers, paginationParameters), filteredCaseManagersAndRegionalUsers.Count);
+            return filteredCaseManagersAndRegionalUsers;
         }
 
-        private IList<T> GetPaginatedItems<T>(IEnumerable<T> items,
-            PaginationParametersBase paginationParameters)
-        {
-            return items
-                .Skip(paginationParameters.Offset ?? 0)
-                .Take(paginationParameters.PageSize)
-                .ToList();
-        }
+        // private IList<T> GetPaginatedItems<T>(IEnumerable<T> items,
+        //     PaginationParametersBase paginationParameters)
+        // {
+        //     return items
+        //         .Skip(paginationParameters.Offset ?? 0)
+        //         .Take(paginationParameters.PageSize)
+        //         .ToList();
+        // }
     }
 }
