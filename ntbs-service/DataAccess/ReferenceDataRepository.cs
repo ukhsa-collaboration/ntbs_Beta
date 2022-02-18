@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using MoreLinq;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -53,6 +54,7 @@ namespace ntbs_service.DataAccess
         Task<string> GetLocationPhecCodeForPostcodeAsync(string postcode);
         Task<IList<User>> GetActiveUsersByPhecAdGroup(string phecAdGroup);
         Task<IList<PHEC>> GetPhecsByAdGroups(string adGroups);
+        Task<IList<Hospital>> GetAllHospitals();
     }
 
     public class ReferenceDataRepository : IReferenceDataRepository
@@ -339,6 +341,11 @@ namespace ntbs_service.DataAccess
             }
             var adGroups = adGroupsString.Split(",");
             return await _context.PHEC.Where(phec => adGroups.Contains(phec.AdGroup)).ToListAsync();
+        }
+
+        public async Task<IList<Hospital>> GetAllHospitals()
+        {
+            return await _context.Hospital.OrderBy(h => h.Name).ToListAsync();
         }
 
         private IQueryable<TBService> GetActiveTbServicesQueryable()

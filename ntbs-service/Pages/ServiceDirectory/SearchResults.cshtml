@@ -61,6 +61,28 @@
                     </li>
                 }
             }
+            
+            @if (Model.HospitalSearchResults is not null)
+            {
+                @foreach (var hospital in Model.HospitalSearchResults)
+                {
+                    <li>
+                        <div class="directory-search-result-container non-user-search-result" id="">
+                            <b>Hospital:</b>
+                            <a class="link-without-visited-state" href=@($"/ServiceDirectory/Region/{hospital.TBService.PHEC.Code}")>
+                                @hospital.TBService?.PHEC?.Name
+                            </a>
+                            <span> > </span>
+                            <a class="link-without-visited-state"
+                               href=@($"/ServiceDirectory/Region/{hospital.TBService.PHECCode}#accordion-heading-{hospital.TBService.Code}")>
+                                @hospital.TBService?.Name
+                            </a>
+                            <span> > </span>
+                            @hospital.TBService?.Name
+                        </div>
+                    </li>
+                }
+            }
 
             @if (Model.UserSearchResults is not null)
             {

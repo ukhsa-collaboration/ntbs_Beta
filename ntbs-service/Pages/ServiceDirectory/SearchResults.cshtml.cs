@@ -21,12 +21,14 @@ namespace ntbs_service.Pages.ServiceDirectory
         private readonly IRegionSearchService _regionSearchService;
         private readonly IServiceDirectoryService _serviceDirectoryService;
         private readonly ITBServiceSearchService _tbServiceSearchService;
+        private readonly IHospitalSearchService _hospitalSearchService;
         private IReferenceDataRepository _referenceDataRepository;
         private PaginationParametersBase _paginationParameters;
         public PaginatedList<ServiceDirectoryItemWrapper> DirectorySearchResults;
         public IList<User> UserSearchResults;
         public IList<PHEC> RegionSearchResults;
         public IList<TBService> TbServiceSearchResults;
+        public IList<Hospital> HospitalSearchResults;
         public IList<PHEC> AllPhecs;
         public string NextPageUrl;
         public string PreviousPageUrl;
@@ -36,13 +38,15 @@ namespace ntbs_service.Pages.ServiceDirectory
             IReferenceDataRepository referenceDataRepository, 
             IRegionSearchService regionSearchService, 
             ITBServiceSearchService tbServiceSearchService, 
-            IServiceDirectoryService serviceDirectoryService)
+            IServiceDirectoryService serviceDirectoryService, 
+            IHospitalSearchService hospitalSearchService)
         {
             _userSearchService = userSearchService;
             _referenceDataRepository = referenceDataRepository;
             _regionSearchService = regionSearchService;
             _tbServiceSearchService = tbServiceSearchService;
             _serviceDirectoryService = serviceDirectoryService;
+            _hospitalSearchService = hospitalSearchService;
         }
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex = null, int? offset = null)
@@ -62,12 +66,14 @@ namespace ntbs_service.Pages.ServiceDirectory
             var usersToDisplay = await _userSearchService.OrderQueryableAsync(SearchKeyword);
             var regionsToDisplay = await _regionSearchService.OrderQueryableAsync(SearchKeyword);
             var tbServicesToDisplay = await _tbServiceSearchService.OrderQueryableAsync(SearchKeyword);
+            var hospitalsToDisplay = await _hospitalSearchService.OrderQueryableAsync(SearchKeyword);
 
             var (paginatedResults, count) = 
                 _serviceDirectoryService.GetPaginatedItems(
                     regionsToDisplay,
                     usersToDisplay,
                     tbServicesToDisplay,
+                    hospitalsToDisplay,
                     _paginationParameters);
             
             DirectorySearchResults = new PaginatedList<ServiceDirectoryItemWrapper>(paginatedResults, count, _paginationParameters);
@@ -75,6 +81,7 @@ namespace ntbs_service.Pages.ServiceDirectory
             UserSearchResults = DirectorySearchResults.Where(r => r.IsUser()).Select(r => r.User).ToList();
             RegionSearchResults = DirectorySearchResults.Where(r => r.IsRegion()).Select(r => r.Region).ToList();
             TbServiceSearchResults = DirectorySearchResults.Where(r => r.IsTBService()).Select(r => r.TBService).ToList();
+            HospitalSearchResults = DirectorySearchResults.Where(r => r.IsHospital()).Select(r => r.Hospital).ToList();
 
             AllPhecs = await _referenceDataRepository.GetAllPhecs();
 

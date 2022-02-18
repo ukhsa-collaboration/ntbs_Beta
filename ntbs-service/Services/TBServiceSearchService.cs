@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
+using MoreLinq;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.ReferenceEntities;
 
@@ -31,6 +32,7 @@ namespace ntbs_service.Services
             
             var filteredTBServices = allTBServices
                 .Where(tbs => searchKeywords.All(s => tbs.Name.ToLower().Contains(s)))
+                .OrderBy(tbs => tbs.Name)
                 .ToList();
 
             return filteredTBServices;
