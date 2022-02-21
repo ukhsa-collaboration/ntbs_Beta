@@ -118,6 +118,10 @@ spec:
             # The other nightly cron jobs then need to be set to match.
             - name: ScheduledJobsConfig__ReportingDataRefreshJobCron
               value: "00 22 * * *"
+            # We are disabling this job so that users can make changes to data that will be in the annual report
+            # See https://ntbs-uk.atlassian.net/browse/NTBS-3054
+            - name: CloseInactiveNotificationsEnabled
+              value: "false"
             - name: ScheduledJobsConfig__CloseInactiveNotificationsCron
               value: "30 22 * * *"
             - name: ScheduledJobsConfig__DrugResistanceProfileUpdateCron
