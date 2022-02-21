@@ -552,6 +552,7 @@ namespace ntbs_service.DataMigration
             {
                 SymptomStartDate = notification.SymptomOnsetDate,
                 FirstPresentationDate = notification.FirstPresentationDate,
+                TBServiceReferralDate = notification.TBServiceReferralDate,
                 TBServicePresentationDate = notification.TbServicePresentationDate,
                 DiagnosisDate = notification.DiagnosisDate ?? notification.StartOfTreatmentDate ?? notification.NotificationDate,
                 StartedTreatment = !Converter.GetNullableBoolValue(notification.DidNotStartTreatment),

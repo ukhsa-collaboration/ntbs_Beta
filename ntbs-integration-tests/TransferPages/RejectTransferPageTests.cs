@@ -4,7 +4,7 @@ using ntbs_service;
 using ntbs_service.Helpers;
 using Xunit;
 
-namespace ntbs_integration_tests.TransferPage
+namespace ntbs_integration_tests.TransferPages
 {
     public class RejectTransferPageTests : TestRunnerNotificationBase
     {

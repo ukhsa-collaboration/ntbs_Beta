@@ -690,6 +690,22 @@ namespace ntbs_service_unit_tests.DataMigration
             // Assert
             Assert.Equal(NotificationStatus.Notified, notification.NotificationStatus);
         }
+        
+        [Fact]
+        public async Task correctlyMaps_tbServiceReferralReceievedDate_whenNotNull()
+        {
+            // Arrange
+            const string legacyId = "102-1";
+            SetupNotificationsInGroups((legacyId, "12"));
+            
+            // Act
+            var notification = await GetSingleNotification(legacyId);
+
+            //Assert
+            Assert.Equal(new DateTime(2014, 10, 23, 00, 00, 00), notification.ClinicalDetails.TBServiceReferralDate);
+            Assert.Contains("Date referral received is a proxy date obtained from LTBR Date referred to TB service",
+                notification.ClinicalDetails.Notes);
+        }
 
         // Data for this has been taken from an edited test notification, relating to NTBS-2966
         [Fact]
