@@ -122,6 +122,10 @@ spec:
             # fallback to appSettings.
             - name: ScheduledJobsConfig__ReportingDataRefreshJobCron
               value: "30 07 * * *"
+            # We are disabling this job so that users can make changes to data that will be in the annual report
+            # See https://ntbs-uk.atlassian.net/browse/NTBS-3054
+            - name: CloseInactiveNotificationsEnabled
+              value: "false"
             - name: ScheduledJobsConfig__CloseInactiveNotificationsCron
               value: "00 08 * * *"
             - name: ScheduledJobsConfig__DrugResistanceProfileUpdateCron
