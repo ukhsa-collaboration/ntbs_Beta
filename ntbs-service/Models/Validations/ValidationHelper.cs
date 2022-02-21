@@ -145,7 +145,7 @@
         #region TransferAlert
         public const string TransferDestinationCannotBeCurrentTbService =
             "Notification cannot be transferred to the notification's current TB service";
-        public const string DateShouldBeLaterThanNotificationStart = "{0} must be after the start of notification date";
+        public const string DateShouldBeLaterThanNotificationStart = "{0} must be after the start of notification";
         public const string DateShouldBeLaterThanLatestTransfer = "{0} must be after the date of the latest transfer";
         #endregion
 

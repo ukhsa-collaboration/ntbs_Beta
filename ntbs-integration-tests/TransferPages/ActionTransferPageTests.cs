@@ -11,7 +11,7 @@ using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
 using Xunit;
 
-namespace ntbs_integration_tests.TransferPage
+namespace ntbs_integration_tests.TransferPages
 {
     public class ActionTransferPageTests : TestRunnerNotificationBase
     {
