@@ -41,6 +41,7 @@ Feature: Notification editing
     And I can see the value '9866698' for the field 'local-patient-id' in the 'PatientDetails' overview section
 
   Scenario: Edit notification hospital details fields
+    Given Test is skipped when using cookie override for authentication
     When I go to edit the 'HospitalDetails' section
     Then I should be on the HospitalDetails page
     When I enter 2 into 'FormattedNotificationDate_Day'
@@ -317,6 +318,7 @@ Feature: Notification editing
     And I can see the value 'Angola' for the field 'treatment-country' in the 'PreviousHistory' overview section
 
   Scenario: Edit notification treatment event fields
+    Given Test is skipped when using cookie override for authentication
     When I go to edit the 'TreatmentEvents' section
     Then I should be on the TreatmentEvents page
     When I click on the Edit link

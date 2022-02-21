@@ -1,4 +1,6 @@
-﻿using ntbs_service.Models.Entities;
+﻿using System;
+using System.Linq;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Helpers
@@ -53,6 +55,11 @@ namespace ntbs_service.Helpers
             treatmentStartEvent.TreatmentEventType = clinicalDetails.TreatmentStartDate != null
                 ? TreatmentEventType.TreatmentStart
                 : TreatmentEventType.DiagnosisMade;
+        }
+        
+        public static DateTime? Earliest(params DateTime?[] dates)
+        {
+            return dates.Where(d => d.HasValue).OrderBy(d => d).FirstOrDefault();
         }
     }
 }
