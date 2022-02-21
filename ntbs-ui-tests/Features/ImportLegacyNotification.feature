@@ -1,6 +1,7 @@
 Feature: Import legacy notification
 
   Scenario: Import legacy notification
+    Given Test is skipped when using cookie override for authentication
     Given I navigate to the app
     And I have logged in as BirminghamServiceUser
     And I am on the Search page
