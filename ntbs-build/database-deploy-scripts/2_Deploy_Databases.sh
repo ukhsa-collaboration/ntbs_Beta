@@ -65,8 +65,8 @@ ON_DEV_BOX=${ON_DEV_BOX:-yes}
 
 if [[ $ON_DEV_BOX = "yes" ]]
 then
-    MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe"
-    SQLPACKAGE_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\150\sqlpackage.exe"
+    MSBUILD_PATH="C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe"
+    SQLPACKAGE_PATH="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\sqlpackage.exe"
 else
     # This is where these executables are stored on my machine - other users will need to check/update these if running the script locally
     MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\MSBuild.exe"
