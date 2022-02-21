@@ -219,10 +219,11 @@ namespace ntbs_service.Services
             IEnumerable<TBService> tbServices,
             IEnumerable<string> groupNames)
         {
+            var accountEnabled = graphUser.AccountEnabled.HasValue && graphUser.AccountEnabled.Value;
 
-            var tbServicesMatchingGroups = tbServices
-                .Where(tb => groupNames.Contains(tb.ServiceAdGroup))
-                .ToList();
+            var tbServicesMatchingGroups = accountEnabled
+                ? tbServices.Where(tb => groupNames.Contains(tb.ServiceAdGroup)).ToList()
+                : new List<TBService>();
 
             var userName = graphUser.UserPrincipalName;
             if (IsUserExternal(graphUser))
@@ -240,9 +241,9 @@ namespace ntbs_service.Services
                 GivenName = graphUser.GivenName,
                 FamilyName = graphUser.Surname,
                 DisplayName = displayName,
-                IsActive = graphUser.AccountEnabled.HasValue && graphUser.AccountEnabled.Value,
-                AdGroups = string.Join(",", groupNames),
-                IsCaseManager = tbServicesMatchingGroups.Any()
+                IsActive = accountEnabled,
+                AdGroups = accountEnabled ? string.Join(",", groupNames) : null,
+                IsCaseManager = accountEnabled && tbServicesMatchingGroups.Any()
             };
 
             return (user, tbServicesMatchingGroups);
