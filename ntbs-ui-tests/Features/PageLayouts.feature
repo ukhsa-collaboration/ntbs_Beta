@@ -5,6 +5,7 @@ Feature: Page layouts
     And I have logged in as BirminghamServiceUser
     
   Scenario: The homepage has correct titles for tables
+    Given Test is skipped when using cookie override for authentication
     Given I am on the Homepage
     Then I can see the correct titles for the 'alerts-table' table
     Then I can see the correct titles for the 'draft-notifications-table' table

@@ -40,6 +40,15 @@
             </nhs-grid-column>
 
             <nhs-grid-column grid-column-width="OneThird">
+                <span asp-for="TransferAlert.TransferDate" class="nhsuk-label bold-text">
+                    Transfer date
+                </span>
+                <div id="transfer-date">
+                    @Model.TransferAlert.TransferDate?.ConvertToString()
+                </div>
+            </nhs-grid-column>
+
+            <nhs-grid-column grid-column-width="OneThird">
                 <span asp-for="TransferAlert.TbServiceCode" class="nhsuk-label bold-text">
                     Case manager
                 </span>

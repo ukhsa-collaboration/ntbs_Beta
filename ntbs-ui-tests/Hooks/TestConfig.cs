@@ -28,6 +28,10 @@ namespace ntbs_ui_tests.Hooks
         public string EnvironmentUnderTest { get; set; }
 
         public EnvironmentConfig EnvironmentConfig => Environments[EnvironmentUnderTest];
+
+        public string AuthenticatedCookieHeader { get; set; }
+
+        public bool UseCookieOverride => !string.IsNullOrWhiteSpace(AuthenticatedCookieHeader);
     }
 
     public class EnvironmentConfig
@@ -35,8 +39,11 @@ namespace ntbs_ui_tests.Hooks
         public string ConnectionString { get; set; }
         public string MigrationConnectionString { get; set; }
         public string SpecimenConnectionString { get; set; }
-        public string RootUri { get; set; }
+        public string RootUriString { get; set; }
         public string ImportedNotificationNtbsEnvironment { get; set; }
+
+        private Uri uri;
+        public Uri RootUri => uri ??= new Uri(RootUriString);
     }
 
     public class UserConfig
