@@ -34,5 +34,5 @@ public class ServiceDirectoryItemWrapper
 
     public bool IsTBService => TBService is not null;
 
-    public bool IsHospital => Hospital is null;
+    public bool IsHospital => Hospital is not null;
 }

@@ -21,14 +21,14 @@ namespace ntbs_service.Services
         public (IList<ServiceDirectoryItemWrapper>, int) GetPaginatedItems(
             IList<PHEC> regions, 
             IList<User> users, 
-            IList<TBService> tbservices,
+            IList<TBService> tbServices,
             IList<Hospital> hospitals,
             PaginationParametersBase paginationParameters)
         {
             var serviceDirectoryItems = new List<ServiceDirectoryItemWrapper>();
             
             serviceDirectoryItems.AddRange(regions.Select(r  => new ServiceDirectoryItemWrapper(r)));
-            serviceDirectoryItems.AddRange(tbservices.Select(t => new ServiceDirectoryItemWrapper(t)));
+            serviceDirectoryItems.AddRange(tbServices.Select(t => new ServiceDirectoryItemWrapper(t)));
             serviceDirectoryItems.AddRange(hospitals.Select(h => new ServiceDirectoryItemWrapper(h)));
             serviceDirectoryItems.AddRange(users.Select(u => new ServiceDirectoryItemWrapper(u)));
             
