@@ -10,31 +10,29 @@ public class ServiceDirectoryItemWrapper
     public TBService TBService { get; }
     public Hospital Hospital { get; }
 
-    public ServiceDirectoryItemWrapper(User user = null, PHEC region = null, TBService tbService = null, Hospital hospital = null)
+    public ServiceDirectoryItemWrapper(User user)
     {
         this.User = user;
+    }
+
+    public ServiceDirectoryItemWrapper(PHEC region)
+    {
         this.Region = region;
+    }
+    public ServiceDirectoryItemWrapper(TBService tbService)
+    {
         this.TBService = tbService;
+    }
+    public ServiceDirectoryItemWrapper(Hospital hospital)
+    {
         this.Hospital = hospital;
     }
+    
+    public bool IsUser => User is not null;
 
-    public bool IsUser()
-    {
-        return this.User is not null;
-    }
+    public bool IsRegion => Region is not null;
 
-    public bool IsRegion()
-    {
-        return this.Region is not null;
-    }
+    public bool IsTBService => TBService is not null;
 
-    public bool IsTBService()
-    {
-        return this.TBService is not null;
-    }
-
-    public bool IsHospital()
-    {
-        return this.Hospital is not null;
-    }
+    public bool IsHospital => Hospital is null;
 }

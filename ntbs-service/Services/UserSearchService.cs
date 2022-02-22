@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
 
@@ -9,7 +8,7 @@ namespace ntbs_service.Services
 {
     public interface IUserSearchService
     {
-        Task<IList<User>> OrderQueryableAsync(string searchKeyword);
+        Task<IList<User>> OrderQueryableAsync(List<string> searchKeywords);
     }
 
     public class UserSearchService : IUserSearchService
@@ -24,12 +23,8 @@ namespace ntbs_service.Services
         }
 
         public async Task<IList<User>> OrderQueryableAsync(
-            string searchKeyword)
+            List<string> searchKeywords)
         {
-            var searchKeywords = searchKeyword.Split(" ")
-                .Where(x => !x.IsNullOrEmpty())
-                .Select(s => s.ToLower()).ToList();
-
             var allPhecs = await _referenceDataRepository.GetAllPhecs();
             var filteredPhecs = allPhecs
                 .Where(phec => searchKeywords.All(s => phec.Name.ToLower().Contains(s)));

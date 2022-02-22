@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using MoreLinq;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -345,12 +344,15 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<Hospital>> GetAllHospitals()
         {
-            return await _context.Hospital.OrderBy(h => h.Name).ToListAsync();
+            return await _context.Hospital
+                .Where(h => !h.IsLegacy)
+                .OrderBy(h => h.Name)
+                .ToListAsync();
         }
 
         private IQueryable<TBService> GetActiveTbServicesQueryable()
         {
-            return _context.TbService.Where(s => s.IsLegacy == false);
+            return _context.TbService.Where(s => !s.IsLegacy);
         }
     }
 }

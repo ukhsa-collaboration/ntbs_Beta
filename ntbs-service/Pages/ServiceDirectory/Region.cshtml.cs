@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using MoreLinq;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -24,7 +23,7 @@ namespace ntbs_service.Pages.ServiceDirectory
         public string PhecCode { get; set; }
 
         public Dictionary<TBService, List<User>> TbServicesWithCaseManagers;
-        public Dictionary<TBService, List<Hospital>> TbServicesWithHospitals;
+        public Dictionary<TBService, List<string>> TbServicesWithHospitalNames;
         public PHEC Phec;
         public IList<User> RegionalCaseManagers;
 
@@ -41,14 +40,14 @@ namespace ntbs_service.Pages.ServiceDirectory
                         .ToList()
                     );
 
-            var tbServices = (await _referenceDataRepository.GetTbServicesFromPhecCodeAsync(PhecCode)).Select(t => t.Code);
-            TbServicesWithHospitals = (await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(tbServices))
-                .Where(h => h.IsLegacy != true)
+            var tbServices = TbServicesWithCaseManagers.Keys.ToList().Select(k => k.Code);
+            TbServicesWithHospitalNames = (await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(tbServices))
+                .Where(h => !h.IsLegacy)
                 .GroupBy(h => h.TBService)
                 .ToDictionary(
                     group => group.Key,
-                    group => group.ToList());
-
+                    group => group.Select(h => h.Name).ToList());
+            
             Phec = await _referenceDataRepository.GetPhecByCode(PhecCode);
 
             RegionalCaseManagers = await _referenceDataRepository.GetActiveUsersByPhecAdGroup(Phec.AdGroup);

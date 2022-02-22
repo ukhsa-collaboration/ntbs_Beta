@@ -27,10 +27,10 @@ namespace ntbs_service.Services
         {
             var serviceDirectoryItems = new List<ServiceDirectoryItemWrapper>();
             
-            serviceDirectoryItems.AddRange(regions.Select(r  => new ServiceDirectoryItemWrapper(region: r)));
-            serviceDirectoryItems.AddRange(tbservices.Select(t => new ServiceDirectoryItemWrapper(tbService: t)));
-            serviceDirectoryItems.AddRange(hospitals.Select(h => new ServiceDirectoryItemWrapper(hospital: h)));
-            serviceDirectoryItems.AddRange(users.Select(u => new ServiceDirectoryItemWrapper(user: u)));
+            serviceDirectoryItems.AddRange(regions.Select(r  => new ServiceDirectoryItemWrapper(r)));
+            serviceDirectoryItems.AddRange(tbservices.Select(t => new ServiceDirectoryItemWrapper(t)));
+            serviceDirectoryItems.AddRange(hospitals.Select(h => new ServiceDirectoryItemWrapper(h)));
+            serviceDirectoryItems.AddRange(users.Select(u => new ServiceDirectoryItemWrapper(u)));
             
             var paginatedServiceDirectoryItems = serviceDirectoryItems
                 .Skip(paginationParameters.Offset ?? 0)

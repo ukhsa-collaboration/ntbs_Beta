@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
@@ -62,11 +63,16 @@ namespace ntbs_service.Pages.ServiceDirectory
                 PageIndex = pageIndex ?? 1,
                 Offset = offset ?? 0
             };
-
-            var usersToDisplay = await _userSearchService.OrderQueryableAsync(SearchKeyword);
-            var regionsToDisplay = await _regionSearchService.OrderQueryableAsync(SearchKeyword);
-            var tbServicesToDisplay = await _tbServiceSearchService.OrderQueryableAsync(SearchKeyword);
-            var hospitalsToDisplay = await _hospitalSearchService.OrderQueryableAsync(SearchKeyword);
+            
+            var searchKeywords = SearchKeyword
+                .Split(" ", StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.ToLower())
+                .ToList();
+            
+            var usersToDisplay = await _userSearchService.OrderQueryableAsync(searchKeywords);
+            var regionsToDisplay = await _regionSearchService.OrderQueryableAsync(searchKeywords);
+            var tbServicesToDisplay = await _tbServiceSearchService.OrderQueryableAsync(searchKeywords);
+            var hospitalsToDisplay = await _hospitalSearchService.OrderQueryableAsync(searchKeywords);
 
             var (paginatedResults, count) = 
                 _serviceDirectoryService.GetPaginatedItems(
@@ -78,10 +84,10 @@ namespace ntbs_service.Pages.ServiceDirectory
             
             DirectorySearchResults = new PaginatedList<ServiceDirectoryItemWrapper>(paginatedResults, count, _paginationParameters);
 
-            UserSearchResults = paginatedResults.Where(r => r.IsUser()).Select(r => r.User).ToList();
-            RegionSearchResults = paginatedResults.Where(r => r.IsRegion()).Select(r => r.Region).ToList();
-            TbServiceSearchResults = paginatedResults.Where(r => r.IsTBService()).Select(r => r.TBService).ToList();
-            HospitalSearchResults = paginatedResults.Where(r => r.IsHospital()).Select(r => r.Hospital).ToList();
+            UserSearchResults = paginatedResults.Where(r => r.IsUser).Select(r => r.User).ToList();
+            RegionSearchResults = paginatedResults.Where(r => r.IsRegion).Select(r => r.Region).ToList();
+            TbServiceSearchResults = paginatedResults.Where(r => r.IsTBService).Select(r => r.TBService).ToList();
+            HospitalSearchResults = paginatedResults.Where(r => r.IsHospital).Select(r => r.Hospital).ToList();
 
             AllPhecs = await _referenceDataRepository.GetAllPhecs();
 

@@ -38,7 +38,8 @@
             var tbService = tbServiceWithCaseManagers.Key;
             var caseManagers = tbServiceWithCaseManagers.Value;
             var caseManagerTableModel = new _UserTablePartialModel {Users = caseManagers, TableId = $"case-managers-{tbService.Code}"};
-            var hospitals = Model.TbServicesWithHospitals[tbService].Select(h => h.Name).ToList();
+            var hospitals = Model.TbServicesWithHospitalNames.TryGetValue(tbService, out var value) ? value : null;
+            var hospitalsString = hospitals is not null ? string.Join(", ", hospitals) : null;
             <div class="govuk-accordion__section">
                 <div class="govuk-accordion__section-header">
                     <h3 class="govuk-accordion__section-heading">
@@ -49,9 +50,9 @@
                 </div>
                 <div id="accordion-content-@tbService.Code" class="govuk-accordion__section-content"
                      aria-labelledby="accordion-heading-@tbService.Code">
-                    @if (hospitals.Any())
+                    @if (hospitalsString is not null)
                     {
-                        <p>Hospitals: @string.Join(", ", hospitals)</p>
+                        <p>Hospitals: @hospitalsString</p>
                     }
                     @if (caseManagers.Any())
                     {
