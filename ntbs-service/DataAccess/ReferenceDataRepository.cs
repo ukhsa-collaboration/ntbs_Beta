@@ -53,7 +53,7 @@ namespace ntbs_service.DataAccess
         Task<string> GetLocationPhecCodeForPostcodeAsync(string postcode);
         Task<IList<User>> GetActiveUsersByPhecAdGroup(string phecAdGroup);
         Task<IList<PHEC>> GetPhecsByAdGroups(string adGroups);
-        Task<IList<Hospital>> GetAllHospitals();
+        Task<IList<Hospital>> GetAllActiveHospitals();
     }
 
     public class ReferenceDataRepository : IReferenceDataRepository
@@ -342,17 +342,20 @@ namespace ntbs_service.DataAccess
             return await _context.PHEC.Where(phec => adGroups.Contains(phec.AdGroup)).ToListAsync();
         }
 
-        public async Task<IList<Hospital>> GetAllHospitals()
+        public async Task<IList<Hospital>> GetAllActiveHospitals()
         {
             return await _context.Hospital
                 .Where(h => !h.IsLegacy)
                 .OrderBy(h => h.Name)
+                .Include(h => h.TBService)
+                .ThenInclude(tbs => tbs.PHEC)
                 .ToListAsync();
         }
 
         private IQueryable<TBService> GetActiveTbServicesQueryable()
         {
-            return _context.TbService.Where(s => !s.IsLegacy);
+            return _context.TbService.Where(s => !s.IsLegacy)
+                .Include(s => s.PHEC);
         }
     }
 }

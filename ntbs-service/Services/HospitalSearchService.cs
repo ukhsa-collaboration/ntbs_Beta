@@ -11,7 +11,7 @@ namespace ntbs_service.Services
         Task<IList<Hospital>> OrderQueryableAsync(List<string> searchKeywords);
     }
 
-    class HospitalSearchService : IHospitalSearchService
+    public class HospitalSearchService : IHospitalSearchService
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
 
@@ -22,7 +22,7 @@ namespace ntbs_service.Services
 
         public async Task<IList<Hospital>> OrderQueryableAsync(List<string> searchKeywords)
         {
-            var allHospitals = await _referenceDataRepository.GetAllHospitals();
+            var allHospitals = await _referenceDataRepository.GetAllActiveHospitals();
             
             var filteredHospitals = allHospitals
                 .Where(h => searchKeywords.All(s => h.Name.ToLower().Contains(s)))
