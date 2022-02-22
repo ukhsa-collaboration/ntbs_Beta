@@ -35,8 +35,8 @@
             </div>
                 
             <div class="transfer-request-information flex-container">
-                <div class="transfer-request-information-label"> Date of transfer: </div>
-                <div> @Model.TransferRequest.TransferDate.ConvertToString() </div>
+                <div class="transfer-request-information-label"> Requested date of transfer: </div>
+                <div> @Model.TransferRequest.TransferAlert.TransferDate?.ConvertToString() </div>
             </div>
                 
             <div class="transfer-request-information flex-container">
