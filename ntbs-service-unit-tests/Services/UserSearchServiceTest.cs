@@ -13,7 +13,6 @@ namespace ntbs_service_unit_tests.Services
 {
     public class UserSearchServiceTest
     {
-
         private static readonly List<User> DefaultDisplayNameCaseManagers = new List<User>
         {
             CreateDefaultCaseManager(displayName: "Test UserOne"),

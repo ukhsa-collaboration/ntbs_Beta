@@ -11,22 +11,21 @@ namespace ntbs_service.Services
         Task<IList<TBService>> OrderQueryableAsync(List<string> searchKeywords);
     }
 
-    class TbServiceSearchService : ITBServiceSearchService
+    public class TBServiceSearchService : ITBServiceSearchService
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
 
-        public TbServiceSearchService(IReferenceDataRepository referenceDataRepository)
+        public TBServiceSearchService(IReferenceDataRepository referenceDataRepository)
         {
             _referenceDataRepository = referenceDataRepository;
         }
 
         public async Task<IList<TBService>> OrderQueryableAsync(List<string> searchKeywords)
         {
-            var allTBServices = await _referenceDataRepository.GetAllTbServicesAsync();
+            var allTBServices = await _referenceDataRepository.GetAllActiveTbServicesAsync();
             
             var filteredTBServices = allTBServices
                 .Where(tbs => searchKeywords.All(s => tbs.Name.ToLower().Contains(s)))
-                .OrderBy(tbs => tbs.Name)
                 .ToList();
 
             return filteredTBServices;
