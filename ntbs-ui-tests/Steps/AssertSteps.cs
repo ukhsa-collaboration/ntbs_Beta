@@ -52,7 +52,7 @@ namespace ntbs_ui_tests.Steps
         {
             WithErrorLogging(() =>
             {
-                Assert.Equal($"{Settings.EnvironmentConfig.RootUri}/", Browser.Url);
+                Assert.Equal($"{Settings.EnvironmentConfig.RootUriString}/", Browser.Url);
             });
         }
 

@@ -145,6 +145,8 @@
         #region TransferAlert
         public const string TransferDestinationCannotBeCurrentTbService =
             "Notification cannot be transferred to the notification's current TB service";
+        public const string DateShouldBeLaterThanNotificationStart = "{0} must be after the start of notification";
+        public const string DateShouldBeLaterThanLatestTransfer = "{0} must be after the date of the latest transfer";
         #endregion
 
         #region LabResults
@@ -172,7 +174,7 @@
 
     public static class ValidDates
     {
-        public const string EarliestBirthDate = "01/01/1900";
+        public const string EarliestAllowedDate = "01/01/1900";
         public const string EarliestClinicalDate = "01/01/2010";
         public const int EarliestYear = 1900;
     }

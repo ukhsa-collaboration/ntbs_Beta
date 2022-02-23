@@ -112,9 +112,9 @@ namespace ntbs_service.Services
         {
             var formattedDate = new FormattedDate { Day = day, Month = month, Year = year };
             var modelType = model.GetType();
-            if (formattedDate.TryConvertToDateTime(out var convertedDob))
+            if (formattedDate.TryConvertToDateTime(out var convertedDate))
             {
-                modelType.GetProperty(key).SetValue(model, convertedDob);
+                modelType.GetProperty(key).SetValue(model, convertedDate);
                 return GetValidationResult(model, key);
             }
             else

@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
+using ntbs_service.Models.ViewModels;
 using ntbs_service.Pages.Notifications;
 using ntbs_service.Services;
 
@@ -26,24 +28,10 @@ namespace ntbs_service.Pages.Alerts
         public ValidationService ValidationService;
 
         [BindProperty]
-        [Required(ErrorMessage = "Please accept or decline the transfer")]
-        public bool? AcceptTransfer { get; set; }
+        public TransferRequestActionViewModel TransferRequest { get; set; }
+        
         [BindProperty]
-        [MaxLength(200)]
-        [RegularExpression(ValidationRegexes.CharacterValidationAsciiBasic,
-            ErrorMessage = ValidationMessages.InvalidCharacter)]
-        [Display(Name = "Explanatory comment")]
-        public string DeclineTransferReason { get; set; }
-
-        [BindProperty]
-        public int AlertId { get; set; }
-        public TransferAlert TransferAlert { get; set; }
-        public SelectList Hospitals { get; set; }
-        public SelectList CaseManagers { get; set; }
-        [BindProperty]
-        public Guid TargetHospitalId { get; set; }
-        [BindProperty]
-        public int? TargetCaseManagerId { get; set; }
+        public FormattedDate FormattedTransferDate { get; set; }
 
 
         public TransferRequestActionModel(
@@ -66,46 +54,42 @@ namespace ntbs_service.Pages.Alerts
 
         public async Task<IActionResult> OnGetAsync()
         {
-            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            TransferAlert = await _alertRepository.GetOpenTransferAlertByNotificationId(NotificationId);
-            await AuthorizeAndSetBannerAsync();
+            TransferRequest = new TransferRequestActionViewModel();
+            await GetNotificationAndAlert();
 
             // Check edit permission of user and redirect if not allowed
-            if (!await _authorizationService.IsUserAuthorizedToManageAlert(User, TransferAlert))
+            if (TransferRequest.TransferAlert is null || !await _authorizationService.IsUserAuthorizedToManageAlert(User, TransferRequest.TransferAlert))
             {
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
 
-            if (TransferAlert == null)
-            {
-                return RedirectToPage("/Notifications/Overview", new { NotificationId });
-            }
-
-            var hospitals = await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(
-                new List<string> { TransferAlert.TbServiceCode });
-            Hospitals = new SelectList(hospitals,
-                nameof(Hospital.HospitalId),
-                nameof(Hospital.Name));
-            var caseManagers = await _referenceDataRepository.GetActiveCaseManagersByTbServiceCodesAsync(
-                new List<string> { TransferAlert.TbServiceCode });
-            CaseManagers = new SelectList(caseManagers,
-                nameof(Models.Entities.User.Id),
-                nameof(Models.Entities.User.DisplayName));
-            TargetCaseManagerId = TransferAlert.CaseManagerId;
+            await SetDropdownsAsync();
+            TransferRequest.TargetCaseManagerId = TransferRequest.TransferAlert.CaseManagerId;
+            TransferRequest.TransferDate = TransferRequest.TransferAlert.TransferDate ?? DateTime.Now.Date;
+            FormattedTransferDate = TransferRequest.TransferDate.ConvertToFormattedDate();
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            TransferAlert = await _alertRepository.GetOpenTransferAlertByNotificationId(NotificationId);
-            await AuthorizeAndSetBannerAsync();
+            await GetNotificationAndAlert();
+            ValidationService.TrySetFormattedDate(TransferRequest, "TransferRequest", nameof(TransferRequest.TransferDate), FormattedTransferDate);
+            ModelState.Clear();
+            TryValidateModel(TransferRequest, nameof(TransferRequest));
+            
+            if (TransferRequest.AcceptTransfer != true)
+            {
+                ModelState.Remove("TransferRequest.TransferDate");
+            }
+            
             if (!ModelState.IsValid)
             {
+                await SetDropdownsAsync();
+                await AuthorizeAndSetBannerAsync();
                 return Page();
             }
 
-            if (AcceptTransfer == true)
+            if (TransferRequest.AcceptTransfer == true)
             {
                 await AcceptTransferAndDismissAlertAsync();
                 await AuthorizeAndSetBannerAsync();
@@ -116,39 +100,55 @@ namespace ntbs_service.Pages.Alerts
             return Partial("_RejectedTransferConfirmation", this);
         }
 
+        private async Task SetDropdownsAsync()
+        {
+            var hospitals = await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(
+                new List<string> { TransferRequest.TransferAlert.TbServiceCode });
+            TransferRequest.Hospitals = new SelectList(hospitals,
+                nameof(Hospital.HospitalId),
+                nameof(Hospital.Name));
+            var caseManagers = await _referenceDataRepository.GetActiveCaseManagersByTbServiceCodesAsync(
+                new List<string> { TransferRequest.TransferAlert.TbServiceCode });
+            TransferRequest.CaseManagers = new SelectList(caseManagers,
+                nameof(Models.Entities.User.Id),
+                nameof(Models.Entities.User.DisplayName));
+        }
+
         public async Task AcceptTransferAndDismissAlertAsync()
         {
-            var currentTime = DateTime.Now;
+            var transferDate = TransferRequest.LatestTransferDate?.Date == TransferRequest.TransferDate.Value.Date
+                ? TransferRequest.LatestTransferDate.Value.AddMinutes(1)
+                : TransferRequest.TransferDate.Value;
             var transferOutEvent = new TreatmentEvent
             {
                 NotificationId = NotificationId,
-                EventDate = currentTime,
+                EventDate = transferDate,
                 TreatmentEventType = TreatmentEventType.TransferOut,
                 CaseManagerId = Notification.HospitalDetails.CaseManagerId,
                 TbServiceCode = Notification.HospitalDetails.TBServiceCode,
-                Note = TransferAlert.TransferRequestNote
+                Note = TransferRequest.TransferAlert.TransferRequestNote
             };
             var transferInEvent = new TreatmentEvent
             {
                 NotificationId = NotificationId,
-                EventDate = currentTime.AddSeconds(1),
+                EventDate = transferDate.AddSeconds(1),
                 TreatmentEventType = TreatmentEventType.TransferIn,
-                CaseManagerId = TransferAlert.CaseManagerId,
-                TbServiceCode = TransferAlert.TbServiceCode,
-                Note = TransferAlert.TransferRequestNote
+                CaseManagerId = TransferRequest.TransferAlert.CaseManagerId,
+                TbServiceCode = TransferRequest.TransferAlert.TbServiceCode,
+                Note = TransferRequest.TransferAlert.TransferRequestNote
             };
 
             var previousTbService = new PreviousTbService()
             {
-                TransferDate = currentTime,
+                TransferDate = transferDate,
                 TbServiceCode = Notification.HospitalDetails.TBServiceCode,
                 PhecCode = Notification.HospitalDetails?.TBService?.PHECCode
             };
 
             Notification.PreviousTbServices.Add(previousTbService);
-            Notification.HospitalDetails.TBServiceCode = TransferAlert.TbServiceCode;
-            Notification.HospitalDetails.HospitalId = TargetHospitalId;
-            Notification.HospitalDetails.CaseManagerId = TargetCaseManagerId;
+            Notification.HospitalDetails.TBServiceCode = TransferRequest.TransferAlert.TbServiceCode;
+            Notification.HospitalDetails.HospitalId = TransferRequest.TargetHospitalId;
+            Notification.HospitalDetails.CaseManagerId = TransferRequest.TargetCaseManagerId;
 
             // Drop consultant and local patient ID because these are almost certainly going to be different at the new
             // TB service, as per NTBS-1559
@@ -162,7 +162,7 @@ namespace ntbs_service.Pages.Alerts
             Service.UpdateHospitalDetailsWithoutSave(Notification, Notification.HospitalDetails);
             _treatmentEventRepository.AddWithoutSave(transferOutEvent);
             _treatmentEventRepository.AddWithoutSave(transferInEvent);
-            await _alertService.DismissAlertWithoutSaveAsync(TransferAlert.AlertId, User.Username());
+            await _alertService.DismissAlertWithoutSaveAsync(TransferRequest.TransferAlert.AlertId, User.Username());
             await _treatmentEventRepository.SaveChangesAsync(NotificationAuditType.Edited);
         }
 
@@ -172,8 +172,8 @@ namespace ntbs_service.Pages.Alerts
             var transferRejectedAlert = new TransferRejectedAlert
             {
                 NotificationId = NotificationId,
-                RejectionReason = DeclineTransferReason ?? "No reason was given when declining this transfer.",
-                DecliningUserAndTbServiceString = $"{user.DisplayName}, {TransferAlert.TbService.Name}"
+                RejectionReason = TransferRequest.DeclineTransferReason ?? "No reason was given when declining this transfer.",
+                DecliningUserAndTbServiceString = $"{user.DisplayName}, {TransferRequest.TransferAlert.TbService.Name}"
             };
 
             // Dismiss any existing transfer rejected alert so that the new one can be created
@@ -184,7 +184,37 @@ namespace ntbs_service.Pages.Alerts
                 await _alertService.DismissAlertAsync(pendingTransferRejectedAlert.AlertId, User.Username());
             }
             await _alertService.AddUniqueOpenAlertAsync(transferRejectedAlert);
-            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.Username());
+            await _alertService.DismissAlertAsync(TransferRequest.TransferAlert.AlertId, User.Username());
+        }
+
+        private async Task GetNotificationAndAlert()
+        {
+            await GetNotificationAndSetValuesForValidation();
+            TransferRequest.TransferAlert = await _alertRepository.GetOpenTransferAlertByNotificationId(NotificationId);
+            await AuthorizeAndSetBannerAsync();
+        }
+
+        private async Task GetNotificationAndSetValuesForValidation()
+        {
+            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            TransferRequest.NotificationStartDate =
+                NotificationHelper.Earliest(new[] {
+                    Notification.ClinicalDetails.DiagnosisDate,
+                    Notification.ClinicalDetails.TreatmentStartDate,
+                    Notification.NotificationDate});
+            TransferRequest.LatestTransferDate = Notification.TreatmentEvents.OrderForEpisodes()
+                .LastOrDefault(te => te.TreatmentEventType == TreatmentEventType.TransferIn)?.EventDate;
+        }
+
+        public async Task<ContentResult> OnPostValidateTransferRequestDate([FromBody] DateValidationModel validationData)
+        {
+            await GetNotificationAndSetValuesForValidation();
+            var transferWithValidationData = new TransferViewModel
+            {
+                NotificationStartDate = TransferRequest.NotificationStartDate,
+                LatestTransferDate = TransferRequest.LatestTransferDate
+            };
+            return ValidationService.GetDateValidationResult(transferWithValidationData, validationData.Key, validationData.Day, validationData.Month, validationData.Year);
         }
     }
 }

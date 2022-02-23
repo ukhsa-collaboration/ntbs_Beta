@@ -13,7 +13,7 @@
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Audit.EntityFramework.Core" Version="19.0.3" />
+    <PackageReference Include="Audit.EntityFramework.Core" Version="19.0.5" />
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="CsvHelper" Version="27.2.1" />
     <PackageReference Include="Hangfire.Console" Version="1.4.2" />
@@ -21,31 +21,31 @@
     <PackageReference Include="Hangfire.SqlServer" Version="1.7.28" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.28" />
     <PackageReference Include="Lindhart.Analyser.MissingAwaitWarning" Version="2.0.0" />
-    <PackageReference Include="Markdig" Version="0.26.0" />
+    <PackageReference Include="Markdig" Version="0.27.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.Profiler.AspNetCore" Version="2.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.WsFederation" Version="6.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="6.0.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.Profiler.AspNetCore" Version="2.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.WsFederation" Version="6.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="6.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.RazorPages" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.2" />
     <!-- 
          We don't use Microsoft.Data.SqlClient directly, but it is used by EF Core.
          However, we need a later version that the one EF Core is currently depending on.
          See NTBS-2995.
     -->
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="4.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1">
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="4.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="6.0.1" />
-    <PackageReference Include="Microsoft.Graph" Version="4.15.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="6.0.2" />
+    <PackageReference Include="Microsoft.Graph" Version="4.18.0" />
     <PackageReference Include="Microsoft.Graph.Auth" Version="1.0.0-preview.5" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.40.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.41.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.2" />
     <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NHSUK.FrontEndLibrary.TagHelpers-fork" Version="1.1.4-alpha" />
@@ -53,11 +53,11 @@
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
     <PackageReference Include="Novell.Directory.Ldap.NETStandard2_0" Version="3.1.0" />
-    <PackageReference Include="Sentry.AspNetCore" Version="3.13.0" />
-    <PackageReference Include="Sentry.Serilog" Version="3.13.0" />
+    <PackageReference Include="Sentry.AspNetCore" Version="3.14.0" />
+    <PackageReference Include="Sentry.Serilog" Version="3.14.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
     <PackageReference Include="TimeZoneConverter" Version="5.0.0" />
-    <PackageReference Include="ZNetCS.AspNetCore.Authentication.Basic" Version="5.0.0" />
+    <PackageReference Include="ZNetCS.AspNetCore.Authentication.Basic" Version="6.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Models/SeedData/*.csv">

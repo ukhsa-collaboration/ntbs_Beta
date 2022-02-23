@@ -1,6 +1,7 @@
 Feature: Transfer notification
 
   Background: Create a transfer request
+    Given Test is skipped when using cookie override for authentication
     Given I navigate to the app
     And I have logged in as BirminghamServiceUser
     And I am on seeded 'MAXIMUM_DETAILS' notification overview page
@@ -56,7 +57,7 @@ Feature: Transfer notification
     And I take action on the alert with title Transfer request
 
     And I check 'decline-transfer-input'
-    And I enter Do not want this patient here into 'DeclineTransferReason'
+    And I enter Do not want this patient here into 'TransferRequest_DeclineTransferReason'
     And I click on the 'submit-transfer-button' button
     And I click on the 'return-to-homepage' button
     When I log out

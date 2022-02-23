@@ -40,7 +40,7 @@ namespace ntbs_service.Models.Entities
 
         [Display(Name = "Date of birth")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
-        [ValidDateRange(ValidDates.EarliestBirthDate)]
+        [ValidDateRange(ValidDates.EarliestAllowedDate)]
         public DateTime? Dob { get; set; }
 
         [MaxLength(150)]

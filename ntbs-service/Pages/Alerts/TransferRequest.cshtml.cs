@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.Validations;
 using ntbs_service.Models.ViewModels;
 using ntbs_service.Pages.Notifications;
 using ntbs_service.Services;
@@ -27,6 +29,9 @@ namespace ntbs_service.Pages.Alerts
 
         [BindProperty]
         public TransferRequestViewModel TransferRequest { get; set; }
+
+        [BindProperty]
+        public FormattedDate FormattedTransferDate { get; set; }
 
         [BindProperty]
         public int AlertId { get; set; }
@@ -69,7 +74,9 @@ namespace ntbs_service.Pages.Alerts
                 return Partial("_TransferPendingPartial", this);
             }
 
-            TransferRequest = new TransferRequestViewModel();
+            TransferRequest = new TransferRequestViewModel { TransferDate = DateTime.Now.Date };
+            SetDatesOnRequestForValidation(TransferRequest);
+            FormattedTransferDate = TransferRequest.TransferDate.ConvertToFormattedDate();
             await SetDropdownsAsync();
             return Page();
         }
@@ -77,7 +84,7 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnPostAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            await GetRelatedEntities();
+            await SetValuesForValidation();
             ModelState.Clear();
             TryValidateModel(TransferRequest, nameof(TransferRequest));
             if (!ModelState.IsValid)
@@ -90,6 +97,7 @@ namespace ntbs_service.Pages.Alerts
             var transferAlert = new TransferAlert
             {
                 NotificationId = NotificationId,
+                TransferDate = TransferRequest.TransferDate,
                 TbServiceCode = TransferRequest.TbServiceCode,
                 CaseManagerId = TransferRequest.CaseManagerId,
                 TransferReason = TransferRequest.TransferReason,
@@ -99,6 +107,24 @@ namespace ntbs_service.Pages.Alerts
             await _alertService.AddUniqueOpenAlertAsync(transferAlert);
 
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
+        }
+
+        private async Task SetValuesForValidation()
+        {
+            await GetRelatedEntities();
+            ValidationService.TrySetFormattedDate(TransferRequest, "TransferRequest", nameof(TransferRequest.TransferDate), FormattedTransferDate);
+            SetDatesOnRequestForValidation(TransferRequest);
+        }
+
+        private void SetDatesOnRequestForValidation(TransferViewModel transferRequest)
+        {
+            transferRequest.NotificationStartDate =
+                NotificationHelper.Earliest(new[] {
+                    Notification.ClinicalDetails.DiagnosisDate,
+                    Notification.ClinicalDetails.TreatmentStartDate,
+                    Notification.NotificationDate});
+            transferRequest.LatestTransferDate = Notification.TreatmentEvents.OrderForEpisodes()
+                .LastOrDefault(te => te.TreatmentEventType == TreatmentEventType.TransferIn)?.EventDate;
         }
 
         private async Task GetRelatedEntities()
@@ -171,6 +197,14 @@ namespace ntbs_service.Pages.Alerts
                         Text = n.DisplayName
                     })
                 });
+        }
+
+        public async Task<ContentResult> OnPostValidateTransferRequestDate([FromBody] DateValidationModel validationData)
+        {
+            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            var transferRequest = new TransferViewModel();
+            SetDatesOnRequestForValidation(transferRequest);
+            return ValidationService.GetDateValidationResult(transferRequest, validationData.Key, validationData.Day, validationData.Month, validationData.Year);
         }
     }
 }
