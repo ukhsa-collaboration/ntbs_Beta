@@ -31,8 +31,8 @@
 
                 @if (item.IsRegion)
                 {
-                    <li>
-                        <div class="directory-search-result-container non-user-search-result" id="">
+                    <li class="directory-region-search-result-item">
+                        <div class="directory-search-result-container non-user-search-result">
                             <b>Region:</b>
                             <a class="link-without-visited-state" href=@($"/ServiceDirectory/Region/{item.Region.Code}")>
                                 @item.Region.Name
@@ -43,10 +43,10 @@
 
                 @if (item.IsTBService)
                 {
-                    <li>
+                    <li class="directory-service-search-result-item">
                         <div class="directory-search-result-container non-user-search-result" id="">
                             <b>Service:</b>
-                            <a class="link-without-visited-state" href=@($"/ServiceDirectory/Region/{item.TBService.PHEC.Code}")>
+                            <a class="link-without-visited-state" href=@($"/ServiceDirectory/Region/{item.TBService.PHEC?.Code}")>
                                 @item.TBService.PHEC?.Name
                             </a>
                             <span> > </span>
@@ -60,7 +60,7 @@
 
                 @if (item.IsHospital)
                 {
-                    <li>
+                    <li class="directory-hospital-search-result-item">
                         <div class="directory-search-result-container non-user-search-result" id="">
                             <b>Hospital:</b>
                             <a class="link-without-visited-state" href=@($"/ServiceDirectory/Region/{item.Hospital.TBService.PHEC.Code}")>
@@ -79,7 +79,7 @@
 
                 @if (item.IsUser)
                 {
-                    <li>
+                    <li class="directory-user-search-result-item">
                         <!-- Each search hit is displayed using a notification banner -->
                         <div class="directory-search-result-container" id="user-search-result-item">
                             <a class="case-manager-search-result-name" href="@RouteHelper.GetContactDetailsPath(item.User.Id)">
