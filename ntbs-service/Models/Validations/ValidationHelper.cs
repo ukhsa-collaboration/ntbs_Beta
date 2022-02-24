@@ -36,6 +36,7 @@
         public const string DateShouldBeLaterThanDob = "{0} must be later than date of birth";
         public const string DateShouldBeLaterThanDobYear = "{0} must be later than date of birth year";
         public const string DateShouldBeLaterThanNotification = "{0} must be after the date of notification";
+        public const string DateShouldBeLaterThanDiagnosisDate = "{0} must be after the diagnosis date";
         public const string BeforeCurrentYear = "{0} must be the current year or earlier";
         public const string IdDoesNotMatchNtbsRecord = "The NTBS ID does not match an existing ID in the system";
         public const string IdNotAvailableInNtbs = "Details not available in NTBS";
