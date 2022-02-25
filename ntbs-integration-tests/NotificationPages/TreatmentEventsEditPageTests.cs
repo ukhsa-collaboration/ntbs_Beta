@@ -390,6 +390,69 @@ namespace ntbs_integration_tests.NotificationPages
                 string.Format(ValidationMessages.RequiredSelect, "Outcome value"));
         }
 
+        [Fact]
+        public async Task PostNewTreatmentEventWithDateBeforeDiagnosisDateAndNotificationDate_ReturnsValidationError()
+        {
+            // Arrange
+            const int notificationId = Utilities.NOTIFIED_ID;
+            var url = GetPathForId(NotificationSubPaths.AddTreatmentEvent, notificationId);
+            var document = await GetDocumentForUrlAsync(url);
+
+            // Act
+            var formData = new Dictionary<string, string>
+            {
+                ["TreatmentEvent.TreatmentEventType"] = ((int)TreatmentEventType.TreatmentOutcome).ToString(),
+                ["SelectedTreatmentOutcomeType"] = ((int)TREATMENT_OUTCOME_TYPE).ToString(),
+                ["SelectedTreatmentOutcomeSubType"] = ((int)TREATMENT_OUTCOME_SUBTYPE).ToString(),
+                ["FormattedEventDate.Day"] = "30",
+                ["FormattedEventDate.Month"] = "11",
+                ["FormattedEventDate.Year"] = "2011",
+                ["TreatmentEvent.Note"] = ""
+            };
+            var result = await Client.SendPostFormWithData(document, formData, url);
+
+            // Assert
+            result.AssertValidationErrorResponse();
+            var resultDocument = await GetDocumentAsync(result);
+
+            resultDocument.AssertErrorSummaryMessage(
+                "TreatmentEvent-EventDate",
+                "event-date",
+                string.Format(ValidationMessages.DateShouldBeLaterThanDiagnosisDate, "Event Date"));
+        }
+
+        [Fact]
+        public async Task PostNewTreatmentEventWithDateAfterDiagnosisDateAndBeforeNotificationDate_ReturnsSuccessAndAddsResultToTable()
+        {
+            // Arrange
+            const int notificationId = Utilities.NOTIFIED_ID;
+            var url = GetPathForId(NotificationSubPaths.AddTreatmentEvent, notificationId);
+            var document = await GetDocumentForUrlAsync(url);
+
+            // Act
+            var formData = new Dictionary<string, string>
+            {
+                ["TreatmentEvent.TreatmentEventType"] = ((int)TreatmentEventType.TreatmentOutcome).ToString(),
+                ["SelectedTreatmentOutcomeType"] = ((int)TREATMENT_OUTCOME_TYPE).ToString(),
+                ["SelectedTreatmentOutcomeSubType"] = ((int)TREATMENT_OUTCOME_SUBTYPE).ToString(),
+                ["FormattedEventDate.Day"] = "2",
+                ["FormattedEventDate.Month"] = "1",
+                ["FormattedEventDate.Year"] = "2012",
+                ["TreatmentEvent.Note"] = ""
+            };
+            var result = await Client.SendPostFormWithData(document, formData, url);
+
+            // Assert
+            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTreatmentEvents, notificationId));
+            var treatmentEventsDocument = await GetDocumentForUrlAsync(GetRedirectLocation(result));
+            var treatmentEventRows = treatmentEventsDocument.QuerySelectorAll("#treatment-events tbody tr");
+            Assert.Single(treatmentEventRows);
+            var row = treatmentEventRows.First();
+
+            var textContent = row.TextContent;
+            Assert.Contains(new DateTime(2012, 1, 2).ConvertToString(), textContent);
+            Assert.Contains(TreatmentEventType.TreatmentOutcome.GetDisplayName(), textContent);
+        }
 
         [Theory]
         [InlineData("hello")]
