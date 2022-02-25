@@ -12,20 +12,20 @@ public class ServiceDirectoryItemWrapper
 
     public ServiceDirectoryItemWrapper(User user)
     {
-        this.User = user;
+        User = user;
     }
 
     public ServiceDirectoryItemWrapper(PHEC region)
     {
-        this.Region = region;
+        Region = region;
     }
     public ServiceDirectoryItemWrapper(TBService tbService)
     {
-        this.TBService = tbService;
+        TBService = tbService;
     }
     public ServiceDirectoryItemWrapper(Hospital hospital)
     {
-        this.Hospital = hospital;
+        Hospital = hospital;
     }
     
     public bool IsUser => User is not null;
