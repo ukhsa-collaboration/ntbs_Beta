@@ -17,6 +17,7 @@ namespace ntbs_service.DataAccess
         Task<IList<Country>> GetAllCountriesApartFromUkAsync();
         Task<Country> GetCountryByIdAsync(int id);
         Task<IList<TBService>> GetAllActiveTbServicesAsync();
+        Task<IList<TBService>> GetActiveTBServicesBySearchKeywords(List<string> searchKeywords);
         Task<IList<TBService>> GetAllTbServicesAsync();
         Task<TBService> GetTbServiceByCodeAsync(string code);
         Task<TBService> GetTbServiceFromHospitalIdAsync(Guid hospitalId);
@@ -26,6 +27,7 @@ namespace ntbs_service.DataAccess
         IQueryable<TBService> GetActiveTbServicesOrderedByNameQueryable();
         IQueryable<TBService> GetDefaultTbServicesForUserQueryable(IEnumerable<string> roles);
         Task<IList<PHEC>> GetAllPhecs();
+        Task<IList<PHEC>> GetPhecsBySearchKeywords(List<string> searchKeywords);
         Task<PHEC> GetPhecByCode(string phecCode);
         Task<IList<User>> GetAllActiveCaseManagers();
         Task<User> GetUserByIdAsync(int id);
@@ -53,7 +55,7 @@ namespace ntbs_service.DataAccess
         Task<string> GetLocationPhecCodeForPostcodeAsync(string postcode);
         Task<IList<User>> GetActiveUsersByPhecAdGroup(string phecAdGroup);
         Task<IList<PHEC>> GetPhecsByAdGroups(string adGroups);
-        Task<IList<Hospital>> GetAllActiveHospitals();
+        Task<IList<Hospital>> GetActiveHospitalsBySearchKeywords(List<string> searchKeywords);
     }
 
     public class ReferenceDataRepository : IReferenceDataRepository
@@ -98,6 +100,19 @@ namespace ntbs_service.DataAccess
         public async Task<IList<TBService>> GetAllActiveTbServicesAsync()
         {
             return await GetActiveTbServicesOrderedByNameQueryable().ToListAsync();
+        }
+
+        public async Task<IList<TBService>> GetActiveTBServicesBySearchKeywords(List<string> searchKeywords)
+        {
+            IQueryable<TBService> queryable = GetActiveTbServicesOrderedByNameQueryable();
+            
+            foreach (var keyword in searchKeywords)
+            {
+                queryable = queryable.Where(h => h.Name.ToLower().Contains(keyword));
+            }
+            
+            return await queryable
+                .ToListAsync();
         }
 
         public async Task<IList<TBService>> GetAllTbServicesAsync()
@@ -158,6 +173,20 @@ namespace ntbs_service.DataAccess
         public async Task<IList<PHEC>> GetAllPhecs()
         {
             return await _context.PHEC
+                .OrderBy(x => x.Name)
+                .ToListAsync();
+        }
+
+        public async Task<IList<PHEC>> GetPhecsBySearchKeywords(List<string> searchKeywords)
+        {
+            IQueryable<PHEC> queryable = _context.PHEC;
+            
+            foreach (var keyword in searchKeywords)
+            {
+                queryable = queryable.Where(h => h.Name.ToLower().Contains(keyword));
+            }
+            
+            return await queryable
                 .OrderBy(x => x.Name)
                 .ToListAsync();
         }
@@ -342,13 +371,19 @@ namespace ntbs_service.DataAccess
             return await _context.PHEC.Where(phec => adGroups.Contains(phec.AdGroup)).ToListAsync();
         }
 
-        public async Task<IList<Hospital>> GetAllActiveHospitals()
+        public async Task<IList<Hospital>> GetActiveHospitalsBySearchKeywords(List<string> searchKeywords)
         {
-            return await _context.Hospital
+            IQueryable<Hospital> queryable = _context.Hospital
                 .Where(h => !h.IsLegacy)
                 .OrderBy(h => h.Name)
-                .Include(h => h.TBService)
-                .ThenInclude(tbs => tbs.PHEC)
+                .Include(h => h.TBService.PHEC);
+            
+            foreach (var keyword in searchKeywords)
+            {
+                queryable = queryable.Where(h => h.Name.ToLower().Contains(keyword));
+            }
+            
+            return await queryable
                 .ToListAsync();
         }
 

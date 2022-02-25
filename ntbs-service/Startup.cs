@@ -230,9 +230,6 @@ namespace ntbs_service
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceFactory>();
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
             services.AddScoped<IUserSearchService, UserSearchService>();
-            services.AddScoped<IRegionSearchService, RegionSearchService>();
-            services.AddScoped<ITBServiceSearchService, TBServiceSearchService>();
-            services.AddScoped<IHospitalSearchService, HospitalSearchService>();
             services.AddScoped<IServiceDirectoryService, ServiceDirectoryService>();
             services.AddScoped<IClusterImportService, ClusterImportService>();
             services.AddScoped<ISpecimenImportService, SpecimenImportService>();
