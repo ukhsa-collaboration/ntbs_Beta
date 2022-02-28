@@ -84,7 +84,8 @@
                     </print-button>
                 }
 
-                @if (Model.Notification.NotificationStatus == NotificationStatus.Notified && Model.PermissionLevel == PermissionLevel.Edit)
+                @if (Model.Notification.NotificationStatus is NotificationStatus.Notified or NotificationStatus.Closed 
+                     && Model.PermissionLevel is PermissionLevel.Edit)
                 {
                     var transferRequestHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.TransferRequest);
                     <a id='transfer-button' class="nhsuk-button ntbsuk-button--primary" role="button" href="@transferRequestHref">
