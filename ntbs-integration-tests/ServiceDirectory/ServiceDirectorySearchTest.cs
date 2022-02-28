@@ -4,11 +4,12 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
+using AngleSharp.Text;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.DataAccess;
-using ntbs_service.Services;
 using Xunit;
 
 namespace ntbs_integration_tests.ServiceDirectory
@@ -234,16 +235,51 @@ namespace ntbs_integration_tests.ServiceDirectory
         private async Task<int> GetTotalExpectedResults(string searchKeyword)
         {
             var searchKeywords = new List<string> {searchKeyword};
+            var context = _factory.Services.GetService<NtbsContext>()!;
             
-            var referenceDataRepository = _factory.Services.GetService<IReferenceDataRepository>()!;
-            var userSearchService = _factory.Services.GetService<IUserSearchService>()!;
-            
-            var expectedRegionResults = (await referenceDataRepository.GetPhecsBySearchKeywords(searchKeywords)).Count;
-            var expectedServiceResults = (await referenceDataRepository.GetActiveTBServicesBySearchKeywords(searchKeywords)).Count;
-            var expectedHospitalResults = (await referenceDataRepository.GetActiveHospitalsBySearchKeywords(searchKeywords)).Count;
-            var expectedUserResults = (await userSearchService.OrderQueryableAsync(searchKeywords)).Count;
+            var expectedRegionResults = await context.PHEC
+                .CountAsync(x => x.Name.ToLower().Contains(searchKeyword));
+            var expectedServiceResults = await context.TbService
+                .Include(t => t.PHEC)
+                .CountAsync(t => t.Name.ToLower().Contains(searchKeyword) && !t.IsLegacy);
+            var expectedHospitalResults = await context.Hospital
+                .Include(h => h.TBService.PHEC)
+                .CountAsync(h => h.Name.ToLower().Contains(searchKeyword) && !h.IsLegacy);
+            var expectedUserResults = await GetExpectedUserResults(context, searchKeywords);
 
             return expectedRegionResults + expectedServiceResults + expectedHospitalResults + expectedUserResults;
+        }
+
+        private static async Task<int> GetExpectedUserResults(NtbsContext context, List<string> searchKeywords)
+        {
+            // This method is a replication of the UserSearchService which bypasses all calls to the
+            // referenceDataRepository service
+            
+            var allPhecs = await context.PHEC.OrderBy(x => x.Name).ToListAsync();
+            var filteredPhecs = allPhecs
+                .Where(phec => searchKeywords.All(s => phec.Name.ToLower().Contains(s)));
+
+            var caseManagersAndRegionalUsers = (await context.User
+                    .Include(u => u.CaseManagerTbServices)
+                    .ThenInclude(c => c.TbService)
+                    .ThenInclude(tb => tb.PHEC)
+                    .OrderBy(u => u.DisplayName)
+                    .ToListAsync())
+                .Where(u => u.IsActive && (u.CaseManagerTbServices.Any()
+                                           || (u.AdGroups != null &&
+                                               allPhecs.Any(phec => u.AdGroups.Split(",").Contains(phec.AdGroup)))));
+            
+            var filteredCaseManagersAndRegionalUsers = caseManagersAndRegionalUsers.Where(c =>
+                    searchKeywords.All(s =>
+                        c.FamilyName != null && c.FamilyName.ToLower().Contains(s)
+                        || c.GivenName != null && c.GivenName.ToLower().Contains(s))
+                    || searchKeywords.All(s => c.DisplayName != null && c.DisplayName.ToLower().Contains(s))
+                    || c.CaseManagerTbServices.Any(x =>
+                        searchKeywords.All(s => x.TbService.Name.ToLower().Contains(s)))
+                    || filteredPhecs.Any(phec => c.AdGroups != null && c.AdGroups.Split(",").Contains(phec.AdGroup)))
+                .ToList();
+
+            return filteredCaseManagersAndRegionalUsers.Count;
         }
     }
 }

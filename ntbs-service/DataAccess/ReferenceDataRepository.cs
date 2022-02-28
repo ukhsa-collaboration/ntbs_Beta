@@ -108,11 +108,10 @@ namespace ntbs_service.DataAccess
             
             foreach (var keyword in searchKeywords)
             {
-                queryable = queryable.Where(h => h.Name.ToLower().Contains(keyword));
+                queryable = queryable.Where(t => EF.Functions.Like(t.Name, $"%{keyword}%"));
             }
             
-            return await queryable
-                .ToListAsync();
+            return await queryable.ToListAsync();
         }
 
         public async Task<IList<TBService>> GetAllTbServicesAsync()
@@ -183,12 +182,10 @@ namespace ntbs_service.DataAccess
             
             foreach (var keyword in searchKeywords)
             {
-                queryable = queryable.Where(h => h.Name.ToLower().Contains(keyword));
+                queryable = queryable.Where(x => EF.Functions.Like(x.Name, $"%{keyword}%"));
             }
             
-            return await queryable
-                .OrderBy(x => x.Name)
-                .ToListAsync();
+            return await queryable.OrderBy(x => x.Name).ToListAsync();
         }
 
         public async Task<PHEC> GetPhecByCode(string phecCode)
@@ -380,11 +377,10 @@ namespace ntbs_service.DataAccess
             
             foreach (var keyword in searchKeywords)
             {
-                queryable = queryable.Where(h => h.Name.ToLower().Contains(keyword));
+                queryable = queryable.Where(h => EF.Functions.Like(h.Name, $"%{keyword}%"));
             }
             
-            return await queryable
-                .ToListAsync();
+            return await queryable.ToListAsync();
         }
 
         private IQueryable<TBService> GetActiveTbServicesQueryable()
