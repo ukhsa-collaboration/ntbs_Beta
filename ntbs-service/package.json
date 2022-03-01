@@ -19,7 +19,7 @@
     "@babel/core": "7.17.2",
     "@babel/preset-env": "7.16.11",
     "@sentry/browser": "6.17.8",
-    "@sentry/integrations": "6.17.8",
+    "@sentry/integrations": "6.18.1",
     "accessible-autocomplete": "2.0.4",
     "axios": "0.26.0",
     "babel-loader": "8.2.3",
