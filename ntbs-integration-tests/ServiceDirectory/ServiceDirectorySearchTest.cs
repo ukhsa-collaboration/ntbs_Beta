@@ -17,6 +17,7 @@ namespace ntbs_integration_tests.ServiceDirectory
     public class ServiceDirectorySearchTest : TestRunnerBase
     {
         private NtbsWebApplicationFactory<Startup> _factory;
+
         public ServiceDirectorySearchTest(NtbsWebApplicationFactory<Startup> factory) : base(factory)
         {
             _factory = factory;
@@ -151,7 +152,7 @@ namespace ntbs_integration_tests.ServiceDirectory
             var searchKeyword = "a";
             var pageOffset = 20;
             var formData = new Dictionary<string, string> {["SearchKeyword"] = searchKeyword};
-            
+
             var initialPage = await Client.GetAsync(PageRoute);
             var pageContent = await GetDocumentAsync(initialPage);
 
@@ -163,11 +164,11 @@ namespace ntbs_integration_tests.ServiceDirectory
 
             var totalActualResults = GetTotalActualResults(firstPageContent);
             var firstPageDisplayedResults = GetNumberOfDisplayedResults(firstPageContent);
-            var (firstPageRegionResults, 
-                firstPageServiceResults, 
-                firstPageHospitalResults, 
-                firstPageUserResults) =
-                    GetDisplayedResultsTextContent(firstPageContent);
+            var (firstPageRegionResults,
+                    firstPageServiceResults,
+                    firstPageHospitalResults,
+                    firstPageUserResults) =
+                GetDisplayedResultsTextContent(firstPageContent);
 
             var totalExpectedResults = await GetTotalExpectedResults(searchKeyword);
 
@@ -176,18 +177,19 @@ namespace ntbs_integration_tests.ServiceDirectory
             Assert.Equal(totalExpectedResults, totalActualResults);
 
             // Arrange second page
-            var secondPage = await Client.GetAsync(PageRoute + $"/SearchResults?SearchKeyword={searchKeyword}&pageIndex=2&offset={pageOffset}");
+            var secondPage = await Client.GetAsync(PageRoute +
+                                                   $"/SearchResults?SearchKeyword={searchKeyword}&pageIndex=2&offset={pageOffset}");
             var secondPageContent = await GetDocumentAsync(secondPage);
 
             // Act second page
             var secondPageTotalActualResults = GetTotalActualResults(secondPageContent);
             var secondPageDisplayedResults = GetNumberOfDisplayedResults(secondPageContent);
-            var (secondPageRegionResults, 
-                secondPageServiceResults, 
-                secondPageHospitalResults, 
-                secondPageUserResults) =
-                    GetDisplayedResultsTextContent(secondPageContent);
-            
+            var (secondPageRegionResults,
+                    secondPageServiceResults,
+                    secondPageHospitalResults,
+                    secondPageUserResults) =
+                GetDisplayedResultsTextContent(secondPageContent);
+
             // Assert second page
             Assert.Equal(totalExpectedResults, secondPageTotalActualResults);
             Assert.Equal(totalActualResults - pageOffset, secondPageDisplayedResults);
@@ -198,7 +200,7 @@ namespace ntbs_integration_tests.ServiceDirectory
             Assert.DoesNotContain(secondPageHospitalResults, sphr => firstPageHospitalResults.Any(fphr => fphr == sphr));
             Assert.DoesNotContain(secondPageUserResults, spur => firstPageUserResults.Any(fpur => fpur == spur));
         }
-        
+
         private static int GetTotalActualResults(IHtmlDocument firstPageContent)
         {
             return Convert.ToInt32(
@@ -208,7 +210,7 @@ namespace ntbs_integration_tests.ServiceDirectory
                     .Split(" ", StringSplitOptions.RemoveEmptyEntries)[1]
             );
         }
-        
+
         private static int GetNumberOfDisplayedResults(IHtmlDocument pageContent)
         {
             var regionResults = pageContent.GetElementsByClassName("directory-region-search-result-item");
@@ -217,68 +219,63 @@ namespace ntbs_integration_tests.ServiceDirectory
             var userResults = pageContent.GetElementsByClassName("directory-user-search-result-item");
             return regionResults.Length + serviceResults.Length + hospitalResults.Length + userResults.Length;
         }
-        
+
         private static (
             IEnumerable<string> regionResults,
             IEnumerable<string> serviceResults,
             IEnumerable<string> hospitalResults,
             IEnumerable<string> userResults)
-            GetDisplayedResultsTextContent(IHtmlDocument pageContent) 
+            GetDisplayedResultsTextContent(IHtmlDocument pageContent)
         {
-            var regionResults = pageContent.GetElementsByClassName("directory-region-search-result-item").Select(e => e.TextContent);
-            var serviceResults = pageContent.GetElementsByClassName("directory-service-search-result-item").Select(e => e.TextContent);
-            var hospitalResults = pageContent.GetElementsByClassName("directory-hospital-search-result-item").Select(e => e.TextContent);
-            var userResults = pageContent.GetElementsByClassName("directory-user-search-result-item").Select(e => e.TextContent);
+            var regionResults = pageContent.GetElementsByClassName("directory-region-search-result-item")
+                .Select(e => e.TextContent);
+            var serviceResults = pageContent.GetElementsByClassName("directory-service-search-result-item")
+                .Select(e => e.TextContent);
+            var hospitalResults = pageContent.GetElementsByClassName("directory-hospital-search-result-item")
+                .Select(e => e.TextContent);
+            var userResults = pageContent.GetElementsByClassName("directory-user-search-result-item")
+                .Select(e => e.TextContent);
             return (regionResults, serviceResults, hospitalResults, userResults);
         }
 
         private async Task<int> GetTotalExpectedResults(string searchKeyword)
         {
-            var searchKeywords = new List<string> {searchKeyword};
             var context = _factory.Services.GetService<NtbsContext>()!;
-            
+
             var expectedRegionResults = await context.PHEC
                 .CountAsync(x => x.Name.ToLower().Contains(searchKeyword));
             var expectedServiceResults = await context.TbService
-                .Include(t => t.PHEC)
                 .CountAsync(t => t.Name.ToLower().Contains(searchKeyword) && !t.IsLegacy);
             var expectedHospitalResults = await context.Hospital
-                .Include(h => h.TBService.PHEC)
                 .CountAsync(h => h.Name.ToLower().Contains(searchKeyword) && !h.IsLegacy);
-            var expectedUserResults = await GetExpectedUserResults(context, searchKeywords);
+            var expectedUserResults = await GetExpectedUserResults(context, searchKeyword);
 
             return expectedRegionResults + expectedServiceResults + expectedHospitalResults + expectedUserResults;
         }
 
-        private static async Task<int> GetExpectedUserResults(NtbsContext context, List<string> searchKeywords)
+        private static async Task<int> GetExpectedUserResults(NtbsContext context, string searchKeyword)
         {
             // This method is a replication of the UserSearchService which bypasses all calls to the
             // referenceDataRepository service
-            
+
             var allPhecs = await context.PHEC.OrderBy(x => x.Name).ToListAsync();
-            var filteredPhecs = allPhecs
-                .Where(phec => searchKeywords.All(s => phec.Name.ToLower().Contains(s)));
 
             var caseManagersAndRegionalUsers = (await context.User
                     .Include(u => u.CaseManagerTbServices)
-                    .ThenInclude(c => c.TbService)
-                    .ThenInclude(tb => tb.PHEC)
                     .OrderBy(u => u.DisplayName)
                     .ToListAsync())
                 .Where(u => u.IsActive && (u.CaseManagerTbServices.Any()
                                            || (u.AdGroups != null &&
                                                allPhecs.Any(phec => u.AdGroups.Split(",").Contains(phec.AdGroup)))));
-            
-            var filteredCaseManagersAndRegionalUsers = caseManagersAndRegionalUsers.Where(c =>
-                    searchKeywords.All(s =>
-                        c.FamilyName != null && c.FamilyName.ToLower().Contains(s)
-                        || c.GivenName != null && c.GivenName.ToLower().Contains(s))
-                    || searchKeywords.All(s => c.DisplayName != null && c.DisplayName.ToLower().Contains(s))
-                    || c.CaseManagerTbServices.Any(x =>
-                        searchKeywords.All(s => x.TbService.Name.ToLower().Contains(s)))
-                    || filteredPhecs.Any(phec => c.AdGroups != null && c.AdGroups.Split(",").Contains(phec.AdGroup)))
-                .ToList();
 
+            var filteredCaseManagersAndRegionalUsers = caseManagersAndRegionalUsers
+                .Where(c =>
+                    c.FamilyName != null
+                    && c.FamilyName.ToLower().Contains(searchKeyword)
+                    || c.GivenName != null && c.GivenName.ToLower().Contains(searchKeyword)
+                    || c.DisplayName != null && c.DisplayName.ToLower().Contains(searchKeyword))
+                .ToList();
+            
             return filteredCaseManagersAndRegionalUsers.Count;
         }
     }

@@ -26,8 +26,6 @@ namespace ntbs_service.Services
             List<string> searchKeywords)
         {
             var allPhecs = await _referenceDataRepository.GetAllPhecs();
-            var filteredPhecs = allPhecs
-                .Where(phec => searchKeywords.All(s => phec.Name.ToLower().Contains(s)));
 
             var caseManagersAndRegionalUsers = (await _userRepository.GetOrderedUsers())
                 .Where(u => u.IsActive && (u.CaseManagerTbServices.Any()
@@ -38,11 +36,8 @@ namespace ntbs_service.Services
             var filteredCaseManagersAndRegionalUsers = caseManagersAndRegionalUsers.Where(c =>
                     searchKeywords.All(s =>
                         c.FamilyName != null && c.FamilyName.ToLower().Contains(s)
-                            || c.GivenName != null && c.GivenName.ToLower().Contains(s))
-                    || searchKeywords.All(s => c.DisplayName != null && c.DisplayName.ToLower().Contains(s))
-                    || c.CaseManagerTbServices.Any(x =>
-                        searchKeywords.All(s => x.TbService.Name.ToLower().Contains(s)))
-                    || filteredPhecs.Any(phec => c.AdGroups != null && c.AdGroups.Split(",").Contains(phec.AdGroup)))
+                        || c.GivenName != null && c.GivenName.ToLower().Contains(s))
+                    || searchKeywords.All(s => c.DisplayName != null && c.DisplayName.ToLower().Contains(s)))
                 .ToList();
 
             return filteredCaseManagersAndRegionalUsers;
