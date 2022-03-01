@@ -21,7 +21,8 @@
 
     var id = ViewData.ContainsKey("id") ? ViewData["id"] : "save-button";
 }
-@if (isDraft && isLastPage)
+
+@if (isDraft && isLastPage && !isEditPage)
 {
     return;
 }
