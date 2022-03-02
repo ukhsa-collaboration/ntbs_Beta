@@ -105,7 +105,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
             // Add additional fields required for date validation
             TreatmentEvent.Dob = Notification.PatientDetails.Dob;
-            TreatmentEvent.DateOfNotification = Notification.NotificationDate;
+            TreatmentEvent.DateOfDiagnosis = Notification.ClinicalDetails.DiagnosisDate;
 
             switch (TreatmentEvent.TreatmentEventType)
             {

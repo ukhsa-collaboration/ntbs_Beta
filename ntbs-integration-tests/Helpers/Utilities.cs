@@ -258,6 +258,7 @@ namespace ntbs_integration_tests.Helpers
                 {
                     NotificationId = NOTIFIED_ID,
                     NotificationStatus = NotificationStatus.Notified,
+                    NotificationDate = new DateTime(2012, 01, 05),
                     // Requires a notification site to pass full validation
                     NotificationSites =
                         new List<NotificationSite>
@@ -274,7 +275,11 @@ namespace ntbs_integration_tests.Helpers
                     {
                         Dob = new DateTime(1970, 1, 1)
                     },
-                    ClinicalDetails = new ClinicalDetails { TreatmentRegimen = TreatmentRegimen.MdrTreatment },
+                    ClinicalDetails = new ClinicalDetails
+                    {
+                        TreatmentRegimen = TreatmentRegimen.MdrTreatment,
+                        DiagnosisDate = new DateTime(2012, 01, 01)
+                    },
                     DrugResistanceProfile = new DrugResistanceProfile {Species = "M. bovis"}
                 },
                 new Notification
