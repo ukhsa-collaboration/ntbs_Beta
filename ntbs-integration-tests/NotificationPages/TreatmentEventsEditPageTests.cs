@@ -31,7 +31,7 @@ namespace ntbs_integration_tests.NotificationPages
 
         protected override string NotificationSubPath => NotificationSubPaths.EditTreatmentEvents;
 
-        public TreatmentEventEditPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
+        public TreatmentEventEditPageTests(NtbsWebApplicationFactory<Program> factory) : base(factory)
         {
         }
 

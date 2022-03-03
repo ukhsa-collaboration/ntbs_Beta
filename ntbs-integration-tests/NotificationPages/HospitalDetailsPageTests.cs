@@ -21,7 +21,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string NotificationSubPath => NotificationSubPaths.EditHospitalDetails;
 
-        public HospitalDetailsPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        public HospitalDetailsPageTests(NtbsWebApplicationFactory<Program> factory) : base(factory) { }
 
         public static IList<Notification> GetSeedingNotifications()
         {

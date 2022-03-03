@@ -14,7 +14,7 @@ namespace ntbs_integration_tests.TransferPages
     public class TransferPageTests : TestRunnerNotificationBase
     {
         protected override string NotificationSubPath => NotificationSubPaths.TransferRequest;
-        public TransferPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        public TransferPageTests(NtbsWebApplicationFactory<Program> factory) : base(factory) { }
 
         private static DateTime _notificationDate = new(2019, 11, 2);
         private static DateTime _diagnosisDate = new(2019, 11, 1);

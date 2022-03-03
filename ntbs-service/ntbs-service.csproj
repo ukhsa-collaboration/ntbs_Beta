@@ -72,4 +72,7 @@
       <DependentUpon>_UserTablePartial.cshtml</DependentUpon>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="ntbs-integration-tests" />
+  </ItemGroup>
 </Project>

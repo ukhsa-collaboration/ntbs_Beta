@@ -15,7 +15,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string NotificationSubPath => NotificationSubPaths.EditComorbidities;
 
-        public ComorbidityPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        public ComorbidityPageTests(NtbsWebApplicationFactory<Program> factory) : base(factory) { }
 
         [Fact]
         public async Task PostComorbidities_RedirectsToNextPageAndSavesContent()

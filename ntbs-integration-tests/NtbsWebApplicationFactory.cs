@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using ntbs_integration_tests.Helpers;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
@@ -19,6 +20,14 @@ namespace ntbs_integration_tests
     public class NtbsWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
         private string _testClassName;
+        
+        protected override IHost CreateHost(IHostBuilder builder)
+        {
+            builder.UseSerilog();
+            var host = builder.Build();
+            host.Start();
+            return host;
+        }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -29,7 +38,6 @@ namespace ntbs_integration_tests
 
             // Disable auditing for all integration tests so we don't run into possible object cycle errors
             Audit.Core.Configuration.AuditDisabled = true;
-            builder.UseSerilog();
             builder.UseEnvironment("CI");
 
             // Running the tests through XUnit creates many versions of the web app at once. If each one is watching

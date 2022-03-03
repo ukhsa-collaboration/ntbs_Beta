@@ -8,7 +8,7 @@ namespace ntbs_integration_tests.SearchPage
 {
     public class SearchPageTests : TestRunnerBase
     {
-        public SearchPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        public SearchPageTests(NtbsWebApplicationFactory<Program> factory) : base(factory) { }
 
         public const string PageRoute = "/Search";
 

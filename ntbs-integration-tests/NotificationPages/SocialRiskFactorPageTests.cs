@@ -11,7 +11,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string NotificationSubPath => NotificationSubPaths.EditSocialRiskFactors;
 
-        public SocialRiskFactorPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
+        public SocialRiskFactorPageTests(NtbsWebApplicationFactory<Program> factory) : base(factory)
         {
         }
 

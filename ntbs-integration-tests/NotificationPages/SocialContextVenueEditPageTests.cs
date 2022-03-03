@@ -18,7 +18,7 @@ namespace ntbs_integration_tests.NotificationPages
         private const int VENUE_TO_DELETE_ID = 11;
         protected override string NotificationSubPath => NotificationSubPaths.EditSocialContextVenueSubPath;
 
-        public SocialContextVenueEditPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
+        public SocialContextVenueEditPageTests(NtbsWebApplicationFactory<Program> factory) : base(factory)
         {
         }
 

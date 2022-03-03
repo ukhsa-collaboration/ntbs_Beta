@@ -10,7 +10,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string NotificationSubPath => NotificationSubPaths.ViewTestResults;
 
-        public TestResultsPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
+        public TestResultsPageTests(NtbsWebApplicationFactory<Program> factory) : base(factory)
         {
         }
 

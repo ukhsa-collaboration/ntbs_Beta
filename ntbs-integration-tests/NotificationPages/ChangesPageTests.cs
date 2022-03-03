@@ -11,7 +11,7 @@ namespace ntbs_integration_tests.NotificationPages
 {
     public class ChangesPageTests : TestRunnerNotificationBase
     {
-        public ChangesPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
+        public ChangesPageTests(NtbsWebApplicationFactory<Program> factory) : base(factory)
         {
         }
 

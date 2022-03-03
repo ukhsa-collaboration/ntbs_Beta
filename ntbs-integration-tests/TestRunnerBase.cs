@@ -3,23 +3,27 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Html.Dom;
+using Microsoft.AspNetCore.Mvc.Testing;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using Xunit;
 
 namespace ntbs_integration_tests
 {
-    public abstract class TestRunnerBase : IClassFixture<NtbsWebApplicationFactory<Startup>>
+    public abstract class TestRunnerBase : IClassFixture<NtbsWebApplicationFactory<Program>>
     {
         protected readonly HttpClient Client;
-        protected readonly NtbsWebApplicationFactory<Startup> Factory;
+        protected readonly NtbsWebApplicationFactory<Program> Factory;
 
-        protected TestRunnerBase(NtbsWebApplicationFactory<Startup> factory)
+        protected TestRunnerBase(NtbsWebApplicationFactory<Program> factory)
         {
             Factory = factory;
             Factory.ConfigureTestClassName(GetType().Name);
             Factory.ConfigureLogger();
-            Client = Factory.CreateClientWithoutRedirects();
+            Client = Factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false
+            });
         }
 
         protected async Task<IHtmlDocument> GetDocumentForUrlAsync(string url)
