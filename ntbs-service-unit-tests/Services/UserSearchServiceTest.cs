@@ -191,6 +191,27 @@ namespace ntbs_service_unit_tests.Services
             Assert.Equal(activeCaseManager, results.Single());
         }
 
+        [Fact] public async Task OrderQueryableAsync_DoesNotReturnRegionMatchingCaseManagersAndUsers()
+        {
+            // Arrange
+            var searchStrings = SearchStringHelper.GetSearchKeywords("Region1");
+            string regionAdGroup = DefaultRegionalUsers[0].AdGroups;
+            var caseManagerWithRegion = CreateDefaultCaseManager("Thomas Haverford");
+            caseManagerWithRegion.AdGroups = regionAdGroup;
+            var usersToReturn = DefaultRegionalUsers;
+            usersToReturn.Add(caseManagerWithRegion);
+        
+            _mockReferenceDataRepository.Setup(r => r.GetAllPhecs())
+                .ReturnsAsync(new List<PHEC>{new PHEC{AdGroup = regionAdGroup, Name = searchStrings[0]}});
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(usersToReturn);
+        
+            // Act
+            var results = await _service.OrderQueryableAsync(searchStrings);
+        
+            // Assert
+            Assert.Empty(results);
+        }
+        
         [Fact]
         public async Task OrderQueryableAsync_ReturnsDisplayNameMatchingRegionalUsers()
         {
@@ -306,6 +327,70 @@ namespace ntbs_service_unit_tests.Services
             Assert.Equal(expectedResults, results);
         }
         
+        [Fact]
+        public async Task SearchWithTwoKeywords_DoesNotReturnUsersContainingBothInTbService()
+        {
+            // Arrange
+            var searchStrings = SearchStringHelper.GetSearchKeywords("South West");
+            var southWest = new TBService {Code = "TB1", Name = "South West service"};
+            var northWest = new TBService {Code = "TB2", Name = "North West service"};
+            var caseManagers = new List<User>
+            {
+                CreateDefaultCaseManager(
+                    displayName: "Foo Bar",
+                    caseManagerTbServices: new List<CaseManagerTbService>
+                    {
+                        new CaseManagerTbService { TbService = southWest, TbServiceCode = southWest.Code }
+                    }),
+                CreateDefaultCaseManager(
+                    displayName: "Bar Foo",
+                    caseManagerTbServices: new List<CaseManagerTbService>
+                    {
+                        new CaseManagerTbService { TbService = northWest, TbServiceCode = northWest.Code }
+                    })
+            };
+            
+            _mockReferenceDataRepository.Setup(r => r.GetAllPhecs()).ReturnsAsync(new List<PHEC>());
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(caseManagers);
+        
+            // Act
+            var results = await _service.OrderQueryableAsync(searchStrings);
+        
+            // Assert
+            Assert.Empty(results);
+        }
+        
+        [Fact]
+        public async Task SearchWithTwoKeywords_DoesNotReturnRegionalUsersWhereBothKeywordsInRegion()
+        {
+            // Arrange
+            var searchStrings = SearchStringHelper.GetSearchKeywords("North West");
+            var southWest = new PHEC { Code = "P1", Name = "South West", AdGroup = "SW" };
+            var northWest = new PHEC { Code = "P2", Name = "North West", AdGroup = "NW" };
+            var burnley = new TBService {Code = "TB2", Name = "Burnley", PHEC = northWest, PHECCode = northWest.Code};
+            var caseManagers = new List<User>
+            {
+                CreateDefaultCaseManager(
+                    displayName: "Bar Foo",
+                    caseManagerTbServices: new List<CaseManagerTbService>
+                    {
+                        new CaseManagerTbService { TbService = burnley, TbServiceCode = burnley.Code }
+                    }),
+                CreateRegionalUser(northWest.AdGroup, "Foo Bar"),
+                CreateRegionalUser(southWest.AdGroup, "Boo Far")
+            };
+            
+            _mockReferenceDataRepository.Setup(r => r.GetAllPhecs())
+                .ReturnsAsync(new List<PHEC> { southWest, northWest });
+            _mockUserRepository.Setup(u => u.GetOrderedUsers()).ReturnsAsync(caseManagers);
+        
+            // Act
+            var results = await _service.OrderQueryableAsync(searchStrings);
+        
+            // Assert
+            Assert.Empty(results);
+        }
+
         private static User CreateDefaultCaseManager(string displayName = null, string givenName = null,
             string familyName = null,
             List<CaseManagerTbService> caseManagerTbServices = null)
