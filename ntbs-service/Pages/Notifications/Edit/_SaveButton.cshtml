@@ -5,29 +5,31 @@
 
 @{
     var isDraft = Model.NotificationStatus == NotificationStatus.Draft;
-    var isEditPage = (bool?) ViewData["IsEditPage"] ?? true;
-    var isLastPage = (bool?) ViewData["IsLastPage"] ?? false;
+    var pageHasEditableContent = (bool?) ViewData["PageHasEditableContent"] ?? true;
     var currentPage = (string) ViewData["CurrentPage"];
+    var isEditMDRPage = currentPage == NotificationSubPaths.EditMDRDetails;
+    var isEditTreatmentEventsPage = currentPage == NotificationSubPaths.EditTreatmentEvents;
 
     var buttonName = "";
-    if (!isEditPage)
+    if (isEditMDRPage && isDraft)
+    {
+        buttonName = "Save";
+    }
+    else if (!pageHasEditableContent)
     {
         buttonName = "Continue";
     }
-    else
-    {
-        buttonName = isDraft ? "Save and continue" : "Save";
-    }
+    else buttonName = isDraft ? "Save and continue" : "Save";
 
     var id = ViewData.ContainsKey("id") ? ViewData["id"] : "save-button";
 }
 
-@if (isDraft && isLastPage && !isEditPage)
+@if (isDraft && isEditTreatmentEventsPage & !Model.IsMdr)
 {
     return;
 }
 
-@if (isDraft || isEditPage)
+@if (isDraft || pageHasEditableContent)
 {
     <button
         nhs-button-type="Standard"
