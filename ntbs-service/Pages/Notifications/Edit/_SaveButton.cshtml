@@ -19,7 +19,10 @@
     {
         buttonName = "Continue";
     }
-    else buttonName = isDraft ? "Save and continue" : "Save";
+    else
+    {
+        buttonName = isDraft ? "Save and continue" : "Save";
+    }
 
     var id = ViewData.ContainsKey("id") ? ViewData["id"] : "save-button";
 }
