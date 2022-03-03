@@ -22,7 +22,7 @@ namespace ntbs_integration_tests.NotificationPages
         private const int TEST_TO_DELETE_ID = 11;
         protected override string NotificationSubPath => NotificationSubPaths.EditManualTestResult(0);
 
-        public ManualTestResultEditPagesTests(NtbsWebApplicationFactory<Program> factory) : base(factory)
+        public ManualTestResultEditPagesTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory)
         {
         }
 

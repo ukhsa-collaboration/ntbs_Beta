@@ -11,7 +11,7 @@ namespace ntbs_integration_tests.Helpers
     public static class WebApplicationExtensions
     {
 
-        public static WebApplicationFactory<Program> WithNotificationAndTbServiceConnected(this WebApplicationFactory<Program> factory,
+        public static WebApplicationFactory<EntryPoint> WithNotificationAndTbServiceConnected(this WebApplicationFactory<EntryPoint> factory,
                                                                                             int notificationId,
                                                                                             string tbServiceCode)
         {
@@ -21,7 +21,7 @@ namespace ntbs_integration_tests.Helpers
             });
         }
 
-        public static WebApplicationFactory<Program> WithNotificationAndPostcodeConnected(this WebApplicationFactory<Program> factory,
+        public static WebApplicationFactory<EntryPoint> WithNotificationAndPostcodeConnected(this WebApplicationFactory<EntryPoint> factory,
                                                                                             int notificationId,
                                                                                             string postcode)
         {
@@ -31,7 +31,7 @@ namespace ntbs_integration_tests.Helpers
             });
         }
 
-        public static HttpClient CreateClientWithoutRedirects(this WebApplicationFactory<Program> factory)
+        public static HttpClient CreateClientWithoutRedirects(this WebApplicationFactory<EntryPoint> factory)
         {
             var client = factory.CreateClient(new WebApplicationFactoryClientOptions
             {

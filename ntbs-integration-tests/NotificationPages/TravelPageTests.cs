@@ -12,7 +12,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string NotificationSubPath => NotificationSubPaths.EditTravel;
 
-        public TravelPageTests(NtbsWebApplicationFactory<Program> factory) : base(factory) { }
+        public TravelPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         [Fact]
         public async Task PostDraft_RedirectsToNextPage_IfModelValid()

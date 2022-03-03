@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ntbs_service;
 using ntbs_service.Helpers;
 
 namespace ntbs_integration_tests
@@ -7,7 +8,7 @@ namespace ntbs_integration_tests
     {
         protected virtual string NotificationSubPath { get; }
 
-        protected TestRunnerNotificationBase(NtbsWebApplicationFactory<Program> factory) : base(factory) { }
+        protected TestRunnerNotificationBase(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         protected string GetCurrentPathForId(int id)
         {

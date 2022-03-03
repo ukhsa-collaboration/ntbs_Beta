@@ -15,7 +15,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string NotificationSubPath => NotificationSubPaths.EditMBovisAnimalExposures;
 
-        public MBovisAnimalExposurePageTests(NtbsWebApplicationFactory<Program> factory) : base(factory)
+        public MBovisAnimalExposurePageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory)
         {
         }
 

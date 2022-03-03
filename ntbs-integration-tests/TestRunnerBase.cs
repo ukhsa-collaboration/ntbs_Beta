@@ -10,12 +10,12 @@ using Xunit;
 
 namespace ntbs_integration_tests
 {
-    public abstract class TestRunnerBase : IClassFixture<NtbsWebApplicationFactory<Program>>
+    public abstract class TestRunnerBase : IClassFixture<NtbsWebApplicationFactory<EntryPoint>>
     {
         protected readonly HttpClient Client;
-        protected readonly NtbsWebApplicationFactory<Program> Factory;
+        protected readonly NtbsWebApplicationFactory<EntryPoint> Factory;
 
-        protected TestRunnerBase(NtbsWebApplicationFactory<Program> factory)
+        protected TestRunnerBase(NtbsWebApplicationFactory<EntryPoint> factory)
         {
             Factory = factory;
             Factory.ConfigureTestClassName(GetType().Name);

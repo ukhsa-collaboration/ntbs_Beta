@@ -12,7 +12,7 @@ namespace ntbs_integration_tests.NotificationPages
     public class CreatePageTests : TestRunnerNotificationBase
     {
 
-        public CreatePageTests(NtbsWebApplicationFactory<Program> factory) : base(factory)
+        public CreatePageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory)
         {
         }
 

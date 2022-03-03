@@ -154,5 +154,3 @@ static void MigrateKeysDb(IServiceProvider services)
         throw;
     }
 }
-
-public partial class Program { }

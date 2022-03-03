@@ -17,7 +17,7 @@ using Serilog.Events;
 
 namespace ntbs_integration_tests
 {
-    public class NtbsWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
+    public class NtbsWebApplicationFactory<TEntryPoint> : WebApplicationFactory<TEntryPoint> where TEntryPoint : class
     {
         private string _testClassName;
         

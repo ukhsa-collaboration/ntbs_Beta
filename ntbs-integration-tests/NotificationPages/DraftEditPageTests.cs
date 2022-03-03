@@ -13,7 +13,7 @@ namespace ntbs_integration_tests.NotificationPages
 {
     public class DraftEditPageTests : TestRunnerNotificationBase
     {
-        public DraftEditPageTests(NtbsWebApplicationFactory<Program> factory) : base(factory) { }
+        public DraftEditPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         public static IEnumerable<Notification> GetSeedingNotifications()
         {

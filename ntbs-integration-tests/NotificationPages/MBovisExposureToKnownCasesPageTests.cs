@@ -15,7 +15,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string NotificationSubPath => NotificationSubPaths.EditMBovisExposureToKnownCases;
 
-        public MBovisExposureToKnownCasesPageTests(NtbsWebApplicationFactory<Program> factory) : base(factory)
+        public MBovisExposureToKnownCasesPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory)
         {
         }
 

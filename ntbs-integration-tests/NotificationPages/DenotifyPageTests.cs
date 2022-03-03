@@ -15,7 +15,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string NotificationSubPath => NotificationSubPaths.Denotify;
 
-        public DenotifyPageTests(NtbsWebApplicationFactory<Program> factory) : base(factory) { }
+        public DenotifyPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         public static IList<Notification> GetSeedingNotifications()
         {

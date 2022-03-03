@@ -14,7 +14,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string NotificationSubPath => NotificationSubPaths.Delete;
 
-        public DeletePageTests(NtbsWebApplicationFactory<Program> factory) : base(factory) { }
+        public DeletePageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         public static IList<Notification> GetSeedingNotifications()
         {

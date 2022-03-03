@@ -18,7 +18,7 @@ namespace ntbs_integration_tests.NotificationPages
         private const int ADDRESS_TO_DELETE_ID = 11;
         protected override string NotificationSubPath => NotificationSubPaths.EditSocialContextAddressSubPath;
 
-        public SocialContextAddressEditPageTests(NtbsWebApplicationFactory<Program> factory) : base(factory)
+        public SocialContextAddressEditPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory)
         {
         }
 

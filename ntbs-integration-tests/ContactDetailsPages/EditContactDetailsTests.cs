@@ -13,7 +13,7 @@ namespace ntbs_integration_tests.ContactDetailsPages
 {
     public class EditContactDetailsTests : TestRunnerBase
     {
-        public EditContactDetailsTests(NtbsWebApplicationFactory<Program> factory)
+        public EditContactDetailsTests(NtbsWebApplicationFactory<EntryPoint> factory)
             : base(factory) { }
 
         [Fact]

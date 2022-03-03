@@ -8,7 +8,7 @@ namespace ntbs_integration_tests.HomePage
 {
     public class HomePageTests : TestRunnerBase
     {
-        public HomePageTests(NtbsWebApplicationFactory<Program> factory) : base(factory) { }
+        public HomePageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         public const string PageRoute = "/Index";
         public const string DismissPageRoute = "/Alerts/20001/Dismiss";

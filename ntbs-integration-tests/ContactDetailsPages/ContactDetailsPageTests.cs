@@ -11,7 +11,7 @@ namespace ntbs_integration_tests.ContactDetailsPages
 {
     public class ContactDetailsPageTests : TestRunnerBase
     {
-        public ContactDetailsPageTests(NtbsWebApplicationFactory<Program> factory)
+        public ContactDetailsPageTests(NtbsWebApplicationFactory<EntryPoint> factory)
             : base(factory) { }
 
         [Fact]

@@ -9,7 +9,7 @@ namespace ntbs_integration_tests.ServiceDirectory
 {
     public class ServiceDirectorySearchTest : TestRunnerBase
     {
-        public ServiceDirectorySearchTest(NtbsWebApplicationFactory<Program> factory) : base(factory) { }
+        public ServiceDirectorySearchTest(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         public const string PageRoute = "ServiceDirectory";
 

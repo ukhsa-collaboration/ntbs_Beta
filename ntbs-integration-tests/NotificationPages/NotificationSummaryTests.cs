@@ -8,7 +8,7 @@ namespace ntbs_integration_tests.NotificationPages
 {
     public class NotificationSummaryTests : TestRunnerBase
     {
-        public NotificationSummaryTests(NtbsWebApplicationFactory<Program> factory) : base(factory) { }
+        public NotificationSummaryTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         private static string PageRoute(string notificationId) => $"/NotificationSummary/{notificationId}";
 

@@ -15,7 +15,7 @@ namespace ntbs_integration_tests.TestServices
 {
     public static class WebApplicationFactoryExtensions
     {
-        public static WebApplicationFactory<Program> WithUserAuth(this WebApplicationFactory<Program> factory, ITestUser user)
+        public static WebApplicationFactory<EntryPoint> WithUserAuth(this WebApplicationFactory<EntryPoint> factory, ITestUser user)
         {
             return factory.WithWebHostBuilder(builder =>
             {
