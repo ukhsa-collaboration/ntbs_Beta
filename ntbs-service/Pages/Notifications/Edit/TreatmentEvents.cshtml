@@ -9,7 +9,7 @@
     ViewData["Title"] = $"Notification #{Model.NotificationId} - {title}";
     ViewData["ShowTreatmentEventEditLinks"] = true;
     ViewData["PageHasEditableContent"] = false;
-    ViewData["CurrentPage"] = NotificationSubPaths.EditTreatmentEvents;
+    ViewData["IsLastPage"] = !Model.Notification.IsMdr;
 }
 
 <partial name="_SinglePageErrorSummaryPartial"/>

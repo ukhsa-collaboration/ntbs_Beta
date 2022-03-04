@@ -7,11 +7,10 @@
     var isDraft = Model.NotificationStatus == NotificationStatus.Draft;
     var pageHasEditableContent = (bool?) ViewData["PageHasEditableContent"] ?? true;
     var currentPage = (string) ViewData["CurrentPage"];
-    var isEditMDRPage = currentPage == NotificationSubPaths.EditMDRDetails;
-    var isEditTreatmentEventsPage = currentPage == NotificationSubPaths.EditTreatmentEvents;
+    var isLastPage = (bool?) ViewData["IsLastPage"] ?? false;
 
     var buttonName = "";
-    if (isEditMDRPage && isDraft)
+    if (isDraft && isLastPage && pageHasEditableContent)
     {
         buttonName = "Save";
     }
@@ -27,7 +26,7 @@
     var id = ViewData.ContainsKey("id") ? ViewData["id"] : "save-button";
 }
 
-@if (isDraft && isEditTreatmentEventsPage & !Model.IsMdr)
+@if (isDraft && isLastPage && !pageHasEditableContent)
 {
     return;
 }
