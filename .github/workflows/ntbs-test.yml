@@ -29,4 +29,4 @@ jobs:
         run: dotnet test
       - name: Run integration tests
         working-directory: ntbs-integration-tests
-        run: dotnet test
+        run: export ASPNETCORE_hostBuilder__reloadConfigOnChange=false; dotnet test

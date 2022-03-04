@@ -75,6 +75,7 @@ Feature: Notification creation
     And I can see the value '1234' for the field 'local-patient-id' in the 'PatientDetails' overview section
 
   Scenario: Create notification with all hospital details fields
+    Given Test is skipped when using cookie override for authentication
     When I click 'Hospital details' on the navigation bar
     Then I should be on the HospitalDetails page
     When I enter 1 into 'FormattedNotificationDate_Day'
@@ -353,6 +354,7 @@ Feature: Notification creation
     And I can see the value 'Unknown' for the field 'treated' in the 'PreviousHistory' overview section
 
   Scenario: Create notification with all treatment event fields
+    Given Test is skipped when using cookie override for authentication
     When I click 'Treatment events' on the navigation bar
     Then I should be on the TreatmentEvents page
     When I click on the 'add-new-treatment-event-button' button

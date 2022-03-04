@@ -49,7 +49,7 @@ namespace ntbs_service.Pages.Notifications
             }
 
             await AuthorizeAndSetBannerAsync();
-            if (PermissionLevel != PermissionLevel.Edit || Notification.NotificationStatus != NotificationStatus.Notified)
+            if (PermissionLevel is not PermissionLevel.Edit || Notification.NotificationStatus is not (NotificationStatus.Notified or NotificationStatus.Closed))
             {
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
@@ -81,7 +81,7 @@ namespace ntbs_service.Pages.Notifications
                 return Page();
             }
 
-            if (Notification.NotificationStatus == NotificationStatus.Notified)
+            if (Notification.NotificationStatus is NotificationStatus.Notified or NotificationStatus.Closed)
             {
                 await Service.DenotifyNotificationAsync(
                     NotificationId,

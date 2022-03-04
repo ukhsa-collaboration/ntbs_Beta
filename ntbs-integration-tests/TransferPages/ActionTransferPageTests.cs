@@ -11,12 +11,12 @@ using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
 using Xunit;
 
-namespace ntbs_integration_tests.TransferPage
+namespace ntbs_integration_tests.TransferPages
 {
     public class ActionTransferPageTests : TestRunnerNotificationBase
     {
         protected override string NotificationSubPath => NotificationSubPaths.ActionTransferRequest;
-        public ActionTransferPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        public ActionTransferPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         public static IList<Notification> GetSeedingNotifications()
         {

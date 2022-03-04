@@ -59,12 +59,14 @@
             <nhs-details display-text="Manage notification" nhs-details-type="Expander" id="manage-notification">
                 @if (Model.Notification.IsLastLinkedNotificationOverOneYearOld && !Model.UserIsReadOnly())
                 {
-                    <form method="post">
-                        <input type="hidden" value="@Model.NotificationId" name="NotificationId"/>
-                        <button nhs-button-type="Standard" classes="ntbsuk-button--primary" asp-page-handler="CreateLink" id="new-linked-notification-button">
-                            New notification for this patient
-                        </button>
-                    </form>
+                    <single-submit-form inline-template>
+                        <form method="post" v-on:submit="disableButton">
+                            <input type="hidden" value="@Model.NotificationId" name="NotificationId"/>
+                            <button nhs-button-type="Standard" classes="ntbsuk-button--primary" asp-page-handler="CreateLink" id="new-linked-notification-button" ref="submitButton">
+                                New notification for this patient
+                            </button>
+                        </form>
+                    </single-submit-form>
                 }
                 else if (Model.LatestLinkedNotificationId.HasValue && Model.LatestLinkedNotificationId != Model.NotificationId)
                 {
@@ -82,7 +84,8 @@
                     </print-button>
                 }
 
-                @if (Model.Notification.NotificationStatus == NotificationStatus.Notified && Model.PermissionLevel == PermissionLevel.Edit)
+                @if (Model.Notification.NotificationStatus is NotificationStatus.Notified or NotificationStatus.Closed 
+                     && Model.PermissionLevel is PermissionLevel.Edit)
                 {
                     var transferRequestHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.TransferRequest);
                     <a id='transfer-button' class="nhsuk-button ntbsuk-button--primary" role="button" href="@transferRequestHref">

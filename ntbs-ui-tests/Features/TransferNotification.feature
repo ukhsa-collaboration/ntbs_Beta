@@ -1,6 +1,7 @@
 Feature: Transfer notification
 
   Background: Create a transfer request
+    Given Test is skipped when using cookie override for authentication
     Given I navigate to the app
     And I have logged in as BirminghamServiceUser
     And I am on seeded 'MAXIMUM_DETAILS' notification overview page

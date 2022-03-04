@@ -21,15 +21,17 @@
 
     <div class="rejection-note"> @Model.TransferRejectedAlert.RejectionReason </div>
 
-    <form method="post" autocomplete="off">
-        <div class="flex-container">
-            <button nhs-button-type="Standard" id="cancel-transfer-button" classes="ntbsuk-button--primary confirm-transfer-button">
-                Dismiss
-            </button>
-            <nhs-back-link href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)" 
-                classes="transfer-request-back-link">
-                Go back
-            </nhs-back-link>
-        </div>
-    </form>
+    <single-submit-form inline-template>
+        <form method="post" autocomplete="off" v-on:submit="disableButton">
+            <div class="flex-container">
+                <button nhs-button-type="Standard" ref="submitButton" id="cancel-transfer-button" classes="ntbsuk-button--primary confirm-transfer-button">
+                    Dismiss
+                </button>
+                <nhs-back-link href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)" 
+                               classes="transfer-request-back-link">
+                    Go back
+                </nhs-back-link>
+            </div>
+        </form>
+    </single-submit-form>
 </nhs-width-container>

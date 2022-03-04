@@ -16,9 +16,8 @@ namespace ntbs_integration_tests.ServiceDirectory
 {
     public class ServiceDirectorySearchTest : TestRunnerBase
     {
-        private NtbsWebApplicationFactory<Startup> _factory;
-
-        public ServiceDirectorySearchTest(NtbsWebApplicationFactory<Startup> factory) : base(factory)
+        private NtbsWebApplicationFactory<EntryPoint> _factory;
+        public ServiceDirectorySearchTest(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory)
         {
             _factory = factory;
         }

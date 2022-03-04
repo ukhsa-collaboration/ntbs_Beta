@@ -116,10 +116,13 @@ namespace ntbs_service.Pages.Alerts
 
         public async Task AcceptTransferAndDismissAlertAsync()
         {
+            var transferDate = TransferRequest.LatestTransferDate?.Date == TransferRequest.TransferDate.Value.Date
+                ? TransferRequest.LatestTransferDate.Value.AddMinutes(1)
+                : TransferRequest.TransferDate.Value;
             var transferOutEvent = new TreatmentEvent
             {
                 NotificationId = NotificationId,
-                EventDate = TransferRequest.TransferDate,
+                EventDate = transferDate,
                 TreatmentEventType = TreatmentEventType.TransferOut,
                 CaseManagerId = Notification.HospitalDetails.CaseManagerId,
                 TbServiceCode = Notification.HospitalDetails.TBServiceCode,
@@ -128,7 +131,7 @@ namespace ntbs_service.Pages.Alerts
             var transferInEvent = new TreatmentEvent
             {
                 NotificationId = NotificationId,
-                EventDate = TransferRequest.TransferDate.AddSeconds(1),
+                EventDate = transferDate.AddSeconds(1),
                 TreatmentEventType = TreatmentEventType.TransferIn,
                 CaseManagerId = TransferRequest.TransferAlert.CaseManagerId,
                 TbServiceCode = TransferRequest.TransferAlert.TbServiceCode,
@@ -137,7 +140,7 @@ namespace ntbs_service.Pages.Alerts
 
             var previousTbService = new PreviousTbService()
             {
-                TransferDate = TransferRequest.TransferDate,
+                TransferDate = transferDate,
                 TbServiceCode = Notification.HospitalDetails.TBServiceCode,
                 PhecCode = Notification.HospitalDetails?.TBService?.PHECCode
             };
@@ -194,7 +197,11 @@ namespace ntbs_service.Pages.Alerts
         private async Task GetNotificationAndSetValuesForValidation()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            TransferRequest.NotificationStartDate = Notification.ClinicalDetails.StartingDate ?? Notification.NotificationDate;
+            TransferRequest.NotificationStartDate =
+                NotificationHelper.Earliest(new[] {
+                    Notification.ClinicalDetails.DiagnosisDate,
+                    Notification.ClinicalDetails.TreatmentStartDate,
+                    Notification.NotificationDate});
             TransferRequest.LatestTransferDate = Notification.TreatmentEvents.OrderForEpisodes()
                 .LastOrDefault(te => te.TreatmentEventType == TreatmentEventType.TransferIn)?.EventDate;
         }

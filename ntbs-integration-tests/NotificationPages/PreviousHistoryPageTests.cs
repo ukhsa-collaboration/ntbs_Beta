@@ -11,7 +11,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string NotificationSubPath => NotificationSubPaths.EditPreviousHistory;
 
-        public PreviousHistoryPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
+        public PreviousHistoryPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory)
         {
         }
 

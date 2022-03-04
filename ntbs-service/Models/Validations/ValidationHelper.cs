@@ -36,6 +36,7 @@
         public const string DateShouldBeLaterThanDob = "{0} must be later than date of birth";
         public const string DateShouldBeLaterThanDobYear = "{0} must be later than date of birth year";
         public const string DateShouldBeLaterThanNotification = "{0} must be after the date of notification";
+        public const string DateShouldBeLaterThanDiagnosisDate = "{0} must be after the diagnosis date";
         public const string BeforeCurrentYear = "{0} must be the current year or earlier";
         public const string IdDoesNotMatchNtbsRecord = "The NTBS ID does not match an existing ID in the system";
         public const string IdNotAvailableInNtbs = "Details not available in NTBS";
@@ -145,7 +146,7 @@
         #region TransferAlert
         public const string TransferDestinationCannotBeCurrentTbService =
             "Notification cannot be transferred to the notification's current TB service";
-        public const string DateShouldBeLaterThanNotificationStart = "{0} must be after the start of notification date";
+        public const string DateShouldBeLaterThanNotificationStart = "{0} must be after the start of notification";
         public const string DateShouldBeLaterThanLatestTransfer = "{0} must be after the date of the latest transfer";
         #endregion
 

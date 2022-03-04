@@ -14,7 +14,7 @@ namespace ntbs_integration_tests.TransferPages
     public class TransferPageTests : TestRunnerNotificationBase
     {
         protected override string NotificationSubPath => NotificationSubPaths.TransferRequest;
-        public TransferPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        public TransferPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         private static DateTime _notificationDate = new(2019, 11, 2);
         private static DateTime _diagnosisDate = new(2019, 11, 1);
@@ -82,16 +82,17 @@ namespace ntbs_integration_tests.TransferPages
             resultDocument.AssertErrorMessage("optional-note", "Optional note can only contain letters, numbers and the symbols ' - . , /");
         }
 
-        public static TheoryData<DateTime, string> transferDateData => new()
+        public static TheoryData<DateTime?, string> transferDateData => new()
         {
             { _diagnosisDate.AddDays(-5), String.Format(ValidationMessages.DateShouldBeLaterThanNotificationStart, "Transfer date") },
             { _transferDate.AddDays(-5), String.Format(ValidationMessages.DateShouldBeLaterThanLatestTransfer, "Transfer date") },
-            { new DateTime(101, 1, 12), ValidationMessages.DateValidityRangeStart("Transfer date", ValidDates.EarliestAllowedDate) }
+            { new DateTime(101, 1, 12), ValidationMessages.DateValidityRangeStart("Transfer date", ValidDates.EarliestAllowedDate) },
+            { null, String.Format(ValidationMessages.Mandatory, "Transfer date") }
         };
 
         [Theory]
         [MemberData(nameof(transferDateData))]
-        public async Task CreateTransferAlert_ReturnsPageDateModelErrors_IfTransferDateNotValid(DateTime transferDate, string expectedErrorMessage)
+        public async Task CreateTransferAlert_ReturnsPageDateModelErrors_IfTransferDateNotValid(DateTime? transferDate, string expectedErrorMessage)
         {
             // Arrange
             const int id = Utilities.NOTIFICATION_WITH_TRANSFER;
@@ -102,9 +103,9 @@ namespace ntbs_integration_tests.TransferPages
             {
                 ["TransferRequest.TbServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["TransferRequest.TransferReason"] = nameof(TransferReason.Relocation),
-                ["FormattedTransferDate.Day"] = transferDate.Day.ToString(),
-                ["FormattedTransferDate.Month"] = transferDate.Month.ToString(),
-                ["FormattedTransferDate.Year"] = transferDate.Year.ToString()
+                ["FormattedTransferDate.Day"] = transferDate?.Day.ToString(),
+                ["FormattedTransferDate.Month"] = transferDate?.Month.ToString(),
+                ["FormattedTransferDate.Year"] = transferDate?.Year.ToString()
             };
 
             // Act
