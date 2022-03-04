@@ -8,7 +8,7 @@ namespace ntbs_integration_tests.ServiceDirectory
 {
     public class ServiceDirectoryRegionPageTest : TestRunnerBase
     {
-        public ServiceDirectoryRegionPageTest(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        public ServiceDirectoryRegionPageTest(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         public const string PageRoute = "ServiceDirectory/Region/E45000009";
 

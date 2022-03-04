@@ -9,7 +9,7 @@ namespace ntbs_integration_tests.TransferPages
     public class RejectTransferPageTests : TestRunnerNotificationBase
     {
         protected override string NotificationSubPath => NotificationSubPaths.TransferDeclined;
-        public RejectTransferPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        public RejectTransferPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         [Fact]
         public async Task DismissRejectedTransferAlert_DismissesAlertOnOverviewPage()
