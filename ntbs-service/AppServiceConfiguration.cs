@@ -220,6 +220,7 @@ public static class AppServiceConfiguration
         services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceFactory>();
         services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
         services.AddScoped<IUserSearchService, UserSearchService>();
+        services.AddScoped<IServiceDirectoryService, ServiceDirectoryService>();
         services.AddScoped<IClusterImportService, ClusterImportService>();
         services.AddScoped<ISpecimenImportService, SpecimenImportService>();
         services.AddScoped<ICaseManagerImportService, CaseManagerImportService>();
