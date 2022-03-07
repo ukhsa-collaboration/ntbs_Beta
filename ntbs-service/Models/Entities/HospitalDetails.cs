@@ -35,6 +35,13 @@ namespace ntbs_service.Models.Entities
         public Guid? HospitalId { get; set; }
         public virtual Hospital Hospital { get; set; }
 
+        [Display(Name = "TB Service record is shared with")]
+        public string SecondaryTBServiceCode { get; set; }
+        public virtual TBService SecondaryTBService { get; set; }
+
+        [Display(Name = "Reason for TB Service share")]
+        public string ReasonForTBServiceShare { get; set; }
+
         [NotMapped]
         public bool HospitalBelongsToTbService => Hospital?.TBService == TBService;
 
