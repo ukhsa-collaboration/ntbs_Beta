@@ -10,17 +10,18 @@
     var isLastPage = (bool?) ViewData["IsLastPage"] ?? false;
 
     var buttonName = "";
-    if (isDraft && isLastPage && pageHasEditableContent)
-    {
-        buttonName = "Save";
-    }
-    else if (!pageHasEditableContent)
+    
+    if (!pageHasEditableContent)
     {
         buttonName = "Continue";
     }
+    else if (isDraft && !isLastPage)
+    {
+        buttonName = "Save and continue";
+    }
     else
     {
-        buttonName = isDraft ? "Save and continue" : "Save";
+        buttonName = "Save";
     }
 
     var id = ViewData.ContainsKey("id") ? ViewData["id"] : "save-button";
