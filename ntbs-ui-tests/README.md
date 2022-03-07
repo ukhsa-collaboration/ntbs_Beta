@@ -79,3 +79,10 @@ will manifest as all tests failing to find their first element in headless mode.
 To fix this: trust your local IIS Express certificate. A guide to doing this can be found
 [here](https://blogs.iis.net/robert_mcmurray/how-to-trust-the-iis-express-self-signed-certificate),
 using resolution number 2.
+
+### I'm getting an error where Chrome driver is at a different version than my Chrome browser
+This issue *should not* affect the UI tests running from the github action - this issue was fixed in NTBS-2382.
+
+Locally this is still a possibility. To fix this:
+- Go to `About Chrome` in your Chrome's browser settings and then copy the version number. For example let's say your browser is version `98.0.4758.102`
+- Add `--drivers.chrome.version=98.0.4758.102` to **both** lines in the [start_selenium](start_selenium.ps1) file.
