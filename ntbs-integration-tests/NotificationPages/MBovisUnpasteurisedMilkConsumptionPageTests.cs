@@ -15,7 +15,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string NotificationSubPath => NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions;
 
-        public MBovisUnpasteurisedMilkConsumptionPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
+        public MBovisUnpasteurisedMilkConsumptionPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory)
         {
         }
 
