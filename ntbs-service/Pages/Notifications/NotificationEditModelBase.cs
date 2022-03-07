@@ -62,7 +62,7 @@ namespace ntbs_service.Pages.Notifications
                 return RedirectToPage("/Notifications/Overview", new {NotificationId});
             }
             
-            if (PermissionLevel != PermissionLevel.Edit)
+            if (PermissionLevel != PermissionLevel.Edit && !UserHasSharePermissionsAndOnCorrectPage())
             {
                 return RedirectForNotified();
             }
@@ -85,7 +85,7 @@ namespace ntbs_service.Pages.Notifications
             }
 
             var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
-            if (permissionLevel != PermissionLevel.Edit)
+            if (permissionLevel != PermissionLevel.Edit && !UserHasSharePermissionsAndOnCorrectPage())
             {
                 return ForbiddenResult();
             }
@@ -108,6 +108,12 @@ namespace ntbs_service.Pages.Notifications
                 default:
                     return RedirectAfterSave(isBeingSubmitted);
             }
+        }
+
+        private bool UserHasSharePermissionsAndOnCorrectPage()
+        {
+            return PermissionLevel == PermissionLevel.SharedWith &&
+                   CurrentPage == NotificationSubPaths.EditContactTracing;
         }
 
         private async Task SetNotification(string actionName)

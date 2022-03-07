@@ -84,10 +84,7 @@ namespace ntbs_service.Services
             ClaimsPrincipal contextUser,
             Notification notification)
         {
-            if (_userPermissionsFilter == null)
-            {
-                _userPermissionsFilter = await GetUserPermissionsFilterAsync(contextUser);
-            }
+            _userPermissionsFilter ??= await GetUserPermissionsFilterAsync(contextUser);
 
             var userIsReadOnly = _userHelper.UserIsReadOnly(contextUser);
 
@@ -108,6 +105,13 @@ namespace ntbs_service.Services
                     : notification.NotificationStatus == NotificationStatus.Closed
                         ? (PermissionLevel.ReadOnly, Messages.ClosedNoEdit)
                         : (PermissionLevel.Edit, null);
+            }
+
+            if (UserInSharedTbService(notification))
+            {
+                return userIsReadOnly
+                    ? (PermissionLevel.ReadOnly, Messages.NoEditPermission)
+                    : (PermissionLevel.SharedWith, Messages.SharedServicePermission);
             }
 
             if (UserBelongsToResidencePhecOfNotification(notification)
@@ -209,6 +213,12 @@ namespace ntbs_service.Services
         {
             return _userHelper.UserIsReadOnly(user) &&
                    (bannerModel.NotificationStatus == NotificationStatus.Draft || bannerModel.Source != NotificationBannerModel.NtbsSource);
+        }
+
+        public bool UserInSharedTbService(Notification notification)
+        {
+            return _userPermissionsFilter.UserBelongsToTbService(notification.HospitalDetails.SecondaryTBServiceCode) 
+                    || _userPermissionsFilter.UserBelongsToPHEC(notification.HospitalDetails.SecondaryTBService?.PHECCode);
         }
     }
 }

@@ -41,6 +41,7 @@ namespace ntbs_service.Pages.Notifications
         public DataQualityDraftAlert DraftAlert { get; set; }
         public PermissionLevel PermissionLevel { get; set; }
         public string PermissionReason { get; set; }
+        public bool IsShared { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public int NotificationId { get; set; }
@@ -55,6 +56,7 @@ namespace ntbs_service.Pages.Notifications
             var (permissionLevel, reason) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
             PermissionLevel = permissionLevel;
             PermissionReason = reason;
+            IsShared = PermissionLevel == PermissionLevel.SharedWith;
             NotificationBannerModel = new NotificationBannerModel(Notification, PermissionLevel == PermissionLevel.None);
         }
 
