@@ -12,7 +12,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string NotificationSubPath => NotificationSubPaths.EditMDRDetails;
 
-        public MdrDetailsPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        public MdrDetailsPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         [Fact]
         public async Task Post_ReturnsPageWithFieldsRequiredErrors_IfExposureYesSelected()

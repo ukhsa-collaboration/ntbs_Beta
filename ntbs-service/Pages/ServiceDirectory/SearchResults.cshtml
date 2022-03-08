@@ -11,82 +11,132 @@
     <back-link-retaining-history inline-template>
         <nhs-back-link v-on:click="navigateBack" href="/ServiceDirectory">Back</nhs-back-link>
     </back-link-retaining-history>
-    
+
     <partial name="Partials/SearchFormPartial" model="Model"/>
 
     <div class="case-manager-results-summary">
         @{
-            var resultCount = Model.UserSearchResults?.NumberOfResults ?? 0;
+            var resultCount = Model.DirectorySearchResults?.NumberOfResults ?? 0;
             var resultsText = resultCount == 1 ? "result" : "results";
             var resultsFoundString = $"{resultCount.ToString()} {resultsText} found";
         }
         <p> @resultsFoundString </p>
     </div>
-    
-    @if (Model.UserSearchResults != null)
+
+    @if (Model.DirectorySearchResults is not null)
     {
-        <ol class="search-results-list" id="search-results">
-            @foreach (var user in @Model.UserSearchResults)
-            {
-                <li>
-                    <!-- Each search hit is displayed using a notification banner -->
-                    <div class="case-manager-search-result-container" id="search-result-item">
-                        <a class="case-manager-search-result-name" href="@RouteHelper.GetContactDetailsPath(user.Id)">
-                             @user.DisplayName
-                        </a>
-                        <nhs-summary-list classes="case-manager-search-result-item-summary" is-without-border="true">
-                            @foreach (var tbService in user.CaseManagerTbServices.Select(x => x.TbService))
-                            {
+        foreach (var item in Model.DirectorySearchResults)
+        {
+            <ol class="search-results-list" id="search-results">
+
+                @if (item.IsRegion)
+                {
+                    <li class="directory-region-search-result-item">
+                        <div class="directory-search-result-container non-user-search-result">
+                            <b>Region:</b>
+                            <a class="link-without-visited-state" href=@($"/ServiceDirectory/Region/{item.Region.Code}")>
+                                @item.Region.Name
+                            </a>
+                        </div>
+                    </li>
+                }
+
+                @if (item.IsTBService)
+                {
+                    <li class="directory-service-search-result-item">
+                        <div class="directory-search-result-container non-user-search-result" id="">
+                            <b>Service:</b>
+                            <a class="link-without-visited-state" href=@($"/ServiceDirectory/Region/{item.TBService.PHEC?.Code}")>
+                                @item.TBService.PHEC?.Name
+                            </a>
+                            <span> > </span>
+                            <a class="link-without-visited-state"
+                               href=@($"/ServiceDirectory/Region/{item.TBService.PHECCode}#accordion-heading-{item.TBService.Code}")>
+                                @item.TBService.Name
+                            </a>
+                        </div>
+                    </li>
+                }
+
+                @if (item.IsHospital)
+                {
+                    <li class="directory-hospital-search-result-item">
+                        <div class="directory-search-result-container non-user-search-result" id="">
+                            <b>Hospital:</b>
+                            <a class="link-without-visited-state" href=@($"/ServiceDirectory/Region/{item.Hospital.TBService.PHEC.Code}")>
+                                @item.Hospital.TBService?.PHEC?.Name
+                            </a>
+                            <span> > </span>
+                            <a class="link-without-visited-state"
+                               href=@($"/ServiceDirectory/Region/{item.Hospital.TBService.PHECCode}#accordion-heading-{item.Hospital.TBService.Code}")>
+                                @item.Hospital.TBService?.Name
+                            </a>
+                            <span> > </span>
+                            @item.Hospital.Name
+                        </div>
+                    </li>
+                }
+
+                @if (item.IsUser)
+                {
+                    <li class="directory-user-search-result-item">
+                        <!-- Each search hit is displayed using a notification banner -->
+                        <div class="directory-search-result-container" id="user-search-result-item">
+                            <a class="case-manager-search-result-name" href="@RouteHelper.GetContactDetailsPath(item.User.Id)">
+                                @item.User.DisplayName
+                            </a>
+                            <nhs-summary-list classes="case-manager-search-result-item-summary" is-without-border="true">
+                                @foreach (var tbService in item.User.CaseManagerTbServices.Select(x => x.TbService))
+                                {
+                                    <nhs-summary-list-row>
+                                        <nhs-summary-list-row-key>Service:</nhs-summary-list-row-key>
+                                        <nhs-summary-list-row-value>
+                                            <span>
+                                                <a class="link-without-visited-state"
+                                                   href=@($"/ServiceDirectory/Region/{tbService.PHECCode}")>
+                                                    @tbService.PHEC?.Name
+                                                </a>
+                                                <span> > </span>
+                                                <a class="link-without-visited-state"
+                                                   href=@($"/ServiceDirectory/Region/{tbService.PHECCode}#accordion-heading-{tbService.Code}")>
+                                                    @tbService.Name
+                                                </a>
+                                            </span>
+                                        </nhs-summary-list-row-value>
+                                    </nhs-summary-list-row>
+                                }
+                                @foreach (var region in Model.AllPhecs.Where(p => item.User.AdGroups != null && item.User.AdGroups.Split(",").Contains(p.AdGroup)))
+                                {
+                                    <nhs-summary-list-row>
+                                        <nhs-summary-list-row-key>Region:</nhs-summary-list-row-key>
+                                        <nhs-summary-list-row-value>
+                                            <span>
+                                                <a class="link-without-visited-state"
+                                                   href=@($"/ServiceDirectory/Region/{region.Code}")>
+                                                    @region.Name
+                                                </a>
+                                            </span>
+                                        </nhs-summary-list-row-value>
+                                    </nhs-summary-list-row>
+                                }
                                 <nhs-summary-list-row>
-                                    <nhs-summary-list-row-key>Service:</nhs-summary-list-row-key>
-                                    <nhs-summary-list-row-value>
-                                        <span>
-                                            <a class="link-without-visited-state"
-                                               href=@($"/ServiceDirectory/Region/{tbService.PHECCode}")>
-                                                @tbService.PHEC?.Name
-                                            </a>
-                                            <span> > </span>
-                                            <a class="link-without-visited-state"
-                                               href=@($"/ServiceDirectory/Region/{tbService.PHECCode}#accordion-heading-{tbService.Code}")>
-                                                @tbService.Name
-                                            </a>
-                                        </span>
-                                    </nhs-summary-list-row-value>
+                                    <nhs-summary-list-row-key>Job Title:</nhs-summary-list-row-key>
+                                    <nhs-summary-list-row-value>@item.User.JobTitle</nhs-summary-list-row-value>
                                 </nhs-summary-list-row>
-                            }
-                            @foreach (var region in Model.AllPhecs.Where(p => user.AdGroups != null && user.AdGroups.Split(",").Contains(p.AdGroup)))
-                            {
-                                <nhs-summary-list-row>
-                                    <nhs-summary-list-row-key>Region:</nhs-summary-list-row-key>
-                                    <nhs-summary-list-row-value>
-                                        <span>
-                                            <a class="link-without-visited-state"
-                                               href=@($"/ServiceDirectory/Region/{region.Code}")>
-                                                @region.Name
-                                            </a>
-                                        </span>
-                                    </nhs-summary-list-row-value>
-                                </nhs-summary-list-row>
-                            }
-                            <nhs-summary-list-row>
-                                <nhs-summary-list-row-key>Job Title:</nhs-summary-list-row-key>
-                                <nhs-summary-list-row-value>@user.JobTitle</nhs-summary-list-row-value>
-                            </nhs-summary-list-row>
-                        </nhs-summary-list>
-                    </div>
-                    
-                </li>
-            }
-        </ol>
-    
+                            </nhs-summary-list>
+                        </div>
+                    </li>
+                }
+            </ol>
+        }
         <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
             <ul class="nhsuk-list nhsuk-pagination__list">
-                <nhs-pagination next-link-text="@Model.UserSearchResults.NextPageText" 
+                <nhs-pagination next-link-text="@Model.DirectorySearchResults.NextPageText"
                                 next-url="@Model.NextPageUrl"
-                                previous-link-text="@Model.UserSearchResults.PreviousPageText" 
+                                previous-link-text="@Model.DirectorySearchResults.PreviousPageText"
                                 previous-url="@Model.PreviousPageUrl">
                 </nhs-pagination>
             </ul>
-        </nav>    
+        </nav>
     }
 </nhs-width-container>

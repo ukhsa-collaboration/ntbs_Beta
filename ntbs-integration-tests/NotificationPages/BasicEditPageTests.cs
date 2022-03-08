@@ -15,7 +15,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         private readonly ITestOutputHelper _output;
 
-        public BasicEditPageTests(NtbsWebApplicationFactory<Startup> factory, ITestOutputHelper output) : base(factory)
+        public BasicEditPageTests(NtbsWebApplicationFactory<EntryPoint> factory, ITestOutputHelper output) : base(factory)
         {
             _output = output;
         }

@@ -19,7 +19,7 @@ namespace ntbs_integration_tests.LabResultsPage
 {
     public class LabResultsPageTests : TestRunnerBase
     {
-        public LabResultsPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        public LabResultsPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         const string PageRoute = "/LabResults";
 

@@ -34,6 +34,7 @@ namespace ntbs_service.DataAccess
         }
 
         public virtual DbSet<Country> Country { get; set; }
+        public virtual DbSet<Continent> Continent { get; set; }
         public virtual DbSet<Ethnicity> Ethnicity { get; set; }
         public virtual DbSet<TBService> TbService { get; set; }
         public virtual DbSet<Hospital> Hospital { get; set; }
@@ -138,6 +139,12 @@ namespace ntbs_service.DataAccess
                 entity.ToTable(nameof(Country), ReferenceDataSchemaName);
 
                 entity.HasData(Models.SeedData.Countries.GetCountriesArray());
+            });
+
+            modelBuilder.Entity<Continent>(entity =>
+            {
+                entity.ToTable(nameof(Continent), ReferenceDataSchemaName);
+                entity.HasData(Models.SeedData.Continents.GetContinents());
             });
 
             modelBuilder.Entity<Ethnicity>(entity =>
