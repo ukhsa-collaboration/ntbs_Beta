@@ -21,7 +21,7 @@ namespace ntbs_service.Models.Entities
         [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
         [ValidClinicalDate]
         [AssertThat(nameof(EventDateAfterDob), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
-        [AssertThat(nameof(AfterNotificationDateUnlessPostMortem), ErrorMessage = ValidationMessages.DateShouldBeLaterThanNotification)]
+        [AssertThat(nameof(AfterDiagnosisDateUnlessPostMortem), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDiagnosisDate)]
         public DateTime? EventDate { get; set; }
 
         [Display(Name = "Event")]
@@ -52,7 +52,7 @@ namespace ntbs_service.Models.Entities
         [NotMapped]
         public DateTime? Dob { get; set; }
         [NotMapped]
-        public DateTime? DateOfNotification { get; set; }
+        public DateTime? DateOfDiagnosis { get; set; }
         [NotMapped]
         public bool IsNotificationPostMortem { get; set; }
 
@@ -62,9 +62,9 @@ namespace ntbs_service.Models.Entities
         public bool TreatmentEventIsEndingEvent => TreatmentOutcome?.TreatmentOutcomeType == TreatmentOutcomeType.Died
                                                    || TreatmentOutcome?.TreatmentOutcomeType == TreatmentOutcomeType.Cured
                                                    || TreatmentOutcome?.TreatmentOutcomeType == TreatmentOutcomeType.Completed;
-        public bool AfterNotificationDateUnlessPostMortem => EventDateAfterNotificationDate || (IsNotificationPostMortem && TreatmentEventIsDeathEvent);
+        public bool AfterDiagnosisDateUnlessPostMortem => EventDateAfterDiagnosisDate || (IsNotificationPostMortem && TreatmentEventIsDeathEvent);
         public bool EventDateAfterDob => Dob == null || EventDate >= Dob;
-        private bool EventDateAfterNotificationDate => DateOfNotification == null || EventDate >= DateOfNotification;
+        private bool EventDateAfterDiagnosisDate => DateOfDiagnosis == null || EventDate >= DateOfDiagnosis;
         public string FormattedEventDate => EventDate.ConvertToString();
 
         public string FormattedEventTypeAndOutcome => GetFormattedEventTypeAndOutcome();

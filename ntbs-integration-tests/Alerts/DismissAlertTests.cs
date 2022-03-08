@@ -8,7 +8,7 @@ namespace ntbs_integration_tests.Alerts
 {
     public class DismissAlertTests : TestRunnerBase
     {
-        public DismissAlertTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
+        public DismissAlertTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory)
         {
         }
 

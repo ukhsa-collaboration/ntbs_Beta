@@ -367,7 +367,6 @@ Feature: Notification creation
     And I enter He did it into 'treatmentevent-note'
     And I click on the 'save-treatment-event-button' button
     And I wait
-    When I click on the 'save-button' button
     When I click on the 'submit-button' button
 
     Then I can see the value 'Outcome at 12 months No outcome recorded' for the field '12-month-outcome' in the 'TreatmentEvents' overview section

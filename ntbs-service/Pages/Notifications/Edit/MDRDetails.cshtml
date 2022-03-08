@@ -8,6 +8,7 @@
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
     var title = NotificationSection.MdrDetails.ToDisplayString();
     ViewData["Title"] = $"Notification #{Model.NotificationId} - {title}";
+    ViewData["IsLastPage"] = true;
     var fullValidation = Model.MDRDetails.ShouldValidateFull ? "True" : "False";
 }
 

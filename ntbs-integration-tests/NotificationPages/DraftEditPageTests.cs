@@ -13,7 +13,7 @@ namespace ntbs_integration_tests.NotificationPages
 {
     public class DraftEditPageTests : TestRunnerNotificationBase
     {
-        public DraftEditPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        public DraftEditPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         public static IEnumerable<Notification> GetSeedingNotifications()
         {
@@ -67,6 +67,52 @@ namespace ntbs_integration_tests.NotificationPages
                 // Assert
                 response.AssertRedirectTo($"/Notifications/{id}");
             }
+        }
+
+        [Fact]
+        public async Task LastEditPage_HasNoSaveButton_ForDraftNonMDRRecord()
+        {
+            // Arrange
+            const int id = Utilities.DRAFT_NOTIFICATION_WITH_DRAFT_ALERT;
+            var lastEditPageUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditTreatmentEvents);
+
+            // Act
+            var lastEditPage = await GetDocumentForUrlAsync(lastEditPageUrl);
+
+            // Assert
+            Assert.Null(lastEditPage.GetElementById("save-button"));
+        }
+        
+        [Fact]
+        public async Task EditTreatmentEventsPage_HasContinueButton_WhenDraftRecordIsMDR()
+        {
+            // Arrange
+            const int id = Utilities.DRAFT_ID;
+            var lastEditPageUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditTreatmentEvents);
+
+            // Act
+            var lastEditPage = await GetDocumentForUrlAsync(lastEditPageUrl);
+            var button = lastEditPage.GetElementById("save-button");
+            
+            // Assert
+            Assert.NotNull(button);
+            Assert.Equal("Continue", button.TextContent.Trim());
+        }
+        
+        [Fact]
+        public async Task LastEditPage_HasSaveButton_WithNoContinue_WhenDraftRecordIsMDR()
+        {
+            // Arrange
+            const int id = Utilities.DRAFT_ID;
+            var lastEditPageUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditMDRDetails);
+
+            // Act
+            var lastEditPage = await GetDocumentForUrlAsync(lastEditPageUrl);
+            var button = lastEditPage.GetElementById("save-button");
+            
+            // Assert
+            Assert.NotNull(button);
+            Assert.Equal("Save", button.TextContent.Trim());
         }
     }
 }

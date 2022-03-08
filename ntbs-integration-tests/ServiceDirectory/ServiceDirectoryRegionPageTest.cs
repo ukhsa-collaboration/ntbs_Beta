@@ -8,7 +8,7 @@ namespace ntbs_integration_tests.ServiceDirectory
 {
     public class ServiceDirectoryRegionPageTest : TestRunnerBase
     {
-        public ServiceDirectoryRegionPageTest(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        public ServiceDirectoryRegionPageTest(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
         public const string PageRoute = "ServiceDirectory/Region/E45000009";
 
@@ -27,6 +27,22 @@ namespace ntbs_integration_tests.ServiceDirectory
             Assert.Contains(Utilities.CASEMANAGER_GATESHEAD_DISPLAY_NAME1, gatesheadSection.TextContent);
             Assert.Contains(Utilities.CASEMANAGER_GATESHEAD_DISPLAY_NAME2, gatesheadSection.TextContent);
             Assert.DoesNotContain(Utilities.CASEMANAGER_GATESHEAD_INACTIVE_DISPLAY_NAME, gatesheadSection.TextContent);
+        }
+
+        [Fact]
+        public async Task GetRegionPage_IncludesActiveHospitalsForGivenService()
+        {
+            // Arrange
+            var initialPage = await Client.GetAsync(PageRoute);
+            var pageContent = await GetDocumentAsync(initialPage);
+
+            // Act
+            var gatesheadSection = pageContent.GetElementsByClassName("govuk-accordion__section")
+                .Single(elem => elem.TextContent.Contains("Gateshead"));
+
+            // Assert
+            Assert.Contains(Utilities.HOSPITAL_SOUTH_TYNESIDE_DISTRICT_HOSPITAL_NAME, gatesheadSection.TextContent);
+            Assert.Contains(Utilities.HOSPITAL_QUEEN_ELIZABETH_HOSPITAL_GATESHEAD_NAME, gatesheadSection.TextContent);
         }
     }
 }

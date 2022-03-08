@@ -45,28 +45,14 @@ spec:
       workspaces:
         - name: output
           workspace: shared-workspace
-    - name: download-migration
-      params:
-        - name: database
-          value: migration
-        - name: container
-          value: data-migration
-        - name: commit_hash
-          value: $(tasks.git-clone-migration.results.commit)
-      runAfter:
-        - git-clone-migration
-      taskRef:
-        kind: Task
-        name: download-dacpac
-      workspaces:
-        - name: output
-          workspace: shared-workspace
     - name: publish-migration
       params:
         - name: checkout_directory
           value: data-migration
-        - name: database
-          value: migration
+        - name: dacpac_directory
+          value: build
+        - name: dacpac_file_name
+          value: ntbs-data-migration.dacpac
         - name: config_map
           value: $(params.environment)
         - name: publish_profile_key
@@ -76,7 +62,7 @@ spec:
         - name: sql-user-secret
           value: $(params.environment)-sql-keytab
       runAfter:
-        - download-migration
+        - git-clone-migration
       taskRef:
         kind: Task
         name: publish-dacpac
@@ -102,28 +88,14 @@ spec:
       workspaces:
         - name: output
           workspace: shared-workspace
-    - name: download-specimen-matching
-      params:
-        - name: database
-          value: specimen-matching
-        - name: container
-          value: specimen-matching
-        - name: commit_hash
-          value: $(tasks.git-clone-specimen-matching.results.commit)
-      runAfter:
-        - git-clone-specimen-matching
-      taskRef:
-        kind: Task
-        name: download-dacpac
-      workspaces:
-        - name: output
-          workspace: shared-workspace
     - name: publish-specimen-matching
       params:
         - name: checkout_directory
           value: specimen-matching
-        - name: database
-          value: specimen-matching
+        - name: dacpac_directory
+          value: build
+        - name: dacpac_file_name
+          value: ntbs-specimen-matching.dacpac
         - name: config_map
           value: $(params.environment)
         - name: publish_profile_key
@@ -133,7 +105,7 @@ spec:
         - name: sql-user-secret
           value: $(params.environment)-sql-keytab
       runAfter:
-        - download-specimen-matching
+        - git-clone-specimen-matching
       taskRef:
         kind: Task
         name: publish-dacpac
@@ -159,28 +131,14 @@ spec:
       workspaces:
         - name: output
           workspace: shared-workspace
-    - name: download-reporting
-      params:
-        - name: database
-          value: reporting
-        - name: container
-          value: reporting
-        - name: commit_hash
-          value: $(tasks.git-clone-reporting.results.commit)
-      runAfter:
-        - git-clone-reporting
-      taskRef:
-        kind: Task
-        name: download-dacpac
-      workspaces:
-        - name: output
-          workspace: shared-workspace
     - name: publish-reporting
       params:
         - name: checkout_directory
           value: reporting
-        - name: database
-          value: reporting
+        - name: dacpac_directory
+          value: build
+        - name: dacpac_file_name
+          value: ntbs-reporting.dacpac
         - name: config_map
           value: $(params.environment)
         - name: publish_profile_key
@@ -190,7 +148,7 @@ spec:
         - name: sql-user-secret
           value: $(params.environment)-sql-keytab
       runAfter:
-        - download-reporting
+        - git-clone-reporting
       taskRef:
         kind: Task
         name: publish-dacpac

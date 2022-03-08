@@ -1451,6 +1451,141 @@ namespace ntbs_service.Migrations
                     b.ToTable("NotificationAndDuplicateIds");
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Continent", b =>
+                {
+                    b.Property<int>("ContinentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContinentId"), 1L, 1);
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ContinentId");
+
+                    b.ToTable("Continent", "ReferenceData");
+
+                    b.HasData(
+                        new
+                        {
+                            ContinentId = 1,
+                            Code = "AF",
+                            Name = "Africa"
+                        },
+                        new
+                        {
+                            ContinentId = 2,
+                            Code = "AN",
+                            Name = "Antarctica"
+                        },
+                        new
+                        {
+                            ContinentId = 3,
+                            Code = "AS",
+                            Name = "Asia"
+                        },
+                        new
+                        {
+                            ContinentId = 4,
+                            Code = "CEU",
+                            Name = "Central Europe"
+                        },
+                        new
+                        {
+                            ContinentId = 5,
+                            Code = "EAS",
+                            Name = "East Asia"
+                        },
+                        new
+                        {
+                            ContinentId = 6,
+                            Code = "EEU",
+                            Name = "East Europe"
+                        },
+                        new
+                        {
+                            ContinentId = 7,
+                            Code = "EMD",
+                            Name = "East Mediterranean"
+                        },
+                        new
+                        {
+                            ContinentId = 8,
+                            Code = "EU",
+                            Name = "Europe"
+                        },
+                        new
+                        {
+                            ContinentId = 9,
+                            Code = "NAF",
+                            Name = "North Africa"
+                        },
+                        new
+                        {
+                            ContinentId = 10,
+                            Code = "NA",
+                            Name = "North America"
+                        },
+                        new
+                        {
+                            ContinentId = 11,
+                            Code = "NAO",
+                            Name = "North America and Oceania"
+                        },
+                        new
+                        {
+                            ContinentId = 12,
+                            Code = "OC",
+                            Name = "Oceania"
+                        },
+                        new
+                        {
+                            ContinentId = 13,
+                            Code = "SA",
+                            Name = "South America"
+                        },
+                        new
+                        {
+                            ContinentId = 14,
+                            Code = "SCA",
+                            Name = "South and Central America, and the Caribbean"
+                        },
+                        new
+                        {
+                            ContinentId = 15,
+                            Code = "SAS",
+                            Name = "South Asia"
+                        },
+                        new
+                        {
+                            ContinentId = 16,
+                            Code = "SEA",
+                            Name = "South East Asia"
+                        },
+                        new
+                        {
+                            ContinentId = 17,
+                            Code = "SSA",
+                            Name = "Sub-Saharan Africa"
+                        },
+                        new
+                        {
+                            ContinentId = 18,
+                            Code = "UU",
+                            Name = "Unknown"
+                        },
+                        new
+                        {
+                            ContinentId = 19,
+                            Code = "WEU",
+                            Name = "West Europe"
+                        });
+                });
+
             modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Country", b =>
                 {
                     b.Property<int>("CountryId")
@@ -1458,6 +1593,9 @@ namespace ntbs_service.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CountryId"), 1L, 1);
+
+                    b.Property<int>("ContinentId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("HasHighTbOccurence")
                         .HasColumnType("bit");
@@ -1474,6 +1612,8 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("CountryId");
 
+                    b.HasIndex("ContinentId");
+
                     b.HasIndex("IsLegacy", "Name");
 
                     b.ToTable("Country", "ReferenceData");
@@ -1482,6 +1622,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 1,
+                            ContinentId = 15,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "AF",
@@ -1490,6 +1631,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 2,
+                            ContinentId = 19,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "AX",
@@ -1498,6 +1640,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 3,
+                            ContinentId = 4,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "AL",
@@ -1506,6 +1649,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 4,
+                            ContinentId = 9,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "DZ",
@@ -1514,6 +1658,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 5,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "AS",
@@ -1522,6 +1667,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 6,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "AD",
@@ -1530,6 +1676,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 7,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "AO",
@@ -1538,6 +1685,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 8,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "AI",
@@ -1546,6 +1694,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 9,
+                            ContinentId = 2,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "AQ",
@@ -1554,6 +1703,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 10,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "AG",
@@ -1562,6 +1712,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 11,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "AR",
@@ -1570,6 +1721,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 12,
+                            ContinentId = 6,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "AM",
@@ -1578,6 +1730,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 13,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "AW",
@@ -1586,6 +1739,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 14,
+                            ContinentId = 11,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "AU",
@@ -1594,6 +1748,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 15,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "AT",
@@ -1602,6 +1757,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 16,
+                            ContinentId = 6,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "AZ",
@@ -1610,6 +1766,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 17,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BS",
@@ -1618,6 +1775,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 18,
+                            ContinentId = 7,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BH",
@@ -1626,6 +1784,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 19,
+                            ContinentId = 15,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BD",
@@ -1634,6 +1793,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 20,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BB",
@@ -1642,6 +1802,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 21,
+                            ContinentId = 6,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BY",
@@ -1650,6 +1811,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 22,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "BE",
@@ -1658,6 +1820,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 23,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BZ",
@@ -1666,6 +1829,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 24,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BJ",
@@ -1674,6 +1838,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 25,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BM",
@@ -1682,6 +1847,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 26,
+                            ContinentId = 15,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BT",
@@ -1690,6 +1856,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 27,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BO",
@@ -1698,6 +1865,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 28,
+                            ContinentId = 4,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BA",
@@ -1706,6 +1874,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 29,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BW",
@@ -1714,6 +1883,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 30,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BV",
@@ -1722,6 +1892,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 31,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BR",
@@ -1730,6 +1901,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 32,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "IO",
@@ -1738,6 +1910,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 33,
+                            ContinentId = 16,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BN",
@@ -1746,6 +1919,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 34,
+                            ContinentId = 4,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BG",
@@ -1754,6 +1928,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 35,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BF",
@@ -1762,6 +1937,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 36,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BI",
@@ -1770,6 +1946,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 37,
+                            ContinentId = 16,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "KH",
@@ -1778,6 +1955,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 38,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "CM",
@@ -1786,6 +1964,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 39,
+                            ContinentId = 11,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "CA",
@@ -1794,6 +1973,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 40,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "CV",
@@ -1802,6 +1982,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 41,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "KY",
@@ -1810,6 +1991,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 42,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "CF",
@@ -1818,6 +2000,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 43,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TD",
@@ -1826,6 +2009,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 44,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "CL",
@@ -1834,6 +2018,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 45,
+                            ContinentId = 5,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "CN",
@@ -1842,6 +2027,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 46,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "CX",
@@ -1850,6 +2036,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 47,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "CC",
@@ -1858,6 +2045,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 48,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "CO",
@@ -1866,6 +2054,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 49,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "KM",
@@ -1874,6 +2063,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 50,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "CG",
@@ -1882,6 +2072,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 51,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "CD",
@@ -1890,6 +2081,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 52,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "CK",
@@ -1898,6 +2090,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 53,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "CR",
@@ -1906,6 +2099,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 54,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "CI",
@@ -1914,6 +2108,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 55,
+                            ContinentId = 4,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "HR",
@@ -1922,6 +2117,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 56,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "CU",
@@ -1930,6 +2126,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 57,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "CY",
@@ -1938,6 +2135,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 58,
+                            ContinentId = 4,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "CZ",
@@ -1946,6 +2144,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 59,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "DK",
@@ -1954,6 +2153,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 60,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "DJ",
@@ -1962,6 +2162,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 61,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "DM",
@@ -1970,6 +2171,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 62,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "DO",
@@ -1978,6 +2180,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 63,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "EC",
@@ -1986,6 +2189,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 64,
+                            ContinentId = 9,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "EG",
@@ -1994,6 +2198,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 65,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SV",
@@ -2002,6 +2207,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 66,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "GQ",
@@ -2010,6 +2216,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 67,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "ER",
@@ -2018,6 +2225,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 68,
+                            ContinentId = 6,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "EE",
@@ -2026,6 +2234,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 69,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "ET",
@@ -2034,6 +2243,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 70,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "FK",
@@ -2042,6 +2252,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 71,
+                            ContinentId = 19,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "FO",
@@ -2050,6 +2261,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 72,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "FJ",
@@ -2058,6 +2270,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 73,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "FI",
@@ -2066,6 +2279,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 74,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "FR",
@@ -2074,6 +2288,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 75,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "GF",
@@ -2082,6 +2297,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 76,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "PF",
@@ -2090,6 +2306,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 77,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TF",
@@ -2098,6 +2315,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 78,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "GA",
@@ -2106,6 +2324,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 79,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "GM",
@@ -2114,6 +2333,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 80,
+                            ContinentId = 6,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "GE",
@@ -2122,6 +2342,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 81,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "DE",
@@ -2130,6 +2351,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 82,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "GH",
@@ -2138,6 +2360,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 83,
+                            ContinentId = 19,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "GI",
@@ -2146,6 +2369,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 84,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "GR",
@@ -2154,6 +2378,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 85,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "GL",
@@ -2162,6 +2387,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 86,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "GD",
@@ -2170,6 +2396,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 87,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "GP",
@@ -2178,6 +2405,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 88,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "GU",
@@ -2186,6 +2414,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 89,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "GT",
@@ -2194,6 +2423,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 90,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "GG",
@@ -2202,6 +2432,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 91,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "GN",
@@ -2210,6 +2441,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 92,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "GW",
@@ -2218,6 +2450,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 93,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "GY",
@@ -2226,6 +2459,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 94,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "HT",
@@ -2234,6 +2468,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 95,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "HM",
@@ -2242,6 +2477,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 96,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "VA",
@@ -2250,6 +2486,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 97,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "HN",
@@ -2258,6 +2495,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 98,
+                            ContinentId = 5,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "HK",
@@ -2266,6 +2504,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 99,
+                            ContinentId = 4,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "HU",
@@ -2274,6 +2513,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 100,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "IS",
@@ -2282,6 +2522,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 101,
+                            ContinentId = 15,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "IN",
@@ -2290,6 +2531,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 102,
+                            ContinentId = 16,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "ID",
@@ -2298,6 +2540,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 103,
+                            ContinentId = 15,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "IR",
@@ -2306,6 +2549,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 104,
+                            ContinentId = 7,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "IQ",
@@ -2314,6 +2558,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 105,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "IE",
@@ -2322,6 +2567,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 106,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "IM",
@@ -2330,6 +2576,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 107,
+                            ContinentId = 7,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "IL",
@@ -2338,6 +2585,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 108,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "IT",
@@ -2346,6 +2594,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 109,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "JM",
@@ -2354,6 +2603,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 110,
+                            ContinentId = 5,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "JP",
@@ -2362,6 +2612,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 111,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "JE",
@@ -2370,6 +2621,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 112,
+                            ContinentId = 7,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "JO",
@@ -2378,6 +2630,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 113,
+                            ContinentId = 6,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "KZ",
@@ -2386,6 +2639,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 114,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "KE",
@@ -2394,6 +2648,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 115,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "KI",
@@ -2402,6 +2657,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 116,
+                            ContinentId = 5,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "KP",
@@ -2410,6 +2666,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 117,
+                            ContinentId = 5,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "KR",
@@ -2418,6 +2675,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 118,
+                            ContinentId = 4,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "XK",
@@ -2426,6 +2684,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 119,
+                            ContinentId = 7,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "KW",
@@ -2434,6 +2693,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 120,
+                            ContinentId = 6,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "KG",
@@ -2442,6 +2702,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 121,
+                            ContinentId = 16,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "LA",
@@ -2450,6 +2711,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 122,
+                            ContinentId = 6,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "LV",
@@ -2458,6 +2720,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 123,
+                            ContinentId = 7,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "LB",
@@ -2466,6 +2729,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 124,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "LS",
@@ -2474,6 +2738,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 125,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "LR",
@@ -2482,6 +2747,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 126,
+                            ContinentId = 9,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "LY",
@@ -2490,6 +2756,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 127,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "LI",
@@ -2498,6 +2765,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 128,
+                            ContinentId = 6,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "LT",
@@ -2506,6 +2774,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 129,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "LU",
@@ -2514,6 +2783,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 130,
+                            ContinentId = 5,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MO",
@@ -2522,6 +2792,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 131,
+                            ContinentId = 4,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MK",
@@ -2530,6 +2801,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 132,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MG",
@@ -2538,6 +2810,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 133,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MW",
@@ -2546,6 +2819,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 134,
+                            ContinentId = 16,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MY",
@@ -2554,6 +2828,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 135,
+                            ContinentId = 15,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MV",
@@ -2562,6 +2837,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 136,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "ML",
@@ -2570,6 +2846,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 137,
+                            ContinentId = 19,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MT",
@@ -2578,6 +2855,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 138,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MH",
@@ -2586,6 +2864,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 139,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MQ",
@@ -2594,6 +2873,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 140,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MR",
@@ -2602,6 +2882,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 141,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MU",
@@ -2610,6 +2891,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 142,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "YT",
@@ -2618,6 +2900,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 143,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MX",
@@ -2626,6 +2909,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 144,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "FM",
@@ -2634,6 +2918,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 145,
+                            ContinentId = 6,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MD",
@@ -2642,6 +2927,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 146,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "MC",
@@ -2650,6 +2936,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 147,
+                            ContinentId = 5,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MN",
@@ -2658,6 +2945,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 148,
+                            ContinentId = 4,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "ME",
@@ -2666,6 +2954,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 149,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MS",
@@ -2674,6 +2963,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 150,
+                            ContinentId = 9,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MA",
@@ -2682,6 +2972,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 151,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MZ",
@@ -2690,6 +2981,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 152,
+                            ContinentId = 16,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MM",
@@ -2698,6 +2990,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 153,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "NA",
@@ -2706,6 +2999,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 154,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "NR",
@@ -2714,6 +3008,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 155,
+                            ContinentId = 15,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "NP",
@@ -2722,6 +3017,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 156,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "NL",
@@ -2730,6 +3026,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 157,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "AN",
@@ -2738,6 +3035,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 158,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "NC",
@@ -2746,6 +3044,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 159,
+                            ContinentId = 11,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "NZ",
@@ -2754,6 +3053,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 160,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "NI",
@@ -2762,6 +3062,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 161,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "NE",
@@ -2770,6 +3071,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 162,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "NG",
@@ -2778,6 +3080,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 163,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "NU",
@@ -2786,6 +3089,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 164,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "NF",
@@ -2794,6 +3098,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 165,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MP",
@@ -2802,6 +3107,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 166,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "NO",
@@ -2810,6 +3116,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 167,
+                            ContinentId = 7,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "OM",
@@ -2818,6 +3125,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 168,
+                            ContinentId = 18,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "  ",
@@ -2826,6 +3134,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 169,
+                            ContinentId = 15,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "PK",
@@ -2834,6 +3143,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 170,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "PW",
@@ -2842,6 +3152,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 171,
+                            ContinentId = 7,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "PS",
@@ -2850,6 +3161,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 172,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "PA",
@@ -2858,6 +3170,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 173,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "PG",
@@ -2866,6 +3179,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 174,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "PY",
@@ -2874,6 +3188,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 175,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "PE",
@@ -2882,6 +3197,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 176,
+                            ContinentId = 16,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "PH",
@@ -2890,6 +3206,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 177,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "PN",
@@ -2898,6 +3215,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 178,
+                            ContinentId = 4,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "PL",
@@ -2906,6 +3224,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 179,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "PT",
@@ -2914,6 +3233,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 180,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "PR",
@@ -2922,6 +3242,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 181,
+                            ContinentId = 7,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "QA",
@@ -2930,6 +3251,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 182,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "RE",
@@ -2938,6 +3260,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 183,
+                            ContinentId = 4,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "RO",
@@ -2946,6 +3269,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 184,
+                            ContinentId = 6,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "RU",
@@ -2954,6 +3278,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 185,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "RW",
@@ -2962,6 +3287,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 186,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "BL",
@@ -2970,6 +3296,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 187,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SH",
@@ -2978,6 +3305,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 188,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "KN",
@@ -2986,6 +3314,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 189,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "LC",
@@ -2994,6 +3323,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 190,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "MF",
@@ -3002,6 +3332,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 191,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "PM",
@@ -3010,6 +3341,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 192,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "VC",
@@ -3018,6 +3350,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 193,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "WS",
@@ -3026,6 +3359,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 194,
+                            ContinentId = 19,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SM",
@@ -3034,6 +3368,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 195,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "ST",
@@ -3042,6 +3377,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 196,
+                            ContinentId = 7,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SA",
@@ -3050,6 +3386,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 197,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SN",
@@ -3058,6 +3395,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 198,
+                            ContinentId = 4,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "RS",
@@ -3066,6 +3404,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 199,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SC",
@@ -3074,6 +3413,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 200,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SL",
@@ -3082,6 +3422,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 201,
+                            ContinentId = 16,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SG",
@@ -3090,6 +3431,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 202,
+                            ContinentId = 4,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SK",
@@ -3098,6 +3440,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 203,
+                            ContinentId = 4,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SI",
@@ -3106,6 +3449,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 204,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SB",
@@ -3114,6 +3458,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 205,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SO",
@@ -3122,6 +3467,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 206,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "ZA",
@@ -3130,6 +3476,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 207,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "GS",
@@ -3138,6 +3485,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 208,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SSD",
@@ -3146,6 +3494,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 209,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "ES",
@@ -3154,6 +3503,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 210,
+                            ContinentId = 15,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "LK",
@@ -3162,6 +3512,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 211,
+                            ContinentId = 9,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SD",
@@ -3170,6 +3521,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 212,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SR",
@@ -3178,6 +3530,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 213,
+                            ContinentId = 19,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SJ",
@@ -3186,6 +3539,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 214,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SZ",
@@ -3194,6 +3548,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 215,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "SE",
@@ -3202,6 +3557,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 216,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "CH",
@@ -3210,6 +3566,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 217,
+                            ContinentId = 7,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "SY",
@@ -3218,6 +3575,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 218,
+                            ContinentId = 5,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TW",
@@ -3226,6 +3584,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 219,
+                            ContinentId = 6,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TJ",
@@ -3234,6 +3593,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 220,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TZ",
@@ -3242,6 +3602,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 221,
+                            ContinentId = 16,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TH",
@@ -3250,6 +3611,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 222,
+                            ContinentId = 16,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TL",
@@ -3258,6 +3620,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 223,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TG",
@@ -3266,6 +3629,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 224,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TK",
@@ -3274,6 +3638,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 225,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TO",
@@ -3282,6 +3647,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 226,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TT",
@@ -3290,6 +3656,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 227,
+                            ContinentId = 9,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TN",
@@ -3298,6 +3665,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 228,
+                            ContinentId = 4,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TR",
@@ -3306,6 +3674,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 229,
+                            ContinentId = 6,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TM",
@@ -3314,6 +3683,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 230,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TC",
@@ -3322,6 +3692,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 231,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "TV",
@@ -3330,6 +3701,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 232,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "UG",
@@ -3338,6 +3710,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 233,
+                            ContinentId = 6,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "UA",
@@ -3346,6 +3719,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 234,
+                            ContinentId = 7,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "AE",
@@ -3354,6 +3728,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 235,
+                            ContinentId = 19,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "GB",
@@ -3362,6 +3737,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 236,
+                            ContinentId = 11,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "US",
@@ -3370,6 +3746,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 237,
+                            ContinentId = 11,
                             HasHighTbOccurence = false,
                             IsLegacy = false,
                             IsoCode = "UM",
@@ -3378,6 +3755,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 238,
+                            ContinentId = 18,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "-",
@@ -3386,6 +3764,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 239,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "UY",
@@ -3394,6 +3773,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 240,
+                            ContinentId = 6,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "UZ",
@@ -3402,6 +3782,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 241,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "VU",
@@ -3410,6 +3791,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 242,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "VE",
@@ -3418,6 +3800,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 243,
+                            ContinentId = 16,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "VN",
@@ -3426,6 +3809,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 244,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "VG",
@@ -3434,6 +3818,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 245,
+                            ContinentId = 14,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "VI",
@@ -3442,6 +3827,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 246,
+                            ContinentId = 11,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "WF",
@@ -3450,6 +3836,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 247,
+                            ContinentId = 9,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "EH",
@@ -3458,6 +3845,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 248,
+                            ContinentId = 7,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "YE",
@@ -3466,6 +3854,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 249,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "ZM",
@@ -3474,6 +3863,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 250,
+                            ContinentId = 17,
                             HasHighTbOccurence = true,
                             IsLegacy = false,
                             IsoCode = "ZW",
@@ -3482,6 +3872,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 251,
+                            ContinentId = 4,
                             HasHighTbOccurence = false,
                             IsLegacy = true,
                             IsoCode = "CS",
@@ -3490,6 +3881,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 252,
+                            ContinentId = 4,
                             HasHighTbOccurence = false,
                             IsLegacy = true,
                             IsoCode = "YU",
@@ -3498,6 +3890,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 253,
+                            ContinentId = 17,
                             HasHighTbOccurence = false,
                             IsLegacy = true,
                             IsoCode = "ZR",
@@ -6075,6 +6468,17 @@ namespace ntbs_service.Migrations
                     b.Navigation("TbService");
 
                     b.Navigation("TreatmentOutcome");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Country", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.Continent", "Continent")
+                        .WithMany()
+                        .HasForeignKey("ContinentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Continent");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Hospital", b =>
