@@ -1,0 +1,33 @@
+@page "/Notifications/{NotificationId:int}/StopShareWithService/{handler?}"
+
+@using ntbs_service.Helpers
+@model ntbs_service.Pages.AlertsAndActions.StopShareWithServiceModel
+
+@{
+    Layout = "../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = $"{Model.NotificationId} - Stop share with second service";
+}
+
+<nhs-width-container container-width="Standard">
+    <form method="post" autocomplete="off">
+        @{
+            var warningText = $"You are about to stop sharing this notification with {Model.Notification.HospitalDetails.SecondaryTBService.Name}";
+        }
+        
+        <nhs-warning-callout title-text=@warningText>
+            <p>
+                This action will be recorded in the audit log
+            </p>
+        </nhs-warning-callout>
+
+        <div class="flex-container">
+            <button id="confirm-share-button" nhs-button-type="Standard" classes="confirm-transfer-button ntbsuk-button--primary">
+                Confirm
+            </button>
+
+            <nhs-back-link href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)" classes="transfer-request-back-link">
+                Cancel & go back
+            </nhs-back-link>
+        </div>
+    </form>
+</nhs-width-container>

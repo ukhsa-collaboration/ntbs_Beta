@@ -47,7 +47,8 @@ namespace ntbs_service.Services
         Task UpdateMBovisDetailsOccupationExposureAsync(Notification notification, MBovisDetails mBovisDetails);
         Task UpdateMBovisDetailsAnimalExposureAsync(Notification notification, MBovisDetails mBovisDetails);
         Task CloseInactiveNotifications();
-
+        Task ShareNotificationWithService(Notification notification, HospitalDetails hospitalDetails);
+        Task StopSharingNotificationWithService(Notification notification);
     }
 
     public class NotificationService : INotificationService
@@ -533,6 +534,20 @@ namespace ntbs_service.Services
                 await _notificationRepository.SaveChangesAsync(NotificationAuditType.Closed);
                 await _alertService.DismissAllOpenAlertsForNotification(notification.NotificationId);
             }
+        }
+        
+        public async Task ShareNotificationWithService(Notification notification, HospitalDetails hospitalDetails)
+        {
+            notification.HospitalDetails.SecondaryTBServiceCode = hospitalDetails.SecondaryTBServiceCode;
+            notification.HospitalDetails.ReasonForTBServiceShare = hospitalDetails.ReasonForTBServiceShare;
+            await _notificationRepository.SaveChangesAsync();
+        }
+        
+        public async Task StopSharingNotificationWithService(Notification notification)
+        {
+            notification.HospitalDetails.SecondaryTBServiceCode = null;
+            notification.HospitalDetails.ReasonForTBServiceShare = null;
+            await _notificationRepository.SaveChangesAsync();
         }
     }
 }

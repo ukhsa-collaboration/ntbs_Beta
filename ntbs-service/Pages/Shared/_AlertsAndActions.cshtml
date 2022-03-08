@@ -84,24 +84,43 @@
                     </print-button>
                 }
 
-                @if (Model.Notification.NotificationStatus is NotificationStatus.Notified or NotificationStatus.Closed 
-                     && Model.PermissionLevel is PermissionLevel.Edit)
+                @if (Model.PermissionLevel is PermissionLevel.Edit)
                 {
-                    var transferRequestHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.TransferRequest);
-                    <a id='transfer-button' class="nhsuk-button ntbsuk-button--primary" role="button" href="@transferRequestHref">
-                        @if (@Model.Notification.TransferRequestPending)
+                    if (Model.Notification.NotificationStatus is NotificationStatus.Notified or NotificationStatus.Closed)
+                    {
+                        var transferRequestHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.TransferRequest);
+                        <a id='transfer-button' class="nhsuk-button ntbsuk-button--primary" role="button" href="@transferRequestHref">
+                            @if (@Model.Notification.TransferRequestPending)
+                            {
+                                @:Transfer pending
+                            }
+                            else
+                            {
+                                @:Request transfer
+                            }
+                        </a>
+                        if (Model.Notification.NotificationStatus is NotificationStatus.Notified)
                         {
-                            @:Transfer pending
+                            if (Model.Notification.HospitalDetails.SecondaryTBServiceCode is not null)
+                            {
+                                var stopServiceSharingHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.StopShareWithService);
+                                <a id='share-button' class="nhsuk-button ntbsuk-button--primary" role="button" href="@stopServiceSharingHref">
+                                    Stop sharing with second TB service
+                                </a>
+                            }
+                            else
+                            {
+                                var serviceSharingHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.ShareWithService);
+                                <a id='share-button' class="nhsuk-button ntbsuk-button--primary" role="button" href="@serviceSharingHref">
+                                    Share with second TB service
+                                </a>
+                            }
                         }
-                        else
-                        {
-                            @:Request transfer
-                        }
-                    </a>
-                    var denotifyHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Denotify);
-                    <a id='denotify-button' class="action-link" role="button" href="@denotifyHref">
-                        Denotify
-                    </a>
+                        var denotifyHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Denotify);
+                        <a id='denotify-button' class="action-link" role="button" href="@denotifyHref">
+                            Denotify
+                        </a>
+                    }
                 }
             </nhs-details>
         </div>

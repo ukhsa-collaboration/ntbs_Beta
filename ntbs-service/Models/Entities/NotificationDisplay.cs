@@ -60,6 +60,8 @@ namespace ntbs_service.Models.Entities
 
         public override bool? IsLegacy => LTBRID != null || ETSID != null;
 
+        public bool IsShared => HospitalDetails.SecondaryTBServiceCode != null;
+
         private string CreateSitesOfDiseaseString()
         {
             if (NotificationSites == null)

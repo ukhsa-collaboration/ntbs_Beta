@@ -437,6 +437,7 @@ namespace ntbs_service.DataAccess
                             .ThenInclude(la => la.LocalAuthorityToPHEC)
                                 .ThenInclude(pl => pl.PHEC)
                 .Include(n => n.HospitalDetails.TBService.PHEC)
+                .Include(n => n.HospitalDetails.SecondaryTBService.PHEC)
                 .Include(n => n.HospitalDetails.CaseManager)
                 // The DrugResistanceProfile used to be an owned entity (meaning that it was auto-included in every
                 // Notification) and now it is not. The safest thing that we can do to avoid regressions is to include

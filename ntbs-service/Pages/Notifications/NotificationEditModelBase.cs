@@ -84,13 +84,12 @@ namespace ntbs_service.Pages.Notifications
                 return NotFound();
             }
 
-            var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
-            if (permissionLevel != PermissionLevel.Edit && !UserHasSharePermissionsAndOnCorrectPage())
+            await AuthorizeAndSetBannerAsync();
+            if (PermissionLevel != PermissionLevel.Edit && !UserHasSharePermissionsAndOnCorrectPage())
             {
                 return ForbiddenResult();
             }
 
-            await AuthorizeAndSetBannerAsync();
             var isValid = await TryValidateAndSave();
 
             if (!isValid)

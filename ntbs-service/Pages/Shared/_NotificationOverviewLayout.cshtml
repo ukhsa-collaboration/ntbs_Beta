@@ -28,20 +28,32 @@
         </nhs-grid-column>
 
         <nhs-grid-column grid-column-width="Full">
-            @if (!string.IsNullOrEmpty(Model.PermissionReason) && isOverviewPage)
+            @if ((!string.IsNullOrEmpty(Model.PermissionReason) || Model.Notification.IsShared) && isOverviewPage)
             {
                 <div class="notification-overview-details-container no-print">
                     <nhs-inset-text classes="nhs-inset-text--ntbs">
                         <span>
-                            @Model.PermissionReason
-                            @if (Model.PermissionLevel != PermissionLevel.Edit)
+                            @if (!string.IsNullOrEmpty(Model.PermissionReason))
+                            {
+                                @Model.PermissionReason
+                                @if (Model.PermissionLevel != PermissionLevel.Edit)
+                                {
+                                    <span>
+                                        See
+                                        <a href=@(_externalLinksService.GetSharePointFaqPageWithAnchor(Model.PermissionLevel))
+                                           target="_blank"
+                                           rel="noopener noreferrer">help</a>
+                                        for more information.
+                                    </span>
+                                    <br/>
+                                }
+                            }
+                            @if (Model.Notification.IsShared)
                             {
                                 <span>
-                                    See
-                                    <a href=@(_externalLinksService.GetSharePointFaqPageWithAnchor(Model.PermissionLevel))
-                                       target="_blank"
-                                       rel="noopener noreferrer">help</a>
-                                    for more information.
+                                    This record is shared with 
+                                    <a href=@($"/ServiceDirectory/Region/{Model.Notification.HospitalDetails.SecondaryTBService.PHEC.Code}#accordion-heading-{Model.Notification.HospitalDetails.SecondaryTBServiceCode}")>
+                                        @Model.Notification.HospitalDetails.SecondaryTBService?.Name</a>.
                                 </span>
                             }
                         </span>
