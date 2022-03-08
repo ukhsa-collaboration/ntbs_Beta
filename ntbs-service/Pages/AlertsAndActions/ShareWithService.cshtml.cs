@@ -17,7 +17,7 @@ namespace ntbs_service.Pages.AlertsAndActions
         public ValidationService ValidationService;
         
         [BindProperty]
-        public HospitalDetails HospitalDetails { get; set; }
+        public ServiceShareRequestModel ServiceShareModel { get; set; }
         
         public SelectList TbServices { get; set; }
 
@@ -36,12 +36,13 @@ namespace ntbs_service.Pages.AlertsAndActions
         public async Task<IActionResult> OnGetAsync()
         {
             await SetNotificationAndAuthorize();
-            if (PermissionLevel != PermissionLevel.Edit)
+            if (PermissionLevel != PermissionLevel.Edit || Notification.IsShared)
             {
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
+
+            ServiceShareModel = new ServiceShareRequestModel { TBServiceCode = Notification.HospitalDetails.TBServiceCode };
             
-            HospitalDetails = Notification.HospitalDetails;
             await SetDropdownsAsync();
             return Page();
         }
@@ -49,13 +50,13 @@ namespace ntbs_service.Pages.AlertsAndActions
         public async Task<IActionResult> OnPostAsync()
         {
             await SetNotificationAndAuthorize();
-            if (PermissionLevel != PermissionLevel.Edit)
+            if (PermissionLevel != PermissionLevel.Edit || Notification.IsShared)
             {
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
             
             ModelState.Clear();
-            TryValidateModel(HospitalDetails, nameof(HospitalDetails));
+            TryValidateModel(ServiceShareModel, nameof(ServiceShareModel));
             
             if (!ModelState.IsValid)
             {
@@ -64,7 +65,7 @@ namespace ntbs_service.Pages.AlertsAndActions
                 return Page();
             }
 
-            await Service.ShareNotificationWithService(Notification, HospitalDetails);
+            await Service.ShareNotificationWithService(NotificationId, ServiceShareModel.SecondaryTBServiceCode, ServiceShareModel.ReasonForTBServiceShare);
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
 

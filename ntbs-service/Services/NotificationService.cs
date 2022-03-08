@@ -47,8 +47,8 @@ namespace ntbs_service.Services
         Task UpdateMBovisDetailsOccupationExposureAsync(Notification notification, MBovisDetails mBovisDetails);
         Task UpdateMBovisDetailsAnimalExposureAsync(Notification notification, MBovisDetails mBovisDetails);
         Task CloseInactiveNotifications();
-        Task ShareNotificationWithService(Notification notification, HospitalDetails hospitalDetails);
-        Task StopSharingNotificationWithService(Notification notification);
+        Task ShareNotificationWithService(int notificationId, string sharingServiceCode, string reason);
+        Task StopSharingNotificationWithService(int notificationId);
     }
 
     public class NotificationService : INotificationService
@@ -503,6 +503,7 @@ namespace ntbs_service.Services
             await _notificationRepository.SaveChangesAsync(NotificationAuditType.Denotified);
 
             await _alertService.DismissAllOpenAlertsForNotification(notificationId);
+            await StopSharingNotificationWithService(notificationId);
 
             Log.Debug($"{notificationId} denotified, removing lab result matches");
             var success = await _specimenService.UnmatchAllSpecimensForNotification(notificationId, auditUsername);
@@ -524,7 +525,6 @@ namespace ntbs_service.Services
             await _alertService.DismissAllOpenAlertsForNotification(notificationId);
         }
 
-
         public async Task CloseInactiveNotifications()
         {
             var notificationsToSetClosed = await _notificationRepository.GetInactiveNotificationsToCloseAsync();
@@ -533,18 +533,29 @@ namespace ntbs_service.Services
                 notification.NotificationStatus = NotificationStatus.Closed;
                 await _notificationRepository.SaveChangesAsync(NotificationAuditType.Closed);
                 await _alertService.DismissAllOpenAlertsForNotification(notification.NotificationId);
+                await StopSharingNotificationWithService(notification.NotificationId);
             }
         }
-        
-        public async Task ShareNotificationWithService(Notification notification, HospitalDetails hospitalDetails)
+
+        public async Task ShareNotificationWithService(int notificationId, string shareServiceCode, string reason)
         {
-            notification.HospitalDetails.SecondaryTBServiceCode = hospitalDetails.SecondaryTBServiceCode;
-            notification.HospitalDetails.ReasonForTBServiceShare = hospitalDetails.ReasonForTBServiceShare;
+            var notification = await _notificationRepository.GetNotificationAsync(notificationId);
+            if (notification.IsShared)
+            {
+                throw new ApplicationException("Notification shared with second service cannot be shared with another service.");
+            }
+            notification.HospitalDetails.SecondaryTBServiceCode = shareServiceCode;
+            notification.HospitalDetails.ReasonForTBServiceShare = reason;
             await _notificationRepository.SaveChangesAsync();
         }
-        
-        public async Task StopSharingNotificationWithService(Notification notification)
+
+        public async Task StopSharingNotificationWithService(int notificationId)
         {
+            var notification = await _notificationRepository.GetNotificationAsync(notificationId);
+            if (!notification.IsShared)
+            {
+                return;
+            }
             notification.HospitalDetails.SecondaryTBServiceCode = null;
             notification.HospitalDetails.ReasonForTBServiceShare = null;
             await _notificationRepository.SaveChangesAsync();

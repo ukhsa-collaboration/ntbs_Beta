@@ -12,27 +12,29 @@
 
 <nhs-width-container container-width="Standard">
     <form method="post" autocomplete="off">
+        <input type="hidden" asp-for="ServiceShareModel.TBServiceCode">
         <h2> You are about to share this notification with a second TB service</h2>
+        <p>The second TB service will be able to view all of the details of this notification, and will be able to edit the contact tracing information. However, they will not be able to edit any other fields.</p>
         <nhs-hint nhs-hint-type="Standard" id="ntbs-service-directory-hint">
             You can search for TB services in the <a class="nhsuk-action-link" href=/ServiceDirectory>NTBS service directory</a> if you are not sure of the TB service name
         </nhs-hint> <br>
         <div>
             @{
-                var hasTbServiceCodeError = !Model.ValidationService.IsValid("HospitalDetails.SecondaryTBServiceCode");
+                var hasTbServiceCodeError = !Model.ValidationService.IsValid("ServiceShareModel.SecondaryTBServiceCode");
                 var tbServiceCodeGroupState = hasTbServiceCodeError ? Error : Standard;
                 var tbServiceCodeSelectErrorState = hasTbServiceCodeError ? SelectType.Error : SelectType.Standard;
             }
-            <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="HospitalDetails-SecondaryTBServiceCode" ref="tbServices">
-                <label nhs-label-type="Standard" asp-for="HospitalDetails.SecondaryTBServiceCode">
-                    @Html.DisplayNameFor(model => model.HospitalDetails.SecondaryTBServiceCode)
+            <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="ServiceShareModel-SecondaryTBServiceCode" ref="tbServices">
+                <label nhs-label-type="Standard" asp-for="ServiceShareModel.SecondaryTBServiceCode">
+                    @Html.DisplayNameFor(model => model.ServiceShareModel.SecondaryTBServiceCode)
                 </label>
                 <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@hasTbServiceCodeError"
-                      ref="errorField" asp-validation-for="HospitalDetails.SecondaryTBServiceCode"></span>
+                      ref="errorField" asp-validation-for="ServiceShareModel.SecondaryTBServiceCode"></span>
                 <autocomplete-select ref="filterContainer" placeholder="Select TB service" emit-change-on="select" inline-template>
                     @* below id necessary to disable autocomplete in chrome - see https://adamsilver.io/blog/stopping-chrome-from-ignoring-autocomplete-off/ *@
                     <select ref="selectField"
                             nhs-select-type="@tbServiceCodeSelectErrorState"
-                            asp-for="HospitalDetails.SecondaryTBServiceCode"
+                            asp-for="ServiceShareModel.SecondaryTBServiceCode"
                             asp-items="Model.TbServices"
                             id="selectTBService">
                         <option value=""></option>
@@ -42,16 +44,16 @@
         </div>
 
         @{
-            var hasReasonError = !Model.ValidationService.IsValid("HospitalDetails.ReasonForTBServiceShare");
+            var hasReasonError = !Model.ValidationService.IsValid("ServiceShareModel.ReasonForTBServiceShare");
             var reasonFormGroupType = hasReasonError ? Error : Standard;
         }
 
         <nhs-form-group nhs-form-group-type="@reasonFormGroupType">
-            <label asp-for="HospitalDetails.ReasonForTBServiceShare" nhs-label-type="Standard">
+            <label asp-for="ServiceShareModel.ReasonForTBServiceShare" nhs-label-type="Standard">
                 Why are you sharing this record with another TB service?
             </label>
-            <span id="reason-error" nhs-span-type="ErrorMessage" asp-validation-for="HospitalDetails.ReasonForTBServiceShare" has-error="@hasReasonError"></span>
-            <input asp-for="HospitalDetails.ReasonForTBServiceShare" nhs-input-type="Standard" is-error-input="@hasReasonError" aria-describedby="reason-error" />
+            <span id="reason-error" nhs-span-type="ErrorMessage" asp-validation-for="ServiceShareModel.ReasonForTBServiceShare" has-error="@hasReasonError"></span>
+            <input asp-for="ServiceShareModel.ReasonForTBServiceShare" nhs-input-type="Standard" is-error-input="@hasReasonError" aria-describedby="reason-error"/>
         </nhs-form-group>
 
         <div class="flex-container">

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EFAuditer;
 using ntbs_service.DataAccess;
@@ -138,6 +139,14 @@ namespace ntbs_service.Services
                 return new List<AuditLog>();
             }
 
+            // Denotification edits the DenotificationDetails, as well as the status on Notification itself.
+            // Denotification/Closure on a shared notification will add an audit for stopping the share,
+            // as well as changing the status on Notification itself.
+            if (group.Any(log => GetNotificationAuditType(log) is NotificationAuditType.Denotified or NotificationAuditType.Closed))
+            {
+                return new List<AuditLog> {group.Find(log => log.EntityType == nameof(Notification))};
+            }
+
             var transferAlertLog = group.Find(log => log.EntityType == nameof(TransferAlert));
             if (transferAlertLog != null)
             {
@@ -163,12 +172,6 @@ namespace ntbs_service.Services
                 //  - TransferAlert - Update
                 transferAlertLog.ActionString = "cancelled";
                 return new List<AuditLog> {transferAlertLog};
-            }
-
-            // Denotification edits the DenotificationDetails, as well as the status on Notification itself.
-            if (group.Any(log => GetNotificationAuditType(log) == NotificationAuditType.Denotified))
-            {
-                return new List<AuditLog> {group.Find(log => log.EntityType == nameof(Notification))};
             }
 
             // Notification submission, as well as changes to notification date
@@ -256,6 +259,15 @@ namespace ntbs_service.Services
                 return log.ActionString;
             }
 
+            if (LogIsServiceShare(log))
+            {
+                return "shared case with";
+            }
+            else if (LogIsStopServiceShare(log))
+            {
+                return "stopped sharing case with";
+            }
+
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (GetNotificationAuditType(log))
             {
@@ -288,8 +300,30 @@ namespace ntbs_service.Services
             }
         }
 
+        private static bool LogIsServiceShare(AuditLog log)
+        {
+            return LogIsForHospitalDetailsAndHasDataWhichMatchesString(log, "\"NewValue\":\"TBS\\d{4}\"");
+        }
+
+        private static bool LogIsStopServiceShare(AuditLog log)
+        {
+            return LogIsForHospitalDetailsAndHasDataWhichMatchesString(log, "\"OriginalValue\":\"TBS\\d{4}\"");
+        }
+
+        private static bool LogIsForHospitalDetailsAndHasDataWhichMatchesString(AuditLog log, string match)
+        {
+            return log.AuditData != null
+                   && log.EntityType == nameof(HospitalDetails)
+                   && Regex.IsMatch(log.AuditData, ".*{\"ColumnName\":\"SecondaryTBServiceCode\"," + match + "}.*");
+        }
+
         private static string MapSubject(AuditLog log)
         {
+            if (LogIsServiceShare(log) || LogIsStopServiceShare(log))
+            {
+                return "second TB service";
+            }
+
             switch (log.EntityType)
             {
                 case nameof(TransferAlert):

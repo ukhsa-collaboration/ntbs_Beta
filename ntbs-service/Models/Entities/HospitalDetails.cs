@@ -37,7 +37,6 @@ namespace ntbs_service.Models.Entities
         public virtual Hospital Hospital { get; set; }
 
         [Display(Name = "TB Service record is shared with")]
-        [AssertThat("SecondaryTBServiceCode != TBServiceCode", ErrorMessage = ValidationMessages.ShareDestinationCannotBeCurrentTbService)]
         public string SecondaryTBServiceCode { get; set; }
         public virtual TBService SecondaryTBService { get; set; }
 

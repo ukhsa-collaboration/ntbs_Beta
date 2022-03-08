@@ -39,7 +39,7 @@ namespace ntbs_service.Pages.AlertsAndActions
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
 
-            await Service.StopSharingNotificationWithService(Notification);
+            await Service.StopSharingNotificationWithService(NotificationId);
 
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
