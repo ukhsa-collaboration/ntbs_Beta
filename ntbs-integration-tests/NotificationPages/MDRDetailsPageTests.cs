@@ -4,7 +4,6 @@ using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
-using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -244,6 +243,22 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var overviewLink = RouteHelper.GetNotificationOverviewPathWithSectionAnchor(id, NotificationSubPath);
             Assert.NotNull(document.QuerySelector($"a[href='{overviewLink}']"));
+        }
+        
+        [Fact]
+        public async Task EditMDRDetailsPage_ContainsSaveButton()
+        {
+            // Arrange
+            const int id = Utilities.MDR_DETAILS_EXIST;
+            var editMDRDetailsPageUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditMDRDetails);
+
+            // Act
+            var editMDRDetailsPage = await GetDocumentForUrlAsync(editMDRDetailsPageUrl);
+            var button = editMDRDetailsPage.GetElementById("save-button");
+            
+            // Assert
+            Assert.NotNull(button);
+            Assert.Equal("Save", button.TextContent.Trim());
         }
     }
 }

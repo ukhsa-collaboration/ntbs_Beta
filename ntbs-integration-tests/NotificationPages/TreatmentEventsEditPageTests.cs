@@ -534,5 +534,20 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.NotNull(treatmentTransferInRow);
             Assert.Null(treatmentTransferInRow.QuerySelector($"#edit-link-{TRANSFER_IN_EVENT_ID}"));
         }
+
+        [Fact]
+        public async Task EditTreatmentEventsPage_DoesNotContain_SaveButton()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var editTreatmentEventsPageUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditTreatmentEvents);
+
+            // Act
+            var editTreatmentEventsPage = await GetDocumentForUrlAsync(editTreatmentEventsPageUrl);
+            var button = editTreatmentEventsPage.GetElementById("save-button");
+            
+            // Assert
+            Assert.Null(button);
+        }
     }
 }

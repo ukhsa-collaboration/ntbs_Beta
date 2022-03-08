@@ -7,7 +7,7 @@
     var title = NotificationSection.SocialContextAddresses.ToDisplayString();
     ViewData["Title"] = $"Notification #{Model.NotificationId} - {title}";
     ViewData["ShowSocialContextAddressEditLinks"] = true;
-    ViewData["IsEditPage"] = false;
+    ViewData["PageHasEditableContent"] = false;
 }
 
 <h2> @title </h2>
