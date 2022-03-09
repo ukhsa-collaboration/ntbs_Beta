@@ -12,7 +12,6 @@
 
 <nhs-width-container container-width="Standard">
     <form method="post" autocomplete="off">
-        <input type="hidden" asp-for="ServiceShareViewModel.NotificationTBServiceCode">
         <h2> You are about to share this notification with a second TB service</h2>
         <p>The second TB service will be able to view all of the details of this notification, and will be able to edit the contact tracing information.
             However, they will not be able to edit any other fields.</p>
@@ -21,11 +20,11 @@
         </nhs-hint> <br>
         <div>
             @{
-                var hasTbServiceCodeError = !Model.ValidationService.IsValid("ServiceShareModel.SharingTBServiceCode");
+                var hasTbServiceCodeError = !Model.ValidationService.IsValid("ServiceShareViewModel.SharingTBServiceCode");
                 var tbServiceCodeGroupState = hasTbServiceCodeError ? Error : Standard;
                 var tbServiceCodeSelectErrorState = hasTbServiceCodeError ? SelectType.Error : SelectType.Standard;
             }
-            <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="ServiceShareModel-SharingTBServiceCode" ref="tbServices">
+            <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="ServiceShareViewModel-SharingTBServiceCode" ref="tbServices">
                 <label nhs-label-type="Standard" asp-for="ServiceShareViewModel.SharingTBServiceCode">
                     @Html.DisplayNameFor(model => model.ServiceShareViewModel.SharingTBServiceCode)
                 </label>
@@ -45,7 +44,7 @@
         </div>
 
         @{
-            var hasReasonError = !Model.ValidationService.IsValid("ServiceShareModel.ReasonForTBServiceShare");
+            var hasReasonError = !Model.ValidationService.IsValid("ServiceShareViewModel.ReasonForTBServiceShare");
             var reasonFormGroupType = hasReasonError ? Error : Standard;
         }
 

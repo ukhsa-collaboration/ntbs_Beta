@@ -54,7 +54,8 @@ namespace ntbs_service.Pages.AlertsAndActions
             {
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
-            
+
+            ServiceShareViewModel.NotificationTBServiceCode = Notification.HospitalDetails.TBServiceCode;
             ModelState.Clear();
             TryValidateModel(ServiceShareViewModel, nameof(ServiceShareViewModel));
             
