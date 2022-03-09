@@ -21,6 +21,7 @@ namespace ntbs_service.DataAccess
         IQueryable<Notification> GetQueryableNotificationByStatus(IList<NotificationStatus> statuses);
         IQueryable<Notification> GetRecentNotificationsIQueryable();
         IQueryable<Notification> GetDraftNotificationsIQueryable();
+        IQueryable<Notification> GetSharedNotificationsIQueryable();
         Task<Notification> GetNotificationWithNotificationSitesAsync(int notificationId);
         Task<Notification> GetNotificationWithCaseManagerTbServicesAsync(int notificationId);
         Task<Notification> GetNotificationWithTestsAsync(int notificationId);
@@ -87,6 +88,15 @@ namespace ntbs_service.DataAccess
             return _context.Notification
                 .Where(n => n.NotificationStatus == NotificationStatus.Draft)
                 .OrderByDescending(n => n.CreationDate)
+                .ThenBy(n => n.NotificationId);
+        }
+
+        public IQueryable<Notification> GetSharedNotificationsIQueryable()
+        {
+            return _context.Notification
+                .Where(n => n.NotificationStatus == NotificationStatus.Notified
+                            && n.HospitalDetails.SecondaryTBServiceCode != null)
+                .OrderByDescending(n => n.NotificationDate)
                 .ThenBy(n => n.NotificationId);
         }
 
@@ -323,7 +333,7 @@ namespace ntbs_service.DataAccess
                         IsPostMortemWithCorrectEvents = n.IsPostMortemAndHasCorrectEvents,
                         SharedTBServiceCode = n.HospitalDetails.SecondaryTBServiceCode,
                         SharedTBServicePHECCode = n.HospitalDetails.SecondaryTBServiceCode == null
-                            ? null : n.HospitalDetails.SecondaryTBService.PHEC.Code
+                            ? null : n.HospitalDetails.SecondaryTBService.PHECCode
                     })
                 .AsNoTracking()
                 .ToListAsync());
@@ -441,7 +451,7 @@ namespace ntbs_service.DataAccess
                             .ThenInclude(la => la.LocalAuthorityToPHEC)
                                 .ThenInclude(pl => pl.PHEC)
                 .Include(n => n.HospitalDetails.TBService.PHEC)
-                .Include(n => n.HospitalDetails.SecondaryTBService.PHEC)
+                .Include(n => n.HospitalDetails.SecondaryTBService)
                 .Include(n => n.HospitalDetails.CaseManager)
                 // The DrugResistanceProfile used to be an owned entity (meaning that it was auto-included in every
                 // Notification) and now it is not. The safest thing that we can do to avoid regressions is to include

@@ -18,6 +18,7 @@ namespace ntbs_service.Services
             ClaimsPrincipal contextUser,
             Notification notification);
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
+        Task<IQueryable<Notification>> FilterSharedNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
         Task<IList<AlertWithTbServiceForDisplay>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<AlertWithTbServiceForDisplay> alerts);
         Task SetFullAccessOnNotificationBannersAsync(
@@ -173,13 +174,21 @@ namespace ntbs_service.Services
             return _userPermissionsFilter.UserBelongsToPHEC(phecCode);
         }
 
+        public async Task<IQueryable<Notification>> FilterSharedNotificationsByUserAsync(ClaimsPrincipal user,
+            IQueryable<Notification> notifications)
+        {
+            _userPermissionsFilter ??= await GetUserPermissionsFilterAsync(user);
+            return _userPermissionsFilter.Type == UserType.NationalTeam
+                ? Enumerable.Empty<Notification>().AsQueryable()
+                : notifications.Where(n =>
+                    _userPermissionsFilter.IncludedTBServiceCodes.Contains(n.HospitalDetails.SecondaryTBServiceCode)
+                    || _userPermissionsFilter.IncludedPHECCodes.Contains(n.HospitalDetails.SecondaryTBService.PHECCode));
+        }
+
         public async Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user,
             IQueryable<Notification> notifications)
         {
-            if (_userPermissionsFilter == null)
-            {
-                _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
-            }
+            _userPermissionsFilter ??= await GetUserPermissionsFilterAsync(user);
 
             return _userPermissionsFilter.Type == UserType.NationalTeam
                 ? notifications
