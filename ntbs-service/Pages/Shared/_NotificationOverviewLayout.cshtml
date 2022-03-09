@@ -50,10 +50,10 @@
                             }
                             @if (Model.Notification.IsShared)
                             {
+                                var serviceHref = $"/ServiceDirectory/Region/{Model.Notification.HospitalDetails.SecondaryTBService.PHEC.Code}" +
+                                                  $"#accordion-heading-{Model.Notification.HospitalDetails.SecondaryTBServiceCode}";
                                 <span>
-                                    This record is shared with 
-                                    <a href=@($"/ServiceDirectory/Region/{Model.Notification.HospitalDetails.SecondaryTBService.PHEC.Code}#accordion-heading-{Model.Notification.HospitalDetails.SecondaryTBServiceCode}")>
-                                        @Model.Notification.HospitalDetails.SecondaryTBService?.Name</a>.
+                                    This record is shared with <a href="@serviceHref">@Model.Notification.HospitalDetails.SecondaryTBService?.Name</a>.
                                 </span>
                             }
                         </span>

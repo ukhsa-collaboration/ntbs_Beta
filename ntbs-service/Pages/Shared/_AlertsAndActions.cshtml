@@ -101,10 +101,10 @@
                         </a>
                         if (Model.Notification.NotificationStatus is NotificationStatus.Notified)
                         {
-                            if (Model.Notification.HospitalDetails.SecondaryTBServiceCode is not null)
+                            if (Model.Notification.IsShared)
                             {
                                 var stopServiceSharingHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.StopShareWithService);
-                                <a id='share-button' class="nhsuk-button ntbsuk-button--primary" role="button" href="@stopServiceSharingHref">
+                                <a id='stop-share-button' class="nhsuk-button ntbsuk-button--primary" role="button" href="@stopServiceSharingHref">
                                     Stop sharing with second TB service
                                 </a>
                             }

@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
-using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.ViewModels;
 using ntbs_service.Pages.Notifications;
 using ntbs_service.Services;
 
@@ -17,7 +17,7 @@ namespace ntbs_service.Pages.AlertsAndActions
         public ValidationService ValidationService;
         
         [BindProperty]
-        public ServiceShareRequestModel ServiceShareModel { get; set; }
+        public ServiceShareRequestViewModel ServiceShareViewModel { get; set; }
         
         public SelectList TbServices { get; set; }
 
@@ -41,7 +41,7 @@ namespace ntbs_service.Pages.AlertsAndActions
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
 
-            ServiceShareModel = new ServiceShareRequestModel { TBServiceCode = Notification.HospitalDetails.TBServiceCode };
+            ServiceShareViewModel = new ServiceShareRequestViewModel { NotificationTBServiceCode = Notification.HospitalDetails.TBServiceCode };
             
             await SetDropdownsAsync();
             return Page();
@@ -56,7 +56,7 @@ namespace ntbs_service.Pages.AlertsAndActions
             }
             
             ModelState.Clear();
-            TryValidateModel(ServiceShareModel, nameof(ServiceShareModel));
+            TryValidateModel(ServiceShareViewModel, nameof(ServiceShareViewModel));
             
             if (!ModelState.IsValid)
             {
@@ -65,7 +65,7 @@ namespace ntbs_service.Pages.AlertsAndActions
                 return Page();
             }
 
-            await Service.ShareNotificationWithService(NotificationId, ServiceShareModel.SecondaryTBServiceCode, ServiceShareModel.ReasonForTBServiceShare);
+            await Service.ShareNotificationWithService(NotificationId, ServiceShareViewModel.SharingTBServiceCode, ServiceShareViewModel.ReasonForTBServiceShare);
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
 
