@@ -128,15 +128,14 @@ namespace ntbs_service.Services
             ClaimsPrincipal user,
             NotificationBannerModel notificationBannerModel)
         {
-            if (_userPermissionsFilter == null)
-            {
-                _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
-            }
+            _userPermissionsFilter ??= await GetUserPermissionsFilterAsync(user);
 
             return _userPermissionsFilter.Type == UserType.NationalTeam
                    || _userPermissionsFilter.UserBelongsToTbService(notificationBannerModel.TbServiceCode)
                    || _userPermissionsFilter.UserBelongsToPHEC(notificationBannerModel.TbServicePHECCode)
                    || _userPermissionsFilter.UserBelongsToPHEC(notificationBannerModel.LocationPHECCode)
+                   || _userPermissionsFilter.UserBelongsToTbService(notificationBannerModel.SharedTBServiceCode)
+                   || _userPermissionsFilter.UserBelongsToPHEC(notificationBannerModel.SharedTBServicePHECCode)
                    || notificationBannerModel.LinkedNotificationPhecCodes.Any(_userPermissionsFilter.UserBelongsToPHEC)
                    || notificationBannerModel.LinkedNotificationTbServiceCodes.Any(_userPermissionsFilter.UserBelongsToTbService)
                    || notificationBannerModel.PreviousTbServiceCodes.Any(_userPermissionsFilter.UserBelongsToTbService)

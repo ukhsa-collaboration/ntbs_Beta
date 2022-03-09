@@ -320,7 +320,10 @@ namespace ntbs_service.DataAccess
                         NotificationStatus = n.NotificationStatus,
                         DrugResistance = n.DrugResistanceProfile.DrugResistanceProfileString,
                         TreatmentEvents = n.TreatmentEvents,
-                        IsPostMortemWithCorrectEvents = n.IsPostMortemAndHasCorrectEvents
+                        IsPostMortemWithCorrectEvents = n.IsPostMortemAndHasCorrectEvents,
+                        SharedTBServiceCode = n.HospitalDetails.SecondaryTBServiceCode,
+                        SharedTBServicePHECCode = n.HospitalDetails.SecondaryTBServiceCode == null
+                            ? null : n.HospitalDetails.SecondaryTBService.PHEC.Code
                     })
                 .AsNoTracking()
                 .ToListAsync());
@@ -370,6 +373,7 @@ namespace ntbs_service.DataAccess
                     model.LinkedNotificationPhecCodes =
                         linkedNotification?.LinkedNotificationPhecCodes ?? Enumerable.Empty<string>();
 
+                    // Whether we show the padlock is set in a later step, as this varies by user
                     return new NotificationBannerModel(model, showLink: true);
                 });
         }

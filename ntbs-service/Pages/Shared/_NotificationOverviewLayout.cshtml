@@ -33,6 +33,14 @@
                 <div class="notification-overview-details-container no-print">
                     <nhs-inset-text classes="nhs-inset-text--ntbs">
                         <span>
+                            @if (Model.Notification.IsShared)
+                            {
+                                var serviceHref = $"/ServiceDirectory/Region/{Model.Notification.HospitalDetails.SecondaryTBService.PHEC.Code}" +
+                                                  $"#accordion-heading-{Model.Notification.HospitalDetails.SecondaryTBServiceCode}";
+                                <span>
+                                    This record is shared with <a id="shared-service-link" href="@serviceHref">@Model.Notification.HospitalDetails.SecondaryTBService?.Name</a>.
+                                </span>
+                            }
                             @if (!string.IsNullOrEmpty(Model.PermissionReason))
                             {
                                 @Model.PermissionReason
@@ -47,14 +55,6 @@
                                     </span>
                                     <br/>
                                 }
-                            }
-                            @if (Model.Notification.IsShared)
-                            {
-                                var serviceHref = $"/ServiceDirectory/Region/{Model.Notification.HospitalDetails.SecondaryTBService.PHEC.Code}" +
-                                                  $"#accordion-heading-{Model.Notification.HospitalDetails.SecondaryTBServiceCode}";
-                                <span>
-                                    This record is shared with <a id="shared-service-link" href="@serviceHref">@Model.Notification.HospitalDetails.SecondaryTBService?.Name</a>.
-                                </span>
                             }
                         </span>
                     </nhs-inset-text>
