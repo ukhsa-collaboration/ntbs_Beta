@@ -251,7 +251,8 @@ public static class AppServiceConfiguration
                 config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                     .UseSimpleAssemblyNameTypeSerializer()
                     .UseRecommendedSerializerSettings()
-                    .UseSqlServerStorage(builder.Configuration.GetConnectionString("ntbsContext"),
+                    .UseSqlServerStorage(
+                        () => new Microsoft.Data.SqlClient.SqlConnection(builder.Configuration.GetConnectionString("ntbsContext")),
                         new SqlServerStorageOptions
                         {
                             CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
