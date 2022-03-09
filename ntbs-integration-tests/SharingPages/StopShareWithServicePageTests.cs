@@ -45,7 +45,7 @@ namespace ntbs_integration_tests.SharingPages
         }
         
         [Fact]
-        public async Task StopShareWithService_RedirectsToOverviewPage()
+        public async Task Post_StopShareWithService_RedirectsToOverviewPage()
         {
             // Arrange
             const int id = Utilities.NOTIFICATION_SHARED_TO_GATESHEAD;
@@ -61,16 +61,16 @@ namespace ntbs_integration_tests.SharingPages
             result.AssertRedirectTo($"/Notifications/{id}");
         }
 
-        public static TheoryData<TestUser> users = new() {
+        public static TheoryData<TestUser> unpermittedUsers = new() {
             { TestUser.GatesheadCaseManager }, 
             { TestUser.ServiceUserWithNoTbServices }
         };
             
-        [Theory, MemberData(nameof(users))]
+        [Theory, MemberData(nameof(unpermittedUsers))]
         public async Task OnGet_UserWhoIsNotPermittedToEditNotification_RedirectsToOverviewPage(TestUser user)
         {
             const int id = Utilities.NOTIFICATION_SHARED_TO_GATESHEAD;
-            using (var client = Factory.WithUserAuth(TestUser.GatesheadCaseManager)
+            using (var client = Factory.WithUserAuth(user)
                        .CreateClientWithoutRedirects())
             {
                 // Act

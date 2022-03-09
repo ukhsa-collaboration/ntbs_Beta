@@ -135,6 +135,7 @@ namespace ntbs_integration_tests.Helpers
         public const string EAST_OF_ENGLAND_REGION_NAME = "East of England";
         public const string SOUTH_EAST_REGION_NAME = "South East";
         public const string LONDON_REGION_NAME = "London";
+        public const string NORTH_EAST_PHEC_CODE_GATESHEAD = "E45000009";
         public const string PERMITTED_PHEC_CODE = "E45000019";
         public const string UNPERMITTED_PHEC_CODE = "E45000020";
         #endregion

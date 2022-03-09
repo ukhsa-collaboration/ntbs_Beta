@@ -10,7 +10,7 @@ namespace ntbs_integration_tests.ServiceDirectory
     {
         public ServiceDirectoryRegionPageTest(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
-        public const string PageRoute = "ServiceDirectory/Region/E45000009";
+        public const string PageRoute = "ServiceDirectory/Region/" + Utilities.NORTH_EAST_PHEC_CODE_GATESHEAD;
 
         [Fact]
         public async Task GetRegionPage_IncludesOnlyActiveUsers()

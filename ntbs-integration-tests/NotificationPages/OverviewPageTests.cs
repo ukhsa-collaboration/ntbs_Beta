@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_integration_tests.TestServices;
 using ntbs_service;
@@ -18,6 +19,9 @@ namespace ntbs_integration_tests.NotificationPages
     public class OverviewPageTests : TestRunnerNotificationBase
     {
         protected override string NotificationSubPath => NotificationSubPaths.Overview;
+
+        private static readonly string PatientDetailsOverviewSectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPaths.EditPatientDetails);
+        private static readonly string ContactTracingOverviewSectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPaths.EditContactTracing);
 
         public OverviewPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
 
@@ -169,16 +173,38 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
+        public async Task Get_ShowsShareMessageWithLink_ForSharedRecord()
+        {
+            // Arrange
+            using (var client = Factory.WithUserAuth(TestUser.ServiceUserForAbingdonAndPermitted)
+                       .CreateClientWithoutRedirects())
+            {
+                //Act
+                var response = await client.GetAsync(GetCurrentPathForId(Utilities.NOTIFICATION_SHARED_TO_GATESHEAD));
+
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                var document = await GetDocumentAsync(response);
+                Assert.Contains("This record is shared with", document.Body.TextContent);
+                var link = (IHtmlAnchorElement)document.GetElementById("shared-service-link");
+                Assert.Contains(Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_NAME, link.TextContent);
+                Assert.Contains(Utilities.NORTH_EAST_PHEC_CODE_GATESHEAD, link.Href);
+                Assert.Contains(Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID, link.Href);
+            }
+        }
+
+        [Fact]
         public async Task OverviewPageReturnsEditVersion_ForUserWithEditPermission()
         {
             // Arrange
+            var url = GetPathForId(NotificationSubPaths.Overview, Utilities.NOTIFIED_ID);
+
             // Act
-            var url = GetPathForId(NotificationSubPaths.Overview, Utilities.DRAFT_ID);
             var document = await GetDocumentForUrlAsync(url);
 
             // Assert
-            Assert.NotNull(document.QuerySelectorAll("#patient-details-overview-header"));
-            Assert.Null(document.QuerySelector("#patient-details-edit-link"));
+            Assert.NotNull(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-title"));
+            Assert.NotNull(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-edit-link"));
         }
 
         [Fact]
@@ -196,27 +222,46 @@ namespace ntbs_integration_tests.NotificationPages
                 var document = await GetDocumentAsync(response);
 
                 // Assert
-                Assert.NotNull(document.QuerySelectorAll("#patient-details-overview-header"));
-                Assert.Null(document.QuerySelector("#patient-details-edit-link"));
+                Assert.NotNull(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-title"));
+                Assert.Null(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-edit-link"));
             }
         }
 
+        /* Just found that ".WithNotificationAndPostcodeConnected" has never worked.
         [Fact]
         public async Task OverviewPageReturnsReadOnlyVersion_ForRegionalUserWithMatchingPostcodePermission()
         {
             // Arrange
             using (var client = Factory.WithUserAuth(TestUser.RegionalUserWithPermittedPhecCode)
-                .WithNotificationAndPostcodeConnected(Utilities.NOTIFIED_ID, Utilities.PERMITTED_POSTCODE)
+                .WithNotificationAndPostcodeConnected(Utilities.NOTIFICATION_WITH_TRANSFER, Utilities.PERMITTED_POSTCODE)
                 .CreateClientWithoutRedirects())
             {
                 // Act
-                var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
+                var url = GetCurrentPathForId(Utilities.NOTIFICATION_WITH_TRANSFER);
                 var response = await client.GetAsync(url);
                 var document = await GetDocumentAsync(response);
 
                 // Assert
-                Assert.NotNull(document.QuerySelectorAll("#patient-details-overview-header"));
-                Assert.Null(document.QuerySelector("patient-details-edit-link"));
+                Assert.NotNull(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-title"));
+                Assert.Null(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-edit-link"));
+            }
+        }*/
+
+        [Fact]
+        public async Task OverviewPageForSharedRecordReturnsReadOnlyVersionExceptContactTracing_ForUserInSharedTbService()
+        {
+            // Arrange
+            using (var client = Factory.WithUserAuth(TestUser.GatesheadCaseManager).CreateClientWithoutRedirects())
+            {
+                // Act
+                var url = GetCurrentPathForId(Utilities.NOTIFICATION_SHARED_TO_GATESHEAD);
+                var response = await client.GetAsync(url);
+                var document = await GetDocumentAsync(response);
+
+                // Assert
+                Assert.NotNull(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-title"));
+                Assert.Null(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-edit-link"));
+                Assert.NotNull(document.QuerySelector($"#{ContactTracingOverviewSectionId}-edit-link"));
             }
         }
 
@@ -235,8 +280,8 @@ namespace ntbs_integration_tests.NotificationPages
                 var document = await GetDocumentAsync(response);
 
                 // Assert
-                Assert.NotNull(document.QuerySelectorAll("#patient-details-overview-header"));
-                Assert.Null(document.QuerySelector("patient-details-edit-link"));
+                Assert.NotNull(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-title"));
+                Assert.Null(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-edit-link"));
             }
         }
 
@@ -299,6 +344,40 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             Assert.NotNull(document.QuerySelector("#new-linked-notification-button"));
+        }
+
+        public static TheoryData<TestUser, bool, string, int> shareButtonUsers = new()
+        {
+            { TestUser.AbingdonCaseManager, true, "share-button", Utilities.NOTIFICATION_IN_ABINGDON_TO_SHARE },
+            { TestUser.GatesheadCaseManager, false, "share-button", Utilities.NOTIFICATION_IN_ABINGDON_TO_SHARE },
+            { TestUser.RegionalUserWithPermittedPhecCode, true, "share-button", Utilities.NOTIFICATION_IN_ABINGDON_TO_SHARE },
+            { TestUser.ServiceUserWithNoTbServices, false, "share-button", Utilities.NOTIFICATION_IN_ABINGDON_TO_SHARE },
+            { TestUser.AbingdonCaseManager, true, "stop-share-button", Utilities.NOTIFICATION_SHARED_TO_GATESHEAD },
+            { TestUser.GatesheadCaseManager, false, "stop-share-button", Utilities.NOTIFICATION_SHARED_TO_GATESHEAD },
+            { TestUser.RegionalUserWithPermittedPhecCode, true, "stop-share-button", Utilities.NOTIFICATION_SHARED_TO_GATESHEAD },
+            { TestUser.ServiceUserWithNoTbServices, false, "stop-share-button", Utilities.NOTIFICATION_SHARED_TO_GATESHEAD }
+        };
+
+        [Theory, MemberData(nameof(shareButtonUsers))]
+        public async Task OverviewPageShowsCorrectShareButton_IfUserHasEditRights(TestUser user, bool seeShareButton, string buttonId, int notificationId)
+        {
+            using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
+            {
+                // Arrange
+                var url = GetCurrentPathForId(notificationId);
+                var response = await client.GetAsync(url);
+                var document = await GetDocumentAsync(response);
+
+                // Assert
+                if (seeShareButton)
+                {
+                    Assert.NotNull(document.GetElementById(buttonId));
+                }
+                else
+                {
+                    Assert.Null(document.GetElementById(buttonId));
+                }
+            }
         }
 
         [Fact]

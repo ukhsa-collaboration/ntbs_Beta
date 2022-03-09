@@ -125,7 +125,7 @@ namespace ntbs_integration_tests.Helpers
             Utilities.CASEMANAGER_GATESHEAD_EMAIL1,
             Utilities.CASEMANAGER_GATESHEAD_DISPLAY_NAME1,
             UserType.ServiceOrRegionalUser,
-            new[] { Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID },
+            new[] { "App.Auth.NIS.NTBS.Service_Gateshead" },
             tbServiceCodes: new[] { Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID });
 
         public static TestUser GatesheadCaseManager2 = new TestUser(
