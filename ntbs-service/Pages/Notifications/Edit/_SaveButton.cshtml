@@ -24,6 +24,8 @@
         buttonName = "Save";
     }
 
+    var backLinkText = pageHasEditableContent ? "Cancel & go back" : "Go back";
+
     var id = ViewData.ContainsKey("id") ? ViewData["id"] : "save-button";
 }
 
@@ -46,5 +48,5 @@
 
 @if (!isDraft)
 {
-    <nhs-back-link data-ignore-form-leave-checker="true" href="@RouteHelper.GetNotificationOverviewPathWithSectionAnchor(Model.NotificationId, currentPage)">Cancel & go back</nhs-back-link>
+    <nhs-back-link data-ignore-form-leave-checker="true" href="@RouteHelper.GetNotificationOverviewPathWithSectionAnchor(Model.NotificationId, currentPage)">@backLinkText</nhs-back-link>
 }
