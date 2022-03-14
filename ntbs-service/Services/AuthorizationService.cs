@@ -182,7 +182,13 @@ namespace ntbs_service.Services
                 ? Enumerable.Empty<Notification>().AsQueryable()
                 : notifications.Where(n =>
                     _userPermissionsFilter.IncludedTBServiceCodes.Contains(n.HospitalDetails.SecondaryTBServiceCode)
-                    || _userPermissionsFilter.IncludedPHECCodes.Contains(n.HospitalDetails.SecondaryTBService.PHECCode));
+                    || _userPermissionsFilter.IncludedPHECCodes.Contains(n.HospitalDetails.SecondaryTBService.PHECCode))
+                    .Where(n =>
+                        // Do not show the notifications that the user has a direct relation to
+                        !(_userPermissionsFilter.IncludedTBServiceCodes.Contains(n.HospitalDetails.TBServiceCode)
+                          || (n.HospitalDetails.TBService != null
+                              && _userPermissionsFilter.IncludedPHECCodes.Contains(n.HospitalDetails.TBService.PHECCode)))
+                    );
         }
 
         public async Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user,

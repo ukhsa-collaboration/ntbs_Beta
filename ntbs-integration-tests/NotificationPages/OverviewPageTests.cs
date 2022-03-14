@@ -21,6 +21,9 @@ namespace ntbs_integration_tests.NotificationPages
         protected override string NotificationSubPath => NotificationSubPaths.Overview;
 
         private static readonly string PatientDetailsOverviewSectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPaths.EditPatientDetails);
+        private static readonly string ClinicalDetailsOverviewSectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPaths.EditClinicalDetails);
+        private static readonly string HospitalDetailsOverviewSectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPaths.EditHospitalDetails);
+        private static readonly string TreatmentEventsOverviewSectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPaths.EditTreatmentEvents);
         private static readonly string ContactTracingOverviewSectionId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPaths.EditContactTracing);
 
         public OverviewPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory) { }
@@ -203,8 +206,7 @@ namespace ntbs_integration_tests.NotificationPages
             var document = await GetDocumentForUrlAsync(url);
 
             // Assert
-            Assert.NotNull(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-title"));
-            Assert.NotNull(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-edit-link"));
+            AssertEditOverview(document);
         }
 
         [Fact]
@@ -222,12 +224,10 @@ namespace ntbs_integration_tests.NotificationPages
                 var document = await GetDocumentAsync(response);
 
                 // Assert
-                Assert.NotNull(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-title"));
-                Assert.Null(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-edit-link"));
+                AssertReadOnlyOverview(document);
             }
         }
 
-        /* Just found that ".WithNotificationAndPostcodeConnected" has never worked.
         [Fact]
         public async Task OverviewPageReturnsReadOnlyVersion_ForRegionalUserWithMatchingPostcodePermission()
         {
@@ -242,10 +242,9 @@ namespace ntbs_integration_tests.NotificationPages
                 var document = await GetDocumentAsync(response);
 
                 // Assert
-                Assert.NotNull(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-title"));
-                Assert.Null(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-edit-link"));
+                AssertReadOnlyOverview(document);
             }
-        }*/
+        }
 
         [Fact]
         public async Task OverviewPageForSharedRecordReturnsReadOnlyVersionExceptContactTracing_ForUserInSharedTbService()
@@ -259,8 +258,7 @@ namespace ntbs_integration_tests.NotificationPages
                 var document = await GetDocumentAsync(response);
 
                 // Assert
-                Assert.NotNull(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-title"));
-                Assert.Null(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-edit-link"));
+                AssertReadOnlyOverview(document);
                 Assert.NotNull(document.QuerySelector($"#{ContactTracingOverviewSectionId}-edit-link"));
             }
         }
@@ -280,8 +278,7 @@ namespace ntbs_integration_tests.NotificationPages
                 var document = await GetDocumentAsync(response);
 
                 // Assert
-                Assert.NotNull(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-title"));
-                Assert.Null(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-edit-link"));
+                AssertReadOnlyOverview(document);
             }
         }
 
@@ -300,7 +297,7 @@ namespace ntbs_integration_tests.NotificationPages
                 var document = await GetDocumentAsync(response);
 
                 // Assert
-                Assert.NotNull(document.QuerySelectorAll("#patient-details-overview-header"));
+                AssertReadOnlyOverview(document);
                 Assert.Null(document.QuerySelector("#navigation-side-menu"));
             }
         }
@@ -452,6 +449,32 @@ namespace ntbs_integration_tests.NotificationPages
                 var expectedAnchorString = OverviewSubPathToAnchorMap.GetOverviewAnchorId(subPath);
                 Assert.NotNull(document.QuerySelector($"#{expectedAnchorString}-title"));
             });
+        }
+
+        private void AssertEditOverview(IHtmlDocument document)
+        {
+            AssertSectionTitlesInDocument(document);
+            Assert.NotNull(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-edit-link"));
+            Assert.NotNull(document.QuerySelector($"#{ClinicalDetailsOverviewSectionId}-edit-link"));
+            Assert.NotNull(document.QuerySelector($"#{HospitalDetailsOverviewSectionId}-edit-link"));
+            Assert.NotNull(document.QuerySelector($"#{TreatmentEventsOverviewSectionId}-edit-link"));
+        }
+
+        private void AssertReadOnlyOverview(IHtmlDocument document)
+        {
+            AssertSectionTitlesInDocument(document);
+            Assert.Null(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-edit-link"));
+            Assert.Null(document.QuerySelector($"#{ClinicalDetailsOverviewSectionId}-edit-link"));
+            Assert.Null(document.QuerySelector($"#{HospitalDetailsOverviewSectionId}-edit-link"));
+            Assert.Null(document.QuerySelector($"#{TreatmentEventsOverviewSectionId}-edit-link"));
+        }
+
+        private void AssertSectionTitlesInDocument(IHtmlDocument document)
+        {
+            Assert.NotNull(document.QuerySelector($"#{PatientDetailsOverviewSectionId}-title"));
+            Assert.NotNull(document.QuerySelector($"#{ClinicalDetailsOverviewSectionId}-title"));
+            Assert.NotNull(document.QuerySelector($"#{HospitalDetailsOverviewSectionId}-title"));
+            Assert.NotNull(document.QuerySelector($"#{TreatmentEventsOverviewSectionId}-title"));
         }
     }
 }

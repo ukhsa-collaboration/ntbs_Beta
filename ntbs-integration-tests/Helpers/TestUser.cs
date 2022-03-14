@@ -69,7 +69,7 @@ namespace ntbs_integration_tests.Helpers
             "abingdon@nhs.uk",
             "Abingdon Permitted",
             UserType.ServiceOrRegionalUser,
-            new[] { "App.Auth.NIS.NTBS.Service_Abingdon", "App.Auth.NIS.NTBS.Service_Ashford" },
+            new[] { Utilities.ABINGDON_AD_GROUP, Utilities.ASHFORD_AD_GROUP },
             tbServiceCodes: new[]
             {
                 Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
@@ -88,28 +88,28 @@ namespace ntbs_integration_tests.Helpers
             "permitted-phec@phe.com",
             "Permitted Phec",
             UserType.ServiceOrRegionalUser,
-            new[] { "App.Auth.NIS.NTBS.Admin", "App.Auth.NIS.NTBS.SoE" });
+            new[] { Utilities.ADMIN_AD_GROUP, Utilities.SOUTH_EAST_AD_GROUP });
 
         public static TestUser UserWithServiceAndRegion = new TestUser(
             9988,
             "user-service-and-region@phe.com",
             "Service and Region",
             UserType.ServiceOrRegionalUser,
-            new[] { "App.Auth.NIS.NTBS.SoE", "App.Auth.NIS.NTBS.Service_Abingdon" });
+            new[] { Utilities.SOUTH_EAST_AD_GROUP, Utilities.ABINGDON_AD_GROUP });
 
         public static TestUser NationalTeamUser = new TestUser(
             4567,
             "national-team@ntbs.com",
             "National Team",
             UserType.NationalTeam,
-            new[] { "App.Auth.NIS.NTBS.Admin", "App.Auth.NIS.NTBS.NTS" });
+            new[] { Utilities.ADMIN_AD_GROUP, Utilities.NATIONAL_AD_GROUP });
 
         public static TestUser AbingdonCaseManager = new TestUser(
             5678,
             Utilities.CASEMANAGER_ABINGDON_EMAIL,
             "TestCase TestManager",
             UserType.ServiceOrRegionalUser,
-            new[] { "App.Auth.NIS.NTBS.Service_Abingdon" },
+            new[] { Utilities.ABINGDON_AD_GROUP },
             tbServiceCodes: new[] { Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID });
 
         public static TestUser AbingdonCaseManager2 = new TestUser(
@@ -117,7 +117,7 @@ namespace ntbs_integration_tests.Helpers
             Utilities.CASEMANAGER_ABINGDON_EMAIL2,
             "TestCase TestManager",
             UserType.ServiceOrRegionalUser,
-            new[] { "App.Auth.NIS.NTBS.Service_Abingdon" },
+            new[] { Utilities.ABINGDON_AD_GROUP },
             tbServiceCodes: new[] { Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID });
 
         public static TestUser GatesheadCaseManager = new TestUser(
@@ -125,7 +125,7 @@ namespace ntbs_integration_tests.Helpers
             Utilities.CASEMANAGER_GATESHEAD_EMAIL1,
             Utilities.CASEMANAGER_GATESHEAD_DISPLAY_NAME1,
             UserType.ServiceOrRegionalUser,
-            new[] { "App.Auth.NIS.NTBS.Service_Gateshead" },
+            new[] { Utilities.GATESHEAD_AD_GROUP },
             tbServiceCodes: new[] { Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID });
 
         public static TestUser GatesheadCaseManager2 = new TestUser(
@@ -133,7 +133,7 @@ namespace ntbs_integration_tests.Helpers
             Utilities.CASEMANAGER_GATESHEAD_EMAIL2,
             Utilities.CASEMANAGER_GATESHEAD_DISPLAY_NAME2,
             UserType.ServiceOrRegionalUser,
-            new[] { "App.Auth.NIS.NTBS.Service_Gateshead" },
+            new[] { Utilities.GATESHEAD_AD_GROUP },
             tbServiceCodes: new[] { Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID });
 
         public static TestUser InactiveGatesheadCaseManager = new TestUser(
@@ -141,7 +141,7 @@ namespace ntbs_integration_tests.Helpers
             Utilities.CASEMANAGER_GATESHEAD_INACTIVE_EMAIL,
             Utilities.CASEMANAGER_GATESHEAD_INACTIVE_DISPLAY_NAME,
             UserType.ServiceOrRegionalUser,
-            new[] { "App.Auth.NIS.NTBS.Service_Gateshead" },
+            new[] { Utilities.GATESHEAD_AD_GROUP },
             tbServiceCodes: new[] { Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_ID },
             isActive: false);
 
@@ -150,14 +150,14 @@ namespace ntbs_integration_tests.Helpers
             "Developer@ntbs.phe.com",
             "BaseTestCase BaseTestManager",
             UserType.NationalTeam,
-            new[] { "App.Auth.NIS.NTBS.NTS" });
+            new[] { Utilities.NATIONAL_AD_GROUP });
 
         public static TestUser ReadOnlyUser = new TestUser(
             7892,
             "ReadOnly@ntbs.phe.com",
             "ReadOnly UserGroup",
             UserType.ServiceOrRegionalUser,
-            new[] { "App.Auth.NIS.NTBS.Read_Only" },
+            new[] { Utilities.READ_ONLY_AD_GROUP },
             isReadOnly: true);
     }
 }
