@@ -13,7 +13,6 @@ public class ServiceShareRequestViewModel
 
     [Display(Name = "Reason for TB Service share")]
     [MaxLength(1000, ErrorMessage = ValidationMessages.MaximumTextLength)]
-    [ContainsNoTabs]
     [RegularExpression(ValidationRegexes.CharacterValidationAsciiBasicWithNewline,
         ErrorMessage = ValidationMessages.InvalidCharacter)]
     public string ReasonForTBServiceShare { get; set; }

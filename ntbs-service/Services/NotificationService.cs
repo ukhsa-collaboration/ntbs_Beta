@@ -12,6 +12,7 @@ using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.ViewModels;
 using Serilog;
 
 namespace ntbs_service.Services
@@ -47,7 +48,7 @@ namespace ntbs_service.Services
         Task UpdateMBovisDetailsOccupationExposureAsync(Notification notification, MBovisDetails mBovisDetails);
         Task UpdateMBovisDetailsAnimalExposureAsync(Notification notification, MBovisDetails mBovisDetails);
         Task CloseInactiveNotifications();
-        Task ShareNotificationWithService(int notificationId, string sharingServiceCode, string reason);
+        Task ShareNotificationWithService(int notificationId, ServiceShareRequestViewModel shareModel);
         Task StopSharingNotificationWithService(int notificationId);
     }
 
@@ -537,15 +538,15 @@ namespace ntbs_service.Services
             }
         }
 
-        public async Task ShareNotificationWithService(int notificationId, string shareServiceCode, string reason)
+        public async Task ShareNotificationWithService(int notificationId, ServiceShareRequestViewModel shareModel)
         {
             var notification = await _notificationRepository.GetNotificationAsync(notificationId);
             if (notification.IsShared)
             {
                 throw new ApplicationException("Notification shared with second service cannot be shared with another service.");
             }
-            notification.HospitalDetails.SecondaryTBServiceCode = shareServiceCode;
-            notification.HospitalDetails.ReasonForTBServiceShare = reason;
+            notification.HospitalDetails.SecondaryTBServiceCode = shareModel.SharingTBServiceCode;
+            notification.HospitalDetails.ReasonForTBServiceShare = shareModel.ReasonForTBServiceShare;
             await _notificationRepository.SaveChangesAsync();
         }
 

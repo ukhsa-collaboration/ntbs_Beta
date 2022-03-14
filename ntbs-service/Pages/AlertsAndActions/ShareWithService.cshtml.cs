@@ -66,7 +66,7 @@ namespace ntbs_service.Pages.AlertsAndActions
                 return Page();
             }
 
-            await Service.ShareNotificationWithService(NotificationId, ServiceShareViewModel.SharingTBServiceCode, ServiceShareViewModel.ReasonForTBServiceShare);
+            await Service.ShareNotificationWithService(NotificationId, ServiceShareViewModel);
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
 

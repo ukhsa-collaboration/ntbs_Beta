@@ -61,7 +61,7 @@ namespace ntbs_integration_tests.SharingPages
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            resultDocument.AssertErrorMessage("tb-service", "Notification cannot be shared to the notification's current TB service");
+            resultDocument.AssertErrorMessage("tb-service", "Notification cannot be shared with the notification's current TB service");
             resultDocument.AssertErrorMessage("reason", "Invalid character found in Reason for TB Service share");
         }
         

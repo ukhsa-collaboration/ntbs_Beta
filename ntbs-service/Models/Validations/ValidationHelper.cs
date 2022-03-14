@@ -174,7 +174,7 @@
         
         #region ShareWithService
         public const string ShareDestinationCannotBeCurrentTbService =
-            "Notification cannot be shared to the notification's current TB service";
+            "Notification cannot be shared with the notification's current TB service";
         #endregion
     }
 
