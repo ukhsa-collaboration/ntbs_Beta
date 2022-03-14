@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EFAuditer;
+using Newtonsoft.Json;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
@@ -50,7 +50,7 @@ namespace ntbs_service.Services
                 .SelectMany(GetCanonicalLogs)
                 .ToList();
 
-            // We do not detail out the changes that happened before submission  to avoid unnecessary page clutter
+            // We do not detail out the changes that happened before submission to avoid unnecessary page clutter
             var auditLogsToShow = SkipDraftEdits(auditLogs);
 
             return auditLogsToShow.Select(log => new NotificationHistoryListItemModel
@@ -221,6 +221,19 @@ namespace ntbs_service.Services
             {
                 return group;
             }
+            
+            if (group.Count == 1 && group.Single().AuditData != null && group.Single().EntityType == nameof(HospitalDetails))
+            {
+                var log = group.Single();
+                var deserializedUpdate = JsonConvert.DeserializeObject<List<Dictionary<string,string>>>(log.AuditData);
+                if (deserializedUpdate != null && deserializedUpdate.Any(d => d.ContainsValue("SecondaryTBServiceCode")))
+                {
+                    log.ActionString = deserializedUpdate.Any(d => d.ContainsKey("NewValue"))
+                        ? "shared case with" : "stopped sharing case with";
+                    log.SubjectString = "second TB service";
+                    return new List<AuditLog> {log};
+                }
+            }
 
             // We want this check at the end, since some of the group checks above may have a single member but still
             // require manual intervention (e.g. notification sites)
@@ -259,15 +272,6 @@ namespace ntbs_service.Services
                 return log.ActionString;
             }
 
-            if (LogIsServiceShare(log))
-            {
-                return "shared case with";
-            }
-            else if (LogIsStopServiceShare(log))
-            {
-                return "stopped sharing case with";
-            }
-
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (GetNotificationAuditType(log))
             {
@@ -300,28 +304,11 @@ namespace ntbs_service.Services
             }
         }
 
-        private static bool LogIsServiceShare(AuditLog log)
-        {
-            return LogIsForHospitalDetailsAndHasDataWhichMatchesString(log, "\"NewValue\":\"TBS\\d{4}\"");
-        }
-
-        private static bool LogIsStopServiceShare(AuditLog log)
-        {
-            return LogIsForHospitalDetailsAndHasDataWhichMatchesString(log, "\"OriginalValue\":\"TBS\\d{4}\"");
-        }
-
-        private static bool LogIsForHospitalDetailsAndHasDataWhichMatchesString(AuditLog log, string match)
-        {
-            return log.AuditData != null
-                   && log.EntityType == nameof(HospitalDetails)
-                   && Regex.IsMatch(log.AuditData, ".*{\"ColumnName\":\"SecondaryTBServiceCode\"," + match + "}.*");
-        }
-
         private static string MapSubject(AuditLog log)
         {
-            if (LogIsServiceShare(log) || LogIsStopServiceShare(log))
+            if (log.SubjectString != null)
             {
-                return "second TB service";
+                return log.SubjectString;
             }
 
             switch (log.EntityType)
