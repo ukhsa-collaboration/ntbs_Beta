@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 
@@ -11,9 +12,10 @@ using ntbs_service.DataAccess;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20220301173715_AddContinentsTable")]
+    partial class AddContinentsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,12 +152,6 @@ namespace ntbs_service.Migrations
                     b.Property<Guid?>("HospitalId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ReasonForTBServiceShare")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SecondaryTBServiceCode")
-                        .HasColumnType("nvarchar(16)");
-
                     b.Property<string>("TBServiceCode")
                         .HasColumnType("nvarchar(16)");
 
@@ -164,8 +160,6 @@ namespace ntbs_service.Migrations
                     b.HasIndex("CaseManagerId");
 
                     b.HasIndex("HospitalId");
-
-                    b.HasIndex("SecondaryTBServiceCode");
 
                     b.HasIndex("TBServiceCode");
 
@@ -5584,10 +5578,6 @@ namespace ntbs_service.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "SecondaryTBService")
-                        .WithMany()
-                        .HasForeignKey("SecondaryTBServiceCode");
-
                     b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TBService")
                         .WithMany()
                         .HasForeignKey("TBServiceCode");
@@ -5595,8 +5585,6 @@ namespace ntbs_service.Migrations
                     b.Navigation("CaseManager");
 
                     b.Navigation("Hospital");
-
-                    b.Navigation("SecondaryTBService");
 
                     b.Navigation("TBService");
                 });

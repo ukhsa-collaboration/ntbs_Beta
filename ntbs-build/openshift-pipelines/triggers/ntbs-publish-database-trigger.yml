@@ -27,5 +27,10 @@ spec:
         timeout: 15m0s
         workspaces:
           - name: shared-workspace
-            persistentVolumeClaim:
-              claimName: ntbs-build-pvc
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 1Gi

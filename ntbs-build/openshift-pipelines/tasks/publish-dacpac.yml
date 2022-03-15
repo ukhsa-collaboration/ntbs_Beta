@@ -8,8 +8,18 @@ spec:
     - description: Directory containing checkout of repository
       name: checkout_directory
       type: string
-    - description: The name of the database to deploy.
-      name: database
+    - description: >-
+        The relative path of the directory containing the DACPAC within the
+        checkout directory
+      name: dacpac_directory
+      type: string
+    - description: >-
+        The relative path of the directory containing the reference DACPACs
+        within the checkout directory
+      name: reference_dacpacs_path
+      type: string
+    - description: The DACPAC file name
+      name: dacpac_file_name
       type: string
     - description: The config map containing the publish profile location
       name: config_map
@@ -18,9 +28,6 @@ spec:
         The key within the config map containing the relative path of the
         publish profile within the checkout directory
       name: publish_profile_key
-      type: string
-    - description: The relative path of the reference DACPACs within the checkout directory
-      name: reference_dacpacs_path
       type: string
     - description: >-
         The name of the secret containing a keytab for the SQL identity used to
@@ -41,13 +48,13 @@ spec:
 
         cp
         $(workspaces.input.path)/$(params.checkout_directory)/$(params.reference_dacpacs_path)/*.dacpac
-        $(workspaces.input.path)/dacpacs/$(params.database)
+        $(workspaces.input.path)/$(params.checkout_directory)/$(params.dacpac_directory)
 
         if [ -f "$KRB5_CLIENT_KTNAME" ]; then
 
           klist -k $KRB5_CLIENT_KTNAME
 
-          /bin/sqlpackage/sqlpackage -Action:Publish -SourceFile:"$(workspaces.input.path)/dacpacs/$(params.database)/$(params.database).dacpac" -Profile:"$(workspaces.input.path)/$(params.checkout_directory)/$publish_profile_path"
+          /bin/sqlpackage/sqlpackage -Action:Publish -SourceFile:"$(workspaces.input.path)/$(params.checkout_directory)/$(params.dacpac_directory)/$(params.dacpac_file_name)" -Profile:"$(workspaces.input.path)/$(params.checkout_directory)/$publish_profile_path"
 
         else
 
@@ -55,7 +62,7 @@ spec:
 
           sqlPassword="$(cat /krbtab/password)"
 
-          /bin/sqlpackage/sqlpackage -Action:Publish -SourceFile:"$(workspaces.input.path)/dacpacs/$(params.database)/$(params.database).dacpac" -Profile:"$(workspaces.input.path)/$(params.checkout_directory)/$publish_profile_path" -TargetPassword:"$sqlPassword" -TargetUser:"$sqlUser"
+          /bin/sqlpackage/sqlpackage -Action:Publish -SourceFile:"$(workspaces.input.path)/$(params.checkout_directory)/$(params.dacpac_directory)/$(params.dacpac_file_name)" -Profile:"$(workspaces.input.path)/$(params.checkout_directory)/$publish_profile_path" -TargetPassword:"$sqlPassword" -TargetUser:"$sqlUser"
 
         fi
       volumeMounts:

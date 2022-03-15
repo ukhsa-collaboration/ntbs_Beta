@@ -1,0 +1,82 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: download-file-from-container
+  namespace: ntbs-build
+spec:
+  params:
+    - description: The name of the docker registry from which to pull the container.
+      name: registry
+      type: string
+    - description: The image to pull from the registry
+      name: image
+      type: string
+    - description: The path of the file within the container.
+      name: container_path
+      type: string
+    - description: The name of the output directory into which the file is copied.
+      name: output_directory
+      type: string
+  sidecars:
+    - args:
+        - '--storage-driver=vfs'
+        - '--userland-proxy=false'
+        - '--debug'
+      env:
+        - name: DOCKER_TLS_CERTDIR
+          value: /certs
+      image: >-
+        image-registry.openshift-image-registry.svc:5000/ntbs-build/ntbs-image-stream:docker-dind
+      name: server
+      readinessProbe:
+        exec:
+          command:
+            - ls
+            - /certs/client/ca.pem
+        periodSeconds: 1
+      resources:
+        requests:
+          memory: 512Mi
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - mountPath: /certs/client
+          name: dind-certs
+  steps:
+    - env:
+        - name: DOCKER_HOST
+          value: 'tcp://localhost:2376'
+        - name: DOCKER_TLS_VERIFY
+          value: '1'
+        - name: DOCKER_CERT_PATH
+          value: /certs/client
+      image: >-
+        image-registry.openshift-image-registry.svc:5000/ntbs-build/ntbs-image-stream:docker
+      name: download-dacpac
+      resources: {}
+      script: >-
+        mkdir -p $(workspaces.output.path)/$(params.output_directory)
+
+        echo $(cat /github/access_token) | docker login $(params.registry) -u
+        ntbs-backups --password-stdin
+
+        docker pull $(params.registry)/$(params.image)
+
+        docker create --name file_store $(params.registry)/$(params.image)
+
+        docker cp file_store:$(params.container_path)
+        $(workspaces.output.path)/$(params.output_directory)
+      volumeMounts:
+        - mountPath: /github
+          name: github-secrets
+        - mountPath: /certs/client
+          name: dind-certs
+  volumes:
+    - name: github-secrets
+      secret:
+        secretName: github-secrets
+    - emptyDir: {}
+      name: dind-certs
+  workspaces:
+    - description: The file will be saved onto the volume backing this workspace
+      name: output

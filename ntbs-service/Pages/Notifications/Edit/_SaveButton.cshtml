@@ -5,23 +5,36 @@
 
 @{
     var isDraft = Model.NotificationStatus == NotificationStatus.Draft;
-    var isEditPage = (bool?) ViewData["IsEditPage"] ?? true;
+    var pageHasEditableContent = (bool?) ViewData["PageHasEditableContent"] ?? true;
     var currentPage = (string) ViewData["CurrentPage"];
+    var isLastPage = (bool?) ViewData["IsLastPage"] ?? false;
 
     var buttonName = "";
-    if (!isEditPage)
+    
+    if (!pageHasEditableContent)
     {
         buttonName = "Continue";
     }
+    else if (isDraft && !isLastPage)
+    {
+        buttonName = "Save and continue";
+    }
     else
     {
-        buttonName = isDraft ? "Save and continue" : "Save";
+        buttonName = "Save";
     }
+
+    var backLinkText = pageHasEditableContent ? "Cancel & go back" : "Go back";
 
     var id = ViewData.ContainsKey("id") ? ViewData["id"] : "save-button";
 }
 
-@if (isDraft || isEditPage)
+@if (isDraft && isLastPage && !pageHasEditableContent)
+{
+    return;
+}
+
+@if (isDraft || pageHasEditableContent)
 {
     <button
         nhs-button-type="Standard"
@@ -35,5 +48,5 @@
 
 @if (!isDraft)
 {
-    <nhs-back-link data-ignore-form-leave-checker="true" href="@RouteHelper.GetNotificationOverviewPathWithSectionAnchor(Model.NotificationId, currentPage)">Cancel & go back</nhs-back-link>
+    <nhs-back-link data-ignore-form-leave-checker="true" href="@RouteHelper.GetNotificationOverviewPathWithSectionAnchor(Model.NotificationId, currentPage)">@backLinkText</nhs-back-link>
 }
