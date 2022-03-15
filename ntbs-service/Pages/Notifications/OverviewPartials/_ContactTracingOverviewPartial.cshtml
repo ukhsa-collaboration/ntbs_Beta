@@ -9,7 +9,7 @@
 
 <div class="notification-overview-type-and-edit-container" id="@sectionId-title">
     <h3 class="notification-details-type"> Contact tracing </h3>
-    @if (Model.PermissionLevel == PermissionLevel.Edit)
+    @if (Model.PermissionLevel == PermissionLevel.Edit || Model.PermissionLevel == PermissionLevel.SharedWith)
     {
         <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionSubPath)"
            class="notification-edit-link govuk-link--no-visited-state" id="@sectionId-edit-link">

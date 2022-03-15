@@ -85,6 +85,8 @@ namespace ntbs_service.Helpers
         public static string TransferRequest => "Transfer";
         public static string ActionTransferRequest => "ActionTransfer";
         public static string TransferDeclined => "TransferDeclined";
+        public static string ShareWithService => "ShareWithService";
+        public static string StopShareWithService => "StopShareWithService";
 
         public static string EditManualTestResult(int? testResultId) => $"Edit/ManualTestResult/{testResultId}";
         public static string AddManualTestResult => $"Edit/ManualTestResult/New";

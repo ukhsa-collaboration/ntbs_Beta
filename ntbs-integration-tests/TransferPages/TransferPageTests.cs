@@ -27,6 +27,7 @@ namespace ntbs_integration_tests.TransferPages
                 new()
                 {
                     NotificationId = Utilities.NOTIFICATION_WITH_TRANSFER,
+                    NotificationStatus = NotificationStatus.Notified,
                     NotificationDate = _notificationDate,
                     HospitalDetails = new HospitalDetails
                     {

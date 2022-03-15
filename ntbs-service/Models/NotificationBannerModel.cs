@@ -42,6 +42,8 @@ namespace ntbs_service.Models
         public IEnumerable<string> PreviousPhecCodes { get; set; }
         public IEnumerable<string> LinkedNotificationTbServiceCodes { get; set; }
         public IEnumerable<string> LinkedNotificationPhecCodes { get; set; }
+        public string SharedTBServiceCode { get; set; }
+        public string SharedTBServicePHECCode { get; set; }
 
         // Access level is treated as a bool for either able to view or not. This differs from the standard PermissionLevel
         // implemented across the codebase due to there being no visual difference between full edit permissions
@@ -74,6 +76,8 @@ namespace ntbs_service.Models
                 notification.Group?.Notifications.Select(no => no.HospitalDetails.TBService.PHECCode);
             LinkedNotificationTbServiceCodes =
                 notification.Group?.Notifications.Select(no => no.HospitalDetails.TBServiceCode);
+            SharedTBServiceCode = notification.HospitalDetails.SecondaryTBServiceCode;
+            SharedTBServicePHECCode = notification.HospitalDetails.SecondaryTBService?.PHEC?.Code;
             Source = NtbsSource;
             ShowLink = showLink;
             ShowPadlock = showPadlock;
@@ -107,6 +111,8 @@ namespace ntbs_service.Models
             PreviousPhecCodes = notification.PreviousPhecCodes;
             LinkedNotificationTbServiceCodes = notification.LinkedNotificationTbServiceCodes;
             LinkedNotificationPhecCodes = notification.LinkedNotificationPhecCodes;
+            SharedTBServiceCode = notification.SharedTBServiceCode;
+            SharedTBServicePHECCode = notification.SharedTBServicePHECCode;
             Source = NtbsSource;
             ShowLink = showLink;
             ShowPadlock = showPadlock;

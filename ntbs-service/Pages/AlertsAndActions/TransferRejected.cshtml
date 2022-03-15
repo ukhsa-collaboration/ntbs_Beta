@@ -1,0 +1,37 @@
+@page "/Notifications/{NotificationId:int}/TransferDeclined/{handler?}"
+
+@using ntbs_service.Helpers
+@model ntbs_service.Pages.AlertsAndActions.TransferRejectedModel
+
+@{
+    Layout = "../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = $"Transfer Request - {Model.NotificationId}";
+}
+
+<nhs-width-container container-width="Standard">
+    <h2> Transfer for Notification #@Model.NotificationId has been declined </h2>
+    
+    <br>
+    
+    @if(Model.TransferRejectedAlert.DecliningUserAndTbServiceString != null)
+    {
+        <div> @Model.TransferRejectedAlert.DecliningUserAndTbServiceString: </div>
+        <br/>
+    }
+
+    <div class="rejection-note"> @Model.TransferRejectedAlert.RejectionReason </div>
+
+    <single-submit-form inline-template>
+        <form method="post" autocomplete="off" v-on:submit="disableButton">
+            <div class="flex-container">
+                <button nhs-button-type="Standard" ref="submitButton" id="cancel-transfer-button" classes="ntbsuk-button--primary confirm-transfer-button">
+                    Dismiss
+                </button>
+                <nhs-back-link href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)" 
+                               classes="transfer-request-back-link">
+                    Go back
+                </nhs-back-link>
+            </div>
+        </form>
+    </single-submit-form>
+</nhs-width-container>

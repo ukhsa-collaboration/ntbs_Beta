@@ -12,6 +12,7 @@ using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.ViewModels;
 using Serilog;
 
 namespace ntbs_service.Services
@@ -47,7 +48,8 @@ namespace ntbs_service.Services
         Task UpdateMBovisDetailsOccupationExposureAsync(Notification notification, MBovisDetails mBovisDetails);
         Task UpdateMBovisDetailsAnimalExposureAsync(Notification notification, MBovisDetails mBovisDetails);
         Task CloseInactiveNotifications();
-
+        Task ShareNotificationWithService(int notificationId, ServiceShareRequestViewModel shareModel);
+        Task StopSharingNotificationWithService(int notificationId);
     }
 
     public class NotificationService : INotificationService
@@ -502,6 +504,7 @@ namespace ntbs_service.Services
             await _notificationRepository.SaveChangesAsync(NotificationAuditType.Denotified);
 
             await _alertService.DismissAllOpenAlertsForNotification(notificationId);
+            await StopSharingNotificationWithService(notificationId);
 
             Log.Debug($"{notificationId} denotified, removing lab result matches");
             var success = await _specimenService.UnmatchAllSpecimensForNotification(notificationId, auditUsername);
@@ -523,7 +526,6 @@ namespace ntbs_service.Services
             await _alertService.DismissAllOpenAlertsForNotification(notificationId);
         }
 
-
         public async Task CloseInactiveNotifications()
         {
             var notificationsToSetClosed = await _notificationRepository.GetInactiveNotificationsToCloseAsync();
@@ -532,7 +534,32 @@ namespace ntbs_service.Services
                 notification.NotificationStatus = NotificationStatus.Closed;
                 await _notificationRepository.SaveChangesAsync(NotificationAuditType.Closed);
                 await _alertService.DismissAllOpenAlertsForNotification(notification.NotificationId);
+                await StopSharingNotificationWithService(notification.NotificationId);
             }
+        }
+
+        public async Task ShareNotificationWithService(int notificationId, ServiceShareRequestViewModel shareModel)
+        {
+            var notification = await _notificationRepository.GetNotificationAsync(notificationId);
+            if (notification.IsShared)
+            {
+                throw new ApplicationException("Notification shared with second service cannot be shared with another service.");
+            }
+            notification.HospitalDetails.SecondaryTBServiceCode = shareModel.SharingTBServiceCode;
+            notification.HospitalDetails.ReasonForTBServiceShare = shareModel.ReasonForTBServiceShare;
+            await _notificationRepository.SaveChangesAsync();
+        }
+
+        public async Task StopSharingNotificationWithService(int notificationId)
+        {
+            var notification = await _notificationRepository.GetNotificationAsync(notificationId);
+            if (!notification.IsShared)
+            {
+                return;
+            }
+            notification.HospitalDetails.SecondaryTBServiceCode = null;
+            notification.HospitalDetails.ReasonForTBServiceShare = null;
+            await _notificationRepository.SaveChangesAsync();
         }
     }
 }

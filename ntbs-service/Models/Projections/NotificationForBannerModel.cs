@@ -34,5 +34,7 @@ namespace ntbs_service.Models.Projections
         public IEnumerable<string> PreviousPhecCodes { get; set; }
         public IEnumerable<string> LinkedNotificationTbServiceCodes { get; set; }
         public IEnumerable<string> LinkedNotificationPhecCodes { get; set; }
+        public string SharedTBServiceCode { get; set; }
+        public string SharedTBServicePHECCode { get; set; }
     }
 }

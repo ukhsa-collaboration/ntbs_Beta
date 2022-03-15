@@ -4,6 +4,7 @@ namespace ntbs_service.Models.Enums
     {
         Edit,
         ReadOnly,
+        SharedWith,
         None
     }
 }

@@ -166,7 +166,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public async Task<ContentResult> OnPostValidatePostcode([FromBody]PostcodeValidationModel validationData)
         {
-            var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            var notification = await GetNotificationAsync(NotificationId);
             var foundPostcode = await _postcodeService.FindPostcodeAsync(validationData.Postcode);
             var propertyValueTuples = new List<(string, object)>
             {
