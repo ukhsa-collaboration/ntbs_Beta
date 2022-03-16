@@ -57,6 +57,7 @@
     <PackageReference Include="Sentry.AspNetCore" Version="3.14.1" />
     <PackageReference Include="Sentry.Serilog" Version="3.14.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="Serilog.Sinks.Splunk" Version="3.7.0" />
     <PackageReference Include="TimeZoneConverter" Version="5.0.0" />
     <PackageReference Include="ZNetCS.AspNetCore.Authentication.Basic" Version="6.0.1" />
   </ItemGroup>
