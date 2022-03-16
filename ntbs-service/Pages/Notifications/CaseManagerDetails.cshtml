@@ -6,16 +6,16 @@
     Layout = "../Shared/_NotificationOverviewLayout.cshtml";
     ViewData["Title"] = "Contact Details";
     ViewData["CurrentPage"] = NotificationSubPaths.ContactDetails;
+    // The layout of this page should be kept inline with the contact details Index page
 }
-
 <partial name="ContactDetails/_ContactDetailsPartial" model="@Model.CaseManagerDetails"/>
-
-@if (Model.CaseManagerDetails.CaseManagerTbServices.Any())
-{
-    <partial name ="ContactDetails/_TbServiceMembershipDetailsPartial" model="Model.CaseManagerDetails.CaseManagerTbServices" />
-}
 
 @if (Model.RegionalMemberships.Any())
 {
     <partial name="ContactDetails/_RegionalMembershipDetailsPartial" model="@Model.RegionalMemberships"/>
+}
+
+@if (Model.CaseManagerDetails.CaseManagerTbServices.Any())
+{
+    <partial name ="ContactDetails/_TbServiceMembershipDetailsPartial" model="Model.CaseManagerDetails.CaseManagerTbServices" />
 }

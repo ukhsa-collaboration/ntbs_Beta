@@ -1,0 +1,67 @@
+﻿@using ntbs_service.Helpers
+@model ntbs_service.Pages.NotificationTableModel
+
+<nhs-width-container container-width="Standard">
+    <h2 class="heading"> @Model.Name notifications </h2>
+    <nhs-table class="notifications-table" id="@Model.Name.ToLower()-notifications-table" responsive>
+        <nhs-table-head>
+            <nhs-table-item>
+                @Html.DisplayNameFor(model => model.Notifications[0].NotificationId)
+            </nhs-table-item>
+            <nhs-table-item>
+                @Html.DisplayNameFor(model => model.Notifications[0].FullName)
+            </nhs-table-item>
+            @if (Model.UseCreationDate)
+            {
+                <nhs-table-item>
+                    @Html.DisplayNameFor(model => model.Notifications[0].FormattedCreationDate)
+                </nhs-table-item>
+            }
+            else
+            {
+                <nhs-table-item>
+                    @Html.DisplayNameFor(model => model.Notifications[0].FormattedNotificationDate)
+                </nhs-table-item>
+            }
+            <nhs-table-item>
+                @Html.DisplayNameFor(model => model.Notifications[0].TbServiceName)
+            </nhs-table-item>
+            <nhs-table-item>
+                @Html.DisplayNameFor(model => model.Notifications[0].CaseManagerName)
+            </nhs-table-item>
+        </nhs-table-head>
+        <nhs-table-body>
+            @foreach (var item in Model.Notifications)
+            {
+                <nhs-table-body-row>
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.NotificationId)">
+                        <a href="@RouteHelper.GetNotificationPath(item.NotificationId, NotificationSubPaths.Overview)" class="govuk-link--no-visited-state">
+                            @Html.DisplayFor(modelItem => item.NotificationId)
+                        </a>
+                    </nhs-table-item>
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.FullName)">
+                        @Html.DisplayFor(modelItem => item.FullName)
+                    </nhs-table-item>
+                    @if (Model.UseCreationDate)
+                    {
+                        <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.FormattedCreationDate)">
+                            @Html.DisplayFor(modelItem => item.FormattedCreationDate)
+                        </nhs-table-item>
+                    }
+                    else
+                    {
+                        <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.FormattedNotificationDate)">
+                            @Html.DisplayFor(modelItem => item.FormattedNotificationDate)
+                        </nhs-table-item>
+                    }
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.TbServiceName)">
+                        @Html.DisplayFor(modelItem => item.TbServiceName)
+                    </nhs-table-item>
+                    <nhs-table-item heading-text="@Html.DisplayNameFor(_ => item.CaseManagerName)">
+                        @Html.DisplayFor(modelItem => item.CaseManagerName)
+                    </nhs-table-item>
+                </nhs-table-body-row>
+            }
+        </nhs-table-body>
+    </nhs-table>
+</nhs-width-container>

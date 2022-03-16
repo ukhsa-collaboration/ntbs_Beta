@@ -18,6 +18,8 @@ namespace EFAuditer
 
         [NotMapped]
         public string ActionString { get; set; }
+        [NotMapped]
+        public string SubjectString { get; set; }
 
         public AuditLog Clone()
         {

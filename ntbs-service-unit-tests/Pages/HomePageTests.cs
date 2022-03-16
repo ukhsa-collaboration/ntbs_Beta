@@ -66,6 +66,9 @@ namespace ntbs_service_unit_tests.Pages
                 .Setup(s => s.FilterNotificationsByUserAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<IQueryable<Notification>>()))
                 .Returns((ClaimsPrincipal user, IQueryable<Notification> notifications) => Task.FromResult(notifications));
             _mockAuthorizationService
+                .Setup(s => s.FilterSharedNotificationsByUserAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<IQueryable<Notification>>()))
+                .Returns((ClaimsPrincipal user, IQueryable<Notification> notifications) => Task.FromResult(notifications));
+            _mockAuthorizationService
                 .Setup(s => s.FilterAlertsForUserAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<IList<AlertWithTbServiceForDisplay>>()))
                 .Returns((ClaimsPrincipal user, IList<AlertWithTbServiceForDisplay> alerts) => Task.FromResult(alerts));
 
@@ -103,11 +106,45 @@ namespace ntbs_service_unit_tests.Pages
 
             // Act
             await pageModel.OnGetAsync();
-            var resultRecents = Assert.IsAssignableFrom<List<NotificationForHomePage>>(pageModel.RecentNotifications);
+            var resultRecents = Assert.IsAssignableFrom<List<NotificationForHomePage>>(pageModel.RecentNotifications.Notifications);
 
             // Assert
             Assert.Equal(new[] { "BAKER, Bob", "COOK, Charlie", "ADAMS, Alice" }, resultRecents.Select(n => n.FullName));
             _homePageFixture.Context.RemoveRange(recents);
+        }
+
+        [Fact]
+        public async Task OnGetAsync_PopulatesPageModel_WithSharedNotifications()
+        {
+            // Arrange
+            _mockUserService.Setup(s => s.GetUserPermissionsFilterAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
+                new UserPermissionsFilter { Type = UserType.ServiceOrRegionalUser, IncludedTBServiceCodes = new List<string> {"TBS00TEST"} });
+
+            var shared = new List<Notification>
+            {
+                CreateNotification("Alice", "Adams", NotificationStatus.Notified, "2021-04-01", "2021-04-01", "TBS00TEST"),
+                CreateNotification("Bob", "Baker", NotificationStatus.Notified, "2021-04-15", "2021-04-30", "TBS00TEST"),
+                CreateNotification("Charlie", "Cook", NotificationStatus.Notified, "2021-04-30", "2021-04-15", "TBS00TEST")
+            };
+
+            await _homePageFixture.Context.AddRangeAsync(shared);
+            await _homePageFixture.Context.SaveChangesAsync();
+
+            var pageModel = new IndexModel(_notificationRepository,
+                _mockAlertRepository.Object,
+                _mockAuthorizationService.Object,
+                _mockUserService.Object,
+                _mockHomepageKpiService.Object,
+                new Mock<IUserHelper>().Object);
+            pageModel.MockOutSession();
+
+            // Act
+            await pageModel.OnGetAsync();
+            var resultShared = Assert.IsAssignableFrom<List<NotificationForHomePage>>(pageModel.SharedNotifications.Notifications);
+
+            // Assert
+            Assert.Equal(new[] { "BAKER, Bob", "COOK, Charlie", "ADAMS, Alice" }, resultShared.Select(n => n.FullName));
+            _homePageFixture.Context.RemoveRange(shared);
         }
 
         [Fact]
@@ -137,7 +174,7 @@ namespace ntbs_service_unit_tests.Pages
 
             // Act
             await pageModel.OnGetAsync();
-            var resultDrafts = Assert.IsAssignableFrom<List<NotificationForHomePage>>(pageModel.DraftNotifications);
+            var resultDrafts = Assert.IsAssignableFrom<List<NotificationForHomePage>>(pageModel.DraftNotifications.Notifications);
 
             // Assert
             Assert.Equal(new[] { "SMITH, Eve", "JONES, Frank", "DAVIDS, Dave" }, resultDrafts.Select(n => n.FullName));
@@ -234,11 +271,13 @@ namespace ntbs_service_unit_tests.Pages
             string familyName,
             NotificationStatus status,
             string creationDate,
-            string notificationDate = null)
+            string notificationDate = null,
+            string shareServiceCode = null)
         {
             var notification = new Notification
             {
                 PatientDetails = new PatientDetails { GivenName = givenName, FamilyName = familyName },
+                HospitalDetails = new HospitalDetails { SecondaryTBServiceCode = shareServiceCode },
                 NotificationStatus = status,
                 CreationDate = DateTime.Parse(creationDate),
                 NotificationDate = notificationDate != null ? DateTime.Parse(notificationDate) : (DateTime?)null

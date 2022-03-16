@@ -1,0 +1,69 @@
+@page "/Notifications/{NotificationId:int}/ShareWithService/{handler?}"
+
+@using ntbs_service.Helpers
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+@model ntbs_service.Pages.AlertsAndActions.ShareWithServiceModel
+@using NHSUK.FrontEndLibrary.TagHelpers
+
+@{
+    Layout = "../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = $"{Model.NotificationId} - Share with second service";
+}
+
+<nhs-width-container container-width="Standard">
+    <form method="post" autocomplete="off">
+        <h2> You are about to share this notification with a second TB service</h2>
+        <p>The second TB service will be able to view all of the details of this notification, and will be able to edit the contact tracing information.
+            However, they will not be able to edit any other fields.</p>
+        <nhs-hint nhs-hint-type="Standard" id="ntbs-service-directory-hint">
+            You can search for TB services in the <a class="nhsuk-action-link" href=/ServiceDirectory>NTBS service directory</a> if you are not sure of the TB service name
+        </nhs-hint> <br>
+        <div>
+            @{
+                var hasTbServiceCodeError = !Model.ValidationService.IsValid("ServiceShareViewModel.SharingTBServiceCode");
+                var tbServiceCodeGroupState = hasTbServiceCodeError ? Error : Standard;
+                var tbServiceCodeSelectErrorState = hasTbServiceCodeError ? SelectType.Error : SelectType.Standard;
+            }
+            <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="ServiceShareViewModel-SharingTBServiceCode" ref="tbServices">
+                <label nhs-label-type="Standard" asp-for="ServiceShareViewModel.SharingTBServiceCode">
+                    @Html.DisplayNameFor(model => model.ServiceShareViewModel.SharingTBServiceCode)
+                </label>
+                <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@hasTbServiceCodeError"
+                      ref="errorField" asp-validation-for="ServiceShareViewModel.SharingTBServiceCode"></span>
+                <autocomplete-select ref="filterContainer" placeholder="Select TB service" emit-change-on="select" inline-template>
+                    @* below id necessary to disable autocomplete in chrome - see https://adamsilver.io/blog/stopping-chrome-from-ignoring-autocomplete-off/ *@
+                    <select ref="selectField" autocomplete="selectTBService"
+                            nhs-select-type="@tbServiceCodeSelectErrorState"
+                            asp-for="ServiceShareViewModel.SharingTBServiceCode"
+                            asp-items="Model.TbServices"
+                            id="selectTBService">
+                        <option value=""></option>
+                    </select>
+                </autocomplete-select>
+            </nhs-form-group>
+        </div>
+
+        @{
+            var hasReasonError = !Model.ValidationService.IsValid("ServiceShareViewModel.ReasonForTBServiceShare");
+            var reasonFormGroupType = hasReasonError ? Error : Standard;
+        }
+
+        <nhs-form-group nhs-form-group-type="@reasonFormGroupType">
+            <label asp-for="ServiceShareViewModel.ReasonForTBServiceShare" nhs-label-type="Standard">
+                Reason for sharing record with a second TB service
+            </label>
+            <span id="reason-error" nhs-span-type="ErrorMessage" asp-validation-for="ServiceShareViewModel.ReasonForTBServiceShare" has-error="@hasReasonError"></span>
+            <input asp-for="ServiceShareViewModel.ReasonForTBServiceShare" nhs-input-type="Standard" is-error-input="@hasReasonError" aria-describedby="reason-error"/>
+        </nhs-form-group>
+
+        <div class="flex-container">
+            <button id="confirm-share-button" nhs-button-type="Standard" classes="confirm-transfer-button ntbsuk-button--primary">
+                Confirm share
+            </button>
+
+            <nhs-back-link href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)" classes="transfer-request-back-link">
+                Cancel & go back
+            </nhs-back-link>
+        </div>
+    </form>
+</nhs-width-container>

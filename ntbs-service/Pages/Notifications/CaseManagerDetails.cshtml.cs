@@ -33,7 +33,7 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task<IActionResult> OnGetAsync()
         {
-            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            Notification = await GetNotificationAsync(NotificationId);
             if (Notification == null)
             {
                 return NotFound();

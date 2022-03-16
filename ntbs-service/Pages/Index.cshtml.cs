@@ -39,8 +39,9 @@ namespace ntbs_service.Pages
         }
 
         public IList<AlertWithTbServiceForDisplay> Alerts { get; set; }
-        public IList<NotificationForHomePage> DraftNotifications { get; set; }
-        public IList<NotificationForHomePage> RecentNotifications { get; set; }
+        public NotificationTableModel DraftNotifications { get; set; }
+        public NotificationTableModel RecentNotifications { get; set; }
+        public NotificationTableModel SharedNotifications { get; set; }
         public SelectList TbServices { get; set; }
         public SelectList KpiFilter { get; set; }
         public IEnumerable<HomepageKpi> HomepageKpiDetails { get; set; }
@@ -77,16 +78,38 @@ namespace ntbs_service.Pages
         {
             var draftNotificationsQueryable = _notificationRepository.GetDraftNotificationsIQueryable();
             var recentNotificationsQueryable = _notificationRepository.GetRecentNotificationsIQueryable();
-            DraftNotifications =
-                (await _authorizationService.FilterNotificationsByUserAsync(User, draftNotificationsQueryable))
-                .Take(10)
-                .SelectNotificationForHomePage()
-                .ToList();
-            RecentNotifications =
-                (await _authorizationService.FilterNotificationsByUserAsync(User, recentNotificationsQueryable))
-                .Take(10)
-                .SelectNotificationForHomePage()
-                .ToList();
+            var sharedNotificationsQueryable = _notificationRepository.GetSharedNotificationsIQueryable();
+            DraftNotifications = new NotificationTableModel
+            {
+                Notifications =
+                    (await _authorizationService.FilterNotificationsByUserAsync(User, draftNotificationsQueryable))
+                    .Take(10)
+                    .SelectNotificationForHomePage()
+                    .ToList(),
+                Name = "Draft",
+                UseCreationDate = true
+            };
+            RecentNotifications = new NotificationTableModel
+            {
+                Notifications =
+                    (await _authorizationService.FilterNotificationsByUserAsync(User, recentNotificationsQueryable))
+                    .Take(10)
+                    .SelectNotificationForHomePage()
+                    .ToList(),
+                Name = "Recent",
+                UseCreationDate = false
+            };
+            SharedNotifications = new NotificationTableModel
+            {
+                Notifications =
+                    (await _authorizationService.FilterSharedNotificationsByUserAsync(User,
+                        sharedNotificationsQueryable))
+                    .Take(10)
+                    .SelectNotificationForHomePage()
+                    .ToList(),
+                Name = "Shared",
+                UseCreationDate = false
+            };
         }
 
         private async Task SetUserAlertsAndTbServicesAsync()
@@ -106,5 +129,12 @@ namespace ntbs_service.Pages
         {
             return _userHelper.UserIsReadOnly(User);
         }
+    }
+
+    public class NotificationTableModel
+    {
+        public IList<NotificationForHomePage> Notifications { get; set; }
+        public string Name { get; set; }
+        public bool UseCreationDate { get; set; }
     }
 }

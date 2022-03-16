@@ -18,6 +18,7 @@ namespace ntbs_service.Services
             ClaimsPrincipal contextUser,
             Notification notification);
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
+        Task<IQueryable<Notification>> FilterSharedNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
         Task<IList<AlertWithTbServiceForDisplay>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<AlertWithTbServiceForDisplay> alerts);
         Task SetFullAccessOnNotificationBannersAsync(
@@ -84,10 +85,7 @@ namespace ntbs_service.Services
             ClaimsPrincipal contextUser,
             Notification notification)
         {
-            if (_userPermissionsFilter == null)
-            {
-                _userPermissionsFilter = await GetUserPermissionsFilterAsync(contextUser);
-            }
+            _userPermissionsFilter ??= await GetUserPermissionsFilterAsync(contextUser);
 
             var userIsReadOnly = _userHelper.UserIsReadOnly(contextUser);
 
@@ -110,6 +108,13 @@ namespace ntbs_service.Services
                         : (PermissionLevel.Edit, null);
             }
 
+            if (UserInSharedTbService(notification))
+            {
+                return userIsReadOnly
+                    ? (PermissionLevel.ReadOnly, Messages.NoEditPermission)
+                    : (PermissionLevel.SharedWith, Messages.SharedServicePermission);
+            }
+
             if (UserBelongsToResidencePhecOfNotification(notification)
                 || UserHasDirectRelationToLinkedNotification(notification)
                 || UserPreviouslyHadDirectionRelationToNotification(notification))
@@ -124,15 +129,14 @@ namespace ntbs_service.Services
             ClaimsPrincipal user,
             NotificationBannerModel notificationBannerModel)
         {
-            if (_userPermissionsFilter == null)
-            {
-                _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
-            }
+            _userPermissionsFilter ??= await GetUserPermissionsFilterAsync(user);
 
             return _userPermissionsFilter.Type == UserType.NationalTeam
                    || _userPermissionsFilter.UserBelongsToTbService(notificationBannerModel.TbServiceCode)
                    || _userPermissionsFilter.UserBelongsToPHEC(notificationBannerModel.TbServicePHECCode)
                    || _userPermissionsFilter.UserBelongsToPHEC(notificationBannerModel.LocationPHECCode)
+                   || _userPermissionsFilter.UserBelongsToTbService(notificationBannerModel.SharedTBServiceCode)
+                   || _userPermissionsFilter.UserBelongsToPHEC(notificationBannerModel.SharedTBServicePHECCode)
                    || notificationBannerModel.LinkedNotificationPhecCodes.Any(_userPermissionsFilter.UserBelongsToPHEC)
                    || notificationBannerModel.LinkedNotificationTbServiceCodes.Any(_userPermissionsFilter.UserBelongsToTbService)
                    || notificationBannerModel.PreviousTbServiceCodes.Any(_userPermissionsFilter.UserBelongsToTbService)
@@ -170,13 +174,27 @@ namespace ntbs_service.Services
             return _userPermissionsFilter.UserBelongsToPHEC(phecCode);
         }
 
+        public async Task<IQueryable<Notification>> FilterSharedNotificationsByUserAsync(ClaimsPrincipal user,
+            IQueryable<Notification> notifications)
+        {
+            _userPermissionsFilter ??= await GetUserPermissionsFilterAsync(user);
+            return _userPermissionsFilter.Type == UserType.NationalTeam
+                ? Enumerable.Empty<Notification>().AsQueryable()
+                : notifications.Where(n =>
+                    _userPermissionsFilter.IncludedTBServiceCodes.Contains(n.HospitalDetails.SecondaryTBServiceCode)
+                    || _userPermissionsFilter.IncludedPHECCodes.Contains(n.HospitalDetails.SecondaryTBService.PHECCode))
+                    .Where(n =>
+                        // Do not show the notifications that the user has a direct relation to
+                        !(_userPermissionsFilter.IncludedTBServiceCodes.Contains(n.HospitalDetails.TBServiceCode)
+                          || (n.HospitalDetails.TBService != null
+                              && _userPermissionsFilter.IncludedPHECCodes.Contains(n.HospitalDetails.TBService.PHECCode)))
+                    );
+        }
+
         public async Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user,
             IQueryable<Notification> notifications)
         {
-            if (_userPermissionsFilter == null)
-            {
-                _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
-            }
+            _userPermissionsFilter ??= await GetUserPermissionsFilterAsync(user);
 
             return _userPermissionsFilter.Type == UserType.NationalTeam
                 ? notifications
@@ -209,6 +227,12 @@ namespace ntbs_service.Services
         {
             return _userHelper.UserIsReadOnly(user) &&
                    (bannerModel.NotificationStatus == NotificationStatus.Draft || bannerModel.Source != NotificationBannerModel.NtbsSource);
+        }
+
+        public bool UserInSharedTbService(Notification notification)
+        {
+            return _userPermissionsFilter.UserBelongsToTbService(notification.HospitalDetails.SecondaryTBServiceCode) 
+                    || _userPermissionsFilter.UserBelongsToPHEC(notification.HospitalDetails.SecondaryTBService?.PHECCode);
         }
     }
 }
