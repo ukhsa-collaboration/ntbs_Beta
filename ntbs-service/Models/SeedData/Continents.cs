@@ -27,7 +27,7 @@ namespace ntbs_service.Models.SeedData
                 new Continent { ContinentId = 16, Name = "South East Asia", Code = "SEA" },
                 new Continent { ContinentId = 17, Name = "Sub-Saharan Africa", Code = "SSA" },
                 new Continent { ContinentId = 18, Name = "Unknown", Code = "UU" },
-                new Continent { ContinentId = 19, Name = "West Europe", Code = "WEU "}
+                new Continent { ContinentId = 19, Name = "West Europe", Code = "WEU" }
             };
         }
     }

@@ -22,7 +22,7 @@ namespace ntbs_service.Models.Entities.Alerts
 
         public DataQualityPotentialDuplicateAlert()
         {
-            AlertType = AlertType.DataQualityPotientialDuplicate;
+            AlertType = AlertType.DataQualityPotentialDuplicate;
         }
         public string RootEntityType => RootEntities.Notification;
         public string RootId => NotificationId.ToString();
