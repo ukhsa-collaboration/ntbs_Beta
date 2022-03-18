@@ -48,3 +48,5 @@ spec:
   to:
     kind: Service
     name: ntbs-live
+  port:
+    targetPort: 8080

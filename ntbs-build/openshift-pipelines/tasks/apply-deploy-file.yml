@@ -1,36 +1,27 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: apply-deploy-file
+  name: apply-routes-file
   namespace: ntbs-build
 spec:
   params:
-    - description: The image tag to deploy
-      name: image_tag
+    - description: The file to deploy
+      name: deploy_file
       type: string
   steps:
     - image: 'image-registry.openshift-image-registry.svc:5000/ntbs-build/ntbs-image-stream:openshift-cli'
       name: apply
       resources: {}
       script: >
-        deployment_name=$(cat /workspace/config/deployment.name)
+        deploy_file=$(inputs.params.deploy_file)
 
-        deployment_file=$(cat /workspace/config/deployment.file)
-
-        echo "Applying $deployment_file file"
+        echo "Applying $deploy_file file"
 
         oc project ntbs
 
-        oc apply -f ntbs-service/deployments/$deployment_file
+        oc apply -f ntbs-service/deployments/$deploy_file
 
-        echo "Finished applying $deployment_file file"
-
-        echo "Updating build image to $(inputs.params.image_tag)"
-
-        oc set image deployment/$deployment_name $deployment_name=ntbscontainerregistry.azurecr.io/ntbs-service:$(inputs.params.image_tag)
-
-        echo "Finished updating build image"
+        echo "Finished applying $deploy_file file"
       workingDir: /workspace/output
   workspaces:
     - name: output
-    - name: config
