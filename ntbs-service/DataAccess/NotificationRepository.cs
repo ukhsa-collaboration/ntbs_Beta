@@ -413,6 +413,7 @@ namespace ntbs_service.DataAccess
                 .ToListAsync();
             return await _context.NotificationGroup
                 .Include(g => g.Notifications)
+                .AsSplitQuery()
                 .SingleOrDefaultAsync(g => g.NotificationGroupId == notification.GroupId);
         }
 
