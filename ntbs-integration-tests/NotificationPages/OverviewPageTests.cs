@@ -8,6 +8,7 @@ using ntbs_integration_tests.Helpers;
 using ntbs_integration_tests.TestServices;
 using ntbs_service;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Pages;
@@ -63,6 +64,12 @@ namespace ntbs_integration_tests.NotificationPages
                     HospitalDetails = new HospitalDetails
                     {
                         TBServiceCode = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID
+                    },
+                    PatientDetails = new PatientDetails
+                    {
+                        GivenName = "Anna",
+                        FamilyName = "Delvey",
+                        CountryId = Countries.UnknownId
                     }
                 },
                 new Notification
