@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: ntbs-update-live-routes
+  name: point-live-to-maintenance-routes
   namespace: ntbs-build
 spec:
   params:
@@ -26,8 +26,6 @@ spec:
           value: 'true'
         - name: verbose
           value: 'true'
-      runAfter:
-        - check-input
       taskRef:
         kind: ClusterTask
         name: git-clone

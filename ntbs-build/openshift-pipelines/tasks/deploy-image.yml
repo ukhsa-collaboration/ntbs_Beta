@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: apply-deploy-file
+  name: deploy-image
   namespace: ntbs-build
 spec:
   params:
