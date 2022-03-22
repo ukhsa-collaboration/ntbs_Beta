@@ -33,7 +33,7 @@
                 <div class="notification-overview-details-container no-print">
                     <nhs-inset-text classes="nhs-inset-text--ntbs">
                         <span>
-                            @if (Model.Notification.IsShared)
+                            @if (Model.ShowShareMessage)
                             {
                                 var serviceHref = $"/ServiceDirectory/Region/{Model.Notification.HospitalDetails.SecondaryTBService.PHECCode}" +
                                                   $"#accordion-heading-{Model.Notification.HospitalDetails.SecondaryTBServiceCode}";
