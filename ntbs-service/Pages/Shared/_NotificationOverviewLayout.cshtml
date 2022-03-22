@@ -33,6 +33,10 @@
                 <div class="notification-overview-details-container no-print">
                     <nhs-inset-text classes="nhs-inset-text--ntbs">
                         <ul>
+                            @if (Model.ShowPendingTransferMessage)
+                            {
+                                <li>This notification has a pending transfer.</li>
+                            }
                             @if (Model.ShowShareMessage)
                             {
                                 var serviceHref = $"/ServiceDirectory/Region/{Model.Notification.HospitalDetails.SecondaryTBService.PHECCode}" +
@@ -40,10 +44,6 @@
                                 <li>
                                     This notification is shared with <a id="shared-service-link" href="@serviceHref">@Model.Notification.HospitalDetails.SecondaryTBService?.Name</a>.
                                 </li>
-                            }
-                            @if (Model.Notification.HasPendingTransfer == true)
-                            {
-                                <li>This notification has a pending transfer.</li>
                             }
                             @if (!string.IsNullOrEmpty(Model.PermissionReason))
                             {
