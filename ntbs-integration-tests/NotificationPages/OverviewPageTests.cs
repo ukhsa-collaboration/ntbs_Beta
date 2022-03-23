@@ -8,6 +8,7 @@ using ntbs_integration_tests.Helpers;
 using ntbs_integration_tests.TestServices;
 using ntbs_service;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Pages;
@@ -63,6 +64,12 @@ namespace ntbs_integration_tests.NotificationPages
                     HospitalDetails = new HospitalDetails
                     {
                         TBServiceCode = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID
+                    },
+                    PatientDetails = new PatientDetails
+                    {
+                        GivenName = "Anna",
+                        FamilyName = "Delvey",
+                        CountryId = Countries.UnknownId
                     }
                 },
                 new Notification
@@ -188,7 +195,7 @@ namespace ntbs_integration_tests.NotificationPages
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 var document = await GetDocumentAsync(response);
-                Assert.Contains("This record is shared with", document.Body.TextContent);
+                Assert.Contains("This notification is shared with", document.Body.TextContent);
                 var link = (IHtmlAnchorElement)document.GetElementById("shared-service-link");
                 Assert.Contains(Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_NAME, link.TextContent);
                 Assert.Contains(Utilities.NORTH_EAST_PHEC_CODE_GATESHEAD, link.Href);

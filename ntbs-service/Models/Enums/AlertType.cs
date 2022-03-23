@@ -31,7 +31,7 @@ namespace ntbs_service.Models.Enums
         [Display(Name = "Inconsistent values for social risk factors and DOT")]
         DataQualityDotVotAlert,
         [Display(Name = "Potential duplicate notification")]
-        DataQualityPotientialDuplicate,
+        DataQualityPotentialDuplicate,
         [Display(Name = "ECM level not recorded for child")]
         DataQualityChildECMLevel,
         [Display(Name = "Test Alert")]

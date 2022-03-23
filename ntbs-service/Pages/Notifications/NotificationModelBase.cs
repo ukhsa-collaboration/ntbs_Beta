@@ -41,6 +41,8 @@ namespace ntbs_service.Pages.Notifications
         public DataQualityDraftAlert DraftAlert { get; set; }
         public PermissionLevel PermissionLevel { get; set; }
         public string PermissionReason { get; set; }
+        public bool ShowShareMessage { get; set; }
+        public bool ShowPendingTransferMessage { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public int NotificationId { get; set; }
@@ -56,6 +58,8 @@ namespace ntbs_service.Pages.Notifications
             PermissionLevel = permissionLevel;
             PermissionReason = reason;
             NotificationBannerModel = new NotificationBannerModel(Notification, PermissionLevel == PermissionLevel.None);
+            ShowShareMessage = Notification.IsShared && PermissionLevel != PermissionLevel.None;
+            ShowPendingTransferMessage = Notification.HasPendingTransfer == true && PermissionLevel != PermissionLevel.None;
         }
 
         protected async Task<bool> TryGetLinkedNotificationsAsync()

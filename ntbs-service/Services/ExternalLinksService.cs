@@ -34,6 +34,7 @@ namespace ntbs_service.Services
             return permissionLevel switch
             {
                 PermissionLevel.ReadOnly => $"{_externalLinks.SharePointFAQPage}#why-do-i-not-have-permission-to-edit-a-record",
+                PermissionLevel.SharedWith => $"{_externalLinks.SharePointFAQPage}#why-can-i-only-edit-the-contact-tracing-details-of-a-record",
                 PermissionLevel.None => $"{_externalLinks.SharePointFAQPage}#why-can’t-i-view-the-full-details-of-a-record",
                 _ => null
             };

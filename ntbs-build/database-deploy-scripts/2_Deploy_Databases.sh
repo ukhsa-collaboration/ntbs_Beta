@@ -17,7 +17,7 @@ specimen_matching_dir="ntbs-specimen-matching"
 specimen_matching_sqlproj=".\source\ntbs-specimen-matching.sqlproj"
 specimen_matching_dacpac=".\source\bin\Debug\ntbs-specimen-matching.dacpac"
 
-read -p "Which environment would you like to deploy to - live, uat or test (default uat): " DEPLOY_ENVIRONMENT
+read -p "Which environment would you like to deploy to - live, uat, phe-test or test (default uat): " DEPLOY_ENVIRONMENT
 DEPLOY_ENVIRONMENT=${DEPLOY_ENVIRONMENT:-uat}
 
 if [[ $DEPLOY_ENVIRONMENT = "live" ]]
@@ -30,6 +30,11 @@ then
     migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Pre-production\phe-uat-migration.publish.xml"
     reporting_publish_profile=".\source\Publish Profiles\Pre-production\phe-uat-reporting.publish.xml"
     specimen_matching_publish_profile=".\source\Publish Profiles\Pre-production\phe-uat-specimen-matching.publish.xml"
+elif [[ $DEPLOY_ENVIRONMENT = "phe-test" ]]
+then
+    migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Pre-production\phe-test-migration.publish.xml"
+    reporting_publish_profile=".\source\Publish Profiles\Pre-production\phe-test-reporting.publish.xml"
+    specimen_matching_publish_profile=".\source\Publish Profiles\Pre-production\phe-test-specimen-matching.publish.xml"
 elif [[ $DEPLOY_ENVIRONMENT = "int" ]]
 then
     migration_publish_profile=".\ntbs-data-migration\Publish Profiles\Pre-production\azure-migration.publish.xml"
