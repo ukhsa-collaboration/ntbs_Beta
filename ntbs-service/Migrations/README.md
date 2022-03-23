@@ -15,4 +15,7 @@ or can be evoked by hand using
 
 Other NTBS repositories such as [ntbs-specimen-matching](https://github.com/publichealthengland/ntbs-specimen-matching) and [ntbs-reporting](https://github.com/publichealthengland/ntbs-reporting) include DACPAC files of the databases they are reliant on.
 If you have made changes to the NTBS database then these files need to be updated in the corresponding repository.
-The easiest way to create the DACPAC file is through SSMS, instructions can be found [here.](https://sqlplayer.net/2018/10/how-to-create-dacpac-file/)
+
+While you can create a DACPAC file through SSMS, this can sometimes lead to errors caused by references to other databases. Therefore, it is recommended that you extract the DACPAC with 'Verify extraction' disabled through Visual Studio in the SQL Server Object Explorer. Instructions can be found [here.](https://docs.microsoft.com/en-us/sql/relational-databases/data-tier-applications/extract-a-dac-from-a-database?view=sql-server-ver15#UsingDACExtractWizard) )
+
+

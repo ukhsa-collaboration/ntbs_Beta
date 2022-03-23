@@ -28,23 +28,40 @@
         </nhs-grid-column>
 
         <nhs-grid-column grid-column-width="Full">
-            @if (!string.IsNullOrEmpty(Model.PermissionReason) && isOverviewPage)
+            @if ((!string.IsNullOrEmpty(Model.PermissionReason) || Model.Notification.IsShared || Model.Notification.HasPendingTransfer == true) && isOverviewPage)
             {
                 <div class="notification-overview-details-container no-print">
                     <nhs-inset-text classes="nhs-inset-text--ntbs">
-                        <span>
-                            @Model.PermissionReason
-                            @if (Model.PermissionLevel != PermissionLevel.Edit)
+                        <ul>
+                            @if (Model.ShowPendingTransferMessage)
                             {
-                                <span>
-                                    See
-                                    <a href=@(_externalLinksService.GetSharePointFaqPageWithAnchor(Model.PermissionLevel))
-                                       target="_blank"
-                                       rel="noopener noreferrer">help</a>
-                                    for more information.
-                                </span>
+                                <li>This notification has a pending transfer.</li>
                             }
-                        </span>
+                            @if (Model.ShowShareMessage)
+                            {
+                                var serviceHref = $"/ServiceDirectory/Region/{Model.Notification.HospitalDetails.SecondaryTBService.PHECCode}" +
+                                                    $"#accordion-heading-{Model.Notification.HospitalDetails.SecondaryTBServiceCode}";
+                                <li>
+                                    This notification is shared with <a id="shared-service-link" href="@serviceHref">@Model.Notification.HospitalDetails.SecondaryTBService?.Name</a>.
+                                </li>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.PermissionReason))
+                            {
+                                <li>
+                                    @Model.PermissionReason
+                                    @if (Model.PermissionLevel != PermissionLevel.Edit)
+                                    {
+                                        <span>
+                                            See
+                                            <a href=@(_externalLinksService.GetSharePointFaqPageWithAnchor(Model.PermissionLevel))
+                                                target="_blank"
+                                                rel="noopener noreferrer">help</a>
+                                            for more information.
+                                        </span>
+                                    }
+                                </li>
+                            }
+                        </ul>
                     </nhs-inset-text>
                 </div>
             }

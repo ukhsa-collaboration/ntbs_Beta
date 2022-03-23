@@ -150,6 +150,12 @@ namespace ntbs_service.Migrations
                     b.Property<Guid?>("HospitalId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ReasonForTBServiceShare")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecondaryTBServiceCode")
+                        .HasColumnType("nvarchar(16)");
+
                     b.Property<string>("TBServiceCode")
                         .HasColumnType("nvarchar(16)");
 
@@ -158,6 +164,8 @@ namespace ntbs_service.Migrations
                     b.HasIndex("CaseManagerId");
 
                     b.HasIndex("HospitalId");
+
+                    b.HasIndex("SecondaryTBServiceCode");
 
                     b.HasIndex("TBServiceCode");
 
@@ -5410,7 +5418,7 @@ namespace ntbs_service.Migrations
                     b.Property<bool>("NhsNumberMismatch")
                         .HasColumnType("bit");
 
-                    b.HasDiscriminator().HasValue("DataQualityPotientialDuplicate");
+                    b.HasDiscriminator().HasValue("DataQualityPotentialDuplicate");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.DataQualityTreatmentOutcome12", b =>
@@ -5576,6 +5584,10 @@ namespace ntbs_service.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "SecondaryTBService")
+                        .WithMany()
+                        .HasForeignKey("SecondaryTBServiceCode");
+
                     b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TBService")
                         .WithMany()
                         .HasForeignKey("TBServiceCode");
@@ -5583,6 +5595,8 @@ namespace ntbs_service.Migrations
                     b.Navigation("CaseManager");
 
                     b.Navigation("Hospital");
+
+                    b.Navigation("SecondaryTBService");
 
                     b.Navigation("TBService");
                 });

@@ -18,7 +18,7 @@
             Edit
         </a>
     }
-    else if (Model.PermissionLevel == PermissionLevel.ReadOnly)
+    else if (Model.PermissionLevel is PermissionLevel.ReadOnly or PermissionLevel.SharedWith)
     {
         <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionViewSubPath)"
            class="notification-edit-link govuk-link--no-visited-state" id="@sectionId-view-link">

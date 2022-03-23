@@ -783,7 +783,7 @@ namespace ntbs_service.DataAccess
                     .HasValue<DataQualityTreatmentOutcome36>(AlertType.DataQualityTreatmentOutcome36)
                     .HasValue<DataQualityDotVotAlert>(AlertType.DataQualityDotVotAlert)
                     .HasValue<DataQualityChildECMLevel>(AlertType.DataQualityChildECMLevel)
-                    .HasValue<DataQualityPotentialDuplicateAlert>(AlertType.DataQualityPotientialDuplicate);
+                    .HasValue<DataQualityPotentialDuplicateAlert>(AlertType.DataQualityPotentialDuplicate);
 
                 entity.HasIndex(e => new { e.AlertStatus, e.AlertType });
             });

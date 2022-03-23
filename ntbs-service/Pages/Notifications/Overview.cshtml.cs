@@ -117,7 +117,7 @@ namespace ntbs_service.Pages.Notifications
             {
                 return Page();
             }
-            var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            var notification = await GetNotificationAsync(NotificationId);
             var linkedNotification = await Service.CreateLinkedNotificationAsync(notification, User);
 
             return RedirectToPage("/Notifications/Edit/PatientDetails", new { linkedNotification.NotificationId });

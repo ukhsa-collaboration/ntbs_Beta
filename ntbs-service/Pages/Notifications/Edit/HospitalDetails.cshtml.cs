@@ -203,7 +203,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public async Task<JsonResult> OnGetGetFilteredListsByTbService(string value)
         {
-            var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            var notification = await GetNotificationAsync(NotificationId);
             var tbServiceCodeAsList = new List<string> { value };
 
             var filteredHospitals =

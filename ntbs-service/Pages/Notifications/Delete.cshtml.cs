@@ -32,7 +32,7 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task<IActionResult> OnGetAsync()
         {
-            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            Notification = await GetNotificationAsync(NotificationId);
             if (Notification == null)
             {
                 return NotFound();
@@ -50,7 +50,7 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task<IActionResult> OnPostConfirmAsync()
         {
-            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            Notification = await GetNotificationAsync(NotificationId);
             if (!ModelState.IsValid)
             {
                 NotificationBannerModel = new NotificationBannerModel(Notification);

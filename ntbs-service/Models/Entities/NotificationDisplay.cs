@@ -60,6 +60,10 @@ namespace ntbs_service.Models.Entities
 
         public override bool? IsLegacy => LTBRID != null || ETSID != null;
 
+        public bool IsShared => HospitalDetails.SecondaryTBServiceCode != null;
+
+        public bool? HasPendingTransfer => Alerts?.Any(a => a.AlertType == AlertType.TransferRequest && a.AlertStatus == AlertStatus.Open);
+
         private string CreateSitesOfDiseaseString()
         {
             if (NotificationSites == null)

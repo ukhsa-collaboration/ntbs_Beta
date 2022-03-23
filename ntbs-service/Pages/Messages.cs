@@ -6,5 +6,6 @@ namespace ntbs_service.Pages
         public const string NoEditPermission = "You do not have permission to edit this notification. ";
         public const string ClosedNoEdit = "You cannot edit this notification because it is closed. ";
         public const string Closed = "This notification is closed. ";
+        public const string SharedServicePermission = "You are able to edit contact tracing information only. ";
     }
 }

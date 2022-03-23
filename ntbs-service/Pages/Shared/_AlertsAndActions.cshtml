@@ -84,8 +84,7 @@
                     </print-button>
                 }
 
-                @if (Model.Notification.NotificationStatus is NotificationStatus.Notified or NotificationStatus.Closed 
-                     && Model.PermissionLevel is PermissionLevel.Edit)
+                @if (Model.PermissionLevel is PermissionLevel.Edit && Model.Notification.NotificationStatus is NotificationStatus.Notified or NotificationStatus.Closed)
                 {
                     var transferRequestHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.TransferRequest);
                     <a id='transfer-button' class="nhsuk-button ntbsuk-button--primary" role="button" href="@transferRequestHref">
@@ -98,6 +97,23 @@
                             @:Request transfer
                         }
                     </a>
+                    if (Model.Notification.NotificationStatus is NotificationStatus.Notified)
+                    {
+                        if (Model.Notification.IsShared)
+                        {
+                            var stopServiceSharingHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.StopShareWithService);
+                            <a id='stop-share-button' class="nhsuk-button ntbsuk-button--primary" role="button" href="@stopServiceSharingHref">
+                                Stop sharing with second TB service
+                            </a>
+                        }
+                        else
+                        {
+                            var serviceSharingHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.ShareWithService);
+                            <a id='share-button' class="nhsuk-button ntbsuk-button--primary" role="button" href="@serviceSharingHref">
+                                Share with second TB service
+                            </a>
+                        }
+                    }
                     var denotifyHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Denotify);
                     <a id='denotify-button' class="action-link" role="button" href="@denotifyHref">
                         Denotify

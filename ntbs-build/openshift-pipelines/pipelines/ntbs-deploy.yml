@@ -35,7 +35,7 @@ spec:
       workspaces:
         - name: output
           workspace: shared-workspace
-    - name: apply-deploy-file
+    - name: deploy-image
       params:
         - name: image_tag
           value: $(params.image_tag)
@@ -43,7 +43,7 @@ spec:
         - git-clone
       taskRef:
         kind: Task
-        name: apply-deploy-file
+        name: deploy-image
       workspaces:
         - name: output
           workspace: shared-workspace

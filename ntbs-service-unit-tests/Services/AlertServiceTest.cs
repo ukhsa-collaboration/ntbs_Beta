@@ -269,7 +269,7 @@ namespace ntbs_service_unit_tests.Services
             _mockAlertRepository.Setup(x =>
                     x.GetDuplicateAlertByNotificationIdAndDuplicateId(It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(Task.FromResult((DataQualityPotentialDuplicateAlert)null));
-            var testAlert = new DataQualityPotentialDuplicateAlert { NotificationId = 2, AlertType = AlertType.DataQualityPotientialDuplicate };
+            var testAlert = new DataQualityPotentialDuplicateAlert { NotificationId = 2, AlertType = AlertType.DataQualityPotentialDuplicate };
 
             // Act
             await _alertService.AddUniquePotentialDuplicateAlertAsync(testAlert);

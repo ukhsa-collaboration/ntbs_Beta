@@ -20,13 +20,13 @@ SetUpLogger();
 try
 {
     Log.Information("Building web app");
-    
+
     var builder = WebApplication.CreateBuilder(args);
     ConfigureHost(builder);
     AppServiceConfiguration.ConfigureServices(builder);
     var app = builder.Build();
     AppConfiguration.Configure(app);
-    
+
     if (!app.Environment.IsEnvironment("CI"))
     {
         using var scope = app.Services.CreateScope();
@@ -53,20 +53,32 @@ finally
 
 static void SetUpLogger()
 {
-    Log.Logger = new LoggerConfiguration()
-    // Swap these to increase logging. In particular to see EF queries
-    // .MinimumLevel.Debug()
-    // .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .MinimumLevel.Information()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .WriteTo.Sentry(s =>
+    var loggerConfiguration = new LoggerConfiguration()
+        // Swap these to increase logging. In particular to see EF queries
+        // .MinimumLevel.Debug()
+        // .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+        .MinimumLevel.Information()
+        .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+        .Enrich.FromLogContext()
+        .WriteTo.Console()
+        .WriteTo.Sentry(s =>
+        {
+            s.MinimumBreadcrumbLevel = LogEventLevel.Debug;
+            s.MinimumEventLevel = LogEventLevel.Warning;
+        });
+
+    var splunkHost = Environment.GetEnvironmentVariable("Splunk__Host");
+    if (!string.IsNullOrWhiteSpace(splunkHost))
     {
-        s.MinimumBreadcrumbLevel = LogEventLevel.Debug;
-        s.MinimumEventLevel = LogEventLevel.Warning;
-    })
-    .CreateLogger();
+        // Need to use environment variables rather than config, as config is not yet configured.
+        loggerConfiguration.WriteTo.EventCollector(
+            splunkHost,
+            Environment.GetEnvironmentVariable("Splunk__Token"),
+            uriPath: Environment.GetEnvironmentVariable("Splunk__UriPath"),
+            index: Environment.GetEnvironmentVariable("Splunk__Index"));
+    }
+
+    Log.Logger = loggerConfiguration.CreateLogger();
 }
 
 static void ConfigureHost(WebApplicationBuilder builder)

@@ -171,6 +171,11 @@
             "Please add a record of animal exposure or confirm no exposure has occurred";
 
         #endregion
+        
+        #region ShareWithService
+        public const string ShareDestinationCannotBeCurrentTbService =
+            "Notification cannot be shared with the notification's current TB service";
+        #endregion
     }
 
     public static class ValidDates

@@ -1,0 +1,40 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: cleanup-runs
+  namespace: ntbs-build
+spec:
+  params:
+    - default: '10080'
+      description: >-
+        Length of time in minutes to keep PipelineRuns and TaskRuns for (default
+        1 week)
+      name: keep
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: TaskRun
+      metadata:
+        generateName: ntbs-cleanup-
+      spec:
+        params:
+          - name: keep
+            value: $(tt.params.keep)
+        serviceAccountName: tekton-cleaner
+        taskSpec:
+          params:
+            - name: keep
+          steps:
+            - image: >-
+                image-registry.openshift-image-registry.svc:5000/ntbs-build/ntbs-image-stream:tekton-cli
+              name: cleanup-pipelineruns-and-taskruns
+              script: |
+                #!/bin/sh
+                set -ex
+                # A safety check, to avoid deleting too much!
+                if [[ $(params.keep) -eq 0 || $(params.keep) == "" ]]; then
+                  echo "This task cannot be used to delete *all* resources from a cluster" >&2
+                  echo "Please specifcy a value for keep > 0"
+                  exit 1
+                fi
+                tkn pr delete -n ntbs-build --keep-since $(params.keep)
+                tkn tr delete -n ntbs-build --keep-since $(params.keep)

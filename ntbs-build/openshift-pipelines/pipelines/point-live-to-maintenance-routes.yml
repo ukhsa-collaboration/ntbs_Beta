@@ -1,0 +1,48 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: point-live-to-maintenance-routes
+  namespace: ntbs-build
+spec:
+  params:
+    - default: live
+      description: The branch from which to take the route deployment file
+      name: branch
+      type: string
+  tasks:
+    - name: git-clone
+      params:
+        - name: url
+          value: 'https://github.com/publichealthengland/ntbs_Beta.git'
+        - name: revision
+          value: $(params.branch)
+        - name: submodules
+          value: 'false'
+        - name: depth
+          value: '1'
+        - name: sslVerify
+          value: 'true'
+        - name: deleteExisting
+          value: 'true'
+        - name: verbose
+          value: 'true'
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: apply-deploy-file
+      params:
+        - name: deploy_file
+          value: "maintenance-routes-for-live.yml"
+      runAfter:
+        - git-clone
+      taskRef:
+        kind: Task
+        name: apply-deploy-file
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+  workspaces:
+    - name: shared-workspace
