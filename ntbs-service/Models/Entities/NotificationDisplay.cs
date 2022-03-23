@@ -62,6 +62,8 @@ namespace ntbs_service.Models.Entities
 
         public bool IsShared => HospitalDetails.SecondaryTBServiceCode != null;
 
+        public bool? HasPendingTransfer => Alerts?.Any(a => a.AlertType == AlertType.TransferRequest && a.AlertStatus == AlertStatus.Open);
+
         private string CreateSitesOfDiseaseString()
         {
             if (NotificationSites == null)

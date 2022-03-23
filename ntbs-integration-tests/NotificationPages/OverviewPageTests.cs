@@ -195,7 +195,7 @@ namespace ntbs_integration_tests.NotificationPages
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 var document = await GetDocumentAsync(response);
-                Assert.Contains("This record is shared with", document.Body.TextContent);
+                Assert.Contains("This notification is shared with", document.Body.TextContent);
                 var link = (IHtmlAnchorElement)document.GetElementById("shared-service-link");
                 Assert.Contains(Utilities.TBSERVICE_GATESHEAD_AND_SOUTH_TYNESIDE_NAME, link.TextContent);
                 Assert.Contains(Utilities.NORTH_EAST_PHEC_CODE_GATESHEAD, link.Href);
