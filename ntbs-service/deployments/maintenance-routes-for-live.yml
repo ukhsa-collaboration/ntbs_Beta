@@ -1,0 +1,35 @@
+# Real live route, connected to ntbs.phe.nhs.uk
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: ntbs-live-tls-n3
+spec:
+  host: ntbs.phe.nhs.uk
+  path: /
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  to:
+    kind: Service
+    name: coming-soon
+  port:
+    targetPort: 8080
+  wildcardPolicy: None
+---
+# Real live route, connected to ntbs.phe.nhs.uk
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: ntbs-live-internet
+spec:
+  host: ntbs.phe.gov.uk
+  path: /
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  to:
+    kind: Service
+    name: coming-soon
+  port:
+    targetPort: 8080
+  wildcardPolicy: None
