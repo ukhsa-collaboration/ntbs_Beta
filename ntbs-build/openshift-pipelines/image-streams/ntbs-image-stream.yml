@@ -58,7 +58,7 @@ spec:
     - name: publish-dacpac
       from:
         kind: DockerImage
-        name: 'ntbscontainerregistry.azurecr.io/publish-dacpac:latest'
+        name: 'ghcr.io/publichealthengland/ntbs-service:publish-dacpac'
       importPolicy:
         scheduled: true
       referencePolicy:
