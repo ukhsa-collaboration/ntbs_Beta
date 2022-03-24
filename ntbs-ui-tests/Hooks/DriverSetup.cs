@@ -75,7 +75,7 @@ namespace ntbs_ui_tests.Hooks
 
         private async Task CleanUpMigratedNotification()
         {
-            var legacyId = settings.UseCookieOverride ? "189045" : "100894";
+            var legacyId = settings.EnvironmentUnderTest == "phe-uat" ? "100894" : "189045";
             
             using (var connection = new SqlConnection(settings.EnvironmentConfig.SpecimenConnectionString))
             {
