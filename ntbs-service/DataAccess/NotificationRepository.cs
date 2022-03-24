@@ -407,7 +407,7 @@ namespace ntbs_service.DataAccess
         {
             var notification = await _context.Notification.SingleAsync(n => n.NotificationId == notificationId);
             return notification.GroupId.HasValue
-                ? await GetNotificationGroupAsync(notification.GroupId.Value)
+                ? await GetNotificationGroupByIdAsync(notification.GroupId.Value)
                 : null;
         }
 
