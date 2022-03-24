@@ -1,3 +1,5 @@
+@NormalAuth
+@CookieOverride
 Feature: Notification creation
   Happy and error paths for notification creation
   Notification deletion
@@ -74,8 +76,9 @@ Feature: Notification creation
     And I can see the value '1999' for the field 'uk-entry' in the 'PatientDetails' overview section
     And I can see the value '1234' for the field 'local-patient-id' in the 'PatientDetails' overview section
 
+    
+  @NormalAuth
   Scenario: Create notification with all hospital details fields
-    Given Test is skipped when using cookie override for authentication
     When I click 'Hospital details' on the navigation bar
     Then I should be on the HospitalDetails page
     When I enter 1 into 'FormattedNotificationDate_Day'
@@ -94,6 +97,28 @@ Feature: Notification creation
     And I can see the value 'Birmingham UITester' for the field 'case-manager' in the 'HospitalDetails' overview section
     And I can see the value 'Dr Lawton' for the field 'consultant' in the 'HospitalDetails' overview section
     And I can see the value '01 Jan 2019' for the field 'notification-date' in the 'PatientDetails' overview section
+
+  @CookieOverride
+  Scenario: Create notification with all hospital details fields - Cookie Override
+    When I click 'Hospital details' on the navigation bar
+    Then I should be on the HospitalDetails page
+    When I enter 1 into 'FormattedNotificationDate_Day'
+    And I enter 1 into 'FormattedNotificationDate_Month'
+    And I enter 2019 into 'FormattedNotificationDate_Year'
+    And I select Birmingham & Solihull for 'HospitalDetails_TBServiceCode'
+      # Wait until javascript has populated the hospital dropdown
+    And I wait
+    And I select SOLIHULL HOSPITAL for 'HospitalDetails_HospitalId'
+    And I enter Dr Lawton into 'HospitalDetails_Consultant'
+    # And I select Birmingham UITester for 'HospitalDetails_CaseManagerId'
+    When I click on the 'submit-button' button
+
+    Then I can see the value 'Birmingham & Solihull' for the field 'tb-service' in the 'HospitalDetails' overview section
+    And I can see the value 'SOLIHULL HOSPITAL' for the field 'hospital-name' in the 'HospitalDetails' overview section
+    # And I can see the value 'Birmingham UITester' for the field 'case-manager' in the 'HospitalDetails' overview section
+    And I can see the value 'Dr Lawton' for the field 'consultant' in the 'HospitalDetails' overview section
+    And I can see the value '01 Jan 2019' for the field 'notification-date' in the 'PatientDetails' overview section
+
 
   Scenario: Create notification with all clinical details fields
     When I click 'Clinical details' on the navigation bar
@@ -353,8 +378,8 @@ Feature: Notification creation
     And I can see the value '2000' for the field 'diagnosis-year' in the 'PreviousHistory' overview section
     And I can see the value 'Unknown' for the field 'treated' in the 'PreviousHistory' overview section
 
+  @NormalAuth
   Scenario: Create notification with all treatment event fields
-    Given Test is skipped when using cookie override for authentication
     When I click 'Treatment events' on the navigation bar
     Then I should be on the TreatmentEvents page
     When I click on the 'add-new-treatment-event-button' button
@@ -376,6 +401,30 @@ Feature: Notification creation
     And I can see the value 'Treatment outcome - Cured' in the 'TreatmentEvents' table overview section
     And I can see the value 'Multi-drug resistant regimen' in the 'TreatmentEvents' table overview section
     And I can see the value 'Birmingham UITester' in the 'TreatmentEvents' table overview section
+
+  @CookieOverride
+  Scenario: Create notification with all treatment event fields - Cookie Override
+    When I click 'Treatment events' on the navigation bar
+    Then I should be on the TreatmentEvents page
+    When I click on the 'add-new-treatment-event-button' button
+    And I enter 31 into 'FormattedEventDate_Day'
+    And I enter 1 into 'FormattedEventDate_Month'
+    And I enter 2019 into 'FormattedEventDate_Year'
+    And I select Treatment outcome for 'treatmentevent-type'
+    And I select Cured for 'treatmentoutcome-type'
+    And I select Multi-drug resistant regimen for 'treatmentoutcome-subtype'
+    And I enter He did it into 'treatmentevent-note'
+    And I click on the 'save-treatment-event-button' button
+    And I wait
+    When I click on the 'submit-button' button
+
+    Then I can see the value 'Outcome at 12 months No outcome recorded' for the field '12-month-outcome' in the 'TreatmentEvents' overview section
+    And I can see the value 'Outcome at 24 months Cured' for the field '24-month-outcome' in the 'TreatmentEvents' overview section
+    And I can see the value 'Treatment period 1' for the field '1' in the 'TreatmentEvents' overview section
+    And I can see the value '01 Jan 2018 to 31 Jan 2019' for the field '1-dates' in the 'TreatmentEvents' overview section
+    And I can see the value 'Treatment outcome - Cured' in the 'TreatmentEvents' table overview section
+    And I can see the value 'Multi-drug resistant regimen' in the 'TreatmentEvents' table overview section
+    # And I can see the value 'Birmingham UITester' in the 'TreatmentEvents' table overview section
 
   Scenario: Create and delete notification draft
     When I click on the 'delete-draft-button' button

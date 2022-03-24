@@ -1,3 +1,5 @@
+@NormalAuth
+@CookieOverride
 Feature: Notification editing
   Happy and error paths for notification creation
   Notification deletion
@@ -40,8 +42,28 @@ Feature: Notification editing
     And I can see the value '1955' for the field 'uk-entry' in the 'PatientDetails' overview section
     And I can see the value '9866698' for the field 'local-patient-id' in the 'PatientDetails' overview section
 
+  @NormalAuth
   Scenario: Edit notification hospital details fields
-    Given Test is skipped when using cookie override for authentication
+    When I go to edit the 'HospitalDetails' section
+    Then I should be on the HospitalDetails page
+    When I enter 2 into 'FormattedNotificationDate_Day'
+    And I enter 2 into 'FormattedNotificationDate_Month'
+    And I enter 2011 into 'FormattedNotificationDate_Year'
+      # Wait until javascript has populated the hospital dropdown
+    And I wait
+    And I select GOOD HOPE HOSPITAL for 'HospitalDetails_HospitalId'
+    And I enter Dr Howard Foreman into 'HospitalDetails_Consultant'
+    # And I select Birmingham UITester for 'HospitalDetails_CaseManagerId'
+    When I click on the 'save-button' button
+
+    Then I can see the value 'Birmingham & Solihull' for the field 'tb-service' in the 'HospitalDetails' overview section
+    And I can see the value 'GOOD HOPE HOSPITAL' for the field 'hospital-name' in the 'HospitalDetails' overview section
+    # And I can see the value 'Birmingham UITester' for the field 'case-manager' in the 'HospitalDetails' overview section
+    And I can see the value 'Dr Howard Foreman' for the field 'consultant' in the 'HospitalDetails' overview section
+    And I can see the value '02 Feb 2011' for the field 'notification-date' in the 'PatientDetails' overview section
+
+  @CookieOverride
+  Scenario: Edit notification hospital details fields - Cookie Override
     When I go to edit the 'HospitalDetails' section
     Then I should be on the HospitalDetails page
     When I enter 2 into 'FormattedNotificationDate_Day'
@@ -59,6 +81,7 @@ Feature: Notification editing
     And I can see the value 'Birmingham UITester' for the field 'case-manager' in the 'HospitalDetails' overview section
     And I can see the value 'Dr Howard Foreman' for the field 'consultant' in the 'HospitalDetails' overview section
     And I can see the value '02 Feb 2011' for the field 'notification-date' in the 'PatientDetails' overview section
+
 
   Scenario: Edit notification clinical details fields
     When I go to edit the 'ClinicalDetails' section
@@ -317,8 +340,8 @@ Feature: Notification editing
     And I can see the value 'Yes' for the field 'treated' in the 'PreviousHistory' overview section
     And I can see the value 'Angola' for the field 'treatment-country' in the 'PreviousHistory' overview section
 
+  @NormalAuth
   Scenario: Edit notification treatment event fields
-    Given Test is skipped when using cookie override for authentication
     When I go to edit the 'TreatmentEvents' section
     Then I should be on the TreatmentEvents page
     When I click on the Edit link
@@ -340,6 +363,29 @@ Feature: Notification editing
     And I can see the value 'Patient left UK' in the 'TreatmentEvents' table overview section
     And I can see the value 'Birmingham UITester' in the 'TreatmentEvents' table overview section
 
+  @CookieOverride
+  Scenario: Edit notification treatment event fields - Cookie Override
+    When I go to edit the 'TreatmentEvents' section
+    Then I should be on the TreatmentEvents page
+    When I click on the Edit link
+    And I enter 5 into 'FormattedEventDate_Day'
+    And I enter 4 into 'FormattedEventDate_Month'
+    And I enter 2012 into 'FormattedEventDate_Year'
+    And I select Treatment outcome for 'treatmentevent-type'
+    And I select Lost to follow-up for 'treatmentoutcome-type'
+    And I select Patient left UK for 'treatmentoutcome-subtype'
+    And I enter Moved to Yemen we think into 'treatmentevent-note'
+    And I click on the 'save-treatment-event-button' button
+    And I click on the Notification details link
+
+    Then I can see the value 'Outcome at 12 months No outcome recorded' for the field '12-month-outcome' in the 'TreatmentEvents' overview section
+    And I can see the value 'Outcome at 24 months Lost to follow-up' for the field '24-month-outcome' in the 'TreatmentEvents' overview section
+    And I can see the value 'Treatment period 1' for the field '1' in the 'TreatmentEvents' overview section
+    And I can see the value '05 Apr 2012 to 05 Apr 2012' for the field '1-dates' in the 'TreatmentEvents' overview section
+    And I can see the value 'Treatment outcome - Lost to follow-up' in the 'TreatmentEvents' table overview section
+    And I can see the value 'Patient left UK' in the 'TreatmentEvents' table overview section
+    # And I can see the value 'Birmingham UITester' in the 'TreatmentEvents' table overview section
+  
   Scenario: Edit notification MDR detail fields
     When I go to edit the 'MDRDetails' section
     Then I should be on the MDRDetails page

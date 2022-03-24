@@ -1,3 +1,5 @@
+@NormalAuth
+@CookieOverride
 Feature: Denotify notifications
 
     Scenario: Denotify a notification

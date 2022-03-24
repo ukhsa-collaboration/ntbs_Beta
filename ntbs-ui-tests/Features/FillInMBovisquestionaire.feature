@@ -1,3 +1,5 @@
+@NormalAuth
+@CookieOverride
 Feature: M. bovis
 
   Background: Log in and navigate to notification

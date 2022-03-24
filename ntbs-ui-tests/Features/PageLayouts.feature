@@ -1,11 +1,13 @@
+@NormalAuth
+@CookieOverride
 Feature: Page layouts
 
   Background: Create a transfer request
     Given I navigate to the app
     And I have logged in as BirminghamServiceUser
     
+  @NormalAuth
   Scenario: The homepage has correct titles for tables
-    Given Test is skipped when using cookie override for authentication
     Given I am on the Homepage
     Then I can see the correct titles for the 'alerts-table' table
     Then I can see the correct titles for the 'draft-notifications-table' table
