@@ -66,6 +66,8 @@ factor authentication within the tests). To do this you will need to:
   - The `AuthenticatedCookieHeader`to the value you copied from the "cookie" header.
   - The `Username` of the `ManuallyLoggedInUser`. This is the username of the user you used to log in above.
 
+Before running the test using the `phe-uat` environment, you must also update the value of `Category` in the file `test.ps1` from `NormalAuth` to `CookieOverride`.
+
 ## Troubleshooting
 
 ### Is there a way of seeing what Selenium "sees" during a test?
