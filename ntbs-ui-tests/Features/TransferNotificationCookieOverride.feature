@@ -10,7 +10,6 @@ Feature: Transfer notification - Cookie Override
     When I expand manage notification section
     And I click on the 'transfer-button' button
     And I select West Yorkshire from input list 'selectTBService'
-    # And I select Leeds UITester for 'TransferRequest_CaseManagerId'
     And I check 'transfer-radio-Other'
     And I enter Patient likes travel into 'TransferRequest_OtherReasonDescription'
     And I enter I hope your service is doing well into 'TransferRequest_TransferRequestNote'
@@ -24,18 +23,12 @@ Feature: Transfer notification - Cookie Override
 
     Then I can see the value Yorkshire and Humber for element with id 'transfer-region'
     Then I can see the value West Yorkshire for element with id 'transfer-tb-service'
-    # Then I can see the value Leeds UITester for element with id 'transfer-case-manager'
   
   Scenario: Accept transfer of notification between services - Cookie Override
-    # When I log out
-
-    # Given I choose to log in with a different account
-    # Given I have logged in as LeedsServiceUser
     When I navigate to the url of the current notification
     And I take action on the alert with title Transfer request
 
     Then I can see the value Birmingham & Solihull for 'Sending TB service' transfer information
-    # Then I can see the value Birmingham UITester for 'Sending case manager' transfer information
     Then I can see the value Other - Patient likes travel for 'Reason for transfer' transfer information
     Then I can see the value I hope your service is doing well for 'Note accompanying transfer' transfer information
 
@@ -49,10 +42,6 @@ Feature: Transfer notification - Cookie Override
     Then I can see no value for the field 'consultant' in the 'HospitalDetails' overview section
 
   Scenario: Decline transfer of notification between services - Cookie Override
-    # When I log out
-
-    # Given I choose to log in with a different account
-    # Given I have logged in as LeedsServiceUser
     When I navigate to the url of the current notification
     And I take action on the alert with title Transfer request
 
@@ -60,10 +49,6 @@ Feature: Transfer notification - Cookie Override
     And I enter Do not want this patient here into 'TransferRequest_DeclineTransferReason'
     And I click on the 'submit-transfer-button' button
     And I click on the 'return-to-homepage' button
-    # When I log out
-
-    # Given I choose to log in with a different account
-    # Given I have logged in as BirminghamServiceUser
 
     When I navigate to the url of the current notification
     Then I can see the value '3455' for the field 'local-patient-id' in the 'PatientDetails' overview section

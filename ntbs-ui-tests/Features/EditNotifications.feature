@@ -1,5 +1,3 @@
-@NormalAuth
-@CookieOverride
 Feature: Notification editing
   Happy and error paths for notification creation
   Notification deletion
@@ -9,6 +7,7 @@ Feature: Notification editing
     Given I have logged in as BirminghamServiceUser
     Given I am on seeded 'MAXIMUM_DETAILS' notification overview page
 
+  @NormalAuth @CookieOverride
   Scenario: Edit notification patient details fields
     When I go to edit the 'PatientDetails' section
     Then I should be on the PatientDetails page
@@ -43,26 +42,6 @@ Feature: Notification editing
     And I can see the value '9866698' for the field 'local-patient-id' in the 'PatientDetails' overview section
 
   @NormalAuth
-  Scenario: Edit notification hospital details fields
-    When I go to edit the 'HospitalDetails' section
-    Then I should be on the HospitalDetails page
-    When I enter 2 into 'FormattedNotificationDate_Day'
-    And I enter 2 into 'FormattedNotificationDate_Month'
-    And I enter 2011 into 'FormattedNotificationDate_Year'
-      # Wait until javascript has populated the hospital dropdown
-    And I wait
-    And I select GOOD HOPE HOSPITAL for 'HospitalDetails_HospitalId'
-    And I enter Dr Howard Foreman into 'HospitalDetails_Consultant'
-    # And I select Birmingham UITester for 'HospitalDetails_CaseManagerId'
-    When I click on the 'save-button' button
-
-    Then I can see the value 'Birmingham & Solihull' for the field 'tb-service' in the 'HospitalDetails' overview section
-    And I can see the value 'GOOD HOPE HOSPITAL' for the field 'hospital-name' in the 'HospitalDetails' overview section
-    # And I can see the value 'Birmingham UITester' for the field 'case-manager' in the 'HospitalDetails' overview section
-    And I can see the value 'Dr Howard Foreman' for the field 'consultant' in the 'HospitalDetails' overview section
-    And I can see the value '02 Feb 2011' for the field 'notification-date' in the 'PatientDetails' overview section
-
-  @CookieOverride
   Scenario: Edit notification hospital details fields - Cookie Override
     When I go to edit the 'HospitalDetails' section
     Then I should be on the HospitalDetails page
@@ -82,7 +61,25 @@ Feature: Notification editing
     And I can see the value 'Dr Howard Foreman' for the field 'consultant' in the 'HospitalDetails' overview section
     And I can see the value '02 Feb 2011' for the field 'notification-date' in the 'PatientDetails' overview section
 
+  @CookieOverride
+  Scenario: Edit notification hospital details fields
+    When I go to edit the 'HospitalDetails' section
+    Then I should be on the HospitalDetails page
+    When I enter 2 into 'FormattedNotificationDate_Day'
+    And I enter 2 into 'FormattedNotificationDate_Month'
+    And I enter 2011 into 'FormattedNotificationDate_Year'
+      # Wait until javascript has populated the hospital dropdown
+    And I wait
+    And I select GOOD HOPE HOSPITAL for 'HospitalDetails_HospitalId'
+    And I enter Dr Howard Foreman into 'HospitalDetails_Consultant'
+    When I click on the 'save-button' button
 
+    Then I can see the value 'Birmingham & Solihull' for the field 'tb-service' in the 'HospitalDetails' overview section
+    And I can see the value 'GOOD HOPE HOSPITAL' for the field 'hospital-name' in the 'HospitalDetails' overview section
+    And I can see the value 'Dr Howard Foreman' for the field 'consultant' in the 'HospitalDetails' overview section
+    And I can see the value '02 Feb 2011' for the field 'notification-date' in the 'PatientDetails' overview section
+
+  @NormalAuth @CookieOverride
   Scenario: Edit notification clinical details fields
     When I go to edit the 'ClinicalDetails' section
     Then I should be on the ClinicalDetails page
@@ -146,6 +143,7 @@ Feature: Notification editing
     And I can see the value 'Yes' for the field 'case-management' in the 'ClinicalDetails' overview section
     And I can see the value 'Patient has no cool shoes' for the field 'notes' in the 'ClinicalDetails' overview section
 
+  @NormalAuth @CookieOverride
   Scenario: Edit notification test results fields
     When I go to edit the 'TestResults' section
     Then I should be on the TestResults page
@@ -165,6 +163,7 @@ Feature: Notification editing
     And I can see the value 'Negative' in the 'TestResults' table overview section
     And I can see the value '11 Mar 2011' in the 'TestResults' table overview section
 
+  @NormalAuth @CookieOverride
   Scenario: Edit notification contact tracing fields
     When I go to edit the 'ContactTracing' section
     Then I should be on the ContactTracing page
@@ -201,6 +200,7 @@ Feature: Notification editing
     And I can see the value '1' for the field 'children-finished-treatment' in the 'ContactTracing' overview section
     And I can see the value '3' for the field 'total-finished-treatment' in the 'ContactTracing' overview section
 
+  @NormalAuth @CookieOverride
   Scenario: Edit notification social risk factor fields
     When I go to edit the 'SocialRiskFactors' section
     Then I should be on the SocialRiskFactors page
@@ -227,6 +227,7 @@ Feature: Notification editing
     And I can see the value 'Yes' for the field 'asylum-seeker' in the 'SocialRiskFactors' overview section
     And I can see the value 'No' for the field 'immigration-detainee' in the 'SocialRiskFactors' overview section
 
+  @NormalAuth @CookieOverride
   Scenario: Edit notification travel and visitor fields
     When I go to edit the 'Travel' section
     Then I should be on the Travel page
@@ -249,6 +250,7 @@ Feature: Notification editing
     And I can see the value 'Comoros' for the field 'visitor-country2' in the 'Travel' overview section
     And I can see the value 'Fiji' for the field 'visitor-country3' in the 'Travel' overview section
 
+  @NormalAuth @CookieOverride
   Scenario: Can remove countries from travel and visitor fields
     When I go to edit the 'Travel' section
     Then I should be on the Travel page
@@ -260,6 +262,7 @@ Feature: Notification editing
     Then I can see the value 'Yes' for the field 'has-travel' in the 'Travel' overview section
     And I can see the value '2' for the field 'travel-countries-total' in the 'Travel' overview section
 
+  @NormalAuth @CookieOverride
   Scenario: Edit notification comorbidity fields
     When I go to edit the 'Comorbidities' section
     Then I should be on the Comorbidities page
@@ -281,6 +284,7 @@ Feature: Notification editing
     And I can see the value 'Yes' for the field 'immunosuppression-status' in the 'Comorbidities' overview section
     And I can see the value 'Transplantation' for the field 'immunosuppression-types' in the 'Comorbidities' overview section
 
+  @NormalAuth @CookieOverride
   Scenario: Edit notification social context addresses fields
     When I go to edit the 'SocialContextAddresses' section
     Then I should be on the SocialContextAddresses page
@@ -301,6 +305,7 @@ Feature: Notification editing
     And I can see the value '30 May 2010 to 09 Dec 2012' in the 'SocialContextAddresses' table overview section
     And I can see the value 'Made soup here daily' in the 'SocialContextAddresses' table overview section
 
+  @NormalAuth @CookieOverride
   Scenario: Edit notification social context venues fields
     When I go to edit the 'SocialContextVenues' section
     Then I should be on the SocialContextVenues page
@@ -326,6 +331,7 @@ Feature: Notification editing
     And I can see the value 'McDonalds' in the 'SocialContextVenues' table overview section
     And I can see the value 'Nursery' in the 'SocialContextVenues' table overview section
 
+  @NormalAuth @CookieOverride
   Scenario: Edit notification previous tb history fields
     When I go to edit the 'PreviousHistory' section
     Then I should be on the PreviousHistory page
@@ -384,8 +390,8 @@ Feature: Notification editing
     And I can see the value '05 Apr 2012 to 05 Apr 2012' for the field '1-dates' in the 'TreatmentEvents' overview section
     And I can see the value 'Treatment outcome - Lost to follow-up' in the 'TreatmentEvents' table overview section
     And I can see the value 'Patient left UK' in the 'TreatmentEvents' table overview section
-    # And I can see the value 'Birmingham UITester' in the 'TreatmentEvents' table overview section
-  
+
+  @NormalAuth @CookieOverride
   Scenario: Edit notification MDR detail fields
     When I go to edit the 'MDRDetails' section
     Then I should be on the MDRDetails page

@@ -1,5 +1,4 @@
-@NormalAuth
-@CookieOverride
+@NormalAuth @CookieOverride
 Feature: Linked notification creation
   Happy and error paths for notification creation
   Notification deletion

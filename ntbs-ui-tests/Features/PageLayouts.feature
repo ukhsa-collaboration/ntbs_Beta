@@ -1,5 +1,3 @@
-@NormalAuth
-@CookieOverride
 Feature: Page layouts
 
   Background: Create a transfer request
@@ -12,7 +10,8 @@ Feature: Page layouts
     Then I can see the correct titles for the 'alerts-table' table
     Then I can see the correct titles for the 'draft-notifications-table' table
     Then I can see the correct titles for the 'recent-notifications-table' table
-    
+
+  @NormalAuth @CookieOverride
   Scenario: The notification overview data has correct labels
     Given I am on seeded 'MAXIMUM_DETAILS' notification overview page
     Then I can see the correct labels for the 'PatientDetails' overview section
