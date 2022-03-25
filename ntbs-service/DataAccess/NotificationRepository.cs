@@ -406,15 +406,22 @@ namespace ntbs_service.DataAccess
         public async Task<NotificationGroup> GetNotificationGroupAsync(int notificationId)
         {
             var notification = await _context.Notification.SingleAsync(n => n.NotificationId == notificationId);
+            return notification.GroupId.HasValue
+                ? await GetNotificationGroupByIdAsync(notification.GroupId.Value)
+                : null;
+        }
+
+        public async Task<NotificationGroup> GetNotificationGroupByIdAsync(int groupId)
+        {
             // Fetch the banner ready notifications into the context, so that
             // they have all of the relevant details when taken from the group.
             await GetBannerReadyNotificationsIQueryable()
-                .Where(n => n.GroupId == notification.GroupId)
+                .Where(n => n.GroupId == groupId)
                 .ToListAsync();
             return await _context.NotificationGroup
                 .Include(g => g.Notifications)
                 .AsSplitQuery()
-                .SingleOrDefaultAsync(g => g.NotificationGroupId == notification.GroupId);
+                .SingleOrDefaultAsync(g => g.NotificationGroupId == groupId);
         }
 
         // Adds enough information to display notification banner, which makes it a good
