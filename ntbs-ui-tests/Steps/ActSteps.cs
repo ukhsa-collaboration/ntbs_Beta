@@ -66,6 +66,16 @@ namespace ntbs_ui_tests.Steps
                 HtmlElementHelper.FindElementByXpath(Browser, $"//a[contains(.,'{linkLabel}')]").Click();
             });
         }
+        
+        [When(@"I click on the legacy id link")]
+        public void WhenIClickOnTheLegacyIdLink(string linkLabel)
+        {
+            WithErrorLogging(() =>
+            {
+                var legacyId = Settings.EnvironmentConfig.LegacyId;
+                HtmlElementHelper.FindElementByXpath(Browser, $"//a[contains(.,'{legacyId}')]").Click();
+            });
+        }
 
         [When(@"I go to edit the '(.*)' section")]
         public void WhenIGoToEditTheSection(string section)
@@ -189,17 +199,42 @@ namespace ntbs_ui_tests.Steps
                 // Consequently, we add a wait here to ensure that the input is ready.
                 Browser.WaitUntilElementIsClickable(By.Id(elementId), Settings.ImplicitWait);
 
-                var element = HtmlElementHelper.FindElementById(Browser, elementId);
-                element.Click();
-                element.SendKeys(Keys.Control + "a");
-                element.SendKeys(Keys.Delete);
-                element.SendKeys(value + "\t");
+                EnterValueIntoField(value, elementId);
 
                 if (!Settings.IsHeadless)
                 {
                     Thread.Sleep(1000);
                 }
             });
+        }
+        
+        [When(@"I enter the legacy id into '(.*)'")]
+        public void WhenIEnterLegacyIdIntoFieldWithId(string elementId)
+        {
+            WithErrorLogging(() =>
+            {
+                var legacyId = Settings.EnvironmentConfig.LegacyId;
+
+                // In some scenarios, inputs only become clickable after an asynchronous event.
+                // Consequently, we add a wait here to ensure that the input is ready.
+                Browser.WaitUntilElementIsClickable(By.Id(elementId), Settings.ImplicitWait);
+
+                EnterValueIntoField(legacyId, elementId);
+
+                if (!Settings.IsHeadless)
+                {
+                    Thread.Sleep(1000);
+                }
+            });
+        }
+
+        private void EnterValueIntoField(string value, string elementId)
+        {
+            var element = HtmlElementHelper.FindElementById(Browser, elementId);
+            element.Click();
+            element.SendKeys(Keys.Control + "a");
+            element.SendKeys(Keys.Delete);
+            element.SendKeys(value + "\t");
         }
 
         [When(@"I enter '(.*)' into date fields with id '(.*)'")]

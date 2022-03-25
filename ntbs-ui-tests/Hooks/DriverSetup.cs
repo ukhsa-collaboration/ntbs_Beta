@@ -75,7 +75,7 @@ namespace ntbs_ui_tests.Hooks
 
         private async Task CleanUpMigratedNotification()
         {
-            var legacyId = settings.EnvironmentUnderTest == "phe-uat" ? "100894" : "189045";
+            var legacyId = settings.EnvironmentConfig.LegacyId;
             
             using (var connection = new SqlConnection(settings.EnvironmentConfig.SpecimenConnectionString))
             {

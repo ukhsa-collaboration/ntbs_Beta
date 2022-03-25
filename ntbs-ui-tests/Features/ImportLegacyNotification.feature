@@ -1,14 +1,14 @@
 Feature: Import legacy notification
   
   @NormalAuth
-  Scenario Outline: Import legacy notification
+  Scenario: Import legacy notification
     Given I navigate to the app
     And I have logged in as BirminghamServiceUser
     And I am on the Search page
-    When I enter <legacy_id> into 'SearchParameters_IdFilter'
+    When I enter the legacy id into 'SearchParameters_IdFilter'
     And I click on the 'search-button' button
     And I wait
-    And I click on the <legacy_id> link
+    And I click on the legacy id link
     And I click on the 'import-button' button
     And I wait
 
@@ -23,28 +23,20 @@ Feature: Import legacy notification
     And I can see the value Male for element with id 'banner-sex'
     And I can see the value Sensitive to first line for element with id 'banner-drug-resistance'
     And I can see the value Complete for element with id 'banner-treatment-outcome'
-    
-    Examples:
-      | legacy_id |
-      | 189045    |
 
   @CookieOverride
-  Scenario Outline: Import legacy notification - Cookie Override
+  Scenario: Import legacy notification - Cookie Override
     Given I navigate to the app
     And I have logged in as BirminghamServiceUser
     And I am on the Search page
-    When I enter <legacy_id> into 'SearchParameters_IdFilter'
+    When I enter the legacy id into 'SearchParameters_IdFilter'
     And I click on the 'search-button' button
     And I wait
-    And I click on the <legacy_id> link
+    And I click on the legacy id link
     And I click on the 'import-button' button
     And I wait
 
     Then A new notification should have been created
-
-    Examples:
-      | legacy_id |
-      | 100894    |
     
     
   
