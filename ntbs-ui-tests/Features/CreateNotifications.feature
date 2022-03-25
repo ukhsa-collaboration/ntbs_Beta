@@ -1,3 +1,4 @@
+@NormalAuth @CookieOverride
 Feature: Notification creation
   Happy and error paths for notification creation
   Notification deletion
@@ -42,7 +43,6 @@ Feature: Notification creation
     When I select radio value 'test-carried-out-no'
     And I click on the 'save-button' button
 
-  @NormalAuth @CookieOverride
   Scenario: Create notification with all patient details fields
     When I click 'Personal details' on the navigation bar
     Then I should be on the PatientDetails page
@@ -76,7 +76,6 @@ Feature: Notification creation
     And I can see the value '1234' for the field 'local-patient-id' in the 'PatientDetails' overview section
 
     
-  @NormalAuth
   Scenario: Create notification with all hospital details fields
     When I click 'Hospital details' on the navigation bar
     Then I should be on the HospitalDetails page
@@ -96,27 +95,7 @@ Feature: Notification creation
     And I can see the value 'Birmingham UITester' for the field 'case-manager' in the 'HospitalDetails' overview section
     And I can see the value 'Dr Lawton' for the field 'consultant' in the 'HospitalDetails' overview section
     And I can see the value '01 Jan 2019' for the field 'notification-date' in the 'PatientDetails' overview section
-
-  @CookieOverride
-  Scenario: Create notification with all hospital details fields - Cookie Override
-    When I click 'Hospital details' on the navigation bar
-    Then I should be on the HospitalDetails page
-    When I enter 1 into 'FormattedNotificationDate_Day'
-    And I enter 1 into 'FormattedNotificationDate_Month'
-    And I enter 2019 into 'FormattedNotificationDate_Year'
-    And I select Birmingham & Solihull for 'HospitalDetails_TBServiceCode'
-      # Wait until javascript has populated the hospital dropdown
-    And I wait
-    And I select SOLIHULL HOSPITAL for 'HospitalDetails_HospitalId'
-    And I enter Dr Lawton into 'HospitalDetails_Consultant'
-    When I click on the 'submit-button' button
-
-    Then I can see the value 'Birmingham & Solihull' for the field 'tb-service' in the 'HospitalDetails' overview section
-    And I can see the value 'SOLIHULL HOSPITAL' for the field 'hospital-name' in the 'HospitalDetails' overview section
-    And I can see the value 'Dr Lawton' for the field 'consultant' in the 'HospitalDetails' overview section
-    And I can see the value '01 Jan 2019' for the field 'notification-date' in the 'PatientDetails' overview section
-
-  @NormalAuth @CookieOverride
+    
   Scenario: Create notification with all clinical details fields
     When I click 'Clinical details' on the navigation bar
     Then I should be on the ClinicalDetails page
@@ -182,7 +161,6 @@ Feature: Notification creation
     And I can see the value 'Standard therapy' for the field 'treatment-regimen' in the 'ClinicalDetails' overview section
     And I can see the value 'Patient has been doing well' for the field 'notes' in the 'ClinicalDetails' overview section
 
-  @NormalAuth @CookieOverride
   Scenario: Create notification with all test results fields
     When I click 'Test results' on the navigation bar
     Then I should be on the TestResults page
@@ -203,7 +181,6 @@ Feature: Notification creation
     And I can see the value 'Negative' in the 'TestResults' table overview section
     And I can see the value '01 Jan 2012' in the 'TestResults' table overview section
 
-  @NormalAuth @CookieOverride
   Scenario: Create notification with all contact tracing fields
     When I click 'Contact tracing' on the navigation bar
     Then I should be on the ContactTracing page
@@ -240,7 +217,6 @@ Feature: Notification creation
     And I can see the value '2' for the field 'children-finished-treatment' in the 'ContactTracing' overview section
     And I can see the value '3' for the field 'total-finished-treatment' in the 'ContactTracing' overview section
 
-  @NormalAuth @CookieOverride
   Scenario: Create notification with all social risk factor fields
     When I click 'Social risk factors' on the navigation bar
     Then I should be on the SocialRiskFactors page
@@ -265,7 +241,6 @@ Feature: Notification creation
     And I can see the value 'No' for the field 'asylum-seeker' in the 'SocialRiskFactors' overview section
     And I can see the value 'Yes' for the field 'immigration-detainee' in the 'SocialRiskFactors' overview section
 
-  @NormalAuth @CookieOverride
   Scenario: Create notification with all travel and visitor fields
     When I click 'Travel/visitor history' on the navigation bar
     Then I should be on the Travel page
@@ -300,7 +275,6 @@ Feature: Notification creation
     And I can see the value 'Algeria' for the field 'visitor-country2' in the 'Travel' overview section
     And I can see the value 'Macao' for the field 'visitor-country3' in the 'Travel' overview section
 
-  @NormalAuth @CookieOverride
   Scenario: Create notification with all comorbidity fields
     When I click 'Co-morbidities' on the navigation bar
     Then I should be on the Comorbidities page
@@ -323,7 +297,6 @@ Feature: Notification creation
     And I can see the value 'Yes' for the field 'hepatitis-b' in the 'Comorbidities' overview section
     And I can see the value 'Bad illness' for the field 'immunosuppression-other' in the 'Comorbidities' overview section
 
-  @NormalAuth @CookieOverride
   Scenario: Create notification with all social context addresses fields
     When I click 'Social context - addresses' on the navigation bar
     Then I should be on the SocialContextAddresses page
@@ -344,7 +317,6 @@ Feature: Notification creation
     And I can see the value '16 May 2000 to 16 May 2002' in the 'SocialContextAddresses' table overview section
     And I can see the value 'Lived here a while' in the 'SocialContextAddresses' table overview section
 
-  @NormalAuth @CookieOverride
   Scenario: Create notification with all social context venues fields
     When I click 'Social context - venues' on the navigation bar
     Then I should be on the SocialContextVenues page
@@ -370,7 +342,6 @@ Feature: Notification creation
     And I can see the value 'Nandos' in the 'SocialContextVenues' table overview section
     And I can see the value 'Catering' in the 'SocialContextVenues' table overview section
 
-  @NormalAuth @CookieOverride
   Scenario: Create notification with all previous tb history fields
     When I click 'Previous history' on the navigation bar
     Then I should be on the PreviousHistory page
@@ -383,7 +354,6 @@ Feature: Notification creation
     And I can see the value '2000' for the field 'diagnosis-year' in the 'PreviousHistory' overview section
     And I can see the value 'Unknown' for the field 'treated' in the 'PreviousHistory' overview section
 
-  @NormalAuth
   Scenario: Create notification with all treatment event fields
     When I click 'Treatment events' on the navigation bar
     Then I should be on the TreatmentEvents page
@@ -406,31 +376,7 @@ Feature: Notification creation
     And I can see the value 'Treatment outcome - Cured' in the 'TreatmentEvents' table overview section
     And I can see the value 'Multi-drug resistant regimen' in the 'TreatmentEvents' table overview section
     And I can see the value 'Birmingham UITester' in the 'TreatmentEvents' table overview section
-
-  @CookieOverride
-  Scenario: Create notification with all treatment event fields - Cookie Override
-    When I click 'Treatment events' on the navigation bar
-    Then I should be on the TreatmentEvents page
-    When I click on the 'add-new-treatment-event-button' button
-    And I enter 31 into 'FormattedEventDate_Day'
-    And I enter 1 into 'FormattedEventDate_Month'
-    And I enter 2019 into 'FormattedEventDate_Year'
-    And I select Treatment outcome for 'treatmentevent-type'
-    And I select Cured for 'treatmentoutcome-type'
-    And I select Multi-drug resistant regimen for 'treatmentoutcome-subtype'
-    And I enter He did it into 'treatmentevent-note'
-    And I click on the 'save-treatment-event-button' button
-    And I wait
-    When I click on the 'submit-button' button
-
-    Then I can see the value 'Outcome at 12 months No outcome recorded' for the field '12-month-outcome' in the 'TreatmentEvents' overview section
-    And I can see the value 'Outcome at 24 months Cured' for the field '24-month-outcome' in the 'TreatmentEvents' overview section
-    And I can see the value 'Treatment period 1' for the field '1' in the 'TreatmentEvents' overview section
-    And I can see the value '01 Jan 2018 to 31 Jan 2019' for the field '1-dates' in the 'TreatmentEvents' overview section
-    And I can see the value 'Treatment outcome - Cured' in the 'TreatmentEvents' table overview section
-    And I can see the value 'Multi-drug resistant regimen' in the 'TreatmentEvents' table overview section
-
-  @NormalAuth @CookieOverride
+  
   Scenario: Create and delete notification draft
     When I click on the 'delete-draft-button' button
     Then I should be on the Delete page

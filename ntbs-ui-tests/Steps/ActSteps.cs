@@ -227,6 +227,11 @@ namespace ntbs_ui_tests.Steps
         [When(@"I select (.*) for '(.*)'")]
         public void WhenISelectTextFromDropdown(string text, string selectId)
         {
+            if (selectId.Contains("CaseManagerId") && Settings.UseCookieOverride)
+            {
+                return;
+            }
+            
             SelectOptionFromDropdown(text, selectId);
         }
 
