@@ -1,0 +1,26 @@
+name: Build publish-dacpac image
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-publish-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Log in to container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io/publichealthengland
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v2
+        with:
+          context: ntbs-build/publish-dacpac-image
+          push: true
+          tags: ghcr.io/publichealthengland/ntbs-service:publish-dacpac
