@@ -5,10 +5,10 @@ Feature: Import legacy notification
     Given I navigate to the app
     And I have logged in as BirminghamServiceUser
     And I am on the Search page
-    When I enter the legacy id into 'SearchParameters_IdFilter'
+    When I enter the legacy id into the search field
     And I click on the 'search-button' button
     And I wait
-    And I click on the legacy id link
+    And I click on the link for the legacy notification
     And I click on the 'import-button' button
     And I wait
 
@@ -29,10 +29,10 @@ Feature: Import legacy notification
     Given I navigate to the app
     And I have logged in as BirminghamServiceUser
     And I am on the Search page
-    When I enter the legacy id into 'SearchParameters_IdFilter'
+    When I enter the legacy id into the search field
     And I click on the 'search-button' button
     And I wait
-    And I click on the legacy id link
+    And I click on the link for the legacy notification
     And I click on the 'import-button' button
     And I wait
 

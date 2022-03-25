@@ -67,8 +67,8 @@ namespace ntbs_ui_tests.Steps
             });
         }
         
-        [When(@"I click on the legacy id link")]
-        public void WhenIClickOnTheLegacyIdLink(string linkLabel)
+        [When(@"I click on the link for the legacy notification")]
+        public void WhenIClickOnTheLegacyIdLink()
         {
             WithErrorLogging(() =>
             {
@@ -208,12 +208,13 @@ namespace ntbs_ui_tests.Steps
             });
         }
         
-        [When(@"I enter the legacy id into '(.*)'")]
-        public void WhenIEnterLegacyIdIntoFieldWithId(string elementId)
+        [When(@"I enter the legacy id into the search field")]
+        public void WhenIEnterLegacyIdIntoSearchField()
         {
             WithErrorLogging(() =>
             {
                 var legacyId = Settings.EnvironmentConfig.LegacyId;
+                var elementId = "SearchParameters_IdFilter";
 
                 // In some scenarios, inputs only become clickable after an asynchronous event.
                 // Consequently, we add a wait here to ensure that the input is ready.
