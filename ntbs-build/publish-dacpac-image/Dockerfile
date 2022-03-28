@@ -16,4 +16,6 @@ COPY --from=build /root/sqlpackage /root/sqlpackage
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
     libunwind8 \
     libicu66 \
+    krb5-user \
+    procps \
     && rm -rf /var/lib/apt/lists/*
