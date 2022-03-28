@@ -1,0 +1,114 @@
+# To be deployed on PHE Kubernetes and run against the test databases
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ntbs-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ntbs-test
+  template:
+    metadata:
+      labels:
+        app: ntbs-test
+    spec:
+      containers:
+        - name: ntbs-test
+          image: "ghcr.io/publichealthengland/ntbs-service:test-phe"
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 2Gi
+              cpu: 1000m # Given in milicores, this is 1 core
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Staging"
+            - name: ConnectionStrings__ntbsContext
+              valueFrom:
+                secretKeyRef:
+                  name: test-connection-strings
+                  key: db
+            - name: ConnectionStrings__ntbsMigratorContext
+              valueFrom:
+                secretKeyRef:
+                  name: test-connection-strings
+                  key: db
+            - name: ConnectionStrings__keysContext
+              valueFrom:
+                secretKeyRef:
+                  name: test-connection-strings
+                  key: db
+            - name: ConnectionStrings__auditContext
+              valueFrom:
+                secretKeyRef:
+                  name: test-connection-strings
+                  key: audit-db
+            - name: ConnectionStrings__migration
+              valueFrom:
+                secretKeyRef:
+                  name: test-connection-strings
+                  key: migration
+            - name: ConnectionStrings__specimenMatching
+              valueFrom:
+                secretKeyRef:
+                  name: test-connection-strings
+                  key: specimen
+            - name: ConnectionStrings__reporting
+              valueFrom:
+                secretKeyRef:
+                  name: test-connection-strings
+                  key: reporting
+            - name: ExternalLinks__ReportingOverview
+              value: "https://app.powerbi.com/Redirect?action=OpenApp&appId=5ae64787-d2aa-4beb-8bf8-18340efe12ab&ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666"
+            - name: ExternalLinks__ClusterReport
+              value: "https://app.powerbi.com/groups/me/apps/5ae64787-d2aa-4beb-8bf8-18340efe12ab/reports/7b0921bd-8e4b-46f3-8e4b-dc9b7e7c982b/ReportSection?ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666&filter=Cluster%2FClusterId%20eq '<CLUSTER_ID>'"
+            - name: MigrationConfig__NtbsEnvironment
+              value: "Test"
+            - name: Sentry__Environment
+              value: phe-test
+            - name: Hangfire__Enabled
+              value: "true"
+            - name: Hangfire__WorkerCount
+              value: "3"
+            - name: EnvironmentDescription__ContainsLiveData
+              value: "false"
+            - name: EnvironmentDescription__IsLiveSystem
+              value: "false"
+            - name: EnvironmentDescription__DisplayName
+              value: "test"
+            - name: EnvironmentDescription__EnvironmentName
+              value: "phe-test"
+            - name: ScheduledJobsConfig__UserSyncCron
+              value: "30 21 * * *"
+      imagePullSecrets:
+        - name: default-dockercfg-bs7wj
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ntbs-test
+  labels:
+    app: ntbs-test
+spec:
+  type: ClusterIP
+  ports:
+    - name: '8080'
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: ntbs-test
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: ntbs-test
+spec:
+  host: ntbs-test.apps.ocp-por.unix.phe.gov.uk
+  path: /
+  to:
+    kind: Service
+    name: ntbs-test
