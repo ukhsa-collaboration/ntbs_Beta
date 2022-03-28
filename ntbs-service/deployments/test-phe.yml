@@ -69,6 +69,8 @@ spec:
               value: "Test"
             - name: Sentry__Environment
               value: phe-test
+            - name: KRB5_CLIENT_KTNAME
+              value: /krbtab/keytab
             - name: Hangfire__Enabled
               value: "true"
             - name: Hangfire__WorkerCount
@@ -83,8 +85,16 @@ spec:
               value: "phe-test"
             - name: ScheduledJobsConfig__UserSyncCron
               value: "30 21 * * *"
+          volumeMounts:
+            - mountPath: /krbtab
+              name: krb-tab
       imagePullSecrets:
         - name: default-dockercfg-bs7wj
+      volumes:
+        - name: krb-tab
+          secret:
+            defaultMode: 420
+            secretName: ntbs-test-sql-svc
 ---
 apiVersion: v1
 kind: Service
