@@ -26,6 +26,23 @@ spec:
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Staging"
+            - name: AzureAdOptions__Enabled
+              value: "true"
+            - name: AzureAdOptions__ClientId
+              valueFrom:
+                secretKeyRef:
+                  name: uat-phe-azuread-options
+                  key: clientId
+            - name: AzureAdOptions__ClientSecret
+              valueFrom:
+                secretKeyRef:
+                  name: uat-phe-azuread-options
+                  key: clientSecret
+            - name: AzureAdOptions__Authority
+              valueFrom:
+                secretKeyRef:
+                  name: uat-phe-azuread-options
+                  key: authority
             - name: ConnectionStrings__ntbsContext
               valueFrom:
                 secretKeyRef:
