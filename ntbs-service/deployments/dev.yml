@@ -125,3 +125,6 @@ spec:
   to:
     kind: Service
     name: ntbs-dev
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

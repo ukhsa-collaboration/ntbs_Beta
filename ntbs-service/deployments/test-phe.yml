@@ -139,3 +139,6 @@ spec:
   to:
     kind: Service
     name: ntbs-test
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
