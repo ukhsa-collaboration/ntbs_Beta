@@ -41,6 +41,7 @@ namespace ntbs_ui_tests.Hooks
         public string SpecimenConnectionString { get; set; }
         public string RootUriString { get; set; }
         public string ImportedNotificationNtbsEnvironment { get; set; }
+        public string LegacyId { get; set; }
 
         private Uri uri;
         public Uri RootUri => uri ??= new Uri(RootUriString);
