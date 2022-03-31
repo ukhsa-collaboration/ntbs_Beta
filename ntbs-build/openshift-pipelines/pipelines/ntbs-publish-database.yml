@@ -32,11 +32,26 @@ spec:
           value: 'git@github.com:publichealthengland/ntbs-data-migration.git'
         - name: revision
           value: $(params.branch)
+        - name: submodules
+          value: 'false'
+        - name: depth
+          value: '1'
+        - name: sslVerify
+          value: 'true'
+        - name: deleteExisting
+          value: 'true'
+        - name: verbose
+          value: 'true'
+        - name: gitInitImage
+          value: >-
+            registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:da1aedf0b17f2b9dd2a46edc93ff1c0582989414b902a28cd79bad8a035c9ea4
+        - name: userHome
+          value: /tekton/home
         - name: subdirectory
           value: data-migration
       taskRef:
-        kind: Task
-        name: git-clone-with-ssh
+        kind: ClusterTask
+        name: git-clone
       when:
         - input: $(params.deploy-migration)
           operator: in
@@ -45,6 +60,8 @@ spec:
       workspaces:
         - name: output
           workspace: shared-workspace
+        - name: ssh-directory
+          workspace: ssh-directory
     - name: publish-migration
       params:
         - name: checkout_directory
@@ -75,11 +92,26 @@ spec:
           value: 'git@github.com:publichealthengland/ntbs-specimen-matching.git'
         - name: revision
           value: $(params.branch)
+        - name: submodules
+          value: 'false'
+        - name: depth
+          value: '1'
+        - name: sslVerify
+          value: 'true'
+        - name: deleteExisting
+          value: 'true'
+        - name: verbose
+          value: 'true'
+        - name: gitInitImage
+          value: >-
+            registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:da1aedf0b17f2b9dd2a46edc93ff1c0582989414b902a28cd79bad8a035c9ea4
+        - name: userHome
+          value: /tekton/home
         - name: subdirectory
           value: specimen-matching
       taskRef:
-        kind: Task
-        name: git-clone-with-ssh
+        kind: ClusterTask
+        name: git-clone
       when:
         - input: $(params.deploy-specimen-matching)
           operator: in
@@ -88,6 +120,8 @@ spec:
       workspaces:
         - name: output
           workspace: shared-workspace
+        - name: ssh-directory
+          workspace: ssh-directory
     - name: publish-specimen-matching
       params:
         - name: checkout_directory
@@ -118,11 +152,26 @@ spec:
           value: 'git@github.com:publichealthengland/ntbs-reporting.git'
         - name: revision
           value: $(params.branch)
+        - name: submodules
+          value: 'false'
+        - name: depth
+          value: '1'
+        - name: sslVerify
+          value: 'true'
+        - name: deleteExisting
+          value: 'true'
+        - name: verbose
+          value: 'true'
+        - name: gitInitImage
+          value: >-
+            registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:da1aedf0b17f2b9dd2a46edc93ff1c0582989414b902a28cd79bad8a035c9ea4
+        - name: userHome
+          value: /tekton/home
         - name: subdirectory
           value: reporting
       taskRef:
-        kind: Task
-        name: git-clone-with-ssh
+        kind: ClusterTask
+        name: git-clone
       when:
         - input: $(params.deploy-reporting)
           operator: in
@@ -131,6 +180,8 @@ spec:
       workspaces:
         - name: output
           workspace: shared-workspace
+        - name: ssh-directory
+          workspace: ssh-directory
     - name: publish-reporting
       params:
         - name: checkout_directory
@@ -157,3 +208,4 @@ spec:
           workspace: shared-workspace
   workspaces:
     - name: shared-workspace
+    - name: ssh-directory
