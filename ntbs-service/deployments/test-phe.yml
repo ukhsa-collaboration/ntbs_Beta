@@ -1,21 +1,21 @@
-# To be deployed on PHE Kubernetes and run against databases on the "dev" box DEVCOL01
+# To be deployed on PHE Kubernetes and run against the test databases
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ntbs-dev
+  name: ntbs-test
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ntbs-dev
+      app: ntbs-test
   template:
     metadata:
       labels:
-        app: ntbs-dev
+        app: ntbs-test
     spec:
       containers:
-        - name: ntbs-dev
-          image: "ghcr.io/publichealthengland/ntbs-service:dev"
+        - name: ntbs-test
+          image: "ghcr.io/publichealthengland/ntbs-service:test-phe"
           imagePullPolicy: Always
           resources:
             requests:
@@ -26,62 +26,66 @@ spec:
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Staging"
+            - name: AzureAdOptions__Enabled
+              value: "true"
+            - name: AzureAdOptions__ClientId
+              valueFrom:
+                secretKeyRef:
+                  name: uat-phe-azuread-options
+                  key: clientId
+            - name: AzureAdOptions__ClientSecret
+              valueFrom:
+                secretKeyRef:
+                  name: uat-phe-azuread-options
+                  key: clientSecret
+            - name: AzureAdOptions__Authority
+              valueFrom:
+                secretKeyRef:
+                  name: uat-phe-azuread-options
+                  key: authority
             - name: ConnectionStrings__ntbsContext
               valueFrom:
                 secretKeyRef:
-                  name: dev-connection-strings
+                  name: test-connection-strings
                   key: db
             - name: ConnectionStrings__ntbsMigratorContext
               valueFrom:
                 secretKeyRef:
-                  name: dev-connection-strings
+                  name: test-connection-strings
                   key: db
             - name: ConnectionStrings__keysContext
               valueFrom:
                 secretKeyRef:
-                  name: dev-connection-strings
+                  name: test-connection-strings
                   key: db
             - name: ConnectionStrings__auditContext
               valueFrom:
                 secretKeyRef:
-                  name: dev-connection-strings
+                  name: test-connection-strings
                   key: audit-db
             - name: ConnectionStrings__migration
               valueFrom:
                 secretKeyRef:
-                  name: dev-connection-strings
+                  name: test-connection-strings
                   key: migration
             - name: ConnectionStrings__specimenMatching
               valueFrom:
                 secretKeyRef:
-                  name: dev-connection-strings
+                  name: test-connection-strings
                   key: specimen
             - name: ConnectionStrings__reporting
               valueFrom:
                 secretKeyRef:
-                  name: dev-connection-strings
+                  name: test-connection-strings
                   key: reporting
-            - name: Hangfire__WorkerCount
-              value: "3"
             - name: ExternalLinks__ReportingOverview
-              value: "https://app.powerbi.com/Redirect?action=OpenApp&appId=5ae64787-d2aa-4beb-8bf8-18340efe12ab&ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666"
-            - name: ExternalLinks__ClusterReport
-              value: "https://app.powerbi.com/groups/me/apps/5ae64787-d2aa-4beb-8bf8-18340efe12ab/reports/7b0921bd-8e4b-46f3-8e4b-dc9b7e7c982b/ReportSection?ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666&filter=Cluster%2FClusterId%20eq '<CLUSTER_ID>'"
+              value: "https://app.powerbi.com/Redirect?action=OpenApp&appId=c5bd30d4-b135-4e44-81a4-00d61f360721&ctid=ee4e1499-4a35-4b2e-ad47-5f3cf9de8666"
             - name: MigrationConfig__NtbsEnvironment
-              value: "PheDev"
+              value: "Test"
             - name: Sentry__Environment
-              value: phe-dev
-            - name: Splunk__Host
-              value: "https://http-inputs-nhsttdev.splunkcloud.com"
-            - name: Splunk__Token
-              valueFrom:
-                secretKeyRef:
-                  name: splunk
-                  key: dev-token
-            - name: Splunk__UriPath
-              value: "services/collector/event"
-            - name: Splunk__Index
-              value: "ntbs_sentry_nonprod"
+              value: phe-test
+            - name: KRB5_CLIENT_KTNAME
+              value: /krbtab/keytab
             - name: Hangfire__Enabled
               value: "true"
             - name: Hangfire__WorkerCount
@@ -91,20 +95,28 @@ spec:
             - name: EnvironmentDescription__IsLiveSystem
               value: "false"
             - name: EnvironmentDescription__DisplayName
-              value: "development"
+              value: "test"
             - name: EnvironmentDescription__EnvironmentName
-              value: "phe-dev"
+              value: "phe-test"
             - name: ScheduledJobsConfig__UserSyncCron
-              value: "00 21 * * *"
+              value: "30 21 * * *"
+          volumeMounts:
+            - mountPath: /krbtab
+              name: krb-tab
       imagePullSecrets:
         - name: default-dockercfg-bs7wj
+      volumes:
+        - name: krb-tab
+          secret:
+            defaultMode: 420
+            secretName: ntbs-test-sql-svc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ntbs-dev
+  name: ntbs-test
   labels:
-    app: ntbs-dev
+    app: ntbs-test
 spec:
   type: ClusterIP
   ports:
@@ -113,18 +125,18 @@ spec:
       port: 8080
       targetPort: 8080
   selector:
-    app: ntbs-dev
+    app: ntbs-test
 ---
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: ntbs-dev
+  name: ntbs-test
 spec:
-  host: ntbs-dev.apps.ocp-por.unix.phe.gov.uk
+  host: ntbs-test.apps.ocp-por.unix.phe.gov.uk
   path: /
   to:
     kind: Service
-    name: ntbs-dev
+    name: ntbs-test
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
