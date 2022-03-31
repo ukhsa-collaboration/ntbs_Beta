@@ -22,13 +22,19 @@ for configuring environment variables that should be kept secret (and therefore 
 The tests require a Selenium server running in the background, accessible at `localhost:4444`.
 This controls the (usually headless) web browser used to perform the tests.
 
-To run the UI tests in PowerShell, run the script `.\test.ps1` This will setup and teardown a Selenium
-server during each run.
+To run the tests against an environment where two factor authentication is required, you must bypass the usual log in journey (this is because there is no way to log in using two
+factor authentication within the tests). To do this you will need to:
 
-Alternatively, start it running in the background and leave it running all day. It shouldn't use too
-many resources when it is not being used, and it will allow you to run the tests from inside your IDE
-(making use of a debugger, breakpoints, etc.) Run the script `.\start_selenium.ps1` to do this, stop
-it with `Ctrl+C` when you are done.
+- Log in to the site under test using the user account which you want to use in the tests. (You will probably want to use a user with National Team permissions).
+- Open your browser's dev tools, and load any page on the site.
+- In the network tab, find the request you just made, and copy the value of the "cookie" header on the request.
+- Update the following config values:
+  - The `AuthenticatedCookieHeader`to the value you copied from the "cookie" header.
+  - The `Username` of the `ManuallyLoggedInUser`. This is the username of the user you used to log in above.
+- Run the UI tests by running the script `.\test.ps1` in PowerShell.
+
+There are no longer any environments where two factor authentication is not required, but if there are in future, you can run the UI tests with a full login journey by running the script `.\testWithFullLogin.ps1` instead of `.\test.ps1`.
+In this scenario, you do not need to any of the other steps above.
 
 ### Environments
 
@@ -40,19 +46,6 @@ The `phe-uat` environment is hosted in the UKHSA OpenShift cluster, and is alway
 
 If you wish to run with the `local` configuration against your local copy of the code, then you first need to run the site locally.
 Follow the instructions in the [ntbs-service README](../ntbs-service/README.md) to do this (in short: run `dotnet run` in the project root).
-
-To run the tests against an environment where two factor authentication is required, you must bypass the usual log in journey (this is because there is no way to log in using two
-factor authentication within the tests). To do this you will need to:
-
-- Log in to the site under test using the user account which you want to use in the tests. (You will probably want to use a user with National Team permissions).
-- Open your browser's dev tools, and load any page on the site.
-- In the network tab, find the request you just made, and copy the value of the "cookie" header on the request.
-- Update the following config values:
-  - The `EnvironmentUnderTest` to the environment you are testing.
-  - The `AuthenticatedCookieHeader`to the value you copied from the "cookie" header.
-  - The `Username` of the `ManuallyLoggedInUser`. This is the username of the user you used to log in above.
-
-There is a separate script for running the ui tests against `phe-uat`; run the script `.\testWithCookieAuth.ps1` instead of `.\test.ps1` to run the UI tests in PowerShell.
 
 ## Troubleshooting
 
