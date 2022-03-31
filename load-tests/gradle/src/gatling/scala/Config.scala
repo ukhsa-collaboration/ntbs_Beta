@@ -4,7 +4,7 @@ import scala.collection.JavaConverters._
 object Config {
     val urlUnderTest = sys.env.getOrElse(
         "URL_UNDER_TEST",
-        "https://ntbs-load-test.e32846b1ddf0432eb63f.northeurope.aksapp.io"
+        "https://ntbs-uat.phe.nhs.uk"
     )
     val lengthOfTestInMinutes = sys.env.getOrElse("LOAD_TEST_DURATION_IN_MINUTES", "1").toInt
     val firstNotification = sys.env.getOrElse("FIRST_NOTIFICATION", "300001").toInt

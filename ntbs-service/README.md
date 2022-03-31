@@ -55,20 +55,6 @@ for configuring environment variables that should be kept secret (and therefore 
 For example, to override the main connection database string:
 `dotnet user-secrets set "ConnectionStrings:ntbsContext" "my-alternative-connection-string"`
 
-A master copy of local secrets is stored in Azure Key Vault. These can be set up in bulk using the Azure CLI.
-
-```PowerShell
-# Use `az login` to authenticate first if necessary
-# Use `az account set -s 6850ca99-e7c3-4686-9208-25575cef522a` to change to phe-ntbs azure subscription
-
-az keyvault secret show `
- --vault-name "dev-phe-ntbs-secrets" `
- --name "LocalUserSecrets" `
- --query value `
- | ConvertFrom-Json `
- | dotnet user-secrets set
-```
-
 Secrets are project specific so run these commands in the root of a project.
 
 ## Testing
@@ -96,35 +82,9 @@ useful for monitoring and/or triggering:
 
 # Deployments
 The deployments are based on Docker-on-Kubernetes infrastructure.
-The development envs are available on Azure, with production environments hosted on PHE's Kubernetes instance.
+There are four environments hosted on UKHSA's Kubernetes instance - `live`, `uat	`, `test` and `dev`.
 
-## First time set up
-Ensure you have `azure-cli` installed
-- `az login` to log into the azure subscription
-- use `az account set -s <Name or Id>` to set a default subscription if there are multiple
-- `az aks install-cli` to install `kubectl`
-- `az aks get-credentials -g NTBS_Development -n ntbs-envs2` to add appropriate credentials to your `~/.kube/config` file
-
-## Images registry
-We're using ACR to store docker images. When logged in to Azure, run this command to see the username-password for registry user.
-`az acr credential show -n ntbsContainerRegistry`
-Login into docker with above credentials
-` docker login -u [Username] -p [Password] [SERVER]`
-
-## Deploying to environments
-`master` branch deploys to `int` automatically.
-
-For `test` and `uat` environments, pick the docker image <TAG> of the build from registry and from root directory run:
-
-`.\scripts\release.sh <ENV> <TAG>`
-
-For `live` environment, the process is the same once
-[you've connected to Openshift successfully](https://airelogic-nis.atlassian.net/wiki/spaces/R2/pages/163446793/Deployments+on+PHE+infrastructure)
-
-Note - when using two kubectl pods
-[these commands](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-context-and-configuration)
-will help to keep track of the kubectl contexts
-
+Deployments to these environments can be made using OpenShift pipelines. The pipelines can be found in the `ntbs-build` project in UKHSA's OpenShift cluser. For more details see [NTBS - Hosting and Deployments](https://phecloud.sharepoint.com/:w:/r/sites/NTBSResources/Project/Developer%20Guide/NTBS%20-%20Hosting%20and%20Deployments.docx?d=w21dd862322324fdcb0d2d11e545d7b05&csf=1&web=1&e=uATbMn).
 
 ## Running the app in Docker (builds in production mode)
 ```
@@ -153,13 +113,13 @@ Live it should be left out.
 
 - Name:
   - NTBS Login ([Environment Name])
-  - e.g. Environment Name = Dev/Int/Test if Live then leave blank.
-- Application ID Uri:
+  - e.g. Environment Name = Dev/Test/Uat if Live then leave blank.
+- Application ID 
   - https://[domain.com]/ntbs-[environmentname]
   - e.g. https://aptemus.com/ntbs-int or https://phe.gov.uk/ntbs (for live)
 
 Authentication:
-- Redirect URIs: https://[domain]/signin-oidc e.g. https://ntbs-int.e32846b1ddf0432eb63f.northeurope.aksapp.io/signin-oidc
+- Redirect URIs: https://[domain]/signin-oidc e.g. https://ntbs-uat.phe.nhs.uk/signin-oidc
 - Implicit Grant: Enable ID token
 - Supported account type: Accounts in this organisation directory only (Single Tenant)
 - Allow Public Flows: false

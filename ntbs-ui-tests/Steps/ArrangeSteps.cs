@@ -29,15 +29,6 @@ namespace ntbs_ui_tests.Steps
             RuntimeProvider = unitTestRuntimeProvider;
         }
 
-        [Given(@"Test is skipped when using cookie override for authentication")]
-        public void GivenTestIsSkippedWhenFlagIsSet()
-        {
-            if (Settings.UseCookieOverride)
-            {
-                RuntimeProvider.TestIgnore("Test skipped because it cannot be performed using cookie override for authentication.");
-            }
-        }
-
         #region Navigation
 
         [Given(@"I navigate to the app")]

@@ -17,19 +17,6 @@ The following steps are PowerShell specific, but it should be straightforward to
 We use [dotnet secrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-2.2&tabs=windowsgit)
 for configuring environment variables that should be kept secret (and therefore not checked into the repo).
 
-A master copy of local secrets is stored in Azure Key Vault. These can be set up in bulk using the Azure CLI (in Powershell) as follows:
-
-```PowerShell
-# Use `az login` to authenticate first if necessary
-# Use `az account set -s 6850ca99-e7c3-4686-9208-25575cef522a` to change to phe-ntbs azure subscription
-
-az keyvault secret show --vault-name "dev-phe-ntbs-secrets" --name "UITestsSecrets" --query value `
- | ConvertFrom-Json `
- | dotnet user-secrets set
-```
-
-Secrets are project specific so make sure that you run these commands in the root of the UI test project.
-
 ## Running the tests
 
 The tests require a Selenium server running in the background, accessible at `localhost:4444`.
@@ -46,25 +33,26 @@ it with `Ctrl+C` when you are done.
 ### Environments
 
 The tests require that the web app is already running in an environment.
-Five environments are supported by default: `local`, `int`, `test`, `uat` and `phe-uat`.
+Two environments are supported by default: `local` and `phe-uat`.
 You can switch between these environments using the `EnvironmentUnderTest` setting in [testSettings.json](testSettings.json).
 
-The `int`, `test` and `uat` environments are hosted in Azure, and should always be running. The `phe-uat` environment is hosted in the
-UKHSA OpenShift cluster, and likewise is always running, though it is only accessible from the dev server on the UKHSA VPN.
+The `phe-uat` environment is hosted in the UKHSA OpenShift cluster, and is always running, though it is only accessible from machines on the UKHSA VPN (such as the dev server).
 
 If you wish to run with the `local` configuration against your local copy of the code, then you first need to run the site locally.
 Follow the instructions in the [ntbs-service README](../ntbs-service/README.md) to do this (in short: run `dotnet run` in the project root).
 
-To run the tests using the `phe-uat` environment, you must bypass the usual log in journey (this is because there is no way to log in using two
+To run the tests against an environment where two factor authentication is required, you must bypass the usual log in journey (this is because there is no way to log in using two
 factor authentication within the tests). To do this you will need to:
 
 - Log in to the site under test using the user account which you want to use in the tests. (You will probably want to use a user with National Team permissions).
 - Open your browser's dev tools, and load any page on the site.
 - In the network tab, find the request you just made, and copy the value of the "cookie" header on the request.
 - Update the following config values:
-  - The `EnvironmentUnderTest` to `phe-uat`.
+  - The `EnvironmentUnderTest` to the environment you are testing.
   - The `AuthenticatedCookieHeader`to the value you copied from the "cookie" header.
   - The `Username` of the `ManuallyLoggedInUser`. This is the username of the user you used to log in above.
+
+There is a separate script for running the ui tests against `phe-uat`; run the script `.\testWithCookieAuth.ps1` instead of `.\test.ps1` to run the UI tests in PowerShell.
 
 ## Troubleshooting
 

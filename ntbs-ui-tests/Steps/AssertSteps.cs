@@ -211,6 +211,13 @@ namespace ntbs_ui_tests.Steps
         {
             WithErrorLogging(() =>
             {
+                // Don't do this check if asserting case manager and tests running against UAT
+                // This is because there are no test case managers on UAT
+                if (field == "case-manager" && Settings.UseCookieOverride)
+                {
+                    return;
+                }
+                
                 var sectionId =HtmlElementHelper.GetSectionIdFromSection(section);
                 var htmlId = $"{sectionId}-{field}";
                 Assert.Contains(value, HtmlElementHelper.FindElementById(Browser, htmlId).Text);
@@ -222,6 +229,13 @@ namespace ntbs_ui_tests.Steps
         {
             WithErrorLogging(() =>
             {
+                // Don't do this check if asserting case manager and tests running against UAT
+                // This is because there are no test case managers on UAT
+                if (value == "Birmingham UITester" && Settings.UseCookieOverride)
+                {
+                    return;
+                }
+                
                 var sectionId =HtmlElementHelper.GetSectionIdFromSection(section);
                 Assert.Contains(value, HtmlElementHelper.FindElementById(Browser, sectionId).Text);
             });
