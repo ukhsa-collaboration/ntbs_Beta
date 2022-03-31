@@ -34,3 +34,6 @@ spec:
                 resources:
                   requests:
                     storage: 1Gi
+          - name: ssh-directory
+            secret:
+              secretName: ntbs-ssh-credentials
