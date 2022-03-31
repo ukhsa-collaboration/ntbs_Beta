@@ -38,9 +38,9 @@ spec:
         kind: Task
         name: git-clone-with-ssh
       when:
-        - Input: $(params.deploy-migration)
-          Operator: in
-          Values:
+        - input: $(params.deploy-migration)
+          operator: in
+          values:
             - 'yes'
       workspaces:
         - name: output
@@ -81,9 +81,9 @@ spec:
         kind: Task
         name: git-clone-with-ssh
       when:
-        - Input: $(params.deploy-specimen-matching)
-          Operator: in
-          Values:
+        - input: $(params.deploy-specimen-matching)
+          operator: in
+          values:
             - 'yes'
       workspaces:
         - name: output
@@ -124,9 +124,9 @@ spec:
         kind: Task
         name: git-clone-with-ssh
       when:
-        - Input: $(params.deploy-reporting)
-          Operator: in
-          Values:
+        - input: $(params.deploy-reporting)
+          operator: in
+          values:
             - 'yes'
       workspaces:
         - name: output
