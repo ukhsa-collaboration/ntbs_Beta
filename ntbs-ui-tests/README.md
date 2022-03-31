@@ -66,6 +66,8 @@ factor authentication within the tests). To do this you will need to:
   - The `AuthenticatedCookieHeader`to the value you copied from the "cookie" header.
   - The `Username` of the `ManuallyLoggedInUser`. This is the username of the user you used to log in above.
 
+There is a separate script for running the ui tests against `phe-uat`; run the script `.\testWithCookieAuth.ps1` instead of `.\test.ps1` to run the UI tests in PowerShell.
+
 ## Troubleshooting
 
 ### Is there a way of seeing what Selenium "sees" during a test?

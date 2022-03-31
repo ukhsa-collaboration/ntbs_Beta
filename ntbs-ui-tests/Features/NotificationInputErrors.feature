@@ -1,3 +1,4 @@
+@NormalAuth @CookieOverride
 Feature: Notification input errors
   Happy and error paths for notification creation
   Notification deletion

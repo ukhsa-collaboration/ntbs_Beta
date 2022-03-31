@@ -77,7 +77,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: splunk
-                  key: token
+                  key: dev-token
             - name: Splunk__UriPath
               value: "services/collector/event"
             - name: Splunk__Index
