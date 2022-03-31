@@ -25,15 +25,6 @@
       "SpecimenConnectionString": "data source=localhost;initial catalog=specimen-matching;trusted_connection=true;MultipleActiveResultSets=true;TrustServerCertificate=true",
       "ImportedNotificationNtbsEnvironment": "Dev"
     },
-    "int": {
-      "RootUriString": "https://ntbs-int.e32846b1ddf0432eb63f.northeurope.aksapp.io"
-    },
-    "test": {
-      "RootUriString": "https://ntbs-test.e32846b1ddf0432eb63f.northeurope.aksapp.io"
-    },
-    "uat": {
-      "RootUriString": "https://ntbs-uat.e32846b1ddf0432eb63f.northeurope.aksapp.io"
-    },
     "phe-uat": {
       "RootUriString": "https://ntbs-uat-hidden.apps.ocp-por.unix.phe.gov.uk",
       "ConnectionString": "Server=SQLClusPorDC17.phe.gov.uk\\DC17;Database=NTBS_UAT;Integrated Security=true;TrustServerCertificate=true",
