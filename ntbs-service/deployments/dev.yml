@@ -71,6 +71,17 @@ spec:
               value: "PheDev"
             - name: Sentry__Environment
               value: phe-dev
+            - name: Splunk__Host
+              value: "https://http-inputs-nhsttdev.splunkcloud.com"
+            - name: Splunk__Token
+              valueFrom:
+                secretKeyRef:
+                  name: splunk
+                  key: dev-token
+            - name: Splunk__UriPath
+              value: "services/collector/event"
+            - name: Splunk__Index
+              value: "ntbs_sentry_nonprod"
             - name: Hangfire__Enabled
               value: "true"
             - name: Hangfire__WorkerCount
