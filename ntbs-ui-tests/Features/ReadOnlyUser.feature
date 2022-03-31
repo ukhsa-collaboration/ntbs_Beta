@@ -1,10 +1,10 @@
+@NormalAuth
 Feature: Read only user
 
   Background: Log in as read only user
-    Given Test is skipped when using cookie override for authentication
     Given I navigate to the app
     And I have logged in as ReadOnlyUser
-
+    
   Scenario: Read only user has no edit links abd view test result link on notification overview
     Given I am on seeded 'MAXIMUM_DETAILS' notification overview page
 

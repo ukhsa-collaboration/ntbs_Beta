@@ -1,9 +1,7 @@
 name: run tests
 
 on:
-  push:
-    branches-ignore:
-      - master
+  push
 
 jobs:
   test-job:
