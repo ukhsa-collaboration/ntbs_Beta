@@ -211,6 +211,8 @@ namespace ntbs_ui_tests.Steps
         {
             WithErrorLogging(() =>
             {
+                // Don't do this check if asserting case manager and tests running against UAT
+                // This is because there are no test case managers on UAT
                 if (field == "case-manager" && Settings.UseCookieOverride)
                 {
                     return;
@@ -227,6 +229,8 @@ namespace ntbs_ui_tests.Steps
         {
             WithErrorLogging(() =>
             {
+                // Don't do this check if asserting case manager and tests running against UAT
+                // This is because there are no test case managers on UAT
                 if (value == "Birmingham UITester" && Settings.UseCookieOverride)
                 {
                     return;

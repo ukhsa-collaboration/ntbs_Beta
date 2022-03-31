@@ -263,6 +263,8 @@ namespace ntbs_ui_tests.Steps
         [When(@"I select (.*) for '(.*)'")]
         public void WhenISelectTextFromDropdown(string text, string selectId)
         {
+            // Don't do this check if asserting case manager and tests running against UAT
+            // This is because there are no test case managers on UAT
             if (selectId.Contains("CaseManagerId") && Settings.UseCookieOverride)
             {
                 return;
