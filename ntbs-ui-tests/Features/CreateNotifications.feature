@@ -1,7 +1,8 @@
+@NormalAuth @CookieOverride
 Feature: Notification creation
   Happy and error paths for notification creation
   Notification deletion
-
+  
   Background: Create new notification
     Given I navigate to the app
     Given I have logged in as BirminghamServiceUser
@@ -74,8 +75,8 @@ Feature: Notification creation
     And I can see the value '1999' for the field 'uk-entry' in the 'PatientDetails' overview section
     And I can see the value '1234' for the field 'local-patient-id' in the 'PatientDetails' overview section
 
+    
   Scenario: Create notification with all hospital details fields
-    Given Test is skipped when using cookie override for authentication
     When I click 'Hospital details' on the navigation bar
     Then I should be on the HospitalDetails page
     When I enter 1 into 'FormattedNotificationDate_Day'
@@ -94,7 +95,7 @@ Feature: Notification creation
     And I can see the value 'Birmingham UITester' for the field 'case-manager' in the 'HospitalDetails' overview section
     And I can see the value 'Dr Lawton' for the field 'consultant' in the 'HospitalDetails' overview section
     And I can see the value '01 Jan 2019' for the field 'notification-date' in the 'PatientDetails' overview section
-
+    
   Scenario: Create notification with all clinical details fields
     When I click 'Clinical details' on the navigation bar
     Then I should be on the ClinicalDetails page
@@ -354,7 +355,6 @@ Feature: Notification creation
     And I can see the value 'Unknown' for the field 'treated' in the 'PreviousHistory' overview section
 
   Scenario: Create notification with all treatment event fields
-    Given Test is skipped when using cookie override for authentication
     When I click 'Treatment events' on the navigation bar
     Then I should be on the TreatmentEvents page
     When I click on the 'add-new-treatment-event-button' button
@@ -376,7 +376,7 @@ Feature: Notification creation
     And I can see the value 'Treatment outcome - Cured' in the 'TreatmentEvents' table overview section
     And I can see the value 'Multi-drug resistant regimen' in the 'TreatmentEvents' table overview section
     And I can see the value 'Birmingham UITester' in the 'TreatmentEvents' table overview section
-
+  
   Scenario: Create and delete notification draft
     When I click on the 'delete-draft-button' button
     Then I should be on the Delete page

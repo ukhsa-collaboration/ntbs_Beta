@@ -1,14 +1,14 @@
 Feature: Import legacy notification
-
+  
+  @NormalAuth
   Scenario: Import legacy notification
-    Given Test is skipped when using cookie override for authentication
     Given I navigate to the app
     And I have logged in as BirminghamServiceUser
     And I am on the Search page
-    When I enter 189045 into 'SearchParameters_IdFilter'
+    When I enter the legacy id into the search field
     And I click on the 'search-button' button
     And I wait
-    And I click on the 189045 link
+    And I click on the link for the legacy notification
     And I click on the 'import-button' button
     And I wait
 
@@ -23,3 +23,20 @@ Feature: Import legacy notification
     And I can see the value Male for element with id 'banner-sex'
     And I can see the value Sensitive to first line for element with id 'banner-drug-resistance'
     And I can see the value Complete for element with id 'banner-treatment-outcome'
+
+  @CookieOverride
+  Scenario: Import legacy notification - Cookie Override
+    Given I navigate to the app
+    And I have logged in as BirminghamServiceUser
+    And I am on the Search page
+    When I enter the legacy id into the search field
+    And I click on the 'search-button' button
+    And I wait
+    And I click on the link for the legacy notification
+    And I click on the 'import-button' button
+    And I wait
+
+    Then A new notification should have been created
+    
+    
+  

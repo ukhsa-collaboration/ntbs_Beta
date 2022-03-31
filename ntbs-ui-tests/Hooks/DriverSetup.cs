@@ -75,6 +75,8 @@ namespace ntbs_ui_tests.Hooks
 
         private async Task CleanUpMigratedNotification()
         {
+            var legacyId = settings.EnvironmentConfig.LegacyId;
+            
             using (var connection = new SqlConnection(settings.EnvironmentConfig.SpecimenConnectionString))
             {
                 connection.Open();
@@ -85,7 +87,7 @@ namespace ntbs_ui_tests.Hooks
             using (var connection = new SqlConnection(settings.EnvironmentConfig.ConnectionString))
             {
                 connection.Open();
-                var deleteNotification = "DELETE FROM Notification WHERE ETSID = '189045'";
+                var deleteNotification = $"DELETE FROM Notification WHERE ETSID = '{legacyId}'";
                 await connection.ExecuteAsync(deleteNotification);
                 connection.Close();
             }
@@ -93,7 +95,7 @@ namespace ntbs_ui_tests.Hooks
             {
                 connection.Open();
                 var deleteImportedNotification =
-                    "DELETE FROM ImportedNotifications WHERE LegacyId = '189045'" +
+                    $"DELETE FROM ImportedNotifications WHERE LegacyId = '{legacyId}'" +
                     $"AND NtbsEnvironment LIKE '{settings.EnvironmentConfig.ImportedNotificationNtbsEnvironment}'";
                 await connection.ExecuteAsync(deleteImportedNotification);
             }
