@@ -1,3 +1,4 @@
+@NormalAuth @CookieOverride
 Feature: Notification editing
   Happy and error paths for notification creation
   Notification deletion
@@ -39,9 +40,8 @@ Feature: Notification editing
     And I can see the value 'Other' for the field 'country' in the 'PatientDetails' overview section
     And I can see the value '1955' for the field 'uk-entry' in the 'PatientDetails' overview section
     And I can see the value '9866698' for the field 'local-patient-id' in the 'PatientDetails' overview section
-
-  Scenario: Edit notification hospital details fields
-    Given Test is skipped when using cookie override for authentication
+    
+  Scenario: Edit notification hospital details fields - Cookie Override
     When I go to edit the 'HospitalDetails' section
     Then I should be on the HospitalDetails page
     When I enter 2 into 'FormattedNotificationDate_Day'
@@ -59,7 +59,7 @@ Feature: Notification editing
     And I can see the value 'Birmingham UITester' for the field 'case-manager' in the 'HospitalDetails' overview section
     And I can see the value 'Dr Howard Foreman' for the field 'consultant' in the 'HospitalDetails' overview section
     And I can see the value '02 Feb 2011' for the field 'notification-date' in the 'PatientDetails' overview section
-
+    
   Scenario: Edit notification clinical details fields
     When I go to edit the 'ClinicalDetails' section
     Then I should be on the ClinicalDetails page
@@ -142,6 +142,7 @@ Feature: Notification editing
     And I can see the value 'Negative' in the 'TestResults' table overview section
     And I can see the value '11 Mar 2011' in the 'TestResults' table overview section
 
+  @NormalAuth @CookieOverride
   Scenario: Edit notification contact tracing fields
     When I go to edit the 'ContactTracing' section
     Then I should be on the ContactTracing page
@@ -318,7 +319,6 @@ Feature: Notification editing
     And I can see the value 'Angola' for the field 'treatment-country' in the 'PreviousHistory' overview section
 
   Scenario: Edit notification treatment event fields
-    Given Test is skipped when using cookie override for authentication
     When I go to edit the 'TreatmentEvents' section
     Then I should be on the TreatmentEvents page
     When I click on the Edit link
@@ -339,7 +339,7 @@ Feature: Notification editing
     And I can see the value 'Treatment outcome - Lost to follow-up' in the 'TreatmentEvents' table overview section
     And I can see the value 'Patient left UK' in the 'TreatmentEvents' table overview section
     And I can see the value 'Birmingham UITester' in the 'TreatmentEvents' table overview section
-
+    
   Scenario: Edit notification MDR detail fields
     When I go to edit the 'MDRDetails' section
     Then I should be on the MDRDetails page

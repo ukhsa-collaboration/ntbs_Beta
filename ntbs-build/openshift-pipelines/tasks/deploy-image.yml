@@ -27,7 +27,7 @@ spec:
 
         echo "Updating build image to $(inputs.params.image_tag)"
 
-        oc set image deployment/$deployment_name $deployment_name=ntbscontainerregistry.azurecr.io/ntbs-service:$(inputs.params.image_tag)
+        oc set image deployment/$deployment_name $deployment_name=ghcr.io/publichealthengland/ntbs-service:$(inputs.params.image_tag)
 
         echo "Finished updating build image"
       workingDir: /workspace/output

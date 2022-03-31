@@ -4,13 +4,14 @@ Feature: Page layouts
     Given I navigate to the app
     And I have logged in as BirminghamServiceUser
     
+  @NormalAuth
   Scenario: The homepage has correct titles for tables
-    Given Test is skipped when using cookie override for authentication
     Given I am on the Homepage
     Then I can see the correct titles for the 'alerts-table' table
     Then I can see the correct titles for the 'draft-notifications-table' table
     Then I can see the correct titles for the 'recent-notifications-table' table
-    
+
+  @NormalAuth @CookieOverride
   Scenario: The notification overview data has correct labels
     Given I am on seeded 'MAXIMUM_DETAILS' notification overview page
     Then I can see the correct labels for the 'PatientDetails' overview section
