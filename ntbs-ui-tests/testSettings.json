@@ -26,18 +26,6 @@
       "ImportedNotificationNtbsEnvironment": "Dev",
       "LegacyId": "189045"
     },
-    "int": {
-      "RootUriString": "https://ntbs-int.e32846b1ddf0432eb63f.northeurope.aksapp.io",
-      "LegacyId": "189045"
-    },
-    "test": {
-      "RootUriString": "https://ntbs-test.e32846b1ddf0432eb63f.northeurope.aksapp.io",
-      "LegacyId": "189045"
-    },
-    "uat": {
-      "RootUriString": "https://ntbs-uat.e32846b1ddf0432eb63f.northeurope.aksapp.io",
-      "LegacyId": "189045"
-    },
     "phe-uat": {
       "RootUriString": "https://ntbs-uat-hidden.apps.ocp-por.unix.phe.gov.uk",
       "ConnectionString": "Server=SQLClusPorDC17.phe.gov.uk\\DC17;Database=NTBS_UAT;Integrated Security=true;TrustServerCertificate=true",
