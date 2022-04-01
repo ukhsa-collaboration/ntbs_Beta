@@ -22,7 +22,7 @@
     "@sentry/integrations": "6.18.1",
     "accessible-autocomplete": "2.0.4",
     "axios": "0.26.0",
-    "babel-loader": "8.2.3",
+    "babel-loader": "8.2.4",
     "css-vars-ponyfill": "2.4.7",
     "es6-promise": "4.2.8",
     "file-loader": "6.2.0",
