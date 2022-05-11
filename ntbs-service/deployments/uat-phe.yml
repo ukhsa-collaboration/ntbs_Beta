@@ -100,17 +100,6 @@ spec:
               value: "UatPheMigration"
             - name: Sentry__Environment
               value: uat-phe
-            - name: Splunk__Host
-              value: "https://http-inputs-nhsttpreprod.splunkcloud.com"
-            - name: Splunk__Token
-              valueFrom:
-                secretKeyRef:
-                  name: splunk
-                  key: uat-token
-            - name: Splunk__UriPath
-              value: "services/collector/event"
-            - name: Splunk__Index
-              value: "ntbs_dotnet_uat"
             - name: KRB5_CLIENT_KTNAME
               value: /krbtab/keytab
             - name: Hangfire__Enabled
