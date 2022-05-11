@@ -81,7 +81,7 @@ spec:
             - name: Splunk__UriPath
               value: "services/collector/event"
             - name: Splunk__Index
-              value: "ntbs_sentry_nonprod"
+              value: "ntbs_dotnet_dev"
             - name: Hangfire__Enabled
               value: "true"
             - name: Hangfire__WorkerCount
