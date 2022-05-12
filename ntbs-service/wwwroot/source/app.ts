@@ -8,8 +8,8 @@ import "../css/site.scss"
 import config from "./config/config-APP_TARGET";
 import Vue from "vue";
 import {initAll as govUkJsInitAll} from "govuk-frontend";
-import * as Sentry from '@sentry/browser';
-import * as SentryIntegrations from '@sentry/integrations';
+//import * as Sentry from '@sentry/browser';
+//import * as SentryIntegrations from '@sentry/integrations';
 // @ts-ignore
 import Details from '../../node_modules/nhsuk-frontend/packages/components/details/details';
 // @ts-ignore
@@ -53,13 +53,14 @@ import SingleSubmitForm from "./Components/SingleSubmitForm";
 require("es6-promise").polyfill();
 require("./Polyfills/ArrayFromPolyfill");
 
+/*
 if (config.env === "production") {
     Sentry.init({
         dsn: 'https://83b245064a684fa7ac86658bf38d2ad3@sentry.io/2862017', // identifies the sentry project
         integrations: [new SentryIntegrations.Vue({Vue, attachProps: true, logErrors: true})],
     });
 }
-
+*/
 Vue.use(VueAccessibleModal, { transition: "fade" });
 // register Vue components
 Vue.component("date-input", DateInput);
