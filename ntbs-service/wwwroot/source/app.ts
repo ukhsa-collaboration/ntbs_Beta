@@ -53,14 +53,6 @@ import SingleSubmitForm from "./Components/SingleSubmitForm";
 require("es6-promise").polyfill();
 require("./Polyfills/ArrayFromPolyfill");
 
-/*
-if (config.env === "production") {
-    Sentry.init({
-        dsn: 'https://83b245064a684fa7ac86658bf38d2ad3@sentry.io/2862017', // identifies the sentry project
-        integrations: [new SentryIntegrations.Vue({Vue, attachProps: true, logErrors: true})],
-    });
-}
-*/
 Vue.use(VueAccessibleModal, { transition: "fade" });
 // register Vue components
 Vue.component("date-input", DateInput);
