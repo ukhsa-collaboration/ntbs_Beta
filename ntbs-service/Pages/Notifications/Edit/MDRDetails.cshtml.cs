@@ -56,6 +56,8 @@ namespace ntbs_service.Pages.Notifications.Edit
                 return NotFound();
             }
 
+            
+
             var countries = await _referenceDataRepository.GetAllCountriesAsync();
             Countries = new SelectList(countries, nameof(Country.CountryId), nameof(Country.Name));
 
