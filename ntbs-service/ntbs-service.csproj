@@ -49,7 +49,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.2" />
     <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NHSUK.FrontEndLibrary.TagHelpers-fork" Version="1.1.4-alpha" />
     <PackageReference Include="ExpressiveAnnotations" Version="2.9.6">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
@@ -76,5 +75,10 @@
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="ntbs-integration-tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="NHSUK.FrontEndLibrary.TagHelpers">
+      <HintPath>bin\Debug\net6.0\NHSUK.FrontEndLibrary.TagHelpers.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
