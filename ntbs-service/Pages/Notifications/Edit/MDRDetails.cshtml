@@ -227,19 +227,19 @@
                 <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(x => x.MDRDetails.DiscussedAtMDRForum)</nhs-fieldset-legend>
                 <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                     <div class="nhsuk-radios__item">
-                        <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes">
+                        <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-yes" class="nhsuk-radios__input" type="radio" value="@StatusNew.Yes">
                         <label class="nhsuk-label nhsuk-radios__label" for="discussed-at-forum-yes">
                             Yes
                         </label>
                     </div>
                     <div class="nhsuk-radios__item">
-                        <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
+                        <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-no" class="nhsuk-radios__input" type="radio" value="@StatusNew.No">
                         <label class="nhsuk-label nhsuk-radios__label" for="discussed-at-forum-no">
                             No
                         </label>
                     </div>
                     <div class="nhsuk-radios__item">
-                        <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
+                        <input asp-for="MDRDetails.DiscussedAtMDRForum" id="discussed-at-forum-unknown" class="nhsuk-radios__input" type="radio" value="@StatusNew.Unknown">
                         <label class="nhsuk-label nhsuk-radios__label" for="discussed-at-forum-unknown">
                             Unknown
                         </label>
