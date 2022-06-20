@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+
 namespace ntbs_service.Models.Enums
 {
     public enum StatusNew
