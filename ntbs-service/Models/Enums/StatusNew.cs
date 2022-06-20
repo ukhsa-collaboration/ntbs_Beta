@@ -3,6 +3,7 @@
 
 namespace ntbs_service.Models.Enums
 {
+    
     public enum StatusNew
     {       
         [Display(Name = "No")]
