@@ -55,7 +55,7 @@ namespace ntbs_service.Models.Entities
         public virtual Country Country { get; set; }
 
         [Display(Name = "Discussed at the British Thoracic Society MDR forum?")]
-        public Status? DiscussedAtMDRForum { get; set; }
+        public StatusNew? DiscussedAtMDRForum { get; set; }
 
         [NotMapped]
         public DateTime? Dob { get; set; }
