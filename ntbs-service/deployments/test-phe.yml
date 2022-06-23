@@ -84,6 +84,17 @@ spec:
               value: "Test"
             - name: Sentry__Environment
               value: phe-test
+            - name: Splunk__Host
+              value: "https://http-inputs-nhsttpreprod.splunkcloud.com"
+            - name: Splunk__Token
+              valueFrom:
+                secretKeyRef:
+                  name: splunk
+                  key: test-token
+            - name: Splunk__UriPath
+              value: "services/collector/event"
+            - name: Splunk__Index
+              value: "ntbs_dotnet_test"
             - name: KRB5_CLIENT_KTNAME
               value: /krbtab/keytab
             - name: Hangfire__Enabled
