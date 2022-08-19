@@ -10,6 +10,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
+    [Display(Name = "DenotificationDetails")]
     public partial class DenotificationDetails : IOwnedEntityForAuditing
     {
         [AssertThat(nameof(DenotificationAfterNotification), ErrorMessage = ValidationMessages.DateShouldBeLaterThanNotification)]
