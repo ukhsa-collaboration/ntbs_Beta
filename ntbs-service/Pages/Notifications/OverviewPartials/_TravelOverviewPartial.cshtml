@@ -41,7 +41,10 @@
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Total number of months travelled </div>
-                <div class="cell-min-height" id="@sectionId-travel-duration-total"> @Model.Notification.TravelDetails.TotalDurationOfTravel </div>
+
+                @*SDU modified the below code for replacing 0 with empty space 15-12-2022*@
+                <div class="cell-min-height" id="@sectionId-travel-duration-total"> @(Model.Notification.TravelDetails.TotalDurationOfTravel == 0 ? "": Model.Notification.TravelDetails.TotalDurationOfTravel) </div>
+                
             </nhs-grid-column>
         </nhs-grid-row>
         <nhs-grid-row>
