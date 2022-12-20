@@ -83,6 +83,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (Notification.NotificationStatus == Models.Enums.NotificationStatus.Draft)
             {
                 var services = await _userService.GetTbServicesAsync(User);
+
+               // services = services.Where(x => x.IsLegacy != true).ToList();
+
                 if (Notification.HospitalDetails.TBService?.IsLegacy == true)
                 {
                     services = services.Prepend(Notification.HospitalDetails.TBService);
