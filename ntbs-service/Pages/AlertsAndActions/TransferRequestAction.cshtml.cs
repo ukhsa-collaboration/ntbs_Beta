@@ -104,6 +104,8 @@ namespace ntbs_service.Pages.AlertsAndActions
         {
             var hospitals = await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(
                 new List<string> { TransferRequest.TransferAlert.TbServiceCode });
+                hospitals = hospitals.Where(x => x.IsLegacy != true).ToList();
+
             TransferRequest.Hospitals = new SelectList(hospitals,
                 nameof(Hospital.HospitalId),
                 nameof(Hospital.Name));
