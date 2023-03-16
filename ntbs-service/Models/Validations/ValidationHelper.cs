@@ -56,7 +56,7 @@
 
         public const string DiseaseSiteIsRequired = "Please choose at least one site of disease";
         public const string ValidTreatmentOptions = "Short course and MDR treatment cannot both be true";
-        public const string MDRCantChange = "You cannot change the value of this field because an MDR Enhanced Surveillance Questionnaire exists. Please contact NTBS@phe.gov.uk";
+        public const string MDRCantChange = "You cannot change the value of this field because an MDR Enhanced Surveillance Questionnaire exists. Please contact ntbs@ukhsa.gov.uk";
         public const string MDRDuration = "Please enter a whole number of months, or a range, for example, 12, 12-18 or 24+";
         public const string IsPostMortemButStartedTreatment =
             "Unable to save value of 'Diagnosis after death' field due to conflicting information on the record: The patient has started treatment";
@@ -155,7 +155,7 @@
         public const string LabResultNotificationDoesNotExist =
             "The notification ID does not exist, verify you have entered the correct ID before moving forward";
         public const string LabResultNotificationMatchNoPermission =
-            "The notification does not belong to one of your services. If you believe this is the correct notification, please contact ntbs@phe.gov.uk";
+            "The notification does not belong to one of your services. If you believe this is the correct notification, please contact ntbs@ukhsa.gov.uk";
 
         #endregion
 
@@ -171,7 +171,7 @@
             "Please add a record of animal exposure or confirm no exposure has occurred";
 
         #endregion
-        
+
         #region ShareWithService
         public const string ShareDestinationCannotBeCurrentTbService =
             "Notification cannot be shared with the notification's current TB service";
