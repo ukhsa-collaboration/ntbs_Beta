@@ -43,7 +43,7 @@ namespace ntbs_service_unit_tests.Models.Entities.Alerts
                     RiskFactorHomelessness = new RiskFactorDetails(RiskFactorType.Homelessness) { Status = allStatuses },
                     RiskFactorImprisonment = new RiskFactorDetails(RiskFactorType.Imprisonment) { Status = allStatuses },
                     MentalHealthStatus = allStatuses,
-                    RiskFactorSmoking = new RiskFactorDetails(RiskFactorType.Smoking) { Status = allStatuses },
+                    //RiskFactorSmoking = new RiskFactorDetails(RiskFactorType.Smoking) { Status = allStatuses }, // // Modified on 23/03/2023 for NTBS-3161
                     AsylumSeekerStatus = allStatuses,
                     ImmigrationDetaineeStatus = allStatuses
                 }
