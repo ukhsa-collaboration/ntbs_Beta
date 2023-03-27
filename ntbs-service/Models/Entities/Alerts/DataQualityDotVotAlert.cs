@@ -18,6 +18,7 @@ namespace ntbs_service.Models.Entities.Alerts
                         n.SocialRiskFactors.RiskFactorHomelessness.Status == Status.Yes ||
                         n.SocialRiskFactors.RiskFactorImprisonment.Status == Status.Yes ||
                         n.SocialRiskFactors.MentalHealthStatus == Status.Yes ||
+                        //  n.SocialRiskFactors.RiskFactorSmoking.Status == Status.Yes ||
                         n.SocialRiskFactors.AsylumSeekerStatus == Status.Yes ||
                         n.SocialRiskFactors.ImmigrationDetaineeStatus == Status.Yes
                     ) && n.ClinicalDetails.IsDotOffered == Status.No)
@@ -29,6 +30,7 @@ namespace ntbs_service.Models.Entities.Alerts
                         n.SocialRiskFactors.RiskFactorHomelessness.Status != Status.Yes ||
                         n.SocialRiskFactors.RiskFactorImprisonment.Status != Status.Yes ||
                         n.SocialRiskFactors.MentalHealthStatus != Status.Yes ||
+                        // n.SocialRiskFactors.RiskFactorSmoking.Status != Status.Yes ||
                         n.SocialRiskFactors.AsylumSeekerStatus != Status.Yes ||
                         n.SocialRiskFactors.ImmigrationDetaineeStatus != Status.Yes
                     ) && n.ClinicalDetails.IsDotOffered == Status.Yes));

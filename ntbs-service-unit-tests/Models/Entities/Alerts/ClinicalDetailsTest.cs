@@ -9,17 +9,17 @@ namespace ntbs_service_unit_tests.Models.Entities.Alerts
     public class DataQualityDotVotAlertTest
     {
         [Theory]
-        [InlineData("Yes", true, true, false, false)]
+        [InlineData("Yes", true, true, false, true)]
         [InlineData("Yes", true, false, true, false)]
         [InlineData("Yes", false, false, true, false)]
-        [InlineData("Yes", true, false, false, true)]
+        [InlineData("Yes", true, false, false, false)]
         [InlineData("Yes", false, false, false, false)]
         [InlineData("No", true, true, false, true)]
         [InlineData("No", true, false, true, true)]
         [InlineData("No", false, false, true, false)]
         [InlineData("No", true, false, false, false)]
         [InlineData("Unknown", true, true, false, false)]
-        [InlineData(null, true, true, false, false)]
+        [InlineData(null, true, true, false, true)]
         public void DotVotAlert_CorrectlyClassifiesNotification(
             string dotOfferedString,
             bool notificationNotified,
