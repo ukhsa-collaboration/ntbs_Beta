@@ -30,7 +30,7 @@ jobs:
         uses: whoan/docker-build-with-cache-action@v5
         with:
           image_name: ntbs-service
-          registry: ghcr.io/publichealthengland
+          registry: ghcr.io/ukhsa-collaboration
           username: whoan
           password: "${{ secrets.GITHUB_TOKEN }}"
           # auth token based on https://sentry.io/settings/phe-ntbs/developer-settings/jenkins-build-40d229/
