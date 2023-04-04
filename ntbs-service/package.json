@@ -21,7 +21,7 @@
     "accessible-autocomplete": "2.0.4",
     "axios": "0.26.0",
     "babel-loader": "8.2.3",
-    "css-vars-ponyfill": "2.4.7",
+    "css-vars-ponyfill": "2.4.8",
     "es6-promise": "4.2.8",
     "file-loader": "6.2.0",
     "formdata-polyfill": "4.0.10",
