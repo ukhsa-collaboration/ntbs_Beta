@@ -272,6 +272,38 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Contains(TREATMENT_OUTCOME_TYPE.GetDisplayName(), textContent);
             Assert.Contains(TREATMENT_OUTCOME_SUBTYPE.GetDisplayName(), textContent);
         }
+        
+        [Fact]
+        public async Task PostNewTreatmentOutcomeWithCurlyBracketsInNotes_ReturnsValidationErrors()
+        {
+            // Arrange
+            const int notificationId = Utilities.NOTIFICATION_FOR_ADD_TREATMENT_OUTCOME;
+            var url = GetPathForId(NotificationSubPaths.AddTreatmentEvent, notificationId);
+            var document = await GetDocumentForUrlAsync(url);
+            const string noteText = "{{xss}}";
+
+            // Act
+            var formData = new Dictionary<string, string>
+            {
+                ["FormattedEventDate.Day"] = "01",
+                ["FormattedEventDate.Month"] = "01",
+                ["FormattedEventDate.Year"] = "2020",
+                ["TreatmentEvent.TreatmentEventType"] = ((int)TreatmentEventType.TreatmentOutcome).ToString(),
+                ["SelectedTreatmentOutcomeType"] = ((int)TREATMENT_OUTCOME_TYPE).ToString(),
+                ["SelectedTreatmentOutcomeSubType"] = ((int)TREATMENT_OUTCOME_SUBTYPE).ToString(),
+                ["TreatmentEvent.Note"] = noteText
+            };
+            var result = await Client.SendPostFormWithData(document, formData, url);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+
+            resultDocument.AssertErrorSummaryMessage("TreatmentEvent-Note",
+                null,
+                string.Format(ValidationMessages.InvalidCharacter, "Note"));
+            
+            result.AssertValidationErrorResponse();
+        }
 
         [Fact]
         public async Task PostEditTreatmentEvent_ReturnsSuccessAndEditsResultInTable()

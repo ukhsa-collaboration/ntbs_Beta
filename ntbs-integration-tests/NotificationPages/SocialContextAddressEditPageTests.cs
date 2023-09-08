@@ -188,6 +188,42 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
+        public async Task PostEditOfAddressWithCommentContainingCurlyBrackets_ReturnsValidationErrors()
+        {
+            // Arrange
+            const int notificationId = Utilities.NOTIFICATION_WITH_ADDRESSES;
+            var editUrl = GetCurrentPathForId(notificationId) + ADDRESS_ID;
+
+            var editPage = await Client.GetAsync(editUrl);
+            var editDocument = await GetDocumentAsync(editPage);
+
+            // Act
+            var formData = new Dictionary<string, string>
+            {
+                ["FormattedDateFrom.Day"] = "1",
+                ["FormattedDateFrom.Month"] = "1",
+                ["FormattedDateFrom.Year"] = "1999",
+                ["FormattedDateTo.Day"] = "1",
+                ["FormattedDateTo.Month"] = "1",
+                ["FormattedDateTo.Year"] = "2000",
+                ["Address.Address"] = "New address",
+                ["Address.Postcode"] = "M4 4BF",
+                ["Address.Details"] = "{{XSS}}"
+            };
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+            
+            
+            resultDocument.AssertErrorSummaryMessage("Address-Details",
+                null,
+                string.Format(ValidationMessages.InvalidCharacter, "Comments"));
+            
+
+            result.AssertValidationErrorResponse();
+        }
+        [Fact]
         public async Task GetEditForMissingAddress_ReturnsNotFound()
         {
             // Arrange
