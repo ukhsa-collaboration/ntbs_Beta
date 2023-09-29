@@ -35,7 +35,7 @@
                 <nhs-grid-row>
                     <nhs-grid-column grid-column-width="Full">
                         <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Details) </dt>
-                        <dd class="cell-min-height"> @result.Details </dd>
+                        <dd class="cell-min-height"> @result.Details.Sanitize() </dd>
                     </nhs-grid-column>
                 </nhs-grid-row>
             }
