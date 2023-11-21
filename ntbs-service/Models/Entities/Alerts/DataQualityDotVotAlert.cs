@@ -18,21 +18,23 @@ namespace ntbs_service.Models.Entities.Alerts
                         n.SocialRiskFactors.RiskFactorHomelessness.Status == Status.Yes ||
                         n.SocialRiskFactors.RiskFactorImprisonment.Status == Status.Yes ||
                         n.SocialRiskFactors.MentalHealthStatus == Status.Yes ||
-                        n.SocialRiskFactors.RiskFactorSmoking.Status == Status.Yes ||
+                        //  n.SocialRiskFactors.RiskFactorSmoking.Status == Status.Yes ||
                         n.SocialRiskFactors.AsylumSeekerStatus == Status.Yes ||
                         n.SocialRiskFactors.ImmigrationDetaineeStatus == Status.Yes
                     ) && n.ClinicalDetails.IsDotOffered == Status.No)
                     || // OR - record has no social risk factors but DOT set to Yes
+                       // Modified on 23/03/2023 for NTBS-3161
                     (!(
-                        n.SocialRiskFactors.AlcoholMisuseStatus == Status.Yes ||
-                        n.SocialRiskFactors.RiskFactorDrugs.Status == Status.Yes ||
-                        n.SocialRiskFactors.RiskFactorHomelessness.Status == Status.Yes ||
-                        n.SocialRiskFactors.RiskFactorImprisonment.Status == Status.Yes ||
-                        n.SocialRiskFactors.MentalHealthStatus == Status.Yes ||
-                        n.SocialRiskFactors.RiskFactorSmoking.Status == Status.Yes ||
-                        n.SocialRiskFactors.AsylumSeekerStatus == Status.Yes ||
-                        n.SocialRiskFactors.ImmigrationDetaineeStatus == Status.Yes
+                        n.SocialRiskFactors.AlcoholMisuseStatus != Status.Yes ||
+                        n.SocialRiskFactors.RiskFactorDrugs.Status != Status.Yes ||
+                        n.SocialRiskFactors.RiskFactorHomelessness.Status != Status.Yes ||
+                        n.SocialRiskFactors.RiskFactorImprisonment.Status != Status.Yes ||
+                        n.SocialRiskFactors.MentalHealthStatus != Status.Yes ||
+                        // n.SocialRiskFactors.RiskFactorSmoking.Status != Status.Yes ||
+                        n.SocialRiskFactors.AsylumSeekerStatus != Status.Yes ||
+                        n.SocialRiskFactors.ImmigrationDetaineeStatus != Status.Yes
                     ) && n.ClinicalDetails.IsDotOffered == Status.Yes));
+
 
         public static readonly Func<Notification, bool> NotificationQualifies =
             NotificationQualifiesExpression.Compile();
