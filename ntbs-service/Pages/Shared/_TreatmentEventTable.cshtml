@@ -48,7 +48,7 @@
                         @result.TreatmentOutcome?.TreatmentOutcomeSubType?.GetDisplayName()
                     </nhs-table-item>
                     <nhs-table-item heading-text="@Html.DisplayNameFor(_ => header.Note)">
-                        @result.Note
+                        @result.Note.Sanitize()
                     </nhs-table-item>
                     @if (showEditLinks)
                     {

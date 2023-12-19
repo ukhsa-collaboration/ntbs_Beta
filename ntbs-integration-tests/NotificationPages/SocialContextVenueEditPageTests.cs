@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using AngleSharp.Dom;
+using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
@@ -16,6 +18,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         private const int VENUE_ID = 10;
         private const int VENUE_TO_DELETE_ID = 11;
+        private const int VENUE_ID_WITH_CURLY_BRACKETS = 12;
         protected override string NotificationSubPath => NotificationSubPaths.EditSocialContextVenueSubPath;
 
         public SocialContextVenueEditPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory)
@@ -50,6 +53,20 @@ namespace ntbs_integration_tests.NotificationPages
                             Address = "Test address 2",
                             VenueTypeId = 2
                         },
+                    }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_SOCIALCONTEXTVENUE,
+                    NotificationStatus = NotificationStatus.Notified,
+                    SocialContextVenues = new List<SocialContextVenue>
+                    {
+                        new SocialContextVenue
+                        {
+                            SocialContextVenueId = VENUE_ID_WITH_CURLY_BRACKETS,
+                            Name = "{{abc}}",
+                            Details = "{{def}}",
+                        }
                     }
                 }
             };
@@ -93,6 +110,75 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Contains("Weekly", venueTextContent);
         }
 
+        [Fact]
+        public async Task PostNewVenueWithCurlyBracketsInComments_ReturnsValidationErrors()
+        {
+            // Arrange
+            const int notificationId = Utilities.DRAFT_ID;
+            var url = GetPathForId(NotificationSubPaths.AddSocialContextVenue, notificationId);
+            var initialDocument = await GetDocumentForUrlAsync(url);
+
+            // Act
+            var formData = new Dictionary<string, string>
+            {
+                ["FormattedDateFrom.Day"] = "1",
+                ["FormattedDateFrom.Month"] = "1",
+                ["FormattedDateFrom.Year"] = "1999",
+                ["FormattedDateTo.Day"] = "1",
+                ["FormattedDateTo.Month"] = "1",
+                ["FormattedDateTo.Year"] = "2000",
+                ["Venue.Name"] = "Club",
+                ["Venue.Address"] = "123 Fake Street",
+                ["Venue.Frequency"] = ((int)Frequency.Weekly).ToString(),
+                ["Venue.VenueTypeId"] = "1",
+                ["Venue.Details"] = "{{XSS}}",
+            };
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+            
+            resultDocument.AssertErrorSummaryMessage("Venue-Details",
+                null,
+                string.Format(ValidationMessages.InvalidCharacter, "Comments"));
+            
+            result.AssertValidationErrorResponse();
+        }
+
+        [Fact]
+        public async Task PostNewVenueWithCurlyBracketsInVenueName_ReturnsValidationErrors()
+        {
+            // Arrange
+            const int notificationId = Utilities.DRAFT_ID;
+            var url = GetPathForId(NotificationSubPaths.AddSocialContextVenue, notificationId);
+            var initialDocument = await GetDocumentForUrlAsync(url);
+
+            // Act
+            var formData = new Dictionary<string, string>
+            {
+                ["FormattedDateFrom.Day"] = "1",
+                ["FormattedDateFrom.Month"] = "1",
+                ["FormattedDateFrom.Year"] = "1999",
+                ["FormattedDateTo.Day"] = "1",
+                ["FormattedDateTo.Month"] = "1",
+                ["FormattedDateTo.Year"] = "2000",
+                ["Venue.Name"] = "{{XSS}}",
+                ["Venue.Address"] = "123 Fake Street",
+                ["Venue.Frequency"] = ((int)Frequency.Weekly).ToString(),
+                ["Venue.VenueTypeId"] = "1",
+                ["Venue.Details"] = "",
+            };
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+            
+            resultDocument.AssertErrorSummaryMessage("Venue-Name",
+                null,
+                string.Format(ValidationMessages.InvalidCharacter, "Venue name"));
+
+            result.AssertValidationErrorResponse();
+        }
         [Fact]
         public async Task PostEditOfVenue_ReturnsSuccessAndAmendsResultInTable()
         {
@@ -207,6 +293,34 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, editPage.StatusCode);
+        }
+        
+        [Fact]
+        public async Task GetEditOfVenue_RemovesCurlyBrackets()
+        {
+            // Arrange
+            const int notificationId = Utilities.NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_SOCIALCONTEXTVENUE;
+            var url = GetCurrentPathForId(notificationId) + VENUE_ID_WITH_CURLY_BRACKETS;
+            // Act
+            var document = await GetDocumentForUrlAsync(url);
+
+            // Assert
+            var detailsContainer = document.GetElementById("maincontent").TextContent;
+            var venueName = document.QuerySelector<IHtmlInputElement>("#Venue_Name").Value;
+            var venueDetails = document.QuerySelector<IHtmlTextAreaElement>("#Venue_Details").Value;
+
+            Assert.DoesNotContain("{", detailsContainer);
+            Assert.DoesNotContain("}", detailsContainer);
+            Assert.Contains("abc", detailsContainer);
+            Assert.Contains("def", detailsContainer);
+            
+            Assert.DoesNotContain("{", venueName);
+            Assert.DoesNotContain("}", venueName);
+            Assert.Equal("abc", venueName);
+            
+            Assert.DoesNotContain("{", venueDetails);
+            Assert.DoesNotContain("}", venueDetails);
+            Assert.Equal("def", venueDetails);
         }
 
         [Fact]

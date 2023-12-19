@@ -36,6 +36,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                     return NotFound();
                 }
                 FormatDatesForGet(Address);
+                Address.Details = Address.Details.Sanitize();
             }
 
             return Page();

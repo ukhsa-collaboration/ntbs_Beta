@@ -50,6 +50,13 @@ namespace ntbs_service.Pages.ContactDetails
 
             UserHasNotificationAndIsCaseManager = await _notificationRepository.AnyNotificationsForUser(UserId) && ContactDetails.IsCaseManager;
 
+            ContactDetails.JobTitle = ContactDetails.JobTitle.Sanitize();
+            ContactDetails.PhoneNumberPrimary = ContactDetails.PhoneNumberPrimary.Sanitize();
+            ContactDetails.PhoneNumberSecondary = ContactDetails.PhoneNumberSecondary.Sanitize();
+            ContactDetails.EmailPrimary = ContactDetails.EmailPrimary.Sanitize();
+            ContactDetails.EmailSecondary = ContactDetails.EmailSecondary.Sanitize();
+            ContactDetails.Notes = ContactDetails.Notes.Sanitize();
+
             return Page();
         }
 

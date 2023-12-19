@@ -75,6 +75,30 @@ namespace ntbs_integration_tests.TransferPages
             var resultDocument = await GetDocumentAsync(result);
             resultDocument.AssertErrorMessage("comment", "Invalid character found in Explanatory comment");
         }
+        
+        [Fact]
+        public async Task DeclineTransferAlertWithCurlyBracketsInComment_ReturnsValidationError()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var initialDocument = await GetDocumentForUrlAsync(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["TransferRequest.AcceptTransfer"] = "false",
+                ["TransferRequest.DeclineTransferReason"] = "{{XSS}}",
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+                
+            resultDocument.AssertErrorMessage("comment", string.Format(ValidationMessages.InvalidCharacter, "Explanatory comment"));
+        }
+
 
         [Fact]
         public async Task ActionTransferAlertPage_ReturnsPageWithModelErrors_IfNoChoiceMade()

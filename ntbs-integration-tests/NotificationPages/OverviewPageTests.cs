@@ -93,6 +93,26 @@ namespace ntbs_integration_tests.NotificationPages
                             TbServiceCode = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID
                         }
                     }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_OVERVIEW,
+                    NotificationStatus = NotificationStatus.Notified,
+                    SocialContextAddresses = new List<SocialContextAddress>
+                    {
+                        new SocialContextAddress
+                        {
+                            Details = "{{abc}}"
+                        },
+                    },
+                    SocialContextVenues = new List<SocialContextVenue>
+                    {
+                        new SocialContextVenue
+                        {
+                            Details = "{{def}}",
+                            Name = "{{ghi}}"
+                        }
+                    }
                 }
             };
         }
@@ -456,6 +476,25 @@ namespace ntbs_integration_tests.NotificationPages
                 var expectedAnchorString = OverviewSubPathToAnchorMap.GetOverviewAnchorId(subPath);
                 Assert.NotNull(document.QuerySelector($"#{expectedAnchorString}-title"));
             });
+        }
+
+        [Fact]
+        public async Task OverviewPageRemovesCurlyBracketsFromComment()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_OVERVIEW);
+
+            // Act
+            var document = await GetDocumentForUrlAsync(url);
+
+            // Asset
+            var detailsContainer = document.GetElementById("maincontent").TextContent;
+
+            Assert.DoesNotContain("{", detailsContainer);
+            Assert.DoesNotContain("}", detailsContainer);
+            Assert.Contains("abc", detailsContainer);
+            Assert.Contains("def", detailsContainer);
+            Assert.Contains("ghi", detailsContainer);
         }
 
         private void AssertEditOverview(IHtmlDocument document)

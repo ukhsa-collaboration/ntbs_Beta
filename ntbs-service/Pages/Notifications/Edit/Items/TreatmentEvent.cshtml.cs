@@ -75,6 +75,8 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                     SelectedTreatmentOutcomeType = TreatmentEvent.TreatmentOutcome.TreatmentOutcomeType;
                     SelectedTreatmentOutcomeSubType = TreatmentEvent.TreatmentOutcome.TreatmentOutcomeSubType;
                 }
+
+                TreatmentEvent.Note =TreatmentEvent.Note.Sanitize();
             }
 
             TreatmentEventTypes = TreatmentEvent.EditableTreatmentEventTypes

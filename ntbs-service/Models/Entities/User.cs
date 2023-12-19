@@ -21,35 +21,35 @@ namespace ntbs_service.Models.Entities
         [MaxLength(100)]
         [Display(Name = "Job title")]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationAsciiBasic,
+            ValidationRegexes.CharacterValidationAsciiSpaceTozAndEmDash,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string JobTitle { get; set; }
 
         [MaxLength(100)]
         [Display(Name = "Email #1")]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationAsciiBasic,
+            ValidationRegexes.CharacterValidationAsciiSpaceTozAndEmDash,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string EmailPrimary { get; set; }
 
         [MaxLength(100)]
         [Display(Name = "Email #2")]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationAsciiBasic,
+            ValidationRegexes.CharacterValidationAsciiSpaceTozAndEmDash,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string EmailSecondary { get; set; }
 
         [MaxLength(100)]
         [Display(Name = "Phone number #1")]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationAsciiBasic,
+            ValidationRegexes.CharacterValidationAsciiSpaceTozAndEmDash,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string PhoneNumberPrimary { get; set; }
 
         [MaxLength(100)]
         [Display(Name = "Phone number #2")]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationAsciiBasic,
+            ValidationRegexes.CharacterValidationAsciiSpaceTozAndEmDash,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string PhoneNumberSecondary { get; set; }
 
@@ -57,7 +57,7 @@ namespace ntbs_service.Models.Entities
         [ContainsNoTabs]
         [Display(Name = "Notes")]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationAsciiBasicWithNewline,
+            ValidationRegexes.CharacterValidationAsciiSpaceTozAndEmDashAndNewline,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string Notes { get; set; }
 

@@ -27,6 +27,12 @@ namespace ntbs_integration_tests.Helpers
         public IEnumerable<string> TbServiceCodes { get; }
         public bool IsReadOnly { get; }
         public bool IsActive { get; }
+        public string JobTitle { get; set; }
+        public string EmailPrimary { get; set; }
+        public string EmailSecondary { get; set; }
+        public string PhoneNumberPrimary { get; set; }
+        public string PhoneNumberSecondary { get; set; }
+        public string Notes { get; set; }
 
         private TestUser(
             int id,
@@ -36,7 +42,13 @@ namespace ntbs_integration_tests.Helpers
             IEnumerable<string> adGroups,
             IEnumerable<string> tbServiceCodes = null,
             bool isReadOnly = false,
-            bool isActive = true)
+            bool isActive = true,
+            string jobTitle = null,
+            string emailPrimary = null,
+            string emailSecondary = null,
+            string phoneNumberPrimary = null,
+            string phoneNumberSecondary = null,
+            string notes = null)
         {
             Id = id;
             Username = username;
@@ -46,6 +58,12 @@ namespace ntbs_integration_tests.Helpers
             TbServiceCodes = tbServiceCodes ?? new List<string>();
             IsReadOnly = isReadOnly;
             IsActive = isActive;
+            JobTitle = jobTitle;
+            EmailPrimary = emailPrimary;
+            EmailSecondary = emailSecondary;
+            PhoneNumberPrimary = phoneNumberPrimary;
+            PhoneNumberSecondary = phoneNumberSecondary;
+            Notes = notes;
         }
 
         public static IEnumerable<TestUser> GetAll() => new[]
@@ -61,7 +79,8 @@ namespace ntbs_integration_tests.Helpers
             GatesheadCaseManager2,
             InactiveGatesheadCaseManager,
             Developer,
-            ReadOnlyUser
+            ReadOnlyUser,
+            UntrustedContentUser
         };
 
         public static TestUser ServiceUserForAbingdonAndPermitted = new TestUser(
@@ -159,5 +178,20 @@ namespace ntbs_integration_tests.Helpers
             UserType.ServiceOrRegionalUser,
             new[] { Utilities.READ_ONLY_AD_GROUP },
             isReadOnly: true);
+
+        public static TestUser UntrustedContentUser = new TestUser
+        (
+            7893,
+            "someone@ntbs.phe.com",
+            "Someone",
+            UserType.NationalTeam,
+            new[] { Utilities.NATIONAL_AD_GROUP },
+            jobTitle: "{abc}",
+            emailPrimary: "{{def}}",
+            emailSecondary: "g{{hi}}",
+            phoneNumberPrimary: "j}{kl}",
+            phoneNumberSecondary: "{{}}",
+            notes: "}}mno"
+        );
     }
 }

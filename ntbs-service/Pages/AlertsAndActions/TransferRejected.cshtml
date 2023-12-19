@@ -19,7 +19,7 @@
         <br/>
     }
 
-    <div class="rejection-note"> @Model.TransferRejectedAlert.RejectionReason </div>
+    <div class="rejection-note"> @Model.TransferRejectedAlert.RejectionReason.Sanitize() </div>
 
     <single-submit-form inline-template>
         <form method="post" autocomplete="off" v-on:submit="disableButton">

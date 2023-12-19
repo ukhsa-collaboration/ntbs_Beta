@@ -21,6 +21,9 @@ namespace ntbs_service.Models.Entities
         public virtual VenueType VenueType { get; set; }
 
         [MaxLength(50)]
+        [RegularExpression(
+            ValidationRegexes.CharacterValidationAsciiSpaceTozAndEmDash,
+            ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Venue name")]
         public string Name { get; set; }
 

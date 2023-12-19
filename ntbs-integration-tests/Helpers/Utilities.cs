@@ -60,16 +60,23 @@ namespace ntbs_integration_tests.Helpers
         public const int DRAFT_WITH_NO_START_DATES = 10075;
 
         public const int CLINICAL_NOTIFICATION_EXTRA_PULMONARY_ID = 10080;
-
+        public const int NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_ALERT = 10083;
+        public const int NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_TREATMENTEVENT = 10084;
+        public const int NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_TREATMENTEVENTS = 10085;
+        public const int NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_SOCIALCONTEXTVENUES = 10086;
+        public const int NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_SOCIALCONTEXTADDRESSES = 10087;
+        public const int NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_OVERVIEW = 10088;
+        public const int NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_SOCIALCONTEXTVENUE = 10089;
         public const int LATE_DOB_ID = 10090;
+        public const int NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT = 10091;
+        public const int NOTIFICATION_WITH_TRANSFER_REQUEST_TO_ACCEPT = 10092;
+        public const int NOTIFICATION_WITH_TRANSFER = 10093;
+        public const int NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_SOCIALCONTEXTADDRESS = 10094;
         public const int NOTIFICATION_DATE_TODAY = 10095;
         public const int NOTIFICATION_DATE_OVER_YEAR_AGO = 10096;
         public const int LINKED_NOTIFICATION_ABINGDON_TB_SERVICE = 10097;
         public const int LINK_NOTIFICATION_ROYAL_FREE_LONDON_TB_SERVICE = 10098;
 
-        public const int NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT = 10091;
-        public const int NOTIFICATION_WITH_TRANSFER_REQUEST_TO_ACCEPT = 10092;
-        public const int NOTIFICATION_WITH_TRANSFER = 10093;
 
         public static int SPECIMEN_MATCHING_NOTIFICATION_ID1 = MockSpecimenService.MockSpecimenNotificationId1; // 10100
         public static int SPECIMEN_MATCHING_NOTIFICATION_ID2 = MockSpecimenService.MockSpecimenNotificationId2; // 10101
@@ -118,6 +125,8 @@ namespace ntbs_integration_tests.Helpers
         public const int TRANSFER_REJECTED_ID = 20005;
         public const int TRANSFER_ALERT_ID_TO_ACCEPT_2 = 20006;
         public const int TRANSFER_ALERT_WITH_DATE = 20010;
+        public const int TRANSFER_ALERT_DECLINED = 20011;
+
 
         public const int DRAFT_DATA_QUALITY_ALERT = 20007;
         public const int ALERT_TO_DISMISS_ID = 20008;
@@ -231,7 +240,10 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(StopShareWithServicePageTests.GetSeedingNotifications());
             context.Notification.AddRange(ManualTestResultEditPagesTests.GetSeedingNotifications());
             context.Notification.AddRange(SocialContextVenueEditPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(SocialContextVenuesEditPageTests.GetSeedingNotifications());
             context.Notification.AddRange(SocialContextAddressEditPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(SocialContextAddressesEditPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(TreatmentEventsEditPageTests.GetSeedingNotifications());
             context.Notification.AddRange(TreatmentEventEditPageTests.GetSeedingNotifications());
             context.Notification.AddRange(ClinicalDetailsPageTests.GetSeedingNotifications());
             context.Notification.AddRange(ActionTransferPageTests.GetSeedingNotifications());
@@ -241,11 +253,12 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(MBovisOccupationExposurePageTests.GetSeedingNotifications());
             context.Notification.AddRange(MBovisAnimalExposurePageTests.GetSeedingNotifications());
             context.Notification.AddRange(DraftEditPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(RejectTransferPageTests.GetSeedingNotifications());
 
-            context.TreatmentOutcome.AddRange(TreatmentEventEditPageTests.GetSeedingOutcomes());
+            context.TreatmentOutcome.AddRange(TreatmentEventsEditPageTests.GetSeedingOutcomes());
 
             context.Alert.AddRange(DraftEditPageTests.GetSeedingAlerts());
-
+            context.Alert.AddRange(RejectTransferPageTests.GetSeedingAlerts());
             context.SaveChanges();
         }
 
@@ -268,7 +281,13 @@ namespace ntbs_integration_tests.Helpers
                 AdGroups = string.Join(',', user.AdGroups),
                 IsCaseManager = true,
                 IsReadOnly = user.IsReadOnly,
-                IsActive = user.IsActive
+                IsActive = user.IsActive,
+                JobTitle = user.JobTitle,
+                PhoneNumberPrimary = user.PhoneNumberPrimary,
+                PhoneNumberSecondary = user.PhoneNumberSecondary,
+                EmailPrimary = user.EmailPrimary,
+                EmailSecondary = user.EmailSecondary,
+                Notes = user.Notes
             });
         }
 

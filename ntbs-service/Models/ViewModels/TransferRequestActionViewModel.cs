@@ -16,7 +16,7 @@ namespace ntbs_service.Models.ViewModels
         
         [BindProperty]
         [MaxLength(200)]
-        [RegularExpression(ValidationRegexes.CharacterValidationAsciiBasic,
+        [RegularExpression(ValidationRegexes.CharacterValidationAsciiSpaceTozAndEmDash,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Explanatory comment")]
         public string DeclineTransferReason { get; set; }

@@ -11,7 +11,7 @@
     @foreach (var result in orderedResults)
     {
         <div class="notification-overview-type-and-edit-container" id="venue-heading-@result.SocialContextVenueId">
-            <h4 class="notification-details-type"> @result.Title </h4>
+            <h4 class="notification-details-type"> @result.Title.Sanitize() </h4>
             @if (showEditLinks) 
             {
                 var subPath = NotificationSubPaths.EditSocialContextVenue(result.SocialContextVenueId);
@@ -43,7 +43,7 @@
             <nhs-grid-row>
                     <nhs-grid-column grid-column-width="Full">
                     <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Details) </dt>
-                    <dd class="cell-min-height"> @result.Details </dd>
+                    <dd class="cell-min-height"> @result.Details.Sanitize() </dd>
                 </nhs-grid-column>
             </nhs-grid-row>
         </dl>
