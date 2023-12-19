@@ -40,6 +40,8 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 {
                     return NotFound();
                 }
+                Venue.Name = Venue.Name.Sanitize();
+                Venue.Details = Venue.Details.Sanitize();
                 FormatDatesForGet(Venue);
             }
 

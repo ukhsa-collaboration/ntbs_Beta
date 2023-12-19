@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using AngleSharp.Dom;
+using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
@@ -16,6 +18,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         private const int ADDRESS_ID = 10;
         private const int ADDRESS_TO_DELETE_ID = 11;
+        private const int ADDRESS_ID_WITH_CURLY_BRACKETS = 12;
         protected override string NotificationSubPath => NotificationSubPaths.EditSocialContextAddressSubPath;
 
         public SocialContextAddressEditPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory)
@@ -47,6 +50,19 @@ namespace ntbs_integration_tests.NotificationPages
                             Postcode = "M4 4BF",
                             Details = "Regional Office"
                         },
+                    }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_SOCIALCONTEXTADDRESS,
+                    NotificationStatus = NotificationStatus.Notified,
+                    SocialContextAddresses = new List<SocialContextAddress>
+                    {
+                        new SocialContextAddress
+                        {
+                            SocialContextAddressId = ADDRESS_ID_WITH_CURLY_BRACKETS,
+                            Details = "{{abc}}"
+                        }
                     }
                 }
             };
@@ -188,6 +204,42 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
+        public async Task PostEditOfAddressWithCommentContainingCurlyBrackets_ReturnsValidationErrors()
+        {
+            // Arrange
+            const int notificationId = Utilities.NOTIFICATION_WITH_ADDRESSES;
+            var editUrl = GetCurrentPathForId(notificationId) + ADDRESS_ID;
+
+            var editPage = await Client.GetAsync(editUrl);
+            var editDocument = await GetDocumentAsync(editPage);
+
+            // Act
+            var formData = new Dictionary<string, string>
+            {
+                ["FormattedDateFrom.Day"] = "1",
+                ["FormattedDateFrom.Month"] = "1",
+                ["FormattedDateFrom.Year"] = "1999",
+                ["FormattedDateTo.Day"] = "1",
+                ["FormattedDateTo.Month"] = "1",
+                ["FormattedDateTo.Year"] = "2000",
+                ["Address.Address"] = "New address",
+                ["Address.Postcode"] = "M4 4BF",
+                ["Address.Details"] = "{{XSS}}"
+            };
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+            
+            
+            resultDocument.AssertErrorSummaryMessage("Address-Details",
+                null,
+                string.Format(ValidationMessages.InvalidCharacter, "Comments"));
+            
+
+            result.AssertValidationErrorResponse();
+        }
+        [Fact]
         public async Task GetEditForMissingAddress_ReturnsNotFound()
         {
             // Arrange
@@ -199,6 +251,28 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, editPage.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetEditOfAddress_RemovesCurlyBrackets()
+        {
+            // Arrange
+            const int notificationId = Utilities.NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_SOCIALCONTEXTADDRESS;
+            var url = GetCurrentPathForId(notificationId) + ADDRESS_ID_WITH_CURLY_BRACKETS;
+            // Act
+            var document = await GetDocumentForUrlAsync(url);
+
+            // Assert
+            var detailsContainer = document.GetElementById("social-context-addresses-list").TextContent;
+            var addressDetails = document.QuerySelector<IHtmlTextAreaElement>("#Address_Details").Value;
+
+            Assert.DoesNotContain("{", detailsContainer);
+            Assert.DoesNotContain("}", detailsContainer);
+            Assert.Contains("abc", detailsContainer);
+            
+            Assert.DoesNotContain("{", addressDetails);
+            Assert.DoesNotContain("}", addressDetails);
+            Assert.Equal("abc", addressDetails);
         }
 
         [Fact]

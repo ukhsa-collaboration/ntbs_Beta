@@ -193,7 +193,9 @@
         // Taken from https://airelogic-nis.atlassian.net/wiki/spaces/R2/pages/158957672/Allowed+character+set+for+local+patient+ID
         public const string CharacterValidationLocalPatientId = @"[0-9a-zA-Z #$&'()*+,-\/\\.:;=?\[\]_`]+";
         public const string CharacterValidationAsciiBasic = @"[ -~—]+"; // Any basic printable ASCII character and em dash
+        public const string CharacterValidationAsciiSpaceTozAndEmDash = @"[ -z—]+";
         public const string CharacterValidationAsciiBasicWithNewline = @"[ -~—\n\r]+";
+        public const string CharacterValidationAsciiSpaceTozAndEmDashAndNewline = @"[ -z—\n\r]+";
         public const string NumbersValidation = @"[0-9]+";
         public const string NumbersHyphenAndSpaceValidation = @"[0-9\- ]+";
         // Taken from https://stackoverflow.com/a/164994/2363767

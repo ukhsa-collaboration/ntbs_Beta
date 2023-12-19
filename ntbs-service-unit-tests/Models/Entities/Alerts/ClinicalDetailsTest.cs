@@ -9,17 +9,17 @@ namespace ntbs_service_unit_tests.Models.Entities.Alerts
     public class DataQualityDotVotAlertTest
     {
         [Theory]
-        [InlineData("Yes", true, true, false, false)]
+        [InlineData("Yes", true, true, false, true)]
         [InlineData("Yes", true, false, true, false)]
         [InlineData("Yes", false, false, true, false)]
-        [InlineData("Yes", true, false, false, true)]
+        [InlineData("Yes", true, false, false, false)]
         [InlineData("Yes", false, false, false, false)]
         [InlineData("No", true, true, false, true)]
         [InlineData("No", true, false, true, true)]
         [InlineData("No", false, false, true, false)]
         [InlineData("No", true, false, false, false)]
         [InlineData("Unknown", true, true, false, false)]
-        [InlineData(null, true, true, false, false)]
+        [InlineData(null, true, true, false, true)]
         public void DotVotAlert_CorrectlyClassifiesNotification(
             string dotOfferedString,
             bool notificationNotified,
@@ -43,7 +43,7 @@ namespace ntbs_service_unit_tests.Models.Entities.Alerts
                     RiskFactorHomelessness = new RiskFactorDetails(RiskFactorType.Homelessness) { Status = allStatuses },
                     RiskFactorImprisonment = new RiskFactorDetails(RiskFactorType.Imprisonment) { Status = allStatuses },
                     MentalHealthStatus = allStatuses,
-                    RiskFactorSmoking = new RiskFactorDetails(RiskFactorType.Smoking) { Status = allStatuses },
+                    //RiskFactorSmoking = new RiskFactorDetails(RiskFactorType.Smoking) { Status = allStatuses }, // // Modified on 23/03/2023 for NTBS-3161
                     AsylumSeekerStatus = allStatuses,
                     ImmigrationDetaineeStatus = allStatuses
                 }

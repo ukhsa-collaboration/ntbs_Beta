@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Graph;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
@@ -14,7 +15,7 @@ using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
 {
-    public class TreatmentEventEditPageTests : TestRunnerNotificationBase
+    public class TreatmentEventsEditPageTests : TestRunnerNotificationBase
     {
         private const int OUTCOME_TREATMENT_EVENT_ID = 10;
         private const int RESTART_TREATMENT_EVENT_ID = 11;
@@ -23,6 +24,7 @@ namespace ntbs_integration_tests.NotificationPages
         private const int EDIT_TREATMENT_EVENT_ID = 12;
         private const int DELETE_TREATMENT_EVENT_ID = 13;
         private const int TRANSFER_IN_EVENT_ID = 14;
+        private const int CURLY_BRACKET_EVENT_ID = 15;
 
         private const int TREATMENT_OUTCOME_ID = 100;
         private const TreatmentOutcomeType TREATMENT_OUTCOME_TYPE = TreatmentOutcomeType.Lost;
@@ -31,7 +33,7 @@ namespace ntbs_integration_tests.NotificationPages
 
         protected override string NotificationSubPath => NotificationSubPaths.EditTreatmentEvents;
 
-        public TreatmentEventEditPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory)
+        public TreatmentEventsEditPageTests(NtbsWebApplicationFactory<EntryPoint> factory) : base(factory)
         {
         }
 
@@ -110,6 +112,21 @@ namespace ntbs_integration_tests.NotificationPages
                 {
                     NotificationId = Utilities.DRAFT_WITH_NO_START_DATES,
                     NotificationStatus = NotificationStatus.Draft
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_TREATMENTEVENTS,
+                    NotificationStatus = NotificationStatus.Notified,
+                    TreatmentEvents = new List<TreatmentEvent>
+                    {
+                        new TreatmentEvent
+                        {
+                            TreatmentEventId = CURLY_BRACKET_EVENT_ID,
+                            EventDate = new DateTime(2012, 1, 1),
+                            TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                            Note = "{{abc}}"
+                        }
+                    }
                 }
             };
         }
@@ -271,6 +288,38 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Contains(noteText, textContent);
             Assert.Contains(TREATMENT_OUTCOME_TYPE.GetDisplayName(), textContent);
             Assert.Contains(TREATMENT_OUTCOME_SUBTYPE.GetDisplayName(), textContent);
+        }
+        
+        [Fact]
+        public async Task PostNewTreatmentOutcomeWithCurlyBracketsInNotes_ReturnsValidationErrors()
+        {
+            // Arrange
+            const int notificationId = Utilities.NOTIFICATION_FOR_ADD_TREATMENT_OUTCOME;
+            var url = GetPathForId(NotificationSubPaths.AddTreatmentEvent, notificationId);
+            var document = await GetDocumentForUrlAsync(url);
+            const string noteText = "{{xss}}";
+
+            // Act
+            var formData = new Dictionary<string, string>
+            {
+                ["FormattedEventDate.Day"] = "01",
+                ["FormattedEventDate.Month"] = "01",
+                ["FormattedEventDate.Year"] = "2020",
+                ["TreatmentEvent.TreatmentEventType"] = ((int)TreatmentEventType.TreatmentOutcome).ToString(),
+                ["SelectedTreatmentOutcomeType"] = ((int)TREATMENT_OUTCOME_TYPE).ToString(),
+                ["SelectedTreatmentOutcomeSubType"] = ((int)TREATMENT_OUTCOME_SUBTYPE).ToString(),
+                ["TreatmentEvent.Note"] = noteText
+            };
+            var result = await Client.SendPostFormWithData(document, formData, url);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+
+            resultDocument.AssertErrorSummaryMessage("TreatmentEvent-Note",
+                null,
+                string.Format(ValidationMessages.InvalidCharacter, "Note"));
+            
+            result.AssertValidationErrorResponse();
         }
 
         [Fact]
@@ -548,6 +597,24 @@ namespace ntbs_integration_tests.NotificationPages
             
             // Assert
             Assert.Null(button);
+        }
+
+
+        [Fact]
+        public async Task GetEditOfTreatmentEvents_RemovesCurlyBrackets()
+        {
+            // Arrange
+            const int notificationId = Utilities.NOTIFICATION_ID_WITH_CURLY_BRACKETS_IN_TREATMENTEVENTS;
+            var url = GetCurrentPathForId(notificationId);
+            // Act
+            var document = await GetDocumentForUrlAsync(url);
+
+            // Assert
+            var detailsContainer = document.GetElementById("treatment-events").TextContent;
+
+            Assert.DoesNotContain("{", detailsContainer);
+            Assert.DoesNotContain("}", detailsContainer);
+            Assert.Contains("abc", detailsContainer);
         }
     }
 }

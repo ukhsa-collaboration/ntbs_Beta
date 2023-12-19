@@ -55,6 +55,33 @@ namespace ntbs_integration_tests.ContactDetailsPages
                 Assert.Contains("Permitted Phec", breadcrumbs);
             }
         }
+
+        [Fact]
+        public async Task CurlyBracketsRemovedForUntrustedContent()
+        {
+            TestUser user = TestUser.UntrustedContentUser;
+            var pageRoute = (RouteHelper.GetContactDetailsSubPath(user.Id, null));
+            using (var client = Factory.WithUserAuth(user).CreateClientWithoutRedirects())
+            {
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(UserAuthentication.SchemeName);
+                // Arrange
+
+                var initialPage = await client.GetAsync(pageRoute);
+                var pageContent = await GetDocumentAsync(initialPage);
+
+                // Assert
+                var detailsContainer = pageContent.GetElementsByClassName("case-manager-details-container").Single().TextContent;
+
+                Assert.DoesNotContain("{", detailsContainer);
+                Assert.DoesNotContain("}", detailsContainer);
+                Assert.Contains("abc", detailsContainer);
+                Assert.Contains("def", detailsContainer);
+                Assert.Contains("ghi", detailsContainer);
+                Assert.Contains("jkl", detailsContainer);
+                Assert.Contains("mno", detailsContainer);
+            }
+        }
     }
 }
 
