@@ -1,9 +1,7 @@
-﻿using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using BoDi;
 using Dapper;
-using ntbs_service;
+using Microsoft.Data.SqlClient;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
@@ -76,7 +74,7 @@ namespace ntbs_ui_tests.Hooks
         private async Task CleanUpMigratedNotification()
         {
             var legacyId = settings.EnvironmentConfig.LegacyId;
-            
+
             using (var connection = new SqlConnection(settings.EnvironmentConfig.SpecimenConnectionString))
             {
                 connection.Open();
