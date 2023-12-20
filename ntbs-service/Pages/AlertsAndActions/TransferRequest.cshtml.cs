@@ -84,6 +84,14 @@ namespace ntbs_service.Pages.AlertsAndActions
         public async Task<IActionResult> OnPostAsync()
         {
             Notification = await GetNotificationAsync(NotificationId);
+            
+            await AuthorizeAndSetBannerAsync();
+            // Check edit permission and redirect if not allowed
+            if (PermissionLevel != PermissionLevel.Edit)
+            {
+                return RedirectToPage("/Notifications/Overview", new { NotificationId });
+            }
+            
             await SetValuesForValidation();
             ModelState.Clear();
             TryValidateModel(TransferRequest, nameof(TransferRequest));
