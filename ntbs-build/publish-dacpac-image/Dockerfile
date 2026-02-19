@@ -1,4 +1,4 @@
-FROM ubuntu:latest AS build
+FROM ubuntu:24.04 AS build
 
 RUN apt-get update && apt-get install -y \
     curl \
@@ -11,7 +11,7 @@ RUN mkdir sqlpackage
 RUN unzip sqlpackage.zip -d sqlpackage
 RUN chmod a+x ~/sqlpackage/sqlpackage
 
-FROM ubuntu:latest
+FROM ubuntu:24.04
 COPY --from=build /root/sqlpackage /root/sqlpackage
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
     libunwind8 \
